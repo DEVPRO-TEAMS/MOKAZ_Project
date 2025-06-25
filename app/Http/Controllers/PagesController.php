@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class LinkController extends Controller
+class PagesController extends Controller
 {
-    
     public function indexReservations()
     {
         return view('pages.reservation');
@@ -27,5 +25,9 @@ class LinkController extends Controller
     public function indexPolitiq()
     {
         return view('pages.politiq');
+    }
+    public function show()
+    {
+        return view('pages.detail');
     }
 }
