@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\AdminController;
@@ -26,11 +27,12 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // route de navigation
-Route::get('/apropos', [LinkController::class, 'indexApropos'])->name('apropos');
-Route::get('/reservation', [LinkController::class, 'indexReservations'])->name('reservation');
-Route::get('/contact', [LinkController::class, 'indexContact'])->name('contact');
-Route::get('/faq', [LinkController::class, 'indexFaq'])->name('faq');
-Route::get('/confidentialite', [LinkController::class, 'indexPolitiq'])->name('politiq');
+Route::get('/apropos', [PagesController::class, 'indexApropos'])->name('apropos');
+Route::get('/reservation', [PagesController::class, 'indexReservations'])->name('reservation');
+Route::get('/contact', [PagesController::class, 'indexContact'])->name('contact');
+Route::get('/faq', [PagesController::class, 'indexFaq'])->name('faq');
+Route::get('/confidentialite', [PagesController::class, 'indexPolitiq'])->name('politiq');
+Route::get('/detail/property', [PagesController::class, 'show'])->name('property.show');
 
 
 
@@ -40,11 +42,16 @@ Route::prefix('admin')->name('admin.')->group(function(){
     });
     Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('index');
+
+        Route::post('/store', [UserController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
     });
 });
 
 Route::prefix('user')->name('user.')->group(function(){
     Route::middleware('guest')->group(function(){
+
     });
     Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [UserController::class, 'index'])->name('index');

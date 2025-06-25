@@ -138,6 +138,8 @@
     <script src="{{ asset('assets/js/marker.js') }}"></script>
     <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
 
+    <script src="{{ asset('assets/js/map-single.js')}}"></script>
+
 
 </body>
 
