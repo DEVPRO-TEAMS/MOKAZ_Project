@@ -293,7 +293,7 @@
     $(".button-show-hide").on("click", function () {
       $(".layout-wrap").toggleClass("full-width");
     });
-    $(".mobile-nav-toggler,.overlay-dashboard").on("click", function () {
+    $(".mobile-nav-toggler,.overlay-dashboard,.mobile-nav-admin-toggler").on("click", function () {
       $(".layout-wrap").removeClass("full-width");
     });
   };

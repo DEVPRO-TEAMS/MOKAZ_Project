@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Homzen - Real Estate HTML Template</title>
+    <title>MOKAZ - Plateforme Immobilier</title>
 
     <meta name="author" content="themesflat.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -14,6 +14,7 @@
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/font-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/css/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
@@ -21,7 +22,6 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
-
 
 </head>
 
@@ -67,7 +67,9 @@
             @include('layouts.header')
             <!-- End Main Header -->
 
-            @yield('content')
+           <div class="container-fluid" style="margin-top: 5%">
+                 @yield('content')
+            </div>
             <!-- footer -->
             @include('layouts.footer')
             <!-- end footer -->
@@ -77,6 +79,28 @@
         </nav>
 
     </div>
+
+    {{-- Gestion du menu static inteligent  --}}
+
+    <script>
+        let lastScrollTop = 0;
+        const header = document.querySelector('.fixed-header');
+
+        window.addEventListener('scroll', function () {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                // Scroll vers le bas → cacher le header
+                header.style.top = "-100px";
+            } else {
+                // Scroll vers le haut → afficher le header
+                header.style.top = "0";
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // pour éviter valeurs négatives
+        });
+    </script>
+
 
 
 
@@ -96,6 +120,7 @@
     <!-- Javascript -->
     <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/carousel.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/plugin.js') }}"></script>
@@ -106,7 +131,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
 
-    <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
+    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
     <script src="{{ asset('assets/js/map.js') }}"></script>
      <script src="{{ asset('assets/js/map-contact.js')}}"></script>

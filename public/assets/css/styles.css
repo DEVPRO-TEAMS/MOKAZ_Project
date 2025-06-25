@@ -728,7 +728,7 @@ label {
 .main-header {
   z-index: 999;
   width: 100%;
-  height: 80px;
+  height: 100px;
   position: relative;
   border-bottom: 1px solid #e4e4e4;
   background-color: #ffffff;
@@ -1443,7 +1443,7 @@ label {
 ====================================================================
 
 ***/
-.mobile-menu {
+.mobile-menu, .mobile-admin-menu {
   position: fixed;
   left: 0;
   top: 0;
@@ -1454,28 +1454,32 @@ label {
   visibility: hidden;
   z-index: 999999;
 }
-.mobile-menu .nav-logo {
+.mobile-menu .nav-logo, .mobile-admin-menu .nav-logo {
   position: relative;
   background: #ffffff;
   box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.08);
   padding: 12px 20px;
 }
-.mobile-menu .nav-logo img {
+.mobile-menu .nav-logo img, .mobile-admin-menu .nav-logo img {
   max-width: 200px;
 }
-.mobile-menu .bottom-canvas {
+.mobile-menu .bottom-canvas, .mobile-admin-menu .bottom-canvas {
+
   padding: 30px 20px 100px;
   height: 100vh;
   overflow-y: auto;
 }
 
-.mobile-menu-visible {
+.mobile-menu-visible, .mobile-admin-visible {
   overflow: hidden;
 }
-.mobile-menu-visible .mobile-menu {
+.mobile-menu-visible body, .mobile-admin-visible body {
+  overflow: hidden;
+}
+.mobile-menu-visible .mobile-menu, .mobile-admin-visible .mobile-admin-menu {
   visibility: visible;
 }
-.mobile-menu-visible .mobile-menu .menu-backdrop {
+.mobile-menu-visible .mobile-menu .menu-backdrop, .mobile-admin-visible .mobile-admin-menu .menu-backdrop {
   opacity: 1;
   visibility: visible;
   -webkit-transition: all 0.3s ease;
@@ -1484,7 +1488,7 @@ label {
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.mobile-menu-visible .mobile-menu .menu-box {
+.mobile-menu-visible .mobile-menu .menu-box, .mobile-admin-visible .mobile-admin-menu .menu-box {
   left: 0px;
   -webkit-overflow-scrolling: touch;
   -webkit-transition-duration: 0.5s;
@@ -1493,7 +1497,7 @@ label {
   transition-timing-function: ease;
 }
 
-.mobile-menu .menu-backdrop {
+.mobile-menu .menu-backdrop, .mobile-admin-menu .menu-backdrop {
   position: fixed;
   right: 0;
   top: 0;
@@ -1505,7 +1509,7 @@ label {
   visibility: hidden;
   opacity: 0;
 }
-.mobile-menu .menu-box {
+.mobile-menu .menu-box, .mobile-admin-menu .menu-box {
   position: absolute;
   left: -300px;
   top: 0px;
@@ -1522,7 +1526,7 @@ label {
   transition-timing-function: ease;
 }
 
-.close-btn {
+.close-btn, .close-admin-btn {
   position: fixed;
   right: 16px;
   top: 25px;
@@ -1537,40 +1541,40 @@ label {
   opacity: 0;
   visibility: hidden;
 }
-.close-btn::before {
+.close-btn::before, .close-admin-btn::before {
   content: "\e938";
   font-family: "icomoon";
   font-size: 24px;
   font-weight: 100;
 }
 
-.mobile-menu-visible .close-btn {
+.mobile-menu-visible .close-btn, .mobile-admin-visible .close-admin-btn {
   visibility: visible;
   opacity: 1;
 }
 
-.mobile-menu .close-btn:hover {
+.mobile-menu .close-btn:hover, .mobile-admin-menu .close-admin-btn:hover {
   opacity: 0.5;
 }
 
-.mobile-menu .navigation {
+.mobile-menu .navigation, .mobile-admin-menu .admin-navigation {
   position: relative;
   display: block;
   width: 100%;
 }
-.mobile-menu .navigation li {
+.mobile-menu .navigation li, .mobile-admin-menu .admin-navigation li {
   position: relative;
   display: block;
 }
 
-.mobile-menu .navigation li {
+.mobile-menu .navigation li, .mobile-admin-menu .admin-navigation li{
   position: relative;
   display: block;
 }
-.mobile-menu .navigation li > ul > li:last-child {
+.mobile-menu .navigation li > ul > li:last-child, .mobile-admin-menu .admin-navigation li > ul > li:last-child {
   border-bottom: none;
 }
-.mobile-menu .navigation li.dropdown2 .dropdown2-btn {
+.mobile-menu .navigation li.dropdown2 .dropdown2-btn, .mobile-admin-menu .admin-navigation li.dropdown2 .dropdown2-btn {
   position: absolute;
   right: 0px;
   top: 0px;
@@ -1580,7 +1584,7 @@ label {
   cursor: pointer;
   z-index: 5;
 }
-.mobile-menu .navigation li.dropdown2 .dropdown2-btn::before {
+.mobile-menu .navigation li.dropdown2 .dropdown2-btn::before, .mobile-admin-menu .admin-navigation li.dropdown2 .dropdown2-btn::before {
   content: "\e90f";
   font-family: "icomoon";
   font-size: 12px;
@@ -1598,21 +1602,23 @@ label {
   transition: all 0.3s ease;
   transform: rotate(-90deg);
 }
-.mobile-menu .navigation li.open .dropdown2-btn::before {
+.mobile-menu .navigation li.open .dropdown2-btn::before, .mobile-admin-menu .admin-navigation li.open .dropdown2-btn::before {
   transform: unset;
 }
 
-.mobile-menu .navigation li.dropdown2 > ul li a {
+.mobile-menu .navigation li.dropdown2 > ul li a, .mobile-admin-menu .admin-navigation li.dropdown2 > ul li a {
   border-bottom: unset;
   color: #161e2d;
 }
 
-.mobile-menu .navigation li.dropdown2 .dropdown2-btn span {
+.mobile-menu .navigation li.dropdown2 .dropdown2-btn span, .mobile-admin-menu .admin-navigation li.dropdown2 .dropdown2-btn span {
   opacity: 0;
 }
 
 .mobile-menu .navigation li > ul,
-.mobile-menu .navigation li > ul > li > ul {
+.mobile-menu .navigation li > ul > li > ul,
+.mobile-admin-menu .admin-navigation li > ul,
+.mobile-admin-menu .admin-navigation li > ul > li > ul {
   display: none;
   background: rgba(237, 32, 39, 0.1);
   padding: 15px 20px;
@@ -1620,32 +1626,38 @@ label {
 }
 
 .mobile-menu .navigation li > ul > li,
-.mobile-menu .navigation li > ul > li > ul > li {
+.mobile-menu .navigation li > ul > li > ul > li,
+.mobile-admin-menu .admin-navigation li > ul > li,
+.mobile-admin-menu .admin-navigation li > ul > li > ul > li {
   margin-bottom: 0;
 }
 
-.mobile-menu .navigation li > ul > li > a {
+.mobile-menu .navigation li > ul > li > a,
+.mobile-admin-menu .admin-navigation li > ul > li > a {
+
   padding: 7px 0px !important;
   font-weight: 500;
 }
 
-.mobile-menu .navigation li > ul > li > ul {
+.mobile-menu .navigation li > ul > li > ul,
+.mobile-menu .navigation li > ul > li > ul > li > ul {
   padding-left: 15px;
 }
 
-.mobile-menu .navigation li > ul > li > ul > li > a {
+.mobile-menu .navigation li > ul > li > ul > li > a,
+.mobile-admin-menu .admin-navigation li > ul > li > ul > li > a {
   padding-left: 40px;
 }
 
-.mobile-menu .close-btn:hover {
+.mobile-menu .close-btn:hover, .mobile-admin-menu .close-admin-btn:hover {
   opacity: 0.5;
 }
 
-.mobile-menu .navigation li > ul > li:last-child {
+.mobile-menu .navigation li > ul > li:last-child, .mobile-admin-menu .admin-navigation li > ul > li:last-child {
   border-bottom: none;
 }
 
-.mobile-menu .navigation li > a {
+.mobile-menu .navigation li > a, .mobile-admin-menu .admin-navigation li > a {
   font-family: "Josefin Sans", sans-serif;
   position: relative;
   display: block;
@@ -1659,7 +1671,10 @@ label {
 
 .mobile-menu .navigation li:hover > a,
 .mobile-menu .navigation li.current > a,
-.mobile-menu .navigation li.current li.current > a {
+.mobile-menu .navigation li.current li.current > a,
+.mobile-admin-menu .admin-navigation li:hover > a,
+.mobile-admin-menu .admin-navigation li.current > a,
+.mobile-admin-menu .admin-navigation li.current li.current > a {
   color: #ED2027;
 }
 
@@ -1675,7 +1690,7 @@ label {
   padding: 22px 0px;
 }
 
-.mobile-button {
+.mobile-button, .mobile-admin-button {
   display: none;
   position: absolute;
   width: 26px;
@@ -1692,13 +1707,13 @@ label {
   transform: translateY(-50%);
 }
 .mobile-button::before, .mobile-button::after,
-.mobile-button span {
+.mobile-button span, .mobile-admin-button::before, .mobile-admin-button::after, .mobile-admin-button span {
   background-color: #ED2027;
   -webkit-transition: all ease 0.3s;
   -moz-transition: all ease 0.3s;
   transition: all ease 0.3s;
 }
-.mobile-button::before, .mobile-button::after {
+.mobile-button::before, .mobile-button::after, .mobile-admin-button::before, .mobile-admin-button::after {
   content: "";
   position: absolute;
   top: 0;
@@ -1710,7 +1725,7 @@ label {
   -ms-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
 }
-.mobile-button span {
+.mobile-button span, .mobile-admin-button span {
   position: absolute;
   width: 100%;
   height: 2px;
@@ -1719,31 +1734,32 @@ label {
   overflow: hidden;
   text-indent: 200%;
 }
-.mobile-button::before {
+.mobile-button::before, .mobile-admin-button::before {
   -webkit-transform: translate3d(0, -9px, 0);
   -moz-transform: translate3d(0, -9px, 0);
   transform: translate3d(0, -9px, 0);
 }
-.mobile-button::after {
+.mobile-button::after, .mobile-admin-button::after {
   -webkit-transform: translate3d(0, 9px, 0);
   -moz-transform: translate3d(0, 9px, 0);
   transform: translate3d(0, 9px, 0);
 }
-.mobile-button.active span {
+.mobile-button.active span, .mobile-admin-button.active span {
   opacity: 0;
 }
-.mobile-button.active::before {
+.mobile-button.active::before, .mobile-admin-button.active::before {
   -webkit-transform: rotate3d(0, 0, 1, 45deg);
   -moz-transform: rotate3d(0, 0, 1, 45deg);
   transform: rotate3d(0, 0, 1, 45deg);
 }
-.mobile-button.active::after {
+.mobile-button.active::after, .mobile-admin-button.active::after {
   -webkit-transform: rotate3d(0, 0, 1, -45deg);
   -moz-transform: rotate3d(0, 0, 1, -45deg);
   transform: rotate3d(0, 0, 1, -45deg);
 }
 .mobile-button.mobi-style::before, .mobile-button.mobi-style::after,
-.mobile-button.mobi-style span {
+.mobile-button.mobi-style span, .mobile-admin-button.mobi-style::before, .mobile-admin-button.mobi-style::after,
+.mobile-admin-button.mobi-style span {
   background-color: #ffffff;
 }
 
@@ -1760,36 +1776,36 @@ label {
   font-family: "Josefin Sans", sans-serif;
   font-weight: 600;
 }
-.mobile-menu .menu-outer {
+.mobile-menu .menu-outer, .mobile-admin-menu .menu-outer {
   border-bottom: 1px solid #e4e4e4;
   padding-bottom: 20px;
   margin-bottom: 20px;
 }
-.mobile-menu .button-mobi-sell {
+.mobile-menu .button-mobi-sell, .mobile-admin-menu .button-mobi-sell {
   margin-bottom: 15px;
   border-bottom: 1px solid #e4e4e4;
   padding-bottom: 20px;
 }
-.mobile-menu .button-mobi-sell a {
+.mobile-menu .button-mobi-sell a, .mobile-admin-menu .button-mobi-sell a {
   width: 100%;
 }
-.mobile-menu .mobi-icon-box .box {
+.mobile-menu .mobi-icon-box .box, .mobile-admin-menu .mobi-icon-box .box {
   margin-bottom: 19px;
   border-bottom: 1px solid #e4e4e4;
   padding-bottom: 19px;
 }
-.mobile-menu .mobi-icon-box .box:last-child {
+.mobile-menu .mobi-icon-box .box:last-child, .mobile-admin-menu .mobi-icon-box .box:last-child {
   border-bottom: 0;
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
-.mobile-menu .mobi-icon-box .box .content {
+.mobile-menu .mobi-icon-box .box .content, .mobile-admin-menu .mobi-icon-box .box .content {
   color: #a3abb0;
 }
-.mobile-menu .mobi-icon-box .box .content h5 {
+.mobile-menu .mobi-icon-box .box .content h5, .mobile-admin-menu .mobi-icon-box .box .content h5 {
   color: #5c6368;
 }
-.mobile-menu .mobi-icon-box .icon {
+.mobile-menu .mobi-icon-box .icon, .mobile-admin-menu .mobi-icon-box .icon {
   margin-right: 10px;
   font-size: 20px;
 }
@@ -6839,7 +6855,9 @@ label {
 }
 
 .flat-map .top-map {
-  height: 460px;
+  height: calc(100vh - 188px);
+  /* height: 100vh; */
+  /* height: 460px; */
 }
 .flat-map .wrap-filter-search {
   margin-top: -102px;
@@ -7097,11 +7115,16 @@ label {
 }
 
 .fixed-header {
-  position: -webkit-sticky;
-  /* Safari */
-  position: sticky;
-  top: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    transition: top 0.3s ease;
+    background-color: #fff; /* ou ce que tu veux */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 
 .fixed-cate-single {
   position: sticky;
@@ -9516,7 +9539,7 @@ tr {
     padding: 15px;
   }
 
-  .mobile-button {
+  .mobile-button, .mobile-admin-button {
     display: block !important;
   }
 
