@@ -728,7 +728,7 @@ label {
 .main-header {
   z-index: 999;
   width: 100%;
-  height: 80px;
+  height: 100px;
   position: relative;
   border-bottom: 1px solid #e4e4e4;
   background-color: #ffffff;
@@ -6839,7 +6839,9 @@ label {
 }
 
 .flat-map .top-map {
-  height: 460px;
+  height: calc(100vh - 188px);
+  /* height: 100vh; */
+  /* height: 460px; */
 }
 .flat-map .wrap-filter-search {
   margin-top: -102px;
@@ -7097,11 +7099,16 @@ label {
 }
 
 .fixed-header {
-  position: -webkit-sticky;
-  /* Safari */
-  position: sticky;
-  top: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    transition: top 0.3s ease;
+    background-color: #fff; /* ou ce que tu veux */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 
 .fixed-cate-single {
   position: sticky;

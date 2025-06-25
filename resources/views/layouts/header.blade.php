@@ -5,37 +5,11 @@
             <div class="col-lg-12">
                 <div class="inner-container d-flex justify-content-between align-items-center">
                     <!-- Logo Box -->
-                    <div class="logo-box">
+                    <div class="logo-box " style="width: 6.5rem; margin-top: 0">
                         <div class="logo"><a href="{{ route('welcome') }}"><img
-                                    src="{{ asset('assets/images/logo/logo.jpg') }}" alt="logo" width="174"
-                                    height="44"></a></div>
-                    </div>
-                    <div class="nav-outer">
-                        <!-- Main Menu -->
-
-                        <nav class="main-menu show navbar-expand-md">
-                            <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
-                                <ul class="navigation clearfix">
-                                    <li class="{{ request()->routeIs('welcome') ? 'current' : '' }}">
-                                        <a href="{{ route('welcome') }}">Accueil</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('reservation') ? 'current' : '' }}">
-                                        <a href="{{ route('reservation') }}">Réservation</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('apropos') ? 'current' : '' }}">
-                                        <a href="{{ route('apropos') }}">À propos de nous</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('contact') ? 'current' : '' }}">
-                                        <a href="{{ route('contact') }}">Contactez-nous</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('faq') ? 'current' : '' }}">
-                                        <a href="{{ route('faq') }}">FAQ</a>
-                                    </li>
-                                </ul>
+                            src="{{ asset('assets/images/logo/logo-main.png') }}" alt="logo" width="100%"
+                                    height="33"></a>
                             </div>
-                        </nav>
-
-                        <!-- Main Menu End-->
                     </div>
                     <div class="header-account">
                         <div class="register">

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Homzen - Real Estate HTML Template</title>
+    <title>MOKAZ - Plateforme Immobilier</title>
 
     <meta name="author" content="themesflat.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -67,7 +67,9 @@
             @include('layouts.header')
             <!-- End Main Header -->
 
-            @yield('content')
+           <div class="container-fluid" style="margin-top: 5%">
+                 @yield('content')
+            </div>
             <!-- footer -->
             @include('layouts.footer')
             <!-- end footer -->
@@ -77,6 +79,28 @@
         </nav>
 
     </div>
+
+    {{-- Gestion du menu static inteligent  --}}
+
+    <script>
+        let lastScrollTop = 0;
+        const header = document.querySelector('.fixed-header');
+
+        window.addEventListener('scroll', function () {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop) {
+                // Scroll vers le bas → cacher le header
+                header.style.top = "-100px";
+            } else {
+                // Scroll vers le haut → afficher le header
+                header.style.top = "0";
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // pour éviter valeurs négatives
+        });
+    </script>
+
 
 
 
