@@ -8334,9 +8334,10 @@ label {
   display: none;
 }
 
+
+
 .modal .modal-dialog .modal-content {
   border-radius: 24px;
-  border: 0;
   background: #f7f7f7;
 }
 

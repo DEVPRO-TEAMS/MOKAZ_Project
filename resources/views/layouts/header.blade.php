@@ -11,18 +11,17 @@
                                     height="33"></a>
                             </div>
                     </div>
-                    <center class="d-none d-lg-block">
-                        <div class="flat-bt-top">
-                            <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
-                        </div>
-                    </center>
                     <div class="header-account">
                         <div class="register">
                             <ul class="d-flex">
                                 <li><a href="#modalLogin" data-bs-toggle="modal">Connexion</a></li>
+                                <li>/</li>
+                                <li><a href="#modalRegister" data-bs-toggle="modal">S'inscrire</a></li>
                             </ul>
                         </div>
-                        
+                        <div class="flat-bt-top">
+                            <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
+                        </div>
                     </div>
 
                     <div class="mobile-nav-toggler mobile-button"><span></span></div>
@@ -38,11 +37,13 @@
     <div class="mobile-menu">
         <div class="menu-backdrop"></div>
         <nav class="menu-box">
-            <div class="nav-logo"><a href="index.html"><img src="{{ asset('assets/images/logo/logo@2x.png')}}" alt="nav-logo" width="174"
+            <div class="nav-logo"><a href="index.html"><img src="images/logo/logo@2x.png" alt="nav-logo" width="174"
                         height="44"></a></div>
             <div class="bottom-canvas">
                 <div class="login-box flex align-items-center">
                     <a href="#modalLogin" data-bs-toggle="modal">Connexion</a>
+                    <span>/</span>
+                    <a href="#modalRegister" data-bs-toggle="modal">Inscription</a>
                 </div>
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
@@ -102,27 +103,11 @@
                                 <input type="checkbox" class="tf-checkbox style-2" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="remember" class="caption-1 text-variant-1">Se souvenir de moi</label>
                             </fieldset>
-                            @if (Route::has('password.request'))
+                            {{-- @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="caption-1 text-primary">Mot de passe oublie ?</a>
-                            @endif
-                        </div>
-                        <div class="text-variant-1 auth-line d-none">or sign up with</div>
-                        <div class="login-social d-none">
-                            <a href="#" class="btn-login-social">
-                                <img src="images/logo/fb.jpg" alt="img">
-                                Continue with Facebook
-                            </a>
-                            <a href="#" class="btn-login-social">
-                                <img src="images/logo/google.jpg" alt="img">
-                                Continue with Google
-                            </a>
-                            <a href="#" class="btn-login-social">
-                                <img src="images/logo/tw.jpg" alt="img">
-                                Continue with Twitter
-                            </a>
+                            @endif --}}
                         </div>
                         <button type="submit" class="tf-btn primary w-100">Se connecter</button>
-                        <div class="mt-12 text-variant-1 text-center noti d-none">Not registered yet?<a href="#modalRegister" data-bs-toggle="modal" class="text-black fw-5">Sign Up</a> </div>
                     </form>
                 </div>
             </div> 
