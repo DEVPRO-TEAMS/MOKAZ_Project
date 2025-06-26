@@ -51,7 +51,7 @@
                 <div class="mobi-icon-box">
                     <div class="box d-flex align-items-center">
                         <span class="icon icon-phone2"></span>
-                        <div>1-333-345-6868</div>
+                        <div>1-333-345-68688</div>
                     </div>
                     <div class="box d-flex align-items-center">
                         <span class="icon icon-mail"></span>
