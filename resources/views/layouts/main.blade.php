@@ -14,6 +14,7 @@
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/font-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/css/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
@@ -21,7 +22,6 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
-
 
 </head>
 
@@ -120,6 +120,7 @@
     <!-- Javascript -->
     <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/carousel.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/plugin.js') }}"></script>
@@ -130,7 +131,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
 
-    <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
+    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
     <script src="{{ asset('assets/js/map.js') }}"></script>
      <script src="{{ asset('assets/js/map-contact.js')}}"></script>

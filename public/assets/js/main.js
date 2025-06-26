@@ -181,6 +181,7 @@
   // Mobile Nav Hide Show
   if ($(".mobile-menu").length) {
     //$('.mobile-menu .menu-box').mCustomScrollbar();
+    
 
     var mobileMenuContent = $(".main-header .nav-outer .main-menu").html();
     $(".mobile-menu .menu-box .menu-outer").append(mobileMenuContent);
@@ -402,4 +403,66 @@
     ajaxSubscribe.eventLoad();
     alertBox();
   });
+
+  if ($(".mobile-admin-menu").length) {
+    // Injecte le contenu du menu principal dans le menu mobile admin
+    var adminMenuContent = $(".sidebar-menu-dashboard .box-menu-dashboard").html();
+    $(".mobile-admin-menu .admin-menu-list").append(adminMenuContent);
+
+    // Bouton toggle du menu mobile
+    $(".mobile-nav-admin-toggler").on("click", function () {
+        $("body").addClass("mobile-admin-visible");
+    });
+    // // Bouton toggle du menu mobile
+    // $(".mobile-admin-button").on("click", function () {
+    //     $("body").addClass("mobile-admin-visible");
+    // });
+
+    // Fermer le menu mobile
+    $(".mobile-admin-menu .menu-backdrop, .close-admin-btn").on("click", function () {
+        $("body").removeClass("mobile-admin-visible");
+        $(".mobile-admin-menu .admin-menu-list > li").removeClass("open");
+        $(".mobile-admin-menu .admin-menu-list li ul").slideUp(0);
+    });
+
+    // Échappement avec touche ESC
+    $(document).keydown(function (e) {
+        if (e.keyCode === 27) {
+            $("body").removeClass("mobile-admin-visible");
+            $(".mobile-admin-menu .admin-menu-list > li").removeClass("open");
+            $(".mobile-admin-menu .admin-menu-list li ul").slideUp(0);
+        }
+    });
+
+    // Gestion des sous-menus (niveau 1)
+    $(".mobile-admin-menu .admin-menu-list > li.dropdown2 > .dropdown2-btn").on("click", function (e) {
+        e.preventDefault();
+        var target = $(this).parent("li").children("ul");
+        var args = { duration: 300 };
+        if ($(target).is(":visible")) {
+            $(this).parent("li").removeClass("open");
+            $(target).slideUp(args);
+        } else {
+            $(this).parents(".admin-menu-list").find("li.dropdown2").removeClass("open");
+            $(this).parents(".admin-menu-list").find("li.dropdown2 > ul").slideUp(args);
+            $(this).parent("li").toggleClass("open");
+            $(this).parent("li").children("ul").slideToggle(args);
+        }
+    });
+
+    // Gestion des sous-menus (niveau 2)
+    $(".mobile-admin-menu .admin-menu-list > li.dropdown2 > ul > li.dropdown2 > .dropdown2-btn").on("click", function (e) {
+        e.preventDefault();
+        var targetInner = $(this).parent("li").children("ul");
+        if ($(targetInner).is(":visible")) {
+            $(this).parent("li").removeClass("open");
+            $(targetInner).slideUp(500);
+        } else {
+            $(this).parents(".admin-menu-list").find("li.dropdown2").removeClass("open");
+            $(this).parents(".admin-menu-list").find("li.dropdown2 > ul").slideUp(500);
+            $(this).parent("li").toggleClass("open");
+            $(this).parent("li").children("ul").slideToggle(500);
+        }
+    });
+}
 })(jQuery);
