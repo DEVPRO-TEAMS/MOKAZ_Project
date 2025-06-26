@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
@@ -65,3 +67,68 @@ Route::prefix('partner')->name('partner.')->group(function(){
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
     });
 });
+
+
+Route::prefix('setting')->name('setting.')->group(function(){
+    Route::middleware('guest')->group(function(){
+    });
+    Route::middleware(['auth'])->group(function () {
+    });
+});
+
+
+
+Route::get('api/country', function () {
+    $response = Http::get('https://iso.lahrim.fr/countries');
+
+    $data = $response->json();
+
+    if (!is_array($data) || !isset($data['data'])) {
+        return response()->json(['error' => 'Réponse invalide de l’API'], 500);
+    }
+
+    $countries = collect($data['data'])->map(function ($item) {
+        return [
+            'name' => $item['name'] ?? 'N/A',
+            'flag' => $item['flag'] ?? '',
+        ];
+    });
+
+    return $countries->values();
+});
+Route::get('api/cities', function () {
+    $allCities = [];
+
+    $baseUrl = 'https://api.thecompaniesapi.com/v2/locations/cities';
+    $token = 'QkOk9xpTQwSDEvmD06dt7fD8SzNbr5ar';
+    $page = 1;
+
+    do {
+        $response = Http::get($baseUrl, [
+            'token' => $token,
+            'page' => $page,
+        ]);
+
+        $data = $response->json();
+
+        if (!isset($data['cities']) || !is_array($data['cities'])) {
+            break;
+        }
+
+        $allCities = array_merge($allCities, $data['cities']);
+
+        $currentPage = $data['meta']['currentPage'] ?? $page;
+        $lastPage = $data['meta']['lastPage'] ?? $page;
+        $page++;
+
+    } while ($currentPage < $lastPage);
+
+    $states = collect($allCities)
+        ->pluck('state')
+        ->filter()
+        ->unique()
+        ->values();
+
+    return response()->json($states);
+});
+
