@@ -688,12 +688,9 @@
                         <div class="widget-box single-property-contact bg-surface">
                             <div class="h7 title fw-7">Proceder a la reservation</div>
                             <div class="box-avatar">
-                                <div class="avatar avt-100 round">
-                                    <img src="{{asset('assets/images/avatar/avt-1.jpg')}}" alt="avatar">
-                                </div>
                                 <div class="info">
                                     <div class="text-1 name">Shara Conner</div>
-                                    <span>1-333-345-6868 themesflat@gmail.com</span>
+                                    <span>1-333-345-6868</span>
                                 </div>
                             </div>
                             <form action="#" class="contact-form">
@@ -709,10 +706,25 @@
                                     <label for="email">Adresse Email :</label>
                                     <input type="text" placeholder="themesflat@gmail.com" class="form-control">
                                 </div>
+                                <div class="row">
+                                    <div class="ip-group col-md-6">
+                                        <label for="datepickerStart">Date d'arriver :</label>
+                                        <input type="date" class="form-control" id="datepickerStart">
+                                    </div>
+                                    <div class="ip-group col-md-6">
+                                        <label for="datepickerEnd">Date de depart :</label>
+                                        <input type="date" class="form-control" id="datepickerEnd">
+                                    </div>
+                                </div>
                                 <div class="ip-group">
                                     <label for="message">Commentaire:</label>
                                     <textarea id="comment-message" name="message" rows="4" tabindex="4" placeholder="Message"
                                         aria-required="true"></textarea>
+                                </div>
+                                <hr>
+                                <div class="ip-group">
+                                    <label for="total">Total:</label>
+                                    <input type="text" placeholder="XOF 1500" class="form-control">
                                 </div>
                                 <button class="tf-btn primary w-100">Reserver</button>
                             </form>

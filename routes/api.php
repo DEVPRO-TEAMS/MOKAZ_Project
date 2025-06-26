@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,20 @@ use App\Http\Controllers\User\UserController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+Route::get('setting/index/commodity', [SettingController::class, 'listCommodity'])->name('store.commodity');
+Route::post('setting/store/commodity', [SettingController::class, 'store'])->name('store.commodity');
+Route::post('setting/update/{id}/commodity', [SettingController::class, 'update'])->name('update.commodity');
+Route::delete('setting/destroy/{id}/commodity', [SettingController::class, 'destroy'])->name('destroy.commodity');
+
+
+
+
+Route::get('setting/index/propertiesTypes', [SettingController::class, 'propertiesTypes'])->name('index.propertiesTypes');
+Route::post('setting/store/propertyType', [SettingController::class, 'storePropertyType'])->name('store.propertyType');
+Route::post('setting/update/{id}/propertyType', [SettingController::class, 'updatePropertyType'])->name('update.propertyType');
+Route::delete('setting/destroy/{id}/propertyType', [SettingController::class, 'destroyPropertyType'])->name('destroy.propertyType');
 
 
 
