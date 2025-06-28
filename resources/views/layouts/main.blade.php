@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <title>MOKAZ - Plateforme Immobilier</title>
 
-    <meta name="author" content="themesflat.com">
+    <meta name="author" content="creativeagency.web">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- font -->
@@ -76,9 +76,9 @@
         </div>
         <!-- /#page -->
 
-        </nav>
-
     </div>
+
+    @include('components.wishlist')
 
     {{-- Gestion du menu static inteligent  --}}
 
@@ -99,6 +99,14 @@
 
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // pour éviter valeurs négatives
         });
+    </script>
+
+    
+    <script>
+        function toggleWishlistCart() {
+            const cart = document.getElementById('wishlistCart');
+            cart.classList.toggle('d-none');
+        }
     </script>
 
 

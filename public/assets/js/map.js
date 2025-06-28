@@ -39,7 +39,7 @@
             [
                 locationData(
                     "images/home/house-3.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),
@@ -52,7 +52,7 @@
             [
                 locationData(
                     "images/home/house-1.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),
@@ -65,7 +65,7 @@
             [
                 locationData(
                     "images/home/house-2.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),
@@ -78,7 +78,7 @@
             [
                 locationData(
                     "images/home/house-4.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),
@@ -91,7 +91,7 @@
             [
                 locationData(
                     "images/home/house-7.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),
@@ -104,7 +104,7 @@
             [
                 locationData(
                     "images/home/house-6.jpg",
-                    "/detail/property",
+                    "/reservation",
                     "Villa del Mar Retreat, Malibu...",
                     "100 km from my location"
                 ),

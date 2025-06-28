@@ -9,7 +9,7 @@
                 <div class="flat-tab flat-tab-form">
                     <ul class="nav-tab-form style-3 justify-content-center" role="tablist">
                         <li class="nav-tab-item" role="presentation">
-                            <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">Location</a>
+                            <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">Location </a>
                         </li>
                     </ul>
                     <div class="tab-content">

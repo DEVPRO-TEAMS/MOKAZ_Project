@@ -16,7 +16,18 @@
                             <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
                         </div>
                     </center>
+
+                    
                     <div class="header-account">
+
+                        <ul class="icon-box">
+                            <li title="Mes Souhaits">
+                                <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
+                                    <span class="fs-4 icon icon-heart"></span>
+                                </a>
+                            </li>
+                        </ul>
+
                         <div class="register">
                             <ul class="d-flex">
                                 <li><a href="#modalLogin" data-bs-toggle="modal">Connexion</a></li>
@@ -48,6 +59,8 @@
                 <div class="button-mobi-sell">
                     <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
                 </div>
+                
+
                 <div class="mobi-icon-box">
                     <div class="box d-flex align-items-center">
                         <span class="icon icon-phone2"></span>
@@ -62,5 +75,7 @@
         </nav>
     </div>
     <!-- End Mobile Menu -->
+
+
 
 </header>
