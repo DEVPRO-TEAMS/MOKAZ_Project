@@ -5,7 +5,20 @@
         <div class="button-show-hide show-mb">
             <span class="body-1">Show Dashboard</span>
         </div>
+        @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+            @endif
+
+            <form action="{{ route('admin.import.city.country') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="file" class="form-control" name="file" required>
+                <button type="submit" class="btn btn-primary">Importer</button>
+            </form>
         <div class="flat-counter-v2 tf-counter">
+            
             <div class="counter-box">
                 <div class="box-icon w-68 round">
                     <span class="icon icon-list-dashes"></span>

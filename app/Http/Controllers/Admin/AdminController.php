@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Imports\CityCountryImport;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -16,6 +18,17 @@ class AdminController extends Controller
         return view('admins.pages.index');
     }
 
+    public function importCityCountry(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,xls,csv',
+    ]);
+    
+
+    Excel::import(new CityCountryImport, $request->file('file'));
+
+    return back()->with('success', 'Importation réussie.');
+}
     /**
      * Show the form for creating a new resource.
      */

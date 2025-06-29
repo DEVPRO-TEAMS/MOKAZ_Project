@@ -28,10 +28,14 @@
                                 <div class="avatar avt-40 round">
                                     <img src="{{asset('assets/images/avatar/avt-2.jpg')}}" alt="avt">
                                 </div>
-                                <p class="name">Tony Nguyen<span class="icon icon-arr-down"></span></p>
+                                @if (Auth::check())
+                                    <p class="name">{{ Auth::user()->name ?? ''}} {{ Auth::user()->lastname ?? '' }} <span class="icon icon-arr-down"></span></p>
+                                @endif
+                                {{-- <p class="name">{{ Auth::user()->name ?? ''}} {{ Auth::user()->lastname ?? '' }} <span class="icon icon-arr-down"></span></p> --}}
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="my-profile.html">My Profile</a>
-                                    <a class="dropdown-item" href="index.html">Logout</a>
+                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">Se deconnecter</a>
                                 </div>
                             </a>
                         </div>
@@ -89,7 +93,7 @@
             <li class="nav-menu-item">
                 <a class="nav-menu-link" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                    <span class="icon icon-sign-out"></span> Logout</a></li>
+                    <span class="icon icon-sign-out"></span> Se deconnecter</a></li>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>

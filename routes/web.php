@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
@@ -40,9 +41,12 @@ Route::get('/detail/property', [PagesController::class, 'show'])->name('property
 
 
 Route::prefix('admin')->name('admin.')->group(function(){
-    Route::middleware('guest')->group(function(){
+    Route::middleware('guest', 'PreventBackHistory')->group(function(){
+
     });
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::post('/import-city-country', [AdminController::class, 'importCityCountry'])->name('import.city.country');
+
         Route::get('/dashboard', [AdminController::class, 'index'])->name('index');
 
         Route::post('/store', [UserController::class, 'store'])->name('store');
@@ -52,25 +56,25 @@ Route::prefix('admin')->name('admin.')->group(function(){
 });
 
 Route::prefix('user')->name('user.')->group(function(){
-    Route::middleware('guest')->group(function(){
+    Route::middleware('guest', 'PreventBackHistory')->group(function(){
 
     });
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'user'])->group(function () {
         Route::get('/dashboard', [UserController::class, 'index'])->name('index');
     });
 });
 
 Route::prefix('partner')->name('partner.')->group(function(){
-    Route::middleware('guest')->group(function(){
+    Route::middleware('guest', 'PreventBackHistory')->group(function(){
     });
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'partner'])->group(function () {
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
     });
 });
 
 
 Route::prefix('setting')->name('setting.')->group(function(){
-    Route::middleware('guest')->group(function(){
+    Route::middleware('guest', 'PreventBackHistory')->group(function(){
     });
     Route::middleware(['auth'])->group(function () {
     });
@@ -96,12 +100,66 @@ Route::get('api/country', function () {
 
     return $countries->values();
 });
+// Route::get('api/cities', function () {
+//     $allCities = [];
+
+//     $baseUrl = 'https://api.thecompaniesapi.com/v2/locations/cities';
+//     $token = 'QkOk9xpTQwSDEvmD06dt7fD8SzNbr5ar';
+//     $page = 1;
+
+//     $response = Http::get($baseUrl, [
+//             'token' => $token,
+//             'page' => $page,
+//         ]);
+
+//         $dataResponse = $response->json();
+
+//         foreach ($dataResponse['cities'] as $city) {
+//             $Cities = [
+//                 'code' => $city['code'],
+//                 'ville' => $city['name'],
+//                 'pays' => $city['country']['nameFr'],
+                
+//             ];
+//             $meta = $dataResponse['meta'];
+
+//             $allCities[] = $Cities;
+//         }
+//         $allCities['meta'] = $meta;
+        
+//         // 
+        
+//     do {
+        
+
+//         if (!isset($dataResponse['cities']) || !is_array($dataResponse['cities'])) {
+//             break;
+//         }
+
+//         $allCities = array_merge($allCities, $dataResponse['cities']);
+
+//         $currentPage = $data['meta']['currentPage'] ?? $page;
+//         $lastPage = $data['meta']['lastPage'] ?? $page;
+//         $page++;
+
+//     } while ($currentPage < $lastPage);
+
+//     $countries = collect($allCities)
+//         // ->pluck('state')
+//         ->filter()
+//         ->unique()
+//         ->values();
+
+//         return response()->json($countries);
+//     });
+
 Route::get('api/cities', function () {
     $allCities = [];
 
     $baseUrl = 'https://api.thecompaniesapi.com/v2/locations/cities';
     $token = 'QkOk9xpTQwSDEvmD06dt7fD8SzNbr5ar';
     $page = 1;
+    $lastPage = 1;
 
     do {
         $response = Http::get($baseUrl, [
@@ -109,26 +167,43 @@ Route::get('api/cities', function () {
             'page' => $page,
         ]);
 
-        $data = $response->json();
+        $dataResponse = $response->json();
 
-        if (!isset($data['cities']) || !is_array($data['cities'])) {
+        if (!isset($dataResponse['cities']) || !is_array($dataResponse['cities'])) {
             break;
         }
 
-        $allCities = array_merge($allCities, $data['cities']);
+        foreach ($dataResponse['cities'] as $city) {
+            $allCities[] = [
+                'code' => $city['code'] ?? null,
+                'ville' => $city['name'] ?? null,
+                'pays' => $city['country']['nameFr'] ?? null,
+            ];
+        }
 
-        $currentPage = $data['meta']['currentPage'] ?? $page;
-        $lastPage = $data['meta']['lastPage'] ?? $page;
+        $currentPage = $dataResponse['meta']['currentPage'] ?? $page;
+        $lastPage = $dataResponse['meta']['lastPage'] ?? $page;
+
         $page++;
-
     } while ($currentPage < $lastPage);
 
-    $states = collect($allCities)
-        ->pluck('state')
-        ->filter()
-        ->unique()
-        ->values();
+    // Retourne toutes les villes sans la pagination
+    return response()->json($allCities);
+    // afficher les villes dont le pays est Côte d'Ivoire
+    // $filteredCities = collect($allCities)
+    //     ->filter(function ($city) {
+    //         return $city['pays'] == 'Côte d\'Ivoire';
+    //     })
+    //     ->values();
 
-    return response()->json($states);
+    // return response()->json($filteredCities);
+    
 });
+    // return response()->json($dataResponse);
+    // return response()->json($data);
 
+// $data = [
+        //     'code' => $dataResponse['cities']['code'],
+        //     'pays' => $dataResponse['cities']['country'],
+        //     'meta' => $dataResponse['meta'],
+        // ];
