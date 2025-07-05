@@ -709,7 +709,7 @@
                                 <div class="top">
                                     <ul class="d-flex gap-8">
                                         <li class="flag-tag success style-3">Featured</li>
-                                        <li class="flag-tag style-1 style-3">For Sale</li>
+                                        {{-- <li class="flag-tag style-1 style-3">For Sale</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
                                         <li class="box-icon w-40">
@@ -728,12 +728,11 @@
                                 </div>
                             </a>
                             <div class="content">
-                                <h5 class="text-capitalize"><a href="{{ route('property.show') }}" class="link"> Rancho
-                                        Vista Verde, Santa Barbara</a></h5>
+                                <h5 class="text-capitalize"><a href="{{ route('property.show') }}" class="link"> Lorem ipsum dolor sit amet</a></h5>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>145 Brooklyn Ave, Califonia, New York</p>
+                                    <p>Lorem ipsum dolor sit amet consectetur</p>
                                 </div>
-                                <p class="note">"I truly appreciate the professionalism and in-depth...</p>
+                                <p class="note">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa molestiae dicta aperiam...</p>
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -753,13 +752,13 @@
                         <div class="archive-bottom d-flex justify-content-between align-items-center">
                             <div class="d-flex gap-8 align-items-center">
                                 <div class="avatar avt-40 round">
-                                    <img src="images/avatar/avt-11.jpg" alt="avt">
+                                    <img src="{{ asset('assets/images/avatar/avt-11.jpg')}}" alt="avt">
                                 </div>
                                 <span class="body-2">Floyd Miles</span>
                             </div>
                             <div class="d-flex align-items-center">
-                                <h6>$250,00</h6>
-                                <span class="text-variant-1">/month</span>
+                                <h6>25 000 FCFA</h6>
+                                {{-- <span class="text-variant-1">/month</span> --}}
                             </div>
                         </div>
                     </div>
@@ -774,7 +773,7 @@
                             <div class="top">
                                 <ul class="d-flex gap-4 flex-wrap flex-column">
                                     <li class="flag-tag success">Featured</li>
-                                    <li class="flag-tag style-1">For Sale</li>
+                                    {{-- <li class="flag-tag style-1">For Sale</li> --}}
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-28">
@@ -795,9 +794,9 @@
                         <div class="content">
                             <div class="archive-top">
                                 <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                        class="link">Lakeview Haven, Lake Tahoe</a></div>
+                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>145 Brooklyn Ave, Califonia, New York</p>
+                                    <p>Lorem ipsum dolor sit amet consectetur</p>
                                 </div>
                                 <ul class="meta-list">
                                     <li class="item">
@@ -817,13 +816,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
                                     <div class="avatar avt-40 round">
-                                        <img src="images/avatar/avt-5.jpg" alt="avt">
+                                        <img src="{{ asset('assets/images/avatar/avt-5.jpg')}}" alt="avt">
                                     </div>
                                     <span>Ralph Edwards</span>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">$5050,00</div>
-                                    <span class="text-variant-1">/SqFT</span>
+                                    <div class="h7 fw-7">5050 FCFA</div>
                                 </div>
                             </div>
                         </div>
@@ -857,9 +855,9 @@
                         <div class="content">
                             <div class="archive-top">
                                 <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                        class="link">Casa Lomas de Machalí Machas</a></div>
+                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>145 Brooklyn Ave, Califonia, New York</p>
+                                    <p>Lorem ipsum dolor sit amet consectetur</p>
                                 </div>
                                 <ul class="meta-list">
                                     <li class="item">
@@ -879,13 +877,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
                                     <div class="avatar avt-40 round">
-                                        <img src="images/avatar/avt-7.jpg" alt="avt">
+                                        <img src="{{ asset('assets/images/avatar/avt-7.jpg')}}" alt="avt">
                                     </div>
                                     <span>Annette Black</span>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">$250,00</div>
-                                    <span class="text-variant-1">/SqFT</span>
+                                    <div class="h7 fw-7">25 000 FCFA</div>
                                 </div>
                             </div>
                         </div>
@@ -920,9 +917,9 @@
                         <div class="content">
                             <div class="archive-top">
                                 <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                        class="link">Coastal Serenity Cottage</a></div>
+                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>145 Brooklyn Ave, Califonia, New York</p>
+                                    <p>Lorem ipsum dolor sit amet consectetur</p>
                                 </div>
                                 <ul class="meta-list">
                                     <li class="item">
@@ -942,13 +939,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
                                     <div class="avatar avt-40 round">
-                                        <img src="images/avatar/avt-11.jpg" alt="avt">
+                                        <img src="{{ asset('assets/images/avatar/avt-11.jpg')}}" alt="avt">
                                     </div>
                                     <span>Tony Nguyen</span>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">$5050,00</div>
-                                    <span class="text-variant-1">/SqFT</span>
+                                    <div class="h7 fw-7">5050 FCFA</div>
                                 </div>
                             </div>
                         </div>
@@ -962,7 +958,7 @@
     <!-- Testimonial -->
     <section class="flat-section flat-testimonial-v4 wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
         <div class="container">
-            <div class="box-title text-center">
+            <div class="box-titl text-center mb-5">
                 <div class="text-subtitle text-primary">Témoignages</div>
                 <h4 class="mt-4">Ce que disent les gens</h4>
             </div>
@@ -990,8 +986,8 @@
                                     <img src="{{ asset('assets/images/avatar/avt-7.jpg') }}" alt="avatar">
                                 </div>
                                 <div class="info">
-                                    <div class="h7 fw-7">Liam Anderson</div>
-                                    <p class="text-variant-1 mt-4">CEO Digital</p>
+                                    <div class="h7 fw-7">Lorem, ipsum.</div>
+                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
                                 </div>
                             </div>
                         </div>
@@ -1017,8 +1013,8 @@
                                     <img src="{{ asset('assets/images/avatar/avt-5.jpg') }}" alt="avatar">
                                 </div>
                                 <div class="info">
-                                    <div class="h7 fw-7">Adam Will</div>
-                                    <p class="text-variant-1 mt-4">CEO Agency</p>
+                                    <div class="h7 fw-7">Lorem, ipsum.</div>
+                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
                                 </div>
                             </div>
                         </div>
@@ -1044,8 +1040,8 @@
                                     <img src="{{ asset('assets/images/avatar/avt-5.jpg') }}" alt="avatar">
                                 </div>
                                 <div class="info">
-                                    <div class="h7 fw-7">Adam Will</div>
-                                    <p class="text-variant-1 mt-4">CEO Agency</p>
+                                    <div class="h7 fw-7">Lorem, ipsum.</div>
+                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
                                 </div>
                             </div>
                         </div>

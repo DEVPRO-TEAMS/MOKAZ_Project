@@ -37,11 +37,11 @@
                 <div class="content-top d-flex justify-content-between align-items-center">
                     <div class="box-name">
                         <a href="#" class="flag-tag primary">En Location</a>
-                        <h4 class="title link">Lakeview Haven, Lake Tahoe</h4>
+                        <h4 class="title link">Lorem ipsum dolor sit amet consectetur adipisicing</h4>
                     </div>
                     <div class="box-price d-flex align-items-center">
                         <h4>250,00 XOF</h4>
-                        <span class="body-1 text-variant-1">/Mois</span>
+                        {{-- <span class="body-1 text-variant-1">/Mois</span> --}}
                     </div>
                 </div>
                 <div class="content-bottom">
@@ -69,15 +69,12 @@
                 <div class="col-lg-8">
                     <div class="single-property-element single-property-desc">
                         <div class="h7 title fw-7">Description</div>
-                        <p class="body-2 text-variant-1">Located around an hour away from Paris, between the Perche and the
-                            Iton valley, in a beautiful wooded park bordered by a charming stream, this country property
-                            immediately seduces with its bucolic and soothing environment.</p>
-                        <p class="mt-8 body-2 text-variant-1">An ideal choice for sports and leisure enthusiasts who will be
-                            able to take advantage of its swimming pool (11m x 5m), tennis court, gym and sauna.</p>
-                        <a href="#" class="btn-view"><span class="text">View More</span> </a>
+                        <p class="body-2 text-variant-1">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime natus voluptates harum. Recusandae nulla consectetur unde temporibus? Dolores quasi deleniti facilis assumenda est, nulla beatae nobis officiis dignissimos esse voluptatibus.</p>
+                        <p class="mt-8 body-2 text-variant-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum vel itaque tempora nisi laboriosam hic labore suscipit cupiditate animi, similique.</p>
+                        <a href="#" class="btn-view"><span class="text">Voir plus</span> </a>
                     </div>
                     <div class="single-property-element single-property-overview">
-                        <div class="h7 title fw-7">Overview</div>
+                        <div class="h7 title fw-7">Aperçu</div>
                         <ul class="info-box">
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-house-line"></i></a>
@@ -146,11 +143,11 @@
                         </div>
                     </div>
                     <div class="single-property-element single-property-info">
-                        <div class="h7 title fw-7">Property Details</div>
+                        <div class="h7 title fw-7">Détails de la propriété</div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">Property ID:</span>
+                                    <span class="label">ID propriété:</span>
                                     <div class="content fw-7">AVT1020</div>
                                 </div>
                             </div>
@@ -163,8 +160,9 @@
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Price:</span>
-                                    <div class="content fw-7">$250,00<span
-                                            class="caption-1 fw-4 text-variant-1">/month</span></div>
+                                    <div class="content fw-7">$250,00
+                                        <span class="caption-1 fw-4 text-variant-1">/month</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -224,7 +222,7 @@
                         </div>
                     </div>
                     <div class="single-property-element single-property-feature">
-                        <div class="h7 title fw-7">Amenities and features</div>
+                        <div class="h7 title fw-7">Commodités et caractéristiques</div>
                         <div class="wrap-feature">
                             <div class="box-feature">
                                 <div class="fw-7">Home safety:</div>
@@ -319,7 +317,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="single-property-element single-property-floor">
+                    {{-- <div class="single-property-element single-property-floor">
                         <div class="h7 title fw-7">Floor plans</div>
                         <ul class="box-floor" id="parent-floor">
                             <li class="floor-item">
@@ -375,7 +373,7 @@
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
                     <div class="single-property-element single-property-explore">
                         <div class="h7 title fw-7">Explorer les biens</div>
                         <div class="box-img">
@@ -386,7 +384,7 @@
                         </div>
                     </div>
                     <div class="single-property-element single-property-loan">
-                        <div class="h7 title fw-7">Loan Calculator</div>
+                        <div class="h7 title fw-7">Calculateur de prêt</div>
                         <form action="#" class="box-loan-calc">
                             <div class="box-top">
                                 <div class="item-calc">
@@ -416,10 +414,8 @@
                         </form>
                     </div>
                     <div class="single-property-element single-property-nearby">
-                        <div class="h7 title fw-7">What’s nearby?</div>
-                        <p class="body-2">Explore nearby amenities to precisely locate your property and identify
-                            surrounding conveniences, providing a comprehensive overview of the living environment and the
-                            property's convenience.</p>
+                        <div class="h7 title fw-7">Qu'y a-t-il à proximité ?</div>
+                        <p class="body-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse aliquid, quod quisquam debitis exercitationem minima. Ipsam, provident nihil. Dolores a corrupti ipsam nam tempore mollitia quis odio accusantium recusandae sit </p>
                         <div class="grid-2 box-nearby">
                             <ul class="box-left">
                                 <li class="item-nearby">
@@ -462,8 +458,8 @@
                     </div>
                     <div class="single-property-element single-wrapper-review">
                         <div class="box-title-review d-flex justify-content-between align-items-center flex-wrap gap-20">
-                            <div class="h7 fw-7">Guest Reviews</div>
-                            <a href="#" class="tf-btn">View All Reviews</a>
+                            <div class="h7 fw-7">Avis des clients</div>
+                            <a href="#" class="tf-btn">Voir tous les avis</a>
                         </div>
                         <div class="wrap-review">
                             <ul class="box-review">
@@ -472,7 +468,7 @@
                                         <img src="images/avatar/avt-2.jpg" alt="avatar">
                                     </div>
                                     <div class="content">
-                                        <div class="name h7 fw-7 text-black">Viola Lucas
+                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -489,10 +485,7 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">It's really easy to use and it is
-                                            exactly what I am looking for. A lot of good looking templates &
-                                            it's highly customizable. Live support is helpful, solved my issue
-                                            in no time.</p>
+                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem laborum quaerat illo nisi id quibusdam, laudantium unde consequuntur. Deserunt repellendus eius numquam atque, recusandae corporis quos voluptate optio dolore. Modi?</p>
                                         <ul class="box-img-review">
                                             <li>
                                                 <a href="#" class="img-review">
@@ -530,7 +523,7 @@
                                         <img src="images/avatar/avt-3.jpg" alt="avatar">
                                     </div>
                                     <div class="content">
-                                        <div class="name h7 fw-7 text-black">Viola Lucas
+                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -547,10 +540,7 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">It's really easy to use and it is
-                                            exactly what I am looking for. A lot of good looking templates &
-                                            it's highly customizable. Live support is helpful, solved my issue
-                                            in no time.</p>
+                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum, animi incidunt numquam rem non quo! Illum voluptate, ab pariatur ut laboriosam, reiciendis nobis sint, veritatis laudantium consectetur eveniet repellat beatae!</p>
 
                                     </div>
                                 </li>
@@ -559,7 +549,7 @@
                                         <img src="images/avatar/avt-4.jpg" alt="avatar">
                                     </div>
                                     <div class="content">
-                                        <div class="name h7 fw-7 text-black">Darlene Robertson
+                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -576,10 +566,7 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">It's really easy to use and it is
-                                            exactly what I am looking for. A lot of good looking templates &
-                                            it's highly customizable. Live support is helpful, solved my issue
-                                            in no time.</p>
+                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita quas laboriosam debitis voluptates nostrum commodi similique? Dolor deleniti, obcaecati adipisci veritatis iste magnam, debitis modi, ipsam dolorum accusamus deserunt eveniet?</p>
 
                                     </div>
                                 </li>
@@ -588,7 +575,7 @@
                                         <img src="images/avatar/avt-2.jpg" alt="avatar">
                                     </div>
                                     <div class="content">
-                                        <div class="name h7 fw-7 text-black">Viola Lucas
+                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -605,10 +592,12 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">It's really easy to use and it is
-                                            exactly what I am looking for. A lot of good looking templates &
-                                            it's highly customizable. Live support is helpful, solved my issue
-                                            in no time.</p>
+                                        <p class="mt-12 body-2 text-black">
+                                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita quas
+                                            laboriosam debitis voluptates nostrum commodi similique? Dolor deleniti,
+                                            obcaecati adipisci veritatis iste magnam, debitis modi, ipsam dolorum accusamus
+                                            deserunt eveniet?
+                                        </p>
                                         <ul class="box-img-review">
                                             <li>
                                                 <a href="#" class="img-review">
@@ -639,13 +628,13 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                        <a href="#" class="view-question">See more answered questions (719)</a>
+                                        <a href="#" class="view-question">Voir plus de questions répondues (719)</a>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                         <div class="wrap-form-comment">
-                            <div class="h7">Leave A Reply</div>
+                            <div class="h7">Laisser un commentaire</div>
                             <div id="comments" class="comments">
                                 <div class="respond-comment">
                                     <form method="post" id="contactform" class="comment-form form-submit"
@@ -654,7 +643,7 @@
 
                                         <div class="form-wg group-ip">
                                             <fieldset>
-                                                <label class="sub-ip">Name</label>
+                                                <label class="sub-ip">Nom</label>
                                                 <input type="text" class="form-control" name="text"
                                                     placeholder="Your name" required="">
                                             </fieldset>
@@ -664,18 +653,18 @@
                                                     placeholder="Your email" required="">
                                             </fieldset>
                                         </div>
-                                        <fieldset class="form-wg d-flex align-items-center gap-8">
+                                        {{-- <fieldset class="form-wg d-flex align-items-center gap-8">
                                             <input type="checkbox" class="tf-checkbox" id="cb-ip">
                                             <label for="cb-ip" class="text-black text-checkbox">Save your name, email
                                                 for the next time review </label>
-                                        </fieldset>
+                                        </fieldset> --}}
                                         <fieldset class="form-wg">
-                                            <label class="sub-ip">Review</label>
+                                            <label class="sub-ip">Commentaire</label>
                                             <textarea id="comment-message" name="message" rows="4" tabindex="4" placeholder="Write comment "
                                                 aria-required="true"></textarea>
                                         </fieldset>
                                         <button class="form-wg tf-btn primary" name="submit" type="submit">
-                                            <span>Post Comment</span>
+                                            <span>Envoyer</span>
                                         </button>
                                     </form>
                                 </div>
@@ -686,13 +675,13 @@
                 <div class="col-lg-4">
                     <div class="widget-sidebar fixed-sidebar wrapper-sidebar-right">
                         <div class="widget-box single-property-contact bg-surface">
-                            <div class="h7 title fw-7">Proceder a la reservation</div>
-                            <div class="box-avatar">
+                            <div class="h7 title fw-7">Procéder à la reservation</div>
+                            {{-- <div class="box-avatar">
                                 <div class="info">
                                     <div class="text-1 name">Shara Conner</div>
                                     <span>1-333-345-6868</span>
                                 </div>
-                            </div>
+                            </div> --}}
                             <form action="#" class="contact-form">
                                 <div class="ip-group">
                                     <label for="fullname">Nom Complet:</label>
@@ -730,15 +719,15 @@
                             </form>
                         </div>
                         <div class="flat-tab flat-tab-form widget-filter-search widget-box bg-surface">
-                            <div class="h7 title fw-7">Search</div>
-                            <ul class="nav-tab-form" role="tablist">
+                            <div class="h7 title fw-7">Recherche d'autres hebergements</div>
+                            {{-- <ul class="nav-tab-form" role="tablist">
                                 <li class="nav-tab-item" role="presentation">
                                     <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">For Rent</a>
                                 </li>
                                 <li class="nav-tab-item" role="presentation">
                                     <a href="#forSale" class="nav-link-item" data-bs-toggle="tab">For Sale</a>
                                 </li>
-                            </ul>
+                            </ul> --}}
                             <div class="tab-content">
                                 <div class="tab-pane fade active show" role="tabpanel">
                                     <div class="form-sl">
@@ -746,13 +735,13 @@
                                             <div class="wd-filter-select">
                                                 <div class="inner-group inner-filter">
                                                     <div class="form-style">
-                                                        <label class="title-select">Keyword</label>
+                                                        <label class="title-select">Mot-clé</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="Search Keyword." value="" name="s"
                                                             title="Search for" required="">
                                                     </div>
                                                     <div class="form-style">
-                                                        <label class="title-select">Location</label>
+                                                        <label class="title-select">Emplacement</label>
                                                         <div class="group-ip ip-icon">
                                                             <input type="text" class="form-control"
                                                                 placeholder="Search Location" value=""
@@ -764,9 +753,9 @@
                                                         <label class="title-select">Type</label>
                                                         <div class="group-select">
                                                             <div class="nice-select" tabindex="0"><span
-                                                                    class="current">All</span>
+                                                                    class="current">Tous</span>
                                                                 <ul class="list">
-                                                                    <li data-value class="option selected">All</li>
+                                                                    <li data-value class="option selected">Tous</li>
                                                                     <li data-value="villa" class="option">Villa</li>
                                                                     <li data-value="studio" class="option">Studio</li>
                                                                     <li data-value="office" class="option">Office</li>
@@ -775,7 +764,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-style box-select">
-                                                        <label class="title-select">Rooms</label>
+                                                        <label class="title-select">Chambres</label>
                                                         <div class="nice-select" tabindex="0"><span
                                                                 class="current">2</span>
                                                             <ul class="list">
@@ -793,7 +782,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-style box-select">
-                                                        <label class="title-select">Bathrooms</label>
+                                                        <label class="title-select">Salles de bains</label>
                                                         <div class="nice-select" tabindex="0"><span
                                                                 class="current">4</span>
                                                             <ul class="list">
@@ -812,7 +801,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-style box-select">
-                                                        <label class="title-select">Bedrooms</label>
+                                                        <label class="title-select">Chambres à coucher</label>
                                                         <div class="nice-select" tabindex="0"><span
                                                                 class="current">4</span>
                                                             <ul class="list">
@@ -832,11 +821,11 @@
                                                     </div>
                                                     <div class="form-style widget-price">
                                                         <div class="box-title-price">
-                                                            <span class="title-price">Price Range</span>
+                                                            <span class="title-price">Gamme de prix </span>
                                                             <div class="caption-price">
-                                                                <span>from</span>
+                                                                <span>de</span>
                                                                 <span id="slider-range-value1" class="fw-7"></span>
-                                                                <span>to</span>
+                                                                <span>à</span>
                                                                 <span id="slider-range-value2" class="fw-7"></span>
                                                             </div>
                                                         </div>
@@ -848,11 +837,11 @@
                                                     </div>
                                                     <div class="form-style widget-price wd-price-2">
                                                         <div class="box-title-price">
-                                                            <span class="title-price">Size Range</span>
+                                                            <span class="title-price">Gamme de tailles </span>
                                                             <div class="caption-price">
-                                                                <span>from</span>
+                                                                <span>de</span>
                                                                 <span id="slider-range-value01" class="fw-7"></span>
-                                                                <span>to</span>
+                                                                <span>à</span>
                                                                 <span id="slider-range-value02" class="fw-7"></span>
                                                             </div>
                                                         </div>
@@ -865,7 +854,7 @@
                                                     <div class="form-style btn-show-advanced">
                                                         <a class="filter-advanced pull-right">
                                                             <span class="icon icon-faders"></span>
-                                                            <span class="text-advanced">Show Advanced</span>
+                                                            <span class="text-advanced">Afficher avancé</span>
                                                         </a>
                                                     </div>
                                                     <div class="form-style wd-amenities">
@@ -1023,12 +1012,11 @@
                                                     <div class="form-style btn-hide-advanced">
                                                         <a class="filter-advanced pull-right">
                                                             <span class="icon icon-faders"></span>
-                                                            <span class="text-advanced">Hide Advanced</span>
+                                                            <span class="text-advanced">Masquer avancé</span>
                                                         </a>
                                                     </div>
                                                     <div class="form-style">
-                                                        <button type="submit" class="tf-btn primary" href="#">Find
-                                                            Properties</button>
+                                                        <button type="submit" class="tf-btn primary" href="#">Trouver des propriétés</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1039,23 +1027,23 @@
                             </div>
                         </div>
                         <div class="widget-box single-property-whychoose bg-surface">
-                            <div class="h7 title fw-7">Why Choose Us?</div>
+                            <div class="h7 title fw-7">Pourquoi nous choisir ?</div>
                             <ul class="box-whychoose">
                                 <li class="item-why">
                                     <i class="icon icon-secure"></i>
-                                    Secure Booking
+                                    Réservation sécurisée
                                 </li>
                                 <li class="item-why">
                                     <i class="icon icon-guarantee"></i>
-                                    Best Price Guarantee
+                                    Garantie du meilleur prix
                                 </li>
                                 <li class="item-why">
                                     <i class="icon icon-booking"></i>
-                                    Easy Booking Process
+                                    Processus de réservation facile
                                 </li>
                                 <li class="item-why">
                                     <i class="icon icon-support"></i>
-                                    Available Support 24/7
+                                    Assistance disponible 24h/24 et 7j/7
                                 </li>
                             </ul>
                         </div>
