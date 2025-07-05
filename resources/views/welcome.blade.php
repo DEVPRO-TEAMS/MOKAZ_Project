@@ -177,7 +177,7 @@
 
                                         </div>
 
-                                        <div class="group-checkbox">
+                                        {{-- <div class="group-checkbox">
                                             <div class="text-1">Amenities:</div>
                                             <div class="group-amenities mt-8 grid-6">
                                                 <div class="box-amenities">
@@ -314,7 +314,7 @@
 
                                             </div>
 
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </form>
                             </div>
