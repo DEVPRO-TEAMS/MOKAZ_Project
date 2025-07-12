@@ -56,6 +56,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // validation de demande de partenariat 
 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
+        Route::post('demande/rejet', [AdminController::class, 'rejetDemande'])->name('rejet.demande');
     });
 });
 

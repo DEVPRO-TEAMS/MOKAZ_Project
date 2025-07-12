@@ -312,16 +312,16 @@
     }
 </style>
 
-<div class="modal fade" id="showDemandeModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
+<div class="modal fade" id="showDemandeModal{{ $demandePartenariat->id }}" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" id="showDemandeContent{{ $demandePartenariat->id }}">
             <div class="modal-header">
-                <h5 class="modal-title">
+                <h5 class="modal-title text-light">
                     <i class="fas fa-user-tie me-2"></i>Détails de la demande de partenariat
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="showDemandeBody{{ $demandePartenariat->id }}">
                 <!-- Informations Personnelles -->
                 <div class="info-section fade-in">
                     <h6><i class="fas fa-user"></i>Informations Personnelles</h6>
@@ -500,8 +500,19 @@
                                         État :
                                     </div>
                                     <div class="info-value" id="show-etat">
-                                        <span class="status-badge status-pending">{{ $demandePartenariat->etat ?? '' }}</span>
+                                        <span id="etat-wrap-span" class="status badge bg-{{ $demandePartenariat->etat == 'actif' ? 'success' : ($demandePartenariat->etat == 'inactif' ? 'danger' : 'warning') }}">
+                                            @if ($demandePartenariat->etat == 'actif')
+                                                Approuve
+                                            @elseif ($demandePartenariat->etat == 'inactif')
+                                                Inactif
+                                            @elseif ($demandePartenariat->etat == 'pending')
+                                                En attente
+                                            @else
+                                                Non Defini
+                                            @endif
+                                        </span>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -527,13 +538,15 @@
             </div>
             
             <div class="modal-footer">
-                <button class="btn btn-action btn-approve" type="button" data-id="{{ $demandePartenariat->id }}">
+                
+                <button class="btn btn-action btn-approve" type="button" onclick="approveDemand(this)" data-id="{{ $demandePartenariat->id }}">
                     <i class="fas fa-check me-2"></i>Approuver
                 </button>
 
-                <button class="btn btn-action btn-reject" type="button">
-                    <i class="fas fa-times me-2"></i>Rejeter
-                </button>
+                <button class="btn btn-action btn-reject" type="button" onclick="rejectDemand(this)" data-id="{{ $demandePartenariat->id }}">
+    <i class="fas fa-times me-2"></i>Refuser
+</button>
+
                 <button class="btn btn-action btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-arrow-left me-2"></i>Fermer
                 </button>
@@ -543,65 +556,174 @@
 </div>
 
 <script>
-document.querySelector('.btn-approve').addEventListener('click', async function () {
-    const btn = this;
-    const demandeId = btn.getAttribute('data-id'); // tu dois ajouter data-id au bouton
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        async function approveDemand(buttonElement) {
+            const demandeId = buttonElement.getAttribute('data-id');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Traitement...';
-    btn.disabled = true;
+            // Message de confirmation
+            const confirmation = await Swal.fire({
+                title: 'Confirmer l\'approbation ?',
+                icon: 'question',
+                text: 'Voulez-vous vraiment approuver cette demande ?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, approuver',
+                cancelButtonText: 'Annuler',
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    try {
+                        // Animation du bouton pendant le traitement
+                        buttonElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Traitement...';
+                        buttonElement.disabled = true;
 
-    try {
-        const response = await fetch(`api/partnership/accept/${demandeId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({})
-        });
+                        const response = await fetch(`/api/partnership/accept/${demandeId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                        });
 
-        const result = await response.json();
+                        if (!response.ok) {
+                            throw new Error('Erreur réseau');
+                        }
 
-        if (result.status) {
-            // Mise à jour de l’état dans la vue
-            document.getElementById('show-etat').innerHTML = '<span class="status-badge status-approved">Approuvé</span>';
-            btn.innerHTML = '<i class="fas fa-check me-2"></i>Approuvé';
-            btn.classList.remove('btn-approve');
-            btn.classList.add('btn-success');
+                        const result = await response.json();
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Succès',
-                text: result.message || 'Demande approuvée avec succès',
-                timer: 2500,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top-end'
+                        if (!result.status) {
+                            throw new Error(result.message || 'Erreur lors du traitement');
+                        }
+
+                        return result;
+                    } catch (error) {
+                        Swal.showValidationMessage(
+                            `Erreur: ${error.message}`
+                        );
+                        // Réactiver le bouton en cas d'erreur
+                        buttonElement.innerHTML = 'Approuver';
+                        buttonElement.disabled = false;
+                        return false;
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
             });
 
-            // Timeline
-            const timeline = document.querySelector('.info-section:last-of-type');
-            const newItem = document.createElement('div');
-            newItem.className = 'timeline-item';
-            newItem.innerHTML = `<strong>Demande approuvée</strong><div class="text-muted small">À l'instant</div>`;
-            timeline.appendChild(newItem);
+            if (confirmation.isConfirmed) {
+                // Mise à jour du DOM après succès
+                buttonElement.innerHTML = '<i class="fas fa-check-circle"></i> Approuvé';
+                buttonElement.classList.remove('btn-primary');
+                buttonElement.classList.add('btn-success');
+                buttonElement.disabled = true;
+                
+                // Mise à jour du statut dans le tableau si nécessaire
+                const statusElement = document.getElementById(`etat-wrap-span${demandeId}`); 
+                
+                if (statusElement) {
+                    statusElement.textContent = 'Approuvé';
+                    statusElement.classList.remove('bg-warning', 'bg-danger');
+                    statusElement.classList.add('bg-success');
+                }
 
-        } else {
-            throw new Error(result.message || 'Erreur lors de l\'approbation');
+                Swal.fire(
+                    'Approuvé !',
+                    'La demande a été approuvée avec succès.',
+                    'success'
+                );
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById(`showDemandeModal${demandeId}`));
+            modal.hide();
+
         }
 
-    } catch (error) {
-        console.error(error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: error.message || 'Une erreur est survenue',
-        });
-    } finally {
-        btn.disabled = false;
-    }
-});
+        async function rejectDemand(buttonElement) {
+            const demandeId = buttonElement.getAttribute('data-id');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+            // Message de confirmation
+            const confirmation = await Swal.fire({
+                title: 'Confirmer le rejet ?',
+                icon: 'warning',
+                text: 'Voulez-vous vraiment rejeter cette demande ? Cette action est irréversible.',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, rejeter',
+                cancelButtonText: 'Annuler',
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    try {
+                        // Animation du bouton pendant le traitement
+                        buttonElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Traitement...';
+                        buttonElement.disabled = true;
+
+                        const response = await fetch(`/api/partnership/reject/${demandeId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Erreur réseau');
+                        }
+
+                        const result = await response.json();
+
+                        if (!result.status) {
+                            throw new Error(result.message || 'Erreur lors du traitement');
+                        }
+
+                        return result;
+                    } catch (error) {
+                        Swal.showValidationMessage(
+                            `Erreur: ${error.message}`
+                        );
+                        // Réactiver le bouton en cas d'erreur
+                        buttonElement.innerHTML = 'Rejeter';
+                        buttonElement.disabled = false;
+                        return false;
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+
+            if (confirmation.isConfirmed) {
+                // Mise à jour du DOM après succès
+                buttonElement.innerHTML = '<i class="fas fa-times-circle"></i> Rejeté';
+                buttonElement.classList.remove('btn-danger');
+                buttonElement.classList.add('btn-secondary');
+                buttonElement.disabled = true;
+                
+                // Mise à jour du statut dans le tableau si nécessaire
+                const statusElement = document.getElementById(`etat-wrap-span${demandeId}`); 
+                
+                if (statusElement) {
+                    statusElement.textContent = 'Rejeté';
+                    statusElement.classList.remove('bg-warning', 'bg-success');
+                    statusElement.classList.add('bg-danger');
+                }
+
+                Swal.fire(
+                    'Rejeté !',
+                    'La demande a été rejetée avec succès.',
+                    'success'
+                );
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById(`showDemandeModal${demandeId}`));
+            modal.hide();
+        }
+
+    });
 
 </script>
+

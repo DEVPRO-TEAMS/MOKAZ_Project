@@ -54,7 +54,7 @@
                 <div class="content-box">
                     <div class="title-count">En Attentes</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="0" data-inviewport="yes">{{ count($demandePartenariats->where('etat', 'pending')) }}</h6>
+                        <h6 class="number">{{ count($demandePartenariats->where('etat', 'pending')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <div class="content-box">
                     <div class="title-count">Contractés</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="1" data-inviewport="yes">{{ count($demandePartenariats->where('etat', 'actif')) }}</h6>
+                        <h6 class="number" >{{ count($demandePartenariats->where('etat', 'actif')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 <div class="content-box">
                     <div class="title-count">Rejettés</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="1" data-inviewport="yes">{{ count($demandePartenariats->where('etat', 'inactif')) }}</h6>
+                        <h6 class="number" >{{ count($demandePartenariats->where('etat', 'inactif')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -105,14 +105,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex gap-4"><span class="text-primary fw-7">17</span><span class="text-variant-1">Results
-                            found</span></div>
                     <div class="wrap-table">
                         <div class="table-responsive">
 
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Compagny</th>
                                         <th>Télephone</th>
                                         <th>Email</th>
@@ -123,6 +122,12 @@
                                 <tbody>
                                     @foreach ($demandePartenariats as $demandePartenariat)
                                     <tr class="file-delete">
+                                        <td>
+                                            <span>
+                                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#showDemandeModal{{ $demandePartenariat->id }}"
+                                                            class="link">{{$demandePartenariat->id ?? 'Non Défini'}}</a>
+                                            </span>
+                                        </td>
                                         <td>
                                             <div class="listing-box">
                                                 
@@ -148,13 +153,23 @@
                                         </td>
                                         <td>
                                             <div class="status-wrap">
-                                                <span class="status">{{$demandePartenariat->etat ?? 'Non Défini'}}</span>
+                                                <span id="etat-wrap-span" class="etat-wrap-span status badge bg-{{ $demandePartenariat->etat == 'actif' ? 'success' : ($demandePartenariat->etat == 'inactif' ? 'danger' : 'warning') }}">
+                                                    @if ($demandePartenariat->etat == 'actif')
+                                                        Approuve
+                                                    @elseif ($demandePartenariat->etat == 'inactif')
+                                                        Inactif
+                                                    @elseif ($demandePartenariat->etat == 'pending')
+                                                        En attente
+                                                    @else
+                                                        Non Defini
+                                                    @endif
+                                                </span>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="d-flex justify-content-center align-items-center gap-2">
                                                 <!-- Bouton Voir -->
-                                                <button type="button" class="btn btn-icon btn-outline-primary" data-bs-toggle="modal" data-bs-target="#showDemandeModal" title="Voir les détails">
+                                                <button type="button" class="btn btn-icon btn-outline-primary" data-bs-toggle="modal" data-bs-target="#showDemandeModal{{ $demandePartenariat->id }}" title="Voir les détails">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 

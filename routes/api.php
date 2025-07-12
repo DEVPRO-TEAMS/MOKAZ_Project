@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Partner\PartnerController;
 
@@ -33,6 +34,8 @@ Route::delete('setting/destroy/{id}/propertyType', [SettingController::class, 'd
 
 Route::post('partner/demande/store', [PartnerController::class, 'store']);
 Route::post('/partnership/accept/{id}', [AdminController::class, 'accepterDemande']);
+Route::post('/demande/rejet', [AdminController::class, 'rejetDemande'])->name('rejet.demande');
+
 
 
 
