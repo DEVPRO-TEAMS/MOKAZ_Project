@@ -54,7 +54,7 @@
                 <div class="content-box">
                     <div class="title-count">En Attentes</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number">{{ count($demandePartenariats->where('etat', 'pending')) }}</h6>
+                        <h6 class="numbe">{{ count($demandePartenariats->where('etat', 'pending')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <div class="content-box">
                     <div class="title-count">Contractés</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number" >{{ count($demandePartenariats->where('etat', 'actif')) }}</h6>
+                        <h6 class="numbe" >{{ count($demandePartenariats->where('etat', 'actif')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 <div class="content-box">
                     <div class="title-count">Rejettés</div>
                     <div class="d-flex align-items-end">
-                        <h6 class="number" >{{ count($demandePartenariats->where('etat', 'inactif')) }}</h6>
+                        <h6 class="numbe" >{{ count($demandePartenariats->where('etat', 'inactif')) }}</h6>
                     </div>
                 </div>
             </div>
@@ -171,12 +171,6 @@
                                                 <!-- Bouton Voir -->
                                                 <button type="button" class="btn btn-icon btn-outline-primary" data-bs-toggle="modal" data-bs-target="#showDemandeModal{{ $demandePartenariat->id }}" title="Voir les détails">
                                                     <i class="fas fa-eye"></i>
-                                                </button>
-
-                                                <!-- Bouton Supprimer -->
-                                                <button type="button" class="btn btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                    data-id="{{ $demandePartenariat->id }}" title="Supprimer la demande">
-                                                    <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </div>
                                         </td>

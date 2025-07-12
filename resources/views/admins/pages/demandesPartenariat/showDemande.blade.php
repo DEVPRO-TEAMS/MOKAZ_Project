@@ -544,8 +544,8 @@
                 </button>
 
                 <button class="btn btn-action btn-reject" type="button" onclick="rejectDemand(this)" data-id="{{ $demandePartenariat->id }}">
-    <i class="fas fa-times me-2"></i>Refuser
-</button>
+                    <i class="fas fa-times me-2"></i>Refuser
+                </button>
 
                 <button class="btn btn-action btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-arrow-left me-2"></i>Fermer
@@ -556,7 +556,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // document.addEventListener('DOMContentLoaded', function() {
     
         async function approveDemand(buttonElement) {
             const demandeId = buttonElement.getAttribute('data-id');
@@ -661,8 +661,7 @@
                         // Animation du bouton pendant le traitement
                         buttonElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Traitement...';
                         buttonElement.disabled = true;
-
-                        const response = await fetch(`/api/partnership/reject/${demandeId}`, {
+                        const response = await fetch(`/api/demande/rejet/${demandeId}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -673,7 +672,7 @@
                         });
 
                         if (!response.ok) {
-                            throw new Error('Erreur réseau');
+                            throw new Error('Erreur réseau', response.status);
                         }
 
                         const result = await response.json();
@@ -719,11 +718,16 @@
                 );
             }
 
+            setInterval(() => {
+                window.location.reload();
+                
+            }, 2000);
+
             const modal = bootstrap.Modal.getInstance(document.getElementById(`showDemandeModal${demandeId}`));
             modal.hide();
         }
 
-    });
+    // });
 
 </script>
 

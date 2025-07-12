@@ -92,45 +92,42 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function rejetDemande(Request $request)
+    public function rejetDemande($id)
     {
 
-        dd($request->all());
 
+        DB::beginTransaction();
+        try {
 
-        // DB::beginTransaction();
-        // try {
-
-        //     $id = request()->input('id');
-        //     $demande = PartnershipRequest::findOrFail($id);
+            $demande = PartnershipRequest::findOrFail($id);
                 
-        //     if ($demande->etat === 'inactif') {
-        //         return response()->json([
-        //             'status' => false,
-        //             'message' => 'Cette demande a déjà été rejetée'
-        //         ], 400);
-        //     }
+            if ($demande->etat === 'inactif') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Cette demande a déjà été rejetée'
+                ], 400);
+            }
 
-        //     $demande->etat = 'inactif';
-        //     // $demande->date_rejet = now(); // Ajout d'une date de rejet
-        //     $demande->save();
+            $demande->etat = 'inactif';
+            // $demande->date_rejet = now(); // Ajout d'une date de rejet
+            $demande->save();
 
-        //     DB::commit();
+            DB::commit();
             
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'Demande rejetée avec succès',
-        //         'data' => $demande
-        //     ], 200);
+            return response()->json([
+                'status' => true,
+                'message' => 'Demande rejetée avec succès',
+                'data' => $demande
+            ], 200);
 
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => "Une erreur s'est produite lors du rejet de la demande",
-        //         'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
-        //     ], 500);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => "Une erreur s'est produite lors du rejet de la demande",
+                'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
 
