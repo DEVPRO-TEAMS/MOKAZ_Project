@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Partner\PartnerController;
+use App\Http\Controllers\Properties\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +38,7 @@ Route::post('/partnership/accept/{id}', [AdminController::class, 'accepterDemand
 
 
 
-
+Route::get('/get-cities-by-country', [PropertyController::class, 'getCities']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

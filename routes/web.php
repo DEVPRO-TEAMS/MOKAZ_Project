@@ -9,6 +9,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Partner\PartnerController;
+use App\Http\Controllers\Properties\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,8 @@ Route::prefix('partner')->name('partner.')->group(function(){
     });
     Route::middleware(['auth', 'partner'])->group(function () {
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
+        Route::get('/my-properties', [PropertyController::class, 'index'])->name('properties.index');
+        Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
     });
 });
 
