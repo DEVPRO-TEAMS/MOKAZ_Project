@@ -118,7 +118,8 @@
         <script type="text/javascript" src="{{ asset('assets/js/jqueryui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
-
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 

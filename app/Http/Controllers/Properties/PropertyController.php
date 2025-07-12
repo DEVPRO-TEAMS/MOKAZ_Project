@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Properties;
 
 use App\Models\city;
 use App\Models\country;
+use App\Models\Property;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
@@ -14,7 +18,8 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        return view('properties.index');
+        $properties = Property::where('partner_code', Auth::user()->email)->get();
+        return view('properties.index', compact('properties'));
     }
 
     /**
@@ -38,15 +43,57 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try{
+            $property_code = RefgenerateCode(Property::class, 'PROP-', 'property_code');
+
+            if ($request->hasFile('image_property')) {
+            $file = $request->file('image_property');
+            $imageName = $property_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
+            $file->move(public_path('media/properties/'), $imageName);
+        }
+            $property = Property::create(
+                [ 
+                    'property_code' => $property_code,
+                    'partner_code' => $request->partner_code,
+                    'image_property' => $imageName,
+                    'title' => $request->title,
+                    'address' => $request->address,
+                    'zipCode' => $request->zipCode,
+                    'country' => $request->country,
+                    'city' => $request->city,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
+                    'description' => $request->description,
+                    'created_by' => $request->partner_code,
+                ]
+            );
+            DB::commit();
+
+            return response()->json(
+                [
+                    'status' => true,
+                    'message' => 'Propriété créee avec succès.',
+                    'property' => $property
+                ],
+                201
+            );
+
+        }catch(\Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'Une erreur s’est produite lors de la création de la propriété.' . $e], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $property_code)
     {
-        //
+        $demandePartenariat = Property::find($property_code);
+        return view('properties.show', compact('demandePartenariat'));
     }
 
     /**

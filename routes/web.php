@@ -76,8 +76,12 @@ Route::prefix('partner')->name('partner.')->group(function(){
     });
     Route::middleware(['auth', 'partner'])->group(function () {
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
+
+        // Route property
         Route::get('/my-properties', [PropertyController::class, 'index'])->name('properties.index');
         Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
+        // Route::post('/property/store', [PropertyController::class, 'store'])->name('properties.store') api property dans api.php;
+        Route::get('/property/show/{property_code}', [PropertyController::class, 'show'])->name('properties.show');
     });
 });
 

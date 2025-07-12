@@ -184,6 +184,89 @@
     </div>
 
     <script>
+    document.getElementById('partnershipForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
+        submitBtn.disabled = true;
+        
+        try {
+            const formData = new FormData(this);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if(csrfToken) {
+                formData.append('_token', csrfToken);
+            }
+
+            console.log('Form data:', Object.fromEntries(formData));
+
+            const response = await fetch('api/partner/demande/store', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            console.log('Response:', data);
+
+            if (!response.ok) {
+                if (data.errors) {
+                    const errorMessages = Object.values(data.errors).flat().join('\n');
+                    throw new Error(errorMessages);
+                }
+                throw new Error(data.message || 'Erreur lors de l\'envoi');
+            }
+
+            // ✅ Message de succès
+            Swal.fire({
+                icon: 'success',
+                title: 'Succès',
+                text: 'Demande envoyée avec succès',
+                timer: 5000,
+                showConfirmButton: false,
+                position: 'top-end',
+                toast: true
+            });
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
+            modal.hide();
+            this.reset();
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: error.message,
+            });
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Animation des étapes
+    const inputs = document.querySelectorAll('#partnershipForm input, #partnershipForm select, #partnershipForm textarea');
+    const steps = document.querySelectorAll('.step');
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('focus', () => {
+            const stepIndex = Math.floor(index / (inputs.length / 3));
+            steps.forEach((step, i) => {
+                step.classList.toggle('active', i <= stepIndex);
+            });
+        });
+    });
+</script>
+
+
+    {{-- <script>
         document.getElementById('partnershipForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             

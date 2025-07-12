@@ -42,6 +42,9 @@ Route::post('/demande/rejet', [AdminController::class, 'rejetDemande'])->name('r
 
 Route::get('/get-cities-by-country', [PropertyController::class, 'getCities']);
 
+// api property
+Route::post('/property/add', [PropertyController::class, 'store']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
