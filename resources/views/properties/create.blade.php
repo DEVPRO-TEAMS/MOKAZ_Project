@@ -5,8 +5,9 @@
         <div class="button-show-hide show-mb">
             <span class="body-1">Afficher le tableau de bord</span>
         </div>
-        <form action="" method="post">
-            @csrf
+        <form id="addPropertyForm" enctype="multipart/form-data">
+            {{-- @csrf --}}
+            <input type="hidden" name="partner_code" value="{{ Auth::user()->email ?? ''}}">
             <div class="widget-box-2">
                 <h6 class="title">Charger l'image de la propriété</h6>
                 <div class="box-uploadfile text-center">
@@ -14,7 +15,7 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir une image</a>
-                            <input type="file" class="ip-file" name="image_property">
+                            <input type="file" class="ip-file" name="image_property" required>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'image ici</p>
                     </label>
@@ -32,8 +33,9 @@
                     </fieldset>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
-                        <textarea class="textarea-tinymce" name="description"></textarea>
+                        <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" required id="desc"></textarea>
                     </fieldset>
+
                     <div class="box grid-2 gap-30">
                         <fieldset class="box-fieldset">
                             <label for="address">
@@ -47,7 +49,7 @@
                                 Code postal:<span></span>
                             </label>
                             <input type="text" class="form-control style-1" placeholder="Entrer le code postal"
-                                name="zipCode">
+                                name="zipCode" value="">
                         </fieldset>
 
                     </div>
@@ -77,10 +79,10 @@
                         
                         <div class="row">
                             <div class="box-ip col-md-6">
-                                <input type="text" name="longitude" class="form-control style-1" placeholder="Longitude">
+                                <input type="text" name="longitude" class="form-control style-1" placeholder="Longitude" required>
                             </div>
                             <div class="box-ip col-md-5">
-                                <input type="text" name="latitude" class="form-control style-1" placeholder="Latitude">
+                                <input type="text" name="latitude" class="form-control style-1" placeholder="Latitude" required>
                             </div>
                             <div class="box-ip col-md-1">
                                 <a href="#" class="btn-location"><i class="icon icon-location"></i></a>
@@ -103,54 +105,121 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const countrySelect = document.getElementById('country');
-    const citySelect = document.getElementById('city');
+        document.addEventListener('DOMContentLoaded', function () {
+            const countrySelect = document.getElementById('country');
+            const citySelect = document.getElementById('city');
 
-    countrySelect.addEventListener('change', function () {
-        const selectedCountry = this.value;
+            countrySelect.addEventListener('change', function () {
+                const selectedCountry = this.value;
 
-        // Vider les anciennes options
-        citySelect.innerHTML = '<option value="">Chargement...</option>';
+                // Vider les anciennes options
+                citySelect.innerHTML = '<option value="">Chargement...</option>';
 
-        fetch(`/api/get-cities-by-country?country=${selectedCountry}`, {
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur lors de la récupération des villes');
-            }
-            return response.json();
-        })
-        .then(data => {
-            citySelect.innerHTML = ''; // Vider le select
+                fetch(`/api/get-cities-by-country?country=${selectedCountry}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la récupération des villes');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    citySelect.innerHTML = ''; // Vider le select
 
-            if (data.length === 0) {
-                citySelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
-                return;
-            }
+                    if (data.length === 0) {
+                        citySelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
+                        return;
+                    }
 
-            data.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city.code;
-                option.textContent = city.label; // Assurez-vous que votre modèle `city` a un champ `name`
-                citySelect.appendChild(option);
+                    data.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.code;
+                        option.textContent = city.label; // Assurez-vous que votre modèle `city` a un champ `name`
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    citySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
+                });
             });
-        })
-        .catch(error => {
-            console.error(error);
-            citySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
-        });
-    });
 
-    // Déclencher le chargement des villes au chargement initial si un pays est déjà sélectionné
-    if (countrySelect.value) {
-        countrySelect.dispatchEvent(new Event('change'));
-    }
-});
-</script>
+            // Déclencher le chargement des villes au chargement initial si un pays est déjà sélectionné
+            if (countrySelect.value) {
+                countrySelect.dispatchEvent(new Event('change'));
+            }
+        });
+
+        document.getElementById('addPropertyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+        
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(this);
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                if(csrfToken) {
+                    formData.append('_token', csrfToken);
+                }
+
+                console.log('Form data:', Object.fromEntries(formData));
+
+                const response = await fetch('/api/property/add', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                console.log('Response:', data);
+
+                if (!response.ok) {
+                    if (data.errors) {
+                        const errorMessages = Object.values(data.errors).flat().join('\n');
+                        throw new Error(errorMessages);
+                    }
+                    throw new Error(data.message || 'Erreur lors de l\'envoi');
+                }
+
+                // ✅ Message de succès
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Succès',
+                    text: 'Propriété ajoutée avec succès',
+                    timer: 5000,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                    toast: true
+                });
+
+                // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
+                // modal.hide();
+                this.reset();
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Erreur",
+                    text: error.message,
+                });
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

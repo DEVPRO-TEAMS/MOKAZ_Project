@@ -54,40 +54,40 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="file-delete">
-                                <td>
-                                    <div class="listing-box">
-                                        <div class="images">
-                                            <img src="{{ asset('assets/images/home/house-1.jpg')}}" alt="images">
+                            @foreach ($properties as $property)
+                                <tr class="file-delete">
+                                    <td>
+                                        <div class="listing-box">
+                                            <div class="images">
+                                                <img src="{{ asset('media/properties/'.$property->image_property)}}" alt="images">
+                                            </div>
+                                            <div class="content">
+                                                <div class="title"><a href="property-details-v1.html" class="link"> {{ $property->title}} </a> </div>
+                                                <div class="text-date"> {{ $property->address}} </div>
+                                                {{-- <div class="text-1 fw-7">$5050,00</div> --}}
+                                            </div>
                                         </div>
-                                        <div class="content">
-                                            <div class="title"><a href="property-details-v1.html" class="link">Gorgeous
-                                                    Apartment Building</a> </div>
-                                            <div class="text-date">12 Lowell Road, Port Washington</div>
-                                            <div class="text-1 fw-7">$5050,00</div>
+                                    </td>
+                                    <td>
+                                        <span>{{ $property->created_at->format('d-M-Y')}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="status-wrap">
+                                            <a href="#" class="btn-status">{{ $property->etat}}</a>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span>April 9, 2024</span>
-                                </td>
-                                <td>
-                                    <div class="status-wrap">
-                                        <a href="#" class="btn-status">Published</a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span>No</span>
-                                </td>
-                                <td>
-                                    <ul class="list-action d-flex align-items-center justify-content-center">
-                                        <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-edit"></i></a></li>
-                                        <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-eye"></i></a></li>
-                                        <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-trash"></i></a></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            
+                                    </td>
+                                    <td>
+                                        <span>No</span>
+                                    </td>
+                                    <td>
+                                        <ul class="list-action d-flex align-items-center justify-content-center">
+                                            <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-edit"></i></a></li>
+                                            <li class="border rounded me-2"><a class="item p-2" href="{{ route('partner.properties.show', $property->property_code) }}"><i class="icon icon-eye"></i></a></li>
+                                            <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-trash"></i></a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
