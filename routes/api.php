@@ -6,6 +6,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Partner\PartnerController;
+use App\Http\Controllers\Properties\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,7 @@ Route::post('/demande/rejet', [AdminController::class, 'rejetDemande'])->name('r
 
 
 
-
+Route::get('/get-cities-by-country', [PropertyController::class, 'getCities']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

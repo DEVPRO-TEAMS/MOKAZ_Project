@@ -21,7 +21,8 @@
         <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
         <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
         <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/custom.css') }}" />
-
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
         <!-- Favicon and Touch Icons  -->
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
@@ -72,7 +73,7 @@
                             @yield('content')
                         </div>
                         <div class="footer-dashboard">
-                            <p class="text-variant-2">©2024 Homzen. All Rights Reserved.</p>
+                            <p class="text-variant-2">©2025 MOKAZ. Tous droits réservés.</p>
                         </div>
                     </div>
                     <div class="overlay-dashboard"></div>
@@ -111,18 +112,26 @@
         <script type="text/javascript" src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/rangle-slider.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/countto.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/tinymce/tinymce.min.js')}}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/tinymce/tinymce-custom.js')}}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/shortcodes.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/jqueryui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
 
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
         <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
+<<<<<<< HEAD
+=======
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
+        <script src="{{ asset('assets/js/map-single.js')}}"></script>
+>>>>>>> 37428f08c010689df077e198d5634d06ecd64d08
         <script src="{{ asset('assets/js/map.js') }}"></script>
         <script src="{{ asset('assets/js/map-contact.js') }}"></script>
         <script src="{{ asset('assets/js/marker.js') }}"></script>
         <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
-
-
 
     </body>
 

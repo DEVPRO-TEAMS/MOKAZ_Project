@@ -17,6 +17,7 @@ class PartnerController extends Controller
     {
         return view('partners.pages.index');
     }
+    
 
     /**
      * Show the form for creating a new resource.
