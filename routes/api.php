@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Partner\PartnerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,10 @@ Route::get('setting/index/propertiesTypes', [SettingController::class, 'properti
 Route::post('setting/store/propertyType', [SettingController::class, 'storePropertyType'])->name('store.propertyType');
 Route::post('setting/update/{id}/propertyType', [SettingController::class, 'updatePropertyType'])->name('update.propertyType');
 Route::delete('setting/destroy/{id}/propertyType', [SettingController::class, 'destroyPropertyType'])->name('destroy.propertyType');
+
+Route::post('partner/demande/store', [PartnerController::class, 'store']);
+Route::post('/partnership/accept/{id}', [AdminController::class, 'accepterDemande']);
+
 
 
 

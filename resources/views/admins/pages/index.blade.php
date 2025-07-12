@@ -12,11 +12,11 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.import.city.country') }}" method="POST" enctype="multipart/form-data">
+            {{-- <form action="{{ route('admin.import.city.country') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="file" class="form-control" name="file" required>
                 <button type="submit" class="btn btn-primary">Importer</button>
-            </form>
+            </form> --}}
         <div class="flat-counter-v2 tf-counter">
             
             <div class="counter-box">

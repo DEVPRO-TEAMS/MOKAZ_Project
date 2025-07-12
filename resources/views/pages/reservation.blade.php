@@ -13,28 +13,28 @@
                                 <div class="wd-find-select">
                                     <div class="inner-group">
                                         <div class="form-group-1 search-form form-style">
-                                            <label>Keyword</label>
-                                            <input type="text" class="form-control" placeholder="Search Keyword."
-                                                value="" name="s" title="Search for" required="">
+                                            <label>Mot clé</label>
+                                            <input type="text" class="form-control" placeholder="Mot clé."
+                                                value="" name="s" title="Rechercher par .." required="">
                                         </div>
                                         <div class="form-group-2 form-style">
-                                            <label>Location</label>
+                                            <label>Localisation</label>
                                             <div class="group-ip">
-                                                <input type="text" class="form-control" placeholder="Search Location"
-                                                    value="" name="s" title="Search for" required="">
+                                                <input type="text" class="form-control" placeholder="Localisation"
+                                                    value="" name="s" title="Rechercher par ." required="">
                                                 <a href="#" class="icon icon-location"></a>
                                             </div>
                                         </div>
                                         <div class="form-group-3 form-style">
                                             <label>Type</label>
                                             <div class="group-select">
-                                                <div class="nice-select" tabindex="0"><span class="current">All</span>
+                                                <div class="nice-select" tabindex="0"><span class="current">Tous</span>
                                                     <ul class="list">
-                                                        <li data-value class="option selected">All</li>
+                                                        <li data-value class="option selected">Tous</li>
                                                         <li data-value="villa" class="option">Villa</li>
                                                         <li data-value="studio" class="option">Studio</li>
-                                                        <li data-value="office" class="option">Office</li>
-                                                        <li data-value="house" class="option">House</li>
+                                                        <li data-value="office" class="option">Bureau</li>
+                                                        <li data-value="house" class="option">Maison</li>
 
 
                                                     </ul>
@@ -44,21 +44,21 @@
                                         <div class="form-group-4 box-filter">
                                             <a class="filter-advanced pull-right">
                                                 <span class="icon icon-faders"></span>
-                                                <span class="text-1">Advanced</span>
+                                                <span class="text-1">Avancé</span>
                                             </a>
                                         </div>
                                     </div>
-                                    <button type="submit" class="tf-btn primary">Find Properties</button>
+                                    <button type="submit" class="tf-btn primary">Trouver des propriétés</button>
                                 </div>
                                 <div class="wd-search-form">
                                     <div class="grid-2 group-box group-price">
                                         <div class="widget-price">
                                             <div class="box-title-price">
-                                                <span class="title-price">Price Range</span>
+                                                <span class="title-price">Fourchette de prix</span>
                                                 <div class="caption-price">
-                                                    <span>from</span>
+                                                    <span>de</span>
                                                     <span id="slider-range-value1" class="fw-7"></span>
-                                                    <span>to</span>
+                                                    <span>à</span>
                                                     <span id="slider-range-value2" class="fw-7"></span>
                                                 </div>
                                             </div>
@@ -73,7 +73,7 @@
 
                                         <div class="widget-price">
                                             <div class="box-title-price">
-                                                <span class="title-price">Size Range</span>
+                                                <span class="title-price">Gamme de tailles</span>
                                                 <div class="caption-price">
                                                     <span>from</span>
                                                     <span id="slider-range-value01" class="fw-7"></span>
@@ -93,7 +93,7 @@
                                     <div class="grid-2 group-box">
                                         <div class="group-select grid-2">
                                             <div class="box-select">
-                                                <label class="title-select text-variant-1">Rooms</label>
+                                                <label class="title-select text-variant-1">Chambres</label>
                                                 <div class="nice-select" tabindex="0"><span class="current">2</span>
                                                     <ul class="list">
                                                         <li data-value="1" class="option">1</li>
@@ -110,7 +110,7 @@
                                                 </div>
                                             </div>
                                             <div class="box-select">
-                                                <label class="title-select text-variant-1">Bathrooms</label>
+                                                <label class="title-select text-variant-1">Salles de bains</label>
                                                 <div class="nice-select" tabindex="0"><span class="current">2</span>
                                                     <ul class="list">
                                                         <li data-value="1" class="option">1</li>
@@ -129,7 +129,7 @@
                                         </div>
                                         <div class="group-select grid-2">
                                             <div class="box-select">
-                                                <label class="title-select text-variant-1">Bedrooms</label>
+                                                <label class="title-select text-variant-1">Chambres à coucher</label>
                                                 <div class="nice-select" tabindex="0"><span class="current">2</span>
                                                     <ul class="list">
                                                         <li data-value="1" class="option">1</li>
@@ -165,122 +165,6 @@
                                         </div>
 
                                     </div>
-
-                                    <div class="group-checkbox">
-                                        <div class="text-1">Amenities:</div>
-                                        <div class="group-amenities mt-8 grid-6">
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb1"
-                                                        checked>
-                                                    <label for="cb1" class="text-cb-amenities">Air Condition</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb2">
-                                                    <label for="cb2" class="text-cb-amenities">Cable TV</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb3">
-                                                    <label for="cb3" class="text-cb-amenities">Ceiling Height</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb4">
-                                                    <label for="cb4" class="text-cb-amenities">Fireplace</label>
-                                                </fieldset>
-                                            </div>
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb5">
-                                                    <label for="cb5" class="text-cb-amenities">Disabled
-                                                        Access</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb6"
-                                                        checked>
-                                                    <label for="cb6" class="text-cb-amenities">Elevator</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb7">
-                                                    <label for="cb7" class="text-cb-amenities">Fence</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb8">
-                                                    <label for="cb8" class="text-cb-amenities">Garden</label>
-                                                </fieldset>
-                                            </div>
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb9"
-                                                        checked>
-                                                    <label for="cb9" class="text-cb-amenities">Floor</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb10">
-                                                    <label for="cb10" class="text-cb-amenities">Furnishing</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb11"
-                                                        checked>
-                                                    <label for="cb11" class="text-cb-amenities">Garage</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb12">
-                                                    <label for="cb12" class="text-cb-amenities">Pet Friendly</label>
-                                                </fieldset>
-                                            </div>
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb13">
-                                                    <label for="cb13" class="text-cb-amenities">Heating</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb14">
-                                                    <label for="cb14" class="text-cb-amenities">Intercom</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb15">
-                                                    <label for="cb15" class="text-cb-amenities">Parking</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb16">
-                                                    <label for="cb16" class="text-cb-amenities">WiFi</label>
-                                                </fieldset>
-                                            </div>
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb17">
-                                                    <label for="cb17" class="text-cb-amenities">Renovation</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb18">
-                                                    <label for="cb18" class="text-cb-amenities">Security</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb19">
-                                                    <label for="cb19" class="text-cb-amenities">Swimming Pool</label>
-                                                </fieldset>
-
-                                            </div>
-                                            <div class="box-amenities">
-                                                <fieldset class="amenities-item">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb20">
-                                                    <label for="cb20" class="text-cb-amenities">Window Type</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb21">
-                                                    <label for="cb21" class="text-cb-amenities">Search
-                                                        property</label>
-                                                </fieldset>
-                                                <fieldset class="amenities-item mt-12">
-                                                    <input type="checkbox" class="tf-checkbox style-1" id="cb22">
-                                                    <label for="cb22" class="text-cb-amenities">Construction
-                                                        Year</label>
-                                                </fieldset>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
                                 </div>
                             </form>
                             <!-- End Job  Search Form-->
@@ -296,7 +180,7 @@
         <section class="wrapper-layout layout-2">
             <div class="wrap-left">
                 <div class="box-title-listing style-1">
-                    <h5>Property listing</h5>
+                    <h5>Liste des biens</h5>
                     <div class="box-filter-tab">
                         <ul class="nav-tab-filter" role="tablist">
                             <li class="nav-tab-item" role="presentation">
@@ -308,14 +192,15 @@
                                         class="icon icon-list"></i></a>
                             </li>
                         </ul>
-                        <div class="nice-select list-sort" tabindex="0"><span class="current">Sort by (Default)</span>
+                        <div class="nice-select list-sort" tabindex="0"><span class="current">Trier par (par défaut)</span>
                             <ul class="list">
-                                <li data-value="default" class="option selected">Sort by (Default)</li>
-                                <li data-value="new" class="option">Newest</li>
-                                <li data-value="old" class="option">Oldest</li>
+                                <li data-value="default" class="option selected">Trier par (par défaut)</li>
+                                <li data-value="new" class="option">Le plus récent</li>
+                                <li data-value="old" class="option">Le plus ancien</li>
                             </ul>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade active show" id="gridLayout" role="tabpanel">
@@ -325,14 +210,14 @@
                                     <div class="archive-top">
                                         <a href="{{ route('property.show') }}" class="images-group">
                                             <div class="images-style">
-                                                <img src="{{ asset('assets/images/home/house-1.jpg') }}" alt="img">
+                                                <img src="https://i.pinimg.com/736x/99/0f/c7/990fc7a568ad1fde0dcd8ea5a087eac8.jpg" alt="img">
                                             </div>
                                             <div class="top">
                                                 <ul class="d-flex gap-8">
-                                                    <li class="flag-tag success">Featured</li>
-                                                    <li class="flag-tag style-1">For Sale</li>
+                                                    <li class="flag-tag success">en vedette</li>
+                                                    <li class="flag-tag style-1">à vendre</li>
                                                 </ul>
-                                                <ul class="d-flex gap-4">
+                                                <ul class="d-flex gap-4"> 
                                                     <li class="box-icon w-32">
                                                         <span class="icon icon-arrLeftRight"></span>
                                                     </li>
@@ -350,9 +235,9 @@
                                         </a>
                                         <div class="content">
                                             <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                                    class="link"> Casa Lomas de Machalí Machas</a></div>
+                                                    class="link"> Villa moderne avec piscine</a></div>
                                             <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                                <p>33 Maple Street, San Francisco, California</p>
+                                                <p>33 rue commerce, Abidjan, Cote d'ivoire</p>
                                             </div>
                                             <ul class="meta-list">
                                                 <li class="item">
@@ -373,12 +258,12 @@
                                     <div class="archive-bottom d-flex justify-content-between align-items-center">
                                         <div class="d-flex gap-8 align-items-center">
                                             <div class="avatar avt-40 round">
-                                                <img src="images/avatar/avt-6.jpg" alt="avt">
+                                                <img src="https://i.pinimg.com/736x/66/2b/be/662bbef42e07620cbea41e3ac63a74eb.jpg" alt="avt">
                                             </div>
                                             <span>Arlene McCoy</span>
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <h6>$7250,00</h6>
+                                            <h6>7250,00 Fcfa</h6>
                                             <span class="text-variant-1">/SqFT</span>
                                         </div>
                                     </div>
@@ -389,12 +274,12 @@
                                     <div class="archive-top">
                                         <a href="{{ route('property.show') }}" class="images-group">
                                             <div class="images-style">
-                                                <img src="{{ asset('assets/images/home/house-2.jpg') }}" alt="img">
+                                                <img src="https://i.pinimg.com/736x/9d/26/96/9d26968c849f6d53a7a4605791bef6ed.jpg" alt="img">
                                             </div>
                                             <div class="top">
                                                 <ul class="d-flex gap-8">
-                                                    <li class="flag-tag success">Featured</li>
-                                                    <li class="flag-tag style-1">For Sale</li>
+                                                    <li class="flag-tag success">En vedette</li>
+                                                    <li class="flag-tag style-1">En Vente</li>
                                                 </ul>
                                                 <ul class="d-flex gap-4">
                                                     <li class="box-icon w-32">
@@ -416,7 +301,7 @@
                                             <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
                                                     class="link">Villa del Mar Retreat, Malibu</a></div>
                                             <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                                <p>72 Sunset Avenue, Los Angeles, California</p>
+                                                <p>72 avenue Noguess, Abidjan, Plateau</p>
                                             </div>
                                             <ul class="meta-list">
                                                 <li class="item">
@@ -437,12 +322,12 @@
                                     <div class="archive-bottom d-flex justify-content-between align-items-center">
                                         <div class="d-flex gap-8 align-items-center">
                                             <div class="avatar avt-40 round">
-                                                <img src="images/avatar/avt-7.jpg" alt="avt">
+                                                <img src="https://i.pinimg.com/736x/33/70/7c/33707cd80ed6702a5d86ab2d66413f36.jpg" alt="avt">
                                             </div>
                                             <span>Annette Black</span>
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <h6>$250,00</h6>
+                                            <h6>250,00 Fcfa</h6>
                                             <span class="text-variant-1">/month</span>
                                         </div>
                                     </div>
@@ -453,12 +338,12 @@
                                     <div class="archive-top">
                                         <a href="{{ route('property.show') }}" class="images-group">
                                             <div class="images-style">
-                                                <img src="{{ asset('assets/images/home/house-3.jpg') }}" alt="img">
+                                                <img src="https://i.pinimg.com/736x/ba/6a/3a/ba6a3a8b779509bdd667f19adbb659e0.jpg" alt="img">
                                             </div>
                                             <div class="top">
                                                 <ul class="d-flex gap-8">
-                                                    <li class="flag-tag success">Featured</li>
-                                                    <li class="flag-tag style-1">For Sale</li>
+                                                    <li class="flag-tag success">en vedette</li>
+                                                    <li class="flag-tag style-1">en vente</li>
                                                 </ul>
                                                 <ul class="d-flex gap-4">
                                                     <li class="box-icon w-32">
@@ -478,9 +363,9 @@
                                         </a>
                                         <div class="content">
                                             <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                                    class="link">Rancho Vista Verde, Santa Barbara</a></div>
+                                                    class="link">Rancho Villa Barbara, Santa Barbara</a></div>
                                             <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                                <p>33 Maple Street, San Francisco, California</p>
+                                                <p>33 Maple Street, Rue du jardin ,Plateau</p>
                                             </div>
                                             <ul class="meta-list">
                                                 <li class="item">
@@ -501,13 +386,13 @@
                                     <div class="archive-bottom d-flex justify-content-between align-items-center">
                                         <div class="d-flex gap-8 align-items-center">
                                             <div class="avatar avt-40 round">
-                                                <img src="images/avatar/avt-5.jpg" alt="avt">
+                                                <img src="https://i.pinimg.com/736x/33/70/7c/33707cd80ed6702a5d86ab2d66413f36.jpg" alt="avt">
                                             </div>
                                             <span>Ralph Edwards</span>
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <h6>$5050,00</h6>
-                                            <span class="text-variant-1">/SqFT</span>
+                                            <h6>5050,00 Fcfa</h6>
+                                            <span class="text-variant-1">/Jour</span>
                                         </div>
                                     </div>
                                 </div>

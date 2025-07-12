@@ -38,10 +38,10 @@
         var locations = [
             [
                 locationData(
-                    "images/home/house-3.jpg",
+                    "https://i.pinimg.com/736x/36/f0/a1/36f0a1b18f37e50dac6513b8445928d4.jpg",
                     "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "Villa Rose Canaan...",
+                    "100 km de mon domicile"
                 ),
 
                 40.711536,
@@ -51,10 +51,10 @@
             ],
             [
                 locationData(
-                    "images/home/house-1.jpg",
+                    "https://i.pinimg.com/736x/66/85/7c/66857c67d85932c2e2c9b0904e15ce4d.jpg",
                     "/reservation",
                     "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "100 km de mon domicile"
                 ),
 
                 40.710885,
@@ -64,10 +64,10 @@
             ],
             [
                 locationData(
-                    "images/home/house-2.jpg",
+                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
                     "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "Villa Avenu Nodes, Malibu...",
+                    "100 km de mon domicile"
                 ),
 
                 40.715504,
@@ -77,10 +77,10 @@
             ],
             [
                 locationData(
-                    "images/home/house-4.jpg",
+                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
                     "/reservation",
                     "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "100 km de mon domicile"
                 ),
 
                 40.711926,
@@ -90,10 +90,10 @@
             ],
             [
                 locationData(
-                    "images/home/house-7.jpg",
+                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
                     "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "Residence Noya, Kesse...",
+                    "100 km de mon domicile"
                 ),
 
                 40.709024,
@@ -103,10 +103,10 @@
             ],
             [
                 locationData(
-                    "images/home/house-6.jpg",
+                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
                     "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km from my location"
+                    "Immeuble Diakite, Malibu...",
+                    "80 km de mon domicile"
                 ),
 
                 40.704015,

@@ -37,25 +37,25 @@
                 <div class="content-top d-flex justify-content-between align-items-center">
                     <div class="box-name">
                         <a href="#" class="flag-tag primary">En Location</a>
-                        <h4 class="title link">Lorem ipsum dolor sit amet consectetur adipisicing</h4>
+                        <h4 class="title link">Villa moderne avec vue sur lac</h4>
                     </div>
                     <div class="box-price d-flex align-items-center">
                         <h4>250,00 XOF</h4>
-                        {{-- <span class="body-1 text-variant-1">/Mois</span> --}}
+                        <span class="body-1 text-variant-1">/Jour</span>
                     </div>
                 </div>
                 <div class="content-bottom">
                     <div class="info-box">
                         <div class="label text-uppercase">caractéristiques:</div>
                         <ul class="meta">
-                            <li class="meta-item"><span class="icon icon-bed"></span> 2 Bedroom</li>
-                            <li class="meta-item"><span class="icon icon-bathtub"></span> 2 Bathroom</li>
-                            <li class="meta-item"><span class="icon icon-ruler"></span> 6,000 SqFT</li>
+                            <li class="meta-item"><span class="icon icon-bed"></span> 2 Chambres à couché</li>
+                            <li class="meta-item"><span class="icon icon-bathtub"></span> 2 Salle de bain</li>
+                            <li class="meta-item"><span class="icon icon-ruler"></span> 6,000 m<sup>²</sup></li>
                         </ul>
                     </div>
                     <div class="info-box">
                         <div class="label">LOCALISATION:</div>
-                        <p class="meta-item"><span class="icon icon-mapPin"></span> 8 Broadway, Brooklyn, New York</p>
+                        <p class="meta-item"><span class="icon icon-mapPin"></span> 8 avenue, Treichville, Capital</p>
                     </div>
                     <ul class="icon-box">
                         <li><a href="#" class="item"><span class="icon icon-arrLeftRight"></span> </a></li>
@@ -93,42 +93,42 @@
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bed"></i></a>
                                 <div class="content">
-                                    <span class="label">Bedrooms:</span>
-                                    <span>2 Rooms</span>
+                                    <span class="label">Chambre à couché:</span>
+                                    <span>2 Chambres</span>
                                 </div>
                             </li>
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bathtub"></i></a>
                                 <div class="content">
-                                    <span class="label">Bathrooms:</span>
-                                    <span>2 Rooms</span>
+                                    <span class="label">Salle de bain:</span>
+                                    <span>2 salles</span>
                                 </div>
                             </li>
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-garage"></i></a>
                                 <div class="content">
                                     <span class="label">Garages:</span>
-                                    <span>2 Rooms</span>
+                                    <span>2 Places</span>
                                 </div>
                             </li>
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-ruler"></i></a>
                                 <div class="content">
                                     <span class="label">Size:</span>
-                                    <span>900 SqFt</span>
+                                    <span>900 m²</span>
                                 </div>
                             </li>
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-crop"></i></a>
                                 <div class="content">
                                     <span class="label">Land Size:</span>
-                                    <span>2,000 SqFt</span>
+                                    <span>2,000 m²</span>
                                 </div>
                             </li>
                             <li class="item">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-hammer"></i></a>
                                 <div class="content">
-                                    <span class="label">Year Built:</span>
+                                    <span class="label">Construite en:</span>
                                     <span>2024</span>
                                 </div>
                             </li>
@@ -383,36 +383,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="single-property-element single-property-loan">
-                        <div class="h7 title fw-7">Calculateur de prêt</div>
-                        <form action="#" class="box-loan-calc">
-                            <div class="box-top">
-                                <div class="item-calc">
-                                    <label for="loan1" class="label">Total Amount:</label>
-                                    <input type="number" id="loan1" placeholder="10,000" class="form-control">
-                                </div>
-                                <div class="item-calc">
-                                    <label for="loan1" class="label">Down Payment:</label>
-                                    <input type="number" id="loan1" placeholder="3000" class="form-control">
-                                </div>
-                                <div class="item-calc">
-                                    <label for="loan1" class="label">Amortization Period (months):</label>
-                                    <input type="number" id="loan1" placeholder="12" class="form-control">
-                                </div>
-                                <div class="item-calc">
-                                    <label for="loan1" class="label">Interest rate (%):</label>
-                                    <input type="number" id="loan1" placeholder="5" class="form-control">
-                                </div>
-                            </div>
-                            <div class="box-bottom">
-                                <button class="tf-btn primary">Calculator</button>
-                                <div class="d-flex gap-4">
-                                    <span class="h7 fw-7">Monthly Payment:</span>
-                                    <span class="result h7 fw-7">$599.25</span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
                     <div class="single-property-element single-property-nearby">
                         <div class="h7 title fw-7">Qu'y a-t-il à proximité ?</div>
                         <p class="body-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse aliquid, quod quisquam debitis exercitationem minima. Ipsam, provident nihil. Dolores a corrupti ipsam nam tempore mollitia quis odio accusantium recusandae sit </p>
@@ -465,7 +435,7 @@
                             <ul class="box-review">
                                 <li class="list-review-item">
                                     <div class="avatar avt-60 round">
-                                        <img src="images/avatar/avt-2.jpg" alt="avatar">
+                                        <img src="{{ asset('assets/images/avatar/avt-2.jpg')}}" alt="avatar">
                                     </div>
                                     <div class="content">
                                         <div class="name h7 fw-7 text-black">Lorem, ipsum.
@@ -489,136 +459,24 @@
                                         <ul class="box-img-review">
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="images/blog/review1.jpg" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review1.jpg')}}" alt="img-review">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="images/blog/review2.jpg" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review2.jpg')}}" alt="img-review">
 
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="images/blog/review3.jpg" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review3.jpg')}}" alt="img-review">
 
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="images/blog/review4.jpg" alt="img-review">
-
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <span class="fw-7">+12</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="list-review-item">
-                                    <div class="avatar avt-60 round">
-                                        <img src="images/avatar/avt-3.jpg" alt="avatar">
-                                    </div>
-                                    <div class="content">
-                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M0 8C0 12.4112 3.5888 16 8 16C12.4112 16 16 12.4112 16 8C16 3.5888 12.4112 0 8 0C3.5888 0 0 3.5888 0 8ZM12.1657 6.56569C12.4781 6.25327 12.4781 5.74673 12.1657 5.43431C11.8533 5.1219 11.3467 5.1219 11.0343 5.43431L7.2 9.26863L5.36569 7.43431C5.05327 7.12189 4.54673 7.12189 4.23431 7.43431C3.9219 7.74673 3.9219 8.25327 4.23431 8.56569L6.63432 10.9657C6.94673 11.2781 7.45327 11.2781 7.76569 10.9657L12.1657 6.56569Z"
-                                                    fill="#198754" />
-                                            </svg>
-                                        </div>
-                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">August 13,
-                                            2023</span>
-                                        <ul class="mt-8 list-star">
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                        </ul>
-                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Harum, animi incidunt numquam rem non quo! Illum voluptate, ab pariatur ut laboriosam, reiciendis nobis sint, veritatis laudantium consectetur eveniet repellat beatae!</p>
-
-                                    </div>
-                                </li>
-                                <li class="list-review-item">
-                                    <div class="avatar avt-60 round">
-                                        <img src="images/avatar/avt-4.jpg" alt="avatar">
-                                    </div>
-                                    <div class="content">
-                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M0 8C0 12.4112 3.5888 16 8 16C12.4112 16 16 12.4112 16 8C16 3.5888 12.4112 0 8 0C3.5888 0 0 3.5888 0 8ZM12.1657 6.56569C12.4781 6.25327 12.4781 5.74673 12.1657 5.43431C11.8533 5.1219 11.3467 5.1219 11.0343 5.43431L7.2 9.26863L5.36569 7.43431C5.05327 7.12189 4.54673 7.12189 4.23431 7.43431C3.9219 7.74673 3.9219 8.25327 4.23431 8.56569L6.63432 10.9657C6.94673 11.2781 7.45327 11.2781 7.76569 10.9657L12.1657 6.56569Z"
-                                                    fill="#198754" />
-                                            </svg>
-                                        </div>
-                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">August 13,
-                                            2023</span>
-                                        <ul class="mt-8 list-star">
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                        </ul>
-                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita quas laboriosam debitis voluptates nostrum commodi similique? Dolor deleniti, obcaecati adipisci veritatis iste magnam, debitis modi, ipsam dolorum accusamus deserunt eveniet?</p>
-
-                                    </div>
-                                </li>
-                                <li class="list-review-item">
-                                    <div class="avatar avt-60 round">
-                                        <img src="images/avatar/avt-2.jpg" alt="avatar">
-                                    </div>
-                                    <div class="content">
-                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M0 8C0 12.4112 3.5888 16 8 16C12.4112 16 16 12.4112 16 8C16 3.5888 12.4112 0 8 0C3.5888 0 0 3.5888 0 8ZM12.1657 6.56569C12.4781 6.25327 12.4781 5.74673 12.1657 5.43431C11.8533 5.1219 11.3467 5.1219 11.0343 5.43431L7.2 9.26863L5.36569 7.43431C5.05327 7.12189 4.54673 7.12189 4.23431 7.43431C3.9219 7.74673 3.9219 8.25327 4.23431 8.56569L6.63432 10.9657C6.94673 11.2781 7.45327 11.2781 7.76569 10.9657L12.1657 6.56569Z"
-                                                    fill="#198754" />
-                                            </svg>
-                                        </div>
-                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">August 13,
-                                            2023</span>
-                                        <ul class="mt-8 list-star">
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                        </ul>
-                                        <p class="mt-12 body-2 text-black">
-                                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita quas
-                                            laboriosam debitis voluptates nostrum commodi similique? Dolor deleniti,
-                                            obcaecati adipisci veritatis iste magnam, debitis modi, ipsam dolorum accusamus
-                                            deserunt eveniet?
-                                        </p>
-                                        <ul class="box-img-review">
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="images/blog/review1.jpg" alt="img-review">
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="images/blog/review2.jpg" alt="img-review">
-
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="images/blog/review3.jpg" alt="img-review">
-
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="images/blog/review4.jpg" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review4.jpg')}}" alt="img-review">
 
                                                 </a>
                                             </li>
@@ -628,7 +486,6 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                        <a href="#" class="view-question">Voir plus de questions répondues (719)</a>
                                     </div>
                                 </li>
                             </ul>
@@ -1068,12 +925,11 @@
                             <div class="archive-top">
                                 <a href="#" class="images-group">
                                     <div class="images-style">
-                                        <img src="{{ asset('assets/images/home/house-4.jpg')}}" alt="img">
+                                        <img src="https://i.pinimg.com/736x/1e/d4/b7/1ed4b7b8112f91e889cfe4ce9802eb8e.jpg" alt="img">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">Featured</li>
-                                            <li class="flag-tag style-1">For Sale</li>
+                                            <li class="flag-tag success">en vedette</li>
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             <li class="box-icon w-32">
@@ -1088,7 +944,7 @@
                                         </ul>
                                     </div>
                                     <div class="bottom">
-                                        <span class="flag-tag style-2">House</span>
+                                        <span class="flag-tag style-2">Villa</span>
                                     </div>
                                 </a>
                                 <div class="content">
@@ -1121,8 +977,8 @@
                                     <span>Jacob Jones</span>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <h6>$250,00</h6>
-                                    <span class="text-variant-1">/month</span>
+                                    <h6>250,00 Fcfa</h6>
+                                    <span class="text-variant-1">/Jour</span>
                                 </div>
                             </div>
                         </div>
@@ -1132,12 +988,11 @@
                             <div class="archive-top">
                                 <a href="#" class="images-group">
                                     <div class="images-style">
-                                        <img src="{{ asset('assets/images/home/house-5.jpg')}}" alt="img">
+                                        <img src="https://i.pinimg.com/736x/a7/3d/28/a73d28c212b6b76b448dccdc8bf34604.jpg" alt="img">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">Featured</li>
-                                            <li class="flag-tag style-1">For Sale</li>
+                                            <li class="flag-tag success">Location</li>
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             <li class="box-icon w-32">
@@ -1152,7 +1007,7 @@
                                         </ul>
                                     </div>
                                     <div class="bottom">
-                                        <span class="flag-tag style-2">Office</span>
+                                        <span class="flag-tag style-2">Bureau</span>
                                     </div>
                                 </a>
                                 <div class="content">
@@ -1186,134 +1041,6 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <h6>$2050,00</h6>
-                                    <span class="text-variant-1">/SqFT</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="homeya-box style-2">
-                            <div class="archive-top">
-                                <a href="#" class="images-group">
-                                    <div class="images-style">
-                                        <img src="{{ asset('assets/images/home/house-6.jpg')}}" alt="img">
-                                    </div>
-                                    <div class="top">
-                                        <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">Featured</li>
-                                            <li class="flag-tag style-1">For Sale</li>
-                                        </ul>
-                                        <ul class="d-flex gap-4">
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-arrLeftRight"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-heart"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-eye"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="bottom">
-                                        <span class="flag-tag style-2">Studio</span>
-                                    </div>
-                                </a>
-                                <div class="content">
-                                    <div class="h7 text-capitalize fw-7"><a href="#" class="link">Lakeview
-                                            Haven, Lake Tahoe</a></div>
-                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                        <p>8 Broadway, Brooklyn, New York</p>
-                                    </div>
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>2</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>2</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-ruler"></i>
-                                            <span>600 SqFT</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-10.jpg')}}" alt="avt">
-                                    </div>
-                                    <span>Floyd Miles</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <h6>$250,00</h6>
-                                    <span class="text-variant-1">/month</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="homeya-box style-2">
-                            <div class="archive-top">
-                                <a href="#" class="images-group">
-                                    <div class="images-style">
-                                        <img src="{{ asset('assets/images/home/house-1.jpg')}}" alt="img">
-                                    </div>
-                                    <div class="top">
-                                        <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">Featured</li>
-                                            <li class="flag-tag style-1">For Sale</li>
-                                        </ul>
-                                        <ul class="d-flex gap-4">
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-arrLeftRight"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-heart"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-eye"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="bottom">
-                                        <span class="flag-tag style-2">Studio</span>
-                                    </div>
-                                </a>
-                                <div class="content">
-                                    <div class="h7 text-capitalize fw-7"><a href="#" class="link"> Casa Lomas
-                                            de Machalí Machas</a></div>
-                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                        <p>33 Maple Street, San Francisco, California</p>
-                                    </div>
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>3</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>2</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-ruler"></i>
-                                            <span>600 SqFT</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="images/avatar/avt-6.jpg" alt="avt">
-                                    </div>
-                                    <span>Arlene McCoy</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <h6>$7250,00</h6>
                                     <span class="text-variant-1">/SqFT</span>
                                 </div>
                             </div>

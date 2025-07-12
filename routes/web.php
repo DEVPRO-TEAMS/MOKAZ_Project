@@ -52,6 +52,10 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
+
+        // validation de demande de partenariat 
+
+        Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
     });
 });
 
@@ -66,6 +70,7 @@ Route::prefix('user')->name('user.')->group(function(){
 
 Route::prefix('partner')->name('partner.')->group(function(){
     Route::middleware('guest', 'PreventBackHistory')->group(function(){
+        Route::post('demande/store', [PartnerController::class, 'store']);
     });
     Route::middleware(['auth', 'partner'])->group(function () {
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');

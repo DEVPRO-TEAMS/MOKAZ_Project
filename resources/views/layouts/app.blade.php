@@ -186,6 +186,8 @@
 
         <!-- Javascript -->
 
+        <script src="https://kit.fontawesome.com/2b6a213e82.js" crossorigin="anonymous"></script>
+
         <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>

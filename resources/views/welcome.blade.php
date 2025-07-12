@@ -332,7 +332,7 @@
         <div class="container">
             <div class="box-title style-2 text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                 <div class="text-subtitle text-primary">Propriétés en vedette</div>
-                <h4 class="mt-4">Découvrez les meilleures propriétés de MOKAZ pour votre sejour de rêve</h4>
+                <h4 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h4>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                 <div class="col-xl-4 col-md-6">
@@ -344,7 +344,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -361,10 +360,6 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -376,7 +371,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 Fcfa/jour</span>
                                     </li>
                                 </ul>
                             </div>
@@ -392,7 +387,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -409,10 +403,7 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
+                               
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -424,7 +415,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 Fdfa/jour</span>
                                     </li>
                                 </ul>
                             </div>
@@ -440,7 +431,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -457,10 +447,7 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
+                               
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -472,7 +459,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 Fcfa</span>
                                     </li>
                                 </ul>
                             </div>
@@ -488,7 +475,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -505,10 +491,7 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
+                               
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -520,7 +503,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 Fcfa</span>
                                     </li>
                                 </ul>
                             </div>
@@ -536,7 +519,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -553,10 +535,7 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
+                               
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -568,7 +547,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 Fcfa</span>
                                     </li>
                                 </ul>
                             </div>
@@ -584,7 +563,6 @@
                             <div class="top">
                                 <ul class="d-flex gap-8">
                                     <li class="flag-tag success">En vedette</li>
-                                    <li class="flag-tag style-1">A vendre</li>
                                 </ul>
                                 <ul class="d-flex gap-4">
                                     <li class="box-icon w-32">
@@ -601,10 +579,7 @@
                             <div class="content">
                                 <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
                                         class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <div class="d-flex align-items-center price">
-                                    <div class="h7 fw-7 text-white">$7250,00</div>
-                                    <span class="text-white">/SqFT</span>
-                                </div>
+                               
                                 <ul class="meta-list">
                                     <li class="item">
                                         <i class="icon icon-bed"></i>
@@ -616,7 +591,7 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
+                                        <span>600 fcfa</span>
                                     </li>
                                 </ul>
                             </div>
@@ -704,11 +679,11 @@
                         <div class="archive-top">
                             <a href="{{ route('property.show') }}" class="images-group">
                                 <div class="images-style">
-                                    <img src="{{ asset('assets/images/home/bestproperty.jpg') }}" alt="img">
+                                    <img src="https://i.pinimg.com/736x/5a/28/de/5a28de8ace9993c432da0d197ba8b4a7.jpg" alt="img">
                                 </div>
                                 <div class="top">
                                     <ul class="d-flex gap-8">
-                                        <li class="flag-tag success style-3">Featured</li>
+                                        <li class="flag-tag success style-3">Location</li>
                                         {{-- <li class="flag-tag style-1 style-3">For Sale</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
@@ -758,7 +733,7 @@
                             </div>
                             <div class="d-flex align-items-center">
                                 <h6>25 000 FCFA</h6>
-                                {{-- <span class="text-variant-1">/month</span> --}}
+                                <span class="text-variant-1">/Jour</span>
                             </div>
                         </div>
                     </div>
@@ -768,11 +743,11 @@
                     <div class="homeya-box list-style-1">
                         <a href="{{ route('property.show') }}" class="images-group">
                             <div class="images-style">
-                                <img src="{{ asset('assets/images/home/house-sm-1.jpg') }}" alt="img">
+                                <img src="https://i.pinimg.com/736x/36/68/f1/3668f15d041645b979737d94116a1326.jpg" alt="img">
                             </div>
                             <div class="top">
                                 <ul class="d-flex gap-4 flex-wrap flex-column">
-                                    <li class="flag-tag success">Featured</li>
+                                    <li class="flag-tag success">Location</li>
                                     {{-- <li class="flag-tag style-1">For Sale</li> --}}
                                 </ul>
                                 <ul class="d-flex gap-4">
@@ -788,7 +763,7 @@
                                 </ul>
                             </div>
                             <div class="bottom">
-                                <span class="flag-tag style-2">House</span>
+                                <span class="flag-tag style-2">Villa</span>
                             </div>
                         </a>
                         <div class="content">
@@ -830,7 +805,7 @@
                     <div class="homeya-box list-style-1">
                         <a href="{{ route('property.show') }}" class="images-group">
                             <div class="images-style">
-                                <img src="{{ asset('assets/images/home/house-sm-2.jpg') }}" alt="img">
+                                <img src="https://i.pinimg.com/736x/a7/c6/fe/a7c6fe4e1868a144d562024de841cb6d.jpg" alt="img">
                             </div>
                             <div class="top">
                                 <ul class="d-flex">
@@ -883,68 +858,6 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <div class="h7 fw-7">25 000 FCFA</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="homeya-box list-style-1">
-                        <a href="{{ route('property.show') }}" class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/house-sm-3.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex">
-
-                                    <li class="flag-tag style-1">For Sale</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bottom">
-                                <span class="flag-tag style-2">Studio</span>
-                            </div>
-                        </a>
-                        <div class="content">
-                            <div class="archive-top">
-                                <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
-                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
-                                <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>Lorem ipsum dolor sit amet consectetur</p>
-                                </div>
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>4</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-11.jpg')}}" alt="avt">
-                                    </div>
-                                    <span>Tony Nguyen</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">5050 FCFA</div>
                                 </div>
                             </div>
                         </div>
@@ -1088,7 +1001,7 @@
                         <div class="text-subtitle text-primary">Devenir partenaire</div>
                         <h4 class="mt-4">Inscrivez vos propriétés sur Mokaz, rejoignez-nous maintenant !</h4>
                     </div>
-                    <a href="#" class="tf-btn primary size-1">Devenir hébergeur</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#demandPartnariaModal" class="tf-btn primary size-1">Devenir hébergeur</a>
                 </div>
                 <div class="box-right">
                     <img src="{{ asset('assets/images/banner/banner.png') }}" alt="image">
