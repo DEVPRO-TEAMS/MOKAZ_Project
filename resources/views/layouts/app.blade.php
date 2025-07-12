@@ -23,6 +23,7 @@
         <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/custom.css') }}" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
         <!-- Favicon and Touch Icons  -->
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">

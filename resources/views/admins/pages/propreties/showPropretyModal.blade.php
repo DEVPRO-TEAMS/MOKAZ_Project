@@ -154,7 +154,7 @@
                             <i class="fas fa-align-left me-2 text-primary"></i>Description
                         </h6>
                         <div class="bg-light rounded-3 p-3">
-                            <p class="mb-0">{{ $property->description ?? 'Aucune description disponible' }}</p>
+                            <p class="mb-0">{!! $property->description ?? 'Aucune description disponible' !!}</p>
                         </div>
                     </div>
                 </div>

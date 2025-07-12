@@ -93,7 +93,8 @@ class PropertyController extends Controller
     public function show(string $property_code)
     {
         $demandePartenariat = Property::find($property_code);
-        return view('properties.show', compact('demandePartenariat'));
+        $property = Property::where('property_code', $property_code)->first();
+        return view('properties.show', compact('demandePartenariat', 'property'));
     }
 
     /**

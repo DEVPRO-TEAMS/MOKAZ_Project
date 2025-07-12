@@ -1,320 +1,340 @@
 @extends('layouts.app')
 
 @section('content')
-
-<style>
-    .modal-content {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        overflow: hidden;
-    }
-    
-    .modal-header {
-        background: linear-gradient(135deg, #cd380f 0%, #a02f0c 100%);
-        color: white;
-        border-bottom: none;
-        padding: 1.5rem;
-    }
-    
-    .modal-header h5 {
-        font-weight: 600;
-        margin: 0;
-    }
-    
-    .modal-header .btn-close {
-        filter: invert(1);
-        opacity: 0.8;
-    }
-    
-    .modal-header .btn-close:hover {
-        opacity: 1;
-    }
-                
-    .partner-info-card {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid #cd380f;
-        transition: all 0.3s ease;
-        animation: slideInUp 0.5s ease forwards;
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    .partner-info-card:hover {
-        box-shadow: 0 5px 15px rgba(205, 56, 15, 0.1);
-        transform: translateY(-2px);
-    }
-    
-    @keyframes slideInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
+    <style>
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
         }
-    }
-    
-    .info-section {
-        margin-bottom: 2rem;
-    }
-                
-    .info-section h6 {
-        color: #cd380f;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .info-section h6::after {
-        content: '';
-        flex: 1;
-        height: 2px;
-        background: linear-gradient(to right, #cd380f, transparent);
-    }
-    
-    .info-item {
-        display: flex;
-        align-items: center;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e9ecef;
-        transition: all 0.3s ease;
-    }
-    
-    .info-item:last-child {
-        border-bottom: none;
-    }
-                
-    .info-item:hover {
-        background: rgba(205, 56, 15, 0.05);
-        margin: 0 -1rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        border-radius: 8px;
-    }
-    
-    .info-label {
-        font-weight: 600;
-        color: #495057;
-        min-width: 120px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .info-value {
-        color: #212529;
-        flex: 1;
-    }
-                
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-    
-    .status-pending {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeaa7;
-    }
-                
-    .status-approved {
-        background: #d1edff;
-        color: #0c5460;
-        border: 1px solid #b8daff;
-    }
-    
-    .status-rejected {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    
-    .contact-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .contact-btn {
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        border: none;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-                
-    .contact-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    .btn-email {
-        background: #cd380f;
-        color: white;
-    }
-    
-    .btn-phone {
-        background: #28a745;
-        color: white;
-    }
-    
-    .btn-website {
-        background: #007bff;
-        color: white;
-    }
-    
-    .message-box {
-        background: #fff;
-        border: 1px solid #dee2e6;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin-top: 1rem;
-        position: relative;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .message-box::before {
-        content: '"';
-        position: absolute;
-        top: -10px;
-        left: 20px;
-        font-size: 3rem;
-        color: #cd380f;
-        font-family: serif;
-    }
-    
-    .timeline-item {
-        position: relative;
-        padding-left: 2rem;
-        margin-bottom: 1rem;
-    }
-                
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0.5rem;
-        width: 12px;
-        height: 12px;
-        background: #cd380f;
-        border-radius: 50%;
-        animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-    }
-    
-    .timeline-item::after {
-        content: '';
-        position: absolute;
-        left: 5px;
-        top: 1.2rem;
-        width: 2px;
-        height: calc(100% + 1rem);
-        background: #e9ecef;
-    }
 
-    .timeline-item:last-child::after {
-        display: none;
-    }
-    
-    .modal-footer {
-        border-top: 1px solid #e9ecef;
-        padding: 1rem 1.5rem;
-        background: #f8f9fa;
-    }
-    
-    .btn-action {
-        padding: 0.75rem 1.5rem;
-        border-radius: 25px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        border: none;
-    }
-    
-    .btn-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    .btn-approve {
-        background: #28a745;
-        color: white;
-    }
-    
-    .btn-reject {
-        background: #dc3545;
-        color: white;
-    }
-    
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
+        .modal-header {
+            background: linear-gradient(135deg, #cd380f 0%, #a02f0c 100%);
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
 
-    .fade-in {
-        animation: fadeIn 0.6s ease forwards;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    
-    .stat-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
-    }
-    
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #cd380f;
-    }
-    
-    .stat-label {
-        font-size: 0.875rem;
-        color: #6c757d;
-        margin-top: 0.25rem;
-    }
-</style>
+        .modal-header h5 {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+        }
+
+        .modal-header .btn-close:hover {
+            opacity: 1;
+        }
+
+        .partner-info-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #cd380f;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .partner-info-card:hover {
+            box-shadow: 0 5px 15px rgba(205, 56, 15, 0.1);
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-section h6 {
+            color: #cd380f;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-section h6::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #cd380f, transparent);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item:hover {
+            background: rgba(205, 56, 15, 0.05);
+            margin: 0 -1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-value {
+            color: #212529;
+            flex: 1;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-approved {
+            background: #d1edff;
+            color: #0c5460;
+            border: 1px solid #b8daff;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-email {
+            background: #cd380f;
+            color: white;
+        }
+
+        .btn-phone {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-website {
+            background: #007bff;
+            color: white;
+        }
+
+        .message-box {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-box::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 3rem;
+            color: #cd380f;
+            font-family: serif;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: #cd380f;
+            border-radius: 50%;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.2rem;
+            width: 2px;
+            height: calc(100% + 1rem);
+            background: #e9ecef;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            background: #f8f9fa;
+        }
+
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #cd380f;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+    </style>
     <div class="main-content-inner wrap-dashboard-content">
         <div class="button-show-hide show-mb">
             <span class="body-1">Afficher le tableau de bord</span>
@@ -326,214 +346,324 @@
                     <h3 class="title">Détails de la propriété</h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
-                    <a class="tf-btn primary" href="{{ route('partner.properties.create') }}"><i class="icon icon-plus"></i> Ajouter un appartement</a>
+                    <a class="tf-btn primary" href="{{ route('partner.properties.create') }}"><i class="icon icon-plus"></i>
+                        Ajouter un appartement</a>
                 </div>
             </div>
             <div class="wrap-table p-3">
                 <!-- Informations Personnelles -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-user"></i>Informations Personnelles</h6>
+                    <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->property_code }}</h6>
                     <div class="partner-info-card">
+
                         <div class="row g-0">
-                            <div class="col-md-6">
+                            <div class="property-image-container col-12 mb-3" style="height: 350px;">
+                                @if ($property->image_property)
+                                    <img src="{{ asset('media/properties/' . $property->image_property) }}"
+                                        alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
+                                        style="height: 100%; object-fit: cover;">
+                                @else
+                                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center"
+                                        style="height: 200px;">
+                                        <i class="fas fa-home fa-3x text-muted"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <div class="info-item">
                                     <div class="info-label">
-                                        <i class="fas fa-user-circle text-muted"></i>
-                                        Prénom :
+                                        <i class="fas fa-tag me-2"></i>
+                                        Titre :
                                     </div>
-                                    <div class="info-value" id="show-first-name">{{ $demandePartenariat->first_name ?? '' }}</div>
+                                    <div class="info-value" id="show-first-name">{{ $property->title ?? '' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="info-item">
                                     <div class="info-label">
-                                        <i class="fas fa-user-circle text-muted"></i>
-                                        Nom :
+                                        <i class="fas fa-handshake me-2"></i>
+                                        Partenaire :
                                     </div>
-                                    <div class="info-value" id="show-last-name">{{ $demandePartenariat->last_name ?? '' }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-envelope text-muted"></i>
-                                        Email :
-                                    </div>
-                                    <div class="info-value" id="show-email">{{ $demandePartenariat->email ?? '' }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-phone text-muted"></i>
-                                        Téléphone :
-                                    </div>
-                                    <div class="info-value" id="show-phone">{{ $demandePartenariat->phone ?? '' }}</div>
+                                    <div class="info-value" id="show-last-name">{{ $property->partner_code ?? '' }}</div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="contact-actions mt-3">
-                            <a href="#" class="contact-btn btn-email" id="email-btn">
-                                <i class="fas fa-envelope"></i>
-                                Envoyer un email
-                            </a>
-                            <a href="#" class="contact-btn btn-phone" id="phone-btn">
-                                <i class="fas fa-phone"></i>
-                                Appeler
-                            </a>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-toggle-on me-2"></i>Statut :
+                                </div>
+                                <div class="info-value" id="show-last-name">
+                                    <p class="mb-0">
+                                        @if ($property->etat == 'actif')
+                                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                <i class="fas fa-check-circle me-1"></i> Active
+                                            </span>
+                                        @elseif ($property->etat == 'inactif')
+                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                                                <i class="fas fa-times-circle me-1"></i> Inactive
+                                            </span>
+                                        @else
+                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                <i class="fas fa-clock me-1"></i> En attente
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-
-                <!-- Informations Professionnelles -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-building"></i>Informations Professionnelles</h6>
+                    <h6><i class="fas fa-map-marker-alt me-2 text-danger"></i>Localisation</h6>
                     <div class="partner-info-card">
                         <div class="row g-0">
                             <div class="col-md-6">
                                 <div class="info-item">
                                     <div class="info-label">
                                         <i class="fas fa-building text-muted"></i>
-                                        Entreprise :
+                                        Adresse :
                                     </div>
-                                    <div class="info-value" id="show-company">{{ $demandePartenariat->company ?? '' }}</div>
+                                    <div class="info-value" id="show-company">{{ $property->address ?? '' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="info-item">
                                     <div class="info-label">
                                         <i class="fas fa-home text-muted"></i>
-                                        Type de bien :
+                                        Ville :
                                     </div>
-                                    <div class="info-value" id="show-property-type">{{ $demandePartenariat->property_type ?? '' }}</div>
+                                    <div class="info-value" id="show-property-type">{{ $property->city ?? '' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="info-item">
                                     <div class="info-label">
                                         <i class="fas fa-map-marker-alt text-muted"></i>
-                                        Zone d'activité :
+                                        Pays :
                                     </div>
-                                    <div class="info-value" id="show-activity-zone">{{ $demandePartenariat->activity_zone ?? '' }}</div>
+                                    <div class="info-value" id="show-activity-zone">{{ $property->country ?? '' }}</div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-calendar-alt text-muted"></i>
-                                        Expérience :
-                                    </div>
-                                    <div class="info-value" id="show-experience">5-10 ans</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-chart-bar text-muted"></i>
-                                        Portefeuille :
-                                    </div>
-                                    <div class="info-value" id="show-portfolio-size">{{ $demandePartenariat->portfolio_size ?? '' }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-globe text-muted"></i>
-                                        Site web :
-                                    </div>
-                                    <div class="info-value" id="show-website">{{ $demandePartenariat->website ?? '' }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-actions mt-3">
-                            <a href="#" class="contact-btn btn-website" id="website-btn">
-                                <i class="fas fa-globe"></i>
-                                Visiter le site
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Statistiques -->
-                <div class="info-section fade-in">
-                    <h6><i class="fas fa-chart-line"></i>Statistiques</h6>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number">{{ $demandePartenariat->portfolio_size ?? '' }}</div>
-                            <div class="stat-label">Biens en portefeuille</div>
+
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number">{{ $demandePartenariat->experience ?? '' }}</div>
-                            <div class="stat-label">Années d'expérience</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">4.8</div>
-                            <div class="stat-label">Note moyenne</div>
+                        <style>
+                            #map-location-property {
+                                height: 300px;
+                                border-radius: 10px;
+                            }
+                        </style>
+
+                        <div class="contact-actions row mt-3">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar-alt text-muted"></i>
+                                    Emplacement :
+                                </div>
+                            </div>
+                            <div class="col-12" style="height: 300px">
+                                <div id="map-location-property"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Message -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-comment-dots"></i>Message du partenaire</h6>
+                    <h6><i class="fas fa-comment-dots"></i>Description</h6>
                     <div class="message-box">
                         <p id="show-message" class="mb-0">
-                            {{ $demandePartenariat->message ?? '' }}
+                            {!! $property->description ?? '' !!}
                         </p>
                     </div>
                 </div>
 
                 <!-- Statut et Préférences -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-cogs"></i>Statut et Préférences</h6>
+                    <h6><i class="fas fa-building text-danger"></i>Appartements associés</h6>
                     <div class="partner-info-card">
                         <div class="row g-0">
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-bell text-muted"></i>
-                                        Newsletter :
-                                    </div>
-                                    <div class="info-value" id="show-newsletter">
-                                        <span class="badge bg-success">Acceptée</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-flag text-muted"></i>
-                                        État :
-                                    </div>
-                                    <div class="info-value" id="show-etat">
-                                        <span class="status-badge status-pending">{{ $demandePartenariat->etat ?? '' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="col-12">
+                                <div class="table-responsive-lg p-3">
+                                    <table class="table table-hover align-middle mb-0" id="example2">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="80">Code</th>
+                                                <th>Propriété</th>
+                                                <th>Localisation</th>
+                                                <th>Partenaire</th>
+                                                <th width="140">Date</th>
+                                                <th width="120">Statut</th>
+                                                <th width="140">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="7" class="text-center py-5">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
+                                                        <h5 class="fw-semibold">Aucune propriété trouvée</h5>
+                                                        <p class="text-muted">Aucune propriété ne correspond à vos
+                                                            critères de recherche</p>
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {{-- @forelse ($properties as $property)
+                                                <tr class="position-relative">
+                                                    <td class="fw-semibold">#{{ $property->property_code ?? '' }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="property-image me-3">
+                                                                @if ($property->image_property)
+                                                                    <img src="{{ asset('media/properties/' . $property->image_property) }}"
+                                                                        alt="{{ $property->title }}" class="rounded-2"
+                                                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                                                @else
+                                                                    <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
+                                                                        style="width: 50px; height: 50px;">
+                                                                        <i class="fas fa-home"></i>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div>
+                                                                <h6 class="mb-0 fw-semibold">{{ $property->title ?? '' }}
+                                                                </h6>
+                                                                <small
+                                                                    class="text-muted d-block">{{ Str::limit($property->description ?? '', 50) }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="fw-semibold">{{ $property->city->label ?? '' }},
+                                                                {{ $property->country->label ?? '' }}</span>
+                                                            <small
+                                                                class="text-muted">{{ $property->address ?? '' }}</small>
+                                                            @if ($property->zipCode)
+                                                                <small class="text-muted">{{ $property->zipCode }}</small>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-info bg-opacity-10 text-info">
+                                                            <i class="fas fa-handshake me-1"></i>
+                                                            {{ $property->partner_code ?? 'Non assigné' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span>{{ $property->created_at->format('d/m/Y') ?? '' }}</span>
+                                                            <small
+                                                                class="text-muted">{{ $property->created_at->diffForHumans() ?? '' }}</small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if ($property->etat == 'actif')
+                                                            <span
+                                                                class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                                <i class="fas fa-check-circle me-1"></i> Active
+                                                            </span>
+                                                        @elseif ($property->etat == 'inactif')
+                                                            <span
+                                                                class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                                                                <i class="fas fa-times-circle me-1"></i> Inactive
+                                                            </span>
+                                                        @else
+                                                            <span
+                                                                class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                                <i class="fas fa-clock me-1"></i> En attente
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex gap-2">
+                                                            <button
+                                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showPropertyModal{{ $property->id }}"
+                                                                title="Voir détails">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
 
-                <!-- Timeline -->
-                <div class="info-section fade-in">
-                    <h6><i class="fas fa-history"></i>Historique</h6>
-                    <div class="timeline-item">
-                        <strong>Demande soumise</strong>
-                        {{-- <div class="text-muted small">{{ $demandePartenariat->created_at->diffForHumans() ?? '' }}</div> --}}
-                    </div>
-                    <div class="timeline-item">
-                        <strong>Vérification en cours</strong>
-                        <div class="text-muted small">Il y a 1 jour</div>
-                    </div>
-                    <div class="timeline-item">
-                        <strong>En attente d'approbation</strong>
-                        <div class="text-muted small">Maintenant</div>
+                                                            <button
+                                                                class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                                                onclick="editProperty({{ $property->id }})"
+                                                                title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+
+                                                            @if ($property->etat == 'pending')
+                                                                <button
+                                                                    class="btn btn-sm btn-icon btn-outline-success rounded-circle"
+                                                                    onclick="approveProperty({{ $property->id }})"
+                                                                    title="Approuver">
+                                                                    <i class="fas fa-check"></i>
+                                                                </button>
+
+                                                                <button
+                                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle"
+                                                                    onclick="rejectProperty({{ $property->id }})"
+                                                                    title="Rejeter">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                @include('admins.pages.propreties.showPropretyModal')
+                                            @empty
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-5">
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
+                                                            <h5 class="fw-semibold">Aucune propriété trouvée</h5>
+                                                            <p class="text-muted">Aucune propriété ne correspond à vos
+                                                                critères de recherche</p>
+                                                            <a href="{{ route('admin.proprety.view') }}"
+                                                                class="btn btn-sm btn-outline-primary mt-2">
+                                                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser les
+                                                                filtres
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforelse --}}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Récupération des coordonnées depuis les variables Blade (Laravel)
+            const latitude = {{ json_encode($property->latitude ?? 5.3361) }};
+            const longitude = {{ json_encode($property->longitude ?? -4.0268) }};
+
+            // Initialisation de la carte
+            const map = L.map('map-location-property').setView([latitude, longitude], 16);
+
+            // Chargement des tuiles OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }).addTo(map);
+
+            // Ajout d’un marqueur à l’emplacement
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup("Emplacement de la propriété")
+                .openPopup();
+        });
+    </script>
 @endsection
