@@ -32,10 +32,35 @@ class AdminController extends Controller
         return back()->with('success', 'Importation réussie.');
     }
 
-    public function viewDemande()
+  public function viewDemande(Request $request)
     {
+        $query = PartnershipRequest::query();
 
-        $demandePartenariats = PartnershipRequest::orderBy('created_at', 'ASC')->get();
+        // Filtre par recherche textuelle
+        if($request->filled('search')) {
+            $query->where('company', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtre par date
+        if($request->filled('date_debut') && $request->filled('date_fin')) {
+            $query->whereBetween('created_at', [
+                $request->date_debut . ' 00:00:00', 
+                $request->date_fin . ' 23:59:59'
+            ]);
+        } elseif ($request->filled('date_debut')) {
+            $query->where('created_at', '>=', $request->date_debut . ' 00:00:00');
+        } elseif ($request->filled('date_fin')) {
+            $query->where('created_at', '<=', $request->date_fin . ' 23:59:59');
+        }
+
+        // Filtre par état
+        if($request->filled('etat')) {
+            $query->where('etat', $request->etat);
+        }
+
+        $demandePartenariats = $query->orderBy('created_at', 'ASC')->get();
 
         return view('admins.pages.demandesPartenariat.validationDemande', compact('demandePartenariats'));
     }

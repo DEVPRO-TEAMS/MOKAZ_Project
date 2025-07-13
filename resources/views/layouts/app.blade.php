@@ -27,6 +27,7 @@
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
 
+
     </head>
 
     <body class="body bg-surface counter-scroll">
@@ -99,6 +100,8 @@
 
          <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
 
 
 
@@ -124,15 +127,41 @@
         <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
         <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
-<<<<<<< HEAD
-=======
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
         <script src="{{ asset('assets/js/map-single.js')}}"></script>
->>>>>>> 37428f08c010689df077e198d5634d06ecd64d08
         <script src="{{ asset('assets/js/map.js') }}"></script>
         <script src="{{ asset('assets/js/map-contact.js') }}"></script>
         <script src="{{ asset('assets/js/marker.js') }}"></script>
         <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
+
+        <script>
+             $(document).ready(function() {
+    
+
+                var table = $('#example2').DataTable({
+                    lengthChange: true,
+                    searching: false,
+                    buttons: ['copy', 'excel', 'pdf', 'print'],
+                    language: {
+                                search: "Recherche :",
+                                lengthMenu: "Afficher _MENU_ lignes",
+                                zeroRecords: "Aucun enregistrement trouvé",
+                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
+                                infoEmpty: "Aucun enregistrement disponible",
+                                infoFiltered: "(filtré à partir de _MAX_ enregistrements)",
+                                paginate: {
+                                    first: "Premier",
+                                    last: "Dernier",
+                                    next: "Suivant",
+                                    previous: "Précédent",
+                                },
+                            },
+                });
+
+                table.buttons().container()
+                    .appendTo('#example2_wrapper .col-md-6:eq(0)');
+            });
+        </script>
 
     </body>
 
