@@ -79,8 +79,19 @@
     <!-- sidebar dashboard -->
     <div class="sidebar-menu-dashboard">
         <ul class="box-menu-dashboard">
-            <li class="nav-menu-item active"><a class="nav-menu-link" href="dashboard.html"><span class="icon icon-dashboard"></span> Dashboards</a></li>
-            <li class="nav-menu-item"><a class="nav-menu-link" href="my-property.html"><span class="icon icon-list-dashes"></span>My Properties</a></li>
+
+            <li class="nav-menu-item active">
+                @if (Auth::user()->user_type == 'admin')
+                    <a class="nav-menu-link" href="{{ route('admin.index') }}">
+                        <span class="icon icon-dashboard"></span> Tableau de Bord
+                    </a>
+                @else
+                    <a class="nav-menu-link" href="dashboard.html">
+                        <span class="icon icon-dashboard"></span> Tableau de Bord
+                    </a>
+                @endif
+                
+            </li>
 
             <li class="nav-menu-item">
                 <a class="nav-menu-link" href="{{ route('admin.demande.view') }}">
@@ -88,12 +99,22 @@
                     Demandes de partenariat
                 </a>
             </li>
+            @if (Auth::user()->user_type == 'admin')
+                <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('admin.proprety.view') }}">
+                    <span class="icon icon-list-dashes"></span>Propriétés</a>
+                </li>
+            @else
+                <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('partner.properties.index') }}">
+                    <span class="icon icon-list-dashes"></span>Mes Propriétés</a>
+                </li>
+            @endif
+            <li class="nav-menu-item"><a class="nav-menu-link" href="my-property.html"><span class="icon icon-list-dashes"></span>My Properties</a></li>
 
             <li class="nav-menu-item">
                 <a class="nav-menu-link" href="my-invoices.html"><span class="icon icon-file-text"></span> My Invoices</a>
             </li>
 
-            <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('partner.properties.index') }}"><span class="icon icon-list-dashes"></span>Mes Propriétés</a></li>
+            
             {{-- <li class="nav-menu-item"><a class="nav-menu-link" href="my-invoices.html"><span class="icon icon-file-text"></span> My Invoices</a></li>
             <li class="nav-menu-item"><a class="nav-menu-link" href="my-favorites.html"><span class="icon icon-heart"></span>My Favorites</a></li>
             <li class="nav-menu-item"><a class="nav-menu-link" href="reviews.html"><span class="icon icon-review"></span> Reviews</a></li>

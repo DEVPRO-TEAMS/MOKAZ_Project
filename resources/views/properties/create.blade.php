@@ -33,7 +33,7 @@
                     </fieldset>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
-                        <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" required id="desc"></textarea>
+                        <textarea class="textarea-tinymc" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" id="desc"></textarea>
                     </fieldset>
 
                     <div class="box grid-2 gap-30">

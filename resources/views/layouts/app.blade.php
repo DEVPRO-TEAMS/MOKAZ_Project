@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="fr-FR">
 
     <head>
         <meta charset="utf-8">
@@ -100,8 +100,7 @@
 
          <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
-        <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
+      
 
 
 
@@ -133,6 +132,9 @@
         <script src="{{ asset('assets/js/map-contact.js') }}"></script>
         <script src="{{ asset('assets/js/marker.js') }}"></script>
         <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
+
+        <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
 
         <script>
              $(document).ready(function() {

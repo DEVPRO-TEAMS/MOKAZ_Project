@@ -1,438 +1,211 @@
 @extends('layouts.app')
-
 @section('content')
-    <div class="main-content-inner">
-        <div class="button-show-hide show-mb">
-            <span class="body-1">Afficher le tableau de bord</span>
+    <div class="container-fluid py-4">
+        <!-- En-tête -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0 text-gray-800">
+                    <i class="fas fa-handshake me-2 text-danger"></i>
+                    Tableau de Bord - Demandes de Partenariat
+                </h1>
+                <p class="text-muted">Gestion et suivi des demandes de partenariat</p>
+            </div>
         </div>
-        @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-                </div>
-            @endif
 
-            {{-- <form action="{{ route('admin.import.city.country') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="file" class="form-control" name="file" required>
-                <button type="submit" class="btn btn-primary">Importer</button>
-            </form> --}}
-        <div class="flat-counter-v2 tf-counter">
+        <!-- Statistiques principales -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card stat-card">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total Demandes</div>
+                                <div class="h5 mb-0 font-weight-bold" id="totalRequests">156</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-users fa-2x text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <div class="counter-box">
-                <div class="box-icon w-68 round">
-                    <span class="icon icon-list-dashes"></span>
-                </div>
-                <div class="content-box">
-                    <div class="title-count">your Listing</div>
-                    <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="17" data-inviewport="yes">17</h6>
-                        <span class="fw-7 text-variant-2">/17 remaining</span>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card stat-card pending">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">En Attente</div>
+                                <div class="h5 mb-0 font-weight-bold" id="pendingRequests">42</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock fa-2x text-warning"></i>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
-            <div class="counter-box">
-                <div class="box-icon w-68 round">
-                    <span class="icon icon-clock-countdown"></span>
-                </div>
-                <div class="content-box">
-                    <div class="title-count">Pending</div>
-                    <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="0" data-inviewport="yes">0</h6>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card stat-card actif">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Approuvées</div>
+                                <div class="h5 mb-0 font-weight-bold" id="activeRequests">89</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
-            <div class="counter-box">
-                <div class="box-icon w-68 round">
-                    <span class="icon icon-bookmark"></span>
-                </div>
-                <div class="content-box">
-                    <div class="title-count">Favorite</div>
-                    <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="1" data-inviewport="yes">1</h6>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="dashboard-card stat-card inactif">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Rejetées</div>
+                                <div class="h5 mb-0 font-weight-bold" id="inactiveRequests">25</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-times-circle fa-2x text-danger"></i>
+                            </div>
+                        </div>
                     </div>
-
-                </div>
-            </div>
-            <div class="counter-box">
-                <div class="box-icon w-68 round">
-                    <span class="icon icon-review"></span>
-                </div>
-                <div class="content-box">
-                    <div class="title-count">Reviews</div>
-                    <div class="d-flex align-items-end">
-                        <h6 class="number" data-speed="2000" data-to="17" data-inviewport="yes">0</h6>
-                    </div>
-
                 </div>
             </div>
         </div>
-        <div class="wrapper-content row">
-            <div class="col-xl-9">
-                <div class="widget-box-2 wd-listing">
-                    <h6 class="title">New Listing</h6>
-                    <div class="wd-filter">
-                        <div class="ip-group">
-                            <input type="text" placeholder="Search">
-                        </div>
-                        <div class="ip-group icon">
-                            <input type="text" id="datepicker1" class="ip-datepicker icon" placeholder="From Date">
-                        </div>
-                        <div class="ip-group icon">
-                            <input type="text" id="datepicker2" class="ip-datepicker icon" placeholder="To Date">
-                        </div>
-                        <div class="ip-group">
-                            <div class="nice-select" tabindex="0"><span class="current">Select</span>
-                                <ul class="list">
-                                    <li data-value="1" class="option selected">Select</li>
-                                    <li data-value="2" class="option">Today</li>
-                                    <li data-value="3" class="option">Yesterday</li>
-                                </ul>
-                            </div>
-                        </div>
+
+        <!-- Graphiques -->
+        <div class="row mb-4" style="min-height: 40vh;">
+            <div class="col-xl-8 col-lg-7 h-100" >
+                <div class="card dashboard-card">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Évolution des Demandes</h6>
                     </div>
-                    <div class="d-flex gap-4"><span class="text-primary fw-7">17</span><span class="text-variant-1">Results
-                            found</span></div>
-                    <div class="wrap-table">
-                        <div class="table-responsive">
-
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Listing</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-1.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Gorgeous Apartment Building</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- col 2 -->
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-2.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Mountain Mist Retreat, Aspen</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- col 3 -->
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-3.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Lakeview Haven, Lake Tahoe</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- col 4 -->
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-4.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Coastal Serenity Cottage</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- col 5 -->
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-5.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Sunset Heights Estate</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- col 6 -->
-                                    <tr class="file-delete">
-                                        <td>
-                                            <div class="listing-box">
-                                                <div class="images">
-                                                    <img src="images/home/house-8.jpg" alt="images">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="title"><a href="property-details-v1.html"
-                                                            class="link">Casa Lomas de Machalí Machas</a> </div>
-                                                    <div class="text-date">
-                                                        <p class="fw-5"><span class="fw-4 text-variant-1">Posting
-                                                                date:</span> March 22, 2023</p>
-                                                    </div>
-                                                    <div class="text-1 fw-7">$5050,00</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="status-wrap">
-                                                <a href="#" class="btn-status"> Approved</a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <ul class="list-action">
-                                                <li><a class="item"><i class="icon icon-edit"></i>Edit</a></li>
-                                                <li><a class="item"><i class="icon icon-sold"></i>Sold</a></li>
-                                                <li><a class="remove-file item"><i class="icon icon-trash"></i>Delete</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 100%; ">
+                            <canvas id="requestsChart" style="min-height: 300px; "></canvas>
                         </div>
-
-                        <ul class="wd-navigation">
-                            <li><a href="#" class="nav-item active">1</a></li>
-                            <li><a href="#" class="nav-item">2</a></li>
-                            <li><a href="#" class="nav-item">3</a></li>
-                            <li><a href="#" class="nav-item"><i class="icon icon-arr-r"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="widget-box-2 wd-chart">
-                    <h6 class="title">Page Inside</h6>
-                    <div class="wd-filter-date">
-                        <div class="left">
-                            <div class="dates active">Day</div>
-                            <div class="dates">Week</div>
-                            <div class="dates">Month</div>
-                            <div class="dates">Year</div>
-                        </div>
-                        <div class="right">
-                            <div class="ip-group icon">
-                                <input type="text" id="datepicker3" class="ip-datepicker icon"
-                                    placeholder="From Date">
-                            </div>
-                            <div class="ip-group icon">
-                                <input type="text" id="datepicker4" class="ip-datepicker icon" placeholder="To Date">
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="chart-box">
-                        <canvas id="lineChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3">
-                <div class="widget-box-3 mess-box">
-                    <h6>Messages</h6>
-                    <span class="text-variant-1">No message</span>
-                </div>
-                <div class="widget-box-3 recent-box">
-                    <h6>Recent Reviews</h6>
-                    <div class="box-tes-item">
-                        <div class="box-avt d-flex align-items-center gap-12">
-                            <div class="avatar avt-40 round">
-                                <img src="images/avatar/avt-2.jpg" alt="avatar">
-                            </div>
-                            <p>February 18, 2024</p>
-                        </div>
-                        <p class="note p-16">
-                            The housing sector has long been a focal point for investors seeking stability and growth.
-                            Understanding the dynamics of housing stocks and effectively trading within this sector can lead
-                            to substantial gains.
-                        </p>
-                        <ul class="list-star">
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                        </ul>
-
-
+            
+            <div class="col-xl-4 col-lg-5">
+                <div class="card dashboard-card">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Répartition par État</h6>
                     </div>
-                    <div class="box-tes-item">
-                        <div class="box-avt d-flex align-items-center gap-12">
-                            <div class="avatar avt-40 round">
-                                <img src="images/avatar/avt-2.jpg" alt="avatar">
-                            </div>
-                            <p>February 18, 2024</p>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
                         </div>
-                        <p class="note p-16">
-                            The housing sector has long been a focal point for investors seeking stability and growth.
-                            Understanding the dynamics of housing stocks and effectively trading within this sector can lead
-                            to substantial gains.
-                        </p>
-                        <ul class="list-star">
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                        </ul>
-
-
-                    </div>
-                    <div class="box-tes-item">
-                        <div class="box-avt d-flex align-items-center gap-12">
-                            <div class="avatar avt-40 round">
-                                <img src="images/avatar/avt-2.jpg" alt="avatar">
-                            </div>
-                            <p>February 18, 2024</p>
-                        </div>
-                        <p class="note p-16">
-                            The housing sector has long been a focal point for investors seeking stability and growth.
-                            Understanding the dynamics of housing stocks and effectively trading within this sector can lead
-                            to substantial gains.
-                        </p>
-                        <ul class="list-star">
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                        </ul>
-
-
-                    </div>
-                    <div class="box-tes-item">
-                        <div class="box-avt d-flex align-items-center gap-12">
-                            <div class="avatar avt-40 round">
-                                <img src="images/avatar/avt-2.jpg" alt="avatar">
-                            </div>
-                            <p>February 18, 2024</p>
-                        </div>
-                        <p class="note p-16">
-                            The housing sector has long been a focal point for investors seeking stability and growth.
-                            Understanding the dynamics of housing stocks and effectively trading within this sector can lead
-                            to substantial gains.
-                        </p>
-                        <ul class="list-star">
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                            <li class="icon icon-star"></li>
-                        </ul>
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Récupération des données passées depuis le contrôleur
+    const partnerships = {!! json_encode($partnerships) !!};
+    const monthlyData = {!! json_encode($monthlyData) !!};
+    
+    // Mise à jour des statistiques principales
+    document.getElementById('totalRequests').textContent = {!! $totalRequests !!};
+    document.getElementById('pendingRequests').textContent = {!! $pendingRequests !!};
+    document.getElementById('activeRequests').textContent = {!! $activeRequests !!};
+    document.getElementById('inactiveRequests').textContent = {!! $inactiveRequests !!};
+
+    // Initialisation des graphiques
+    function initCharts() {
+        // Graphique d'évolution des demandes
+        const requestsCtx = document.getElementById('requestsChart').getContext('2d');
+        new Chart(requestsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+                datasets: [{
+                    label: 'Demandes',
+                    data: monthlyData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y} demandes`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique de répartition par état
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['En attente', 'Approuvé', 'Rejeté'],
+                datasets: [{
+                    data: [
+                        {!! $pendingRequests !!}, 
+                        {!! $activeRequests !!}, 
+                        {!! $inactiveRequests !!}
+                    ],
+                    backgroundColor: [
+                        '#ffc107',
+                        '#28a745',
+                        '#dc3545'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Le reste de votre code JavaScript peut rester inchangé
+    document.addEventListener('DOMContentLoaded', function() {
+        initCharts();
+    });
+</script>
 @endsection

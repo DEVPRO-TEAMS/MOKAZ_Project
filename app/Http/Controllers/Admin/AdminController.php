@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Imports\CityCountryImport;
 use App\Models\PartnershipRequest;
@@ -14,10 +15,98 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index()
     {
+        // Récupérer toutes les demandes
+        $partnerships = PartnershipRequest::all();
         
-        return view('admins.pages.index');
+        // Statistiques principales
+        $totalRequests = $partnerships->count();
+        $pendingRequests = $partnerships->where('etat', 'pending')->count();
+        $activeRequests = $partnerships->where('etat', 'actif')->count();
+        $inactiveRequests = $partnerships->where('etat', 'inactif')->count();
+        
+        // Préparer les données pour le graphique d'évolution annuelle
+        $currentYear = date('Y');
+        $monthlyData = [];
+        
+        for ($i = 1; $i <= 12; $i++) {
+            $monthStart = $currentYear . '-' . str_pad($i, 2, '0', STR_PAD_LEFT) . '-01';
+            $monthEnd = date('Y-m-t', strtotime($monthStart));
+            
+            $count = PartnershipRequest::whereBetween('created_at', [$monthStart, $monthEnd])->count();
+            $monthlyData[] = $count;
+        }
+        
+        // Répartition par type de propriété
+        $propertyTypes = [
+            'residential' => 'Résidentiel',
+            'commercial' => 'Commercial',
+            'industrial' => 'Industriel',
+            'land' => 'Terrains',
+            'mixed' => 'Mixte'
+        ];
+        
+        $propertyTypeData = [];
+        foreach ($propertyTypes as $key => $label) {
+            $propertyTypeData[$label] = $partnerships->where('property_type', $key)->count();
+        }
+        
+        // Répartition par niveau d'expérience
+        $experienceLevels = [
+            '0-2' => '0-2 ans',
+            '3-5' => '3-5 ans',
+            '6-10' => '6-10 ans',
+            '10+' => 'Plus de 10 ans'
+        ];
+        
+        $experienceData = [];
+        foreach ($experienceLevels as $key => $label) {
+            $experienceData[$label] = $partnerships->where('experience', $key)->count();
+        }
+        
+        return view('admins.pages.index', compact(
+            'partnerships',
+            'totalRequests',
+            'pendingRequests',
+            'activeRequests',
+            'inactiveRequests',
+            'monthlyData',
+            'propertyTypeData',
+            'experienceData'
+        ));
+    }
+
+    public function allProprety(Request $request)
+    {
+        $query = Property::query();
+
+        if($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                ->orWhere('partner_code', 'like', '%' . $request->search . '%')
+                ->orWhere('address', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtre par date
+        if($request->filled('date_debut') && $request->filled('date_fin')) {
+            $query->whereBetween('created_at', [
+                $request->date_debut . ' 00:00:00', 
+                $request->date_fin . ' 23:59:59'
+            ]);
+        } elseif ($request->filled('date_debut')) {
+            $query->where('created_at', '>=', $request->date_debut . ' 00:00:00');
+        } elseif ($request->filled('date_fin')) {
+            $query->where('created_at', '<=', $request->date_fin . ' 23:59:59');
+        }
+
+        // Filtre par état
+        if($request->filled('etat')) {
+            $query->where('etat', $request->etat);
+        }
+
+        $properties = $query->orderBy('created_at', 'desc')->get();
+
+        return view('admins.pages.propreties.viewProperty', compact('properties'));
     }
 
     public function importCityCountry(Request $request)
