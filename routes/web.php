@@ -58,6 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
         Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
+        Route::get('/partner/list', [PartnerController::class, 'index'])->name('partner.index');
     });
 });
 

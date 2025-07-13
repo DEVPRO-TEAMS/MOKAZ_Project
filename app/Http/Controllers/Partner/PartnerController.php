@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,9 @@ class PartnerController extends Controller
      */
     public function index()
     {
-        return view('partners.pages.index');
+
+        $partners = User::where('user_type', 'partner')->get();
+        return view('partners.pages.index', compact('partners'));
     }
     
 

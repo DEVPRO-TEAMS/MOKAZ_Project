@@ -529,51 +529,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="widget-sidebar fixed-sidebar wrapper-sidebar-right">
-                        <div class="widget-box single-property-contact bg-surface">
-                            <div class="h7 title fw-7">Procéder à la reservation</div>
-                            {{-- <div class="box-avatar">
-                                <div class="info">
-                                    <div class="text-1 name">Shara Conner</div>
-                                    <span>1-333-345-6868</span>
-                                </div>
-                            </div> --}}
-                            <form action="#" class="contact-form">
-                                <div class="ip-group">
-                                    <label for="fullname">Nom Complet:</label>
-                                    <input type="text" placeholder="Jony Dane" class="form-control">
-                                </div>
-                                <div class="ip-group">
-                                    <label for="phone">N° de Telephone:</label>
-                                    <input type="text" placeholder="ex 0123456789" class="form-control">
-                                </div>
-                                <div class="ip-group">
-                                    <label for="email">Adresse Email :</label>
-                                    <input type="text" placeholder="themesflat@gmail.com" class="form-control">
-                                </div>
-                                <div class="row">
-                                    <div class="ip-group col-md-6">
-                                        <label for="datepickerStart">Date d'arriver :</label>
-                                        <input type="date" class="form-control" id="datepickerStart">
-                                    </div>
-                                    <div class="ip-group col-md-6">
-                                        <label for="datepickerEnd">Date de depart :</label>
-                                        <input type="date" class="form-control" id="datepickerEnd">
-                                    </div>
-                                </div>
-                                <div class="ip-group">
-                                    <label for="message">Commentaire:</label>
-                                    <textarea id="comment-message" name="message" rows="4" tabindex="4" placeholder="Message"
-                                        aria-required="true"></textarea>
-                                </div>
-                                <hr>
-                                <div class="ip-group">
-                                    <label for="total">Total:</label>
-                                    <input type="text" placeholder="XOF 1500" class="form-control">
-                                </div>
-                                <button class="tf-btn primary w-100">Reserver</button>
-                            </form>
+                <div class="col-lg-4 px-1">
+                    <div class="widget-sidebar fixed-sidebar wrapper-sidebar-right p-0">
+                        <div class="hero-section my-4 card">
+                            <div class="card-header text-center">
+                                <h6><i class="fas fa-hotel text-danger"></i> Hôtel Luxe</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <p>Découvrez le confort et l'élégance dans notre établissement de prestige</p>
+                            </div>
+
+                            <div class="card-footer">
+                                <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal" data-bs-target="#reservationModal">
+                                    <i class="fas fa-calendar-plus"></i> Reserver maintenant
+                                </button>
+                            </div>
                         </div>
                         <div class="flat-tab flat-tab-form widget-filter-search widget-box bg-surface">
                             <div class="h7 title fw-7">Recherche d'autres hebergements</div>
@@ -1050,4 +1021,6 @@
             </div>
         </div>
     </section>
+
+    @include('reservations.reservationModal')
 @endsection

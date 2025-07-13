@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Property;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\CityCountryImport;
 use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -121,7 +124,7 @@ class AdminController extends Controller
         return back()->with('success', 'Importation réussie.');
     }
 
-  public function viewDemande(Request $request)
+    public function viewDemande(Request $request)
     {
         $query = PartnershipRequest::query();
 
@@ -186,15 +189,29 @@ class AdminController extends Controller
 
             // Mise à jour de l'état
             $demande->etat = 'actif';
-            // $demande->date_approbation = now();
             $demande->save();
+
+            // Création du partenariat
+            $partner = User::create([
+                'uuid' => Str::uuid(),
+                'company' => $demande->company,
+                'name' => $demande->first_name,
+                'lastname' => $demande->last_name,
+                'user_type' => 'partner',
+                'phone' => $demande->phone,
+                'role_id' => 1,
+                'email' => $demande->email,
+                'password' => Hash::make('password123'),
+                'token' => null,
+            ]);
 
             DB::commit();
             
             return response()->json([
                 'status' => true,
                 'message' => 'Demande acceptée avec succès',
-                'data' => $demande
+                'data' => $demande,
+                'partner' => $partner
             ], 200);
 
         } catch (\Exception $e) {

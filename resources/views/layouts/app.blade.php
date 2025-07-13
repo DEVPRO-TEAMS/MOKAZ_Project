@@ -104,6 +104,7 @@
 
 
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
         <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
