@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('properties', function (Blueprint $table) {
+        Schema::create('appartements', function (Blueprint $table) {
             $table->id();
+            $table->string('appartement_code')->unique();
             $table->string('property_code')->unique();
-            $table->string('partner_code')->nullable();
-            $table->string('image_property')->nullable();
             $table->string('title')->nullable();
-             $table->string('address')->nullable();
-            $table->string('zipCode')->nullable();
-            $table->string('country')->nullable();
-            $table->string('city')->nullable();
-            $table->string('longitude')->nullable();
-            $table->string('latitude')->nullable();
+             $table->string('price')->nullable();
+            $table->string('available')->nullable();
+            $table->string('appartType')->nullable();
+            $table->string('bedroomsNumber')->nullable();
+            $table->string('bathroomsNumber')->nullable();
+            $table->string('CommoditiesHomesafety')->nullable();
+            $table->string('CommoditiesBedroom')->nullable();
+            $table->string('CommoditiesKitchen')->nullable();
+            $table->string('video_url')->nullable();
+            $table->string('main_image')->nullable();
             $table->longText('description')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('created_by')->nullable();
@@ -33,12 +36,11 @@ return new class extends Migration
         });
     }
 
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('properties');
+        Schema::dropIfExists('appartements');
     }
 };

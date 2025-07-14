@@ -2,599 +2,736 @@
 
 (function ($) {
     "use strict";
+    // function mainMap() {
+    //     var ib = new InfoBox();
+    //     function locationData(mapImg, mapURL, mapTitle, mapLocation) {
+    //         return (
+    //             "" +
+    //             '<div class="map-listing-item">' +
+    //             '<div class="inner-box">' +
+    //             '<div class="infoBox-close"><i class="icon icon-close2"></i></div>' +
+    //             '<div class="image-box">' +
+    //             '<img src="' +
+    //             mapImg +
+    //             '" alt="">' +
+    //             "</div>" +
+    //             '<div class="content">' +
+    //             '<p class="location">' +
+    //             '<span class="icon icon-mapPin"+"></span>' +
+    //             mapLocation +
+    //             "</p>" +
+    //             '<div class="title"><a href=' +
+    //             mapURL +
+    //             ">" +
+    //             mapTitle +
+    //             "</a></div>" +
+    //             '<ul class="list-info">' +
+    //             '<li><span class="icon icon-bed"></span>3</li>' +
+    //             '<li><span class="icon icon-bathtub"></span>2</li>' +
+    //             '<li><span class="icon icon-ruler"></span>600 SqFT</li>' +
+    //             "</ul>" +
+    //             "</div>" +
+    //             "</div>"
+    //         );
+    //     }
+
+    //     var locations = [
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/36/f0/a1/36f0a1b18f37e50dac6513b8445928d4.jpg",
+    //                 "/reservation",
+    //                 "Villa Rose Canaan...",
+    //                 "100 km de mon domicile"
+    //             ),
+
+    //             40.711536,
+    //             -73.994601,
+    //             1,
+    //             "<div></div>",
+    //         ],
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/66/85/7c/66857c67d85932c2e2c9b0904e15ce4d.jpg",
+    //                 "/reservation",
+    //                 "Villa del Mar Retreat, Malibu...",
+    //                 "100 km de mon domicile"
+    //             ),
+
+    //             40.710885,
+    //             -74.016245,
+    //             2,
+    //             "<div></div>",
+    //         ],
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
+    //                 "/reservation",
+    //                 "Villa Avenu Nodes, Malibu...",
+    //                 "100 km de mon domicile"
+    //             ),
+
+    //             40.715504,
+    //             -74.010316,
+    //             3,
+    //             "<div></div>",
+    //         ],
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
+    //                 "/reservation",
+    //                 "Villa del Mar Retreat, Malibu...",
+    //                 "100 km de mon domicile"
+    //             ),
+
+    //             40.711926,
+    //             -74.006623,
+    //             4,
+    //             "<div></div>",
+    //         ],
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
+    //                 "/reservation",
+    //                 "Residence Noya, Kesse...",
+    //                 "100 km de mon domicile"
+    //             ),
+
+    //             40.709024,
+    //             -74.012139,
+    //             5,
+    //             "<div></div>",
+    //         ],
+    //         [
+    //             locationData(
+    //                 "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
+    //                 "/reservation",
+    //                 "Immeuble Diakite, Malibu...",
+    //                 "80 km de mon domicile"
+    //             ),
+
+    //             40.704015,
+    //             -73.992613,
+    //             6,
+    //             "<div></div>",
+    //         ],
+    //     ];
+
+    //     function numericalRating(ratingElem) {
+    //         $(ratingElem).each(function () {
+    //             var dataRating = $(this).attr("data-rating");
+    //             if (dataRating >= 4.0) {
+    //                 $(this).addClass("high");
+    //             } else if (dataRating >= 3.0) {
+    //                 $(this).addClass("mid");
+    //             } else if (dataRating < 3.0) {
+    //                 $(this).addClass("low");
+    //             }
+    //         });
+    //     }
+    //     numericalRating(".numerical-rating");
+
+    //     function starRating(ratingElem) {
+    //         $(ratingElem).each(function () {
+    //             var dataRating = $(this).attr("data-rating");
+
+    //             function starsOutput(
+    //                 firstStar,
+    //                 secondStar,
+    //                 thirdStar,
+    //                 fourthStar,
+    //                 fifthStar
+    //             ) {
+    //                 return (
+    //                     "" +
+    //                     '<span class="' +
+    //                     firstStar +
+    //                     '"></span>' +
+    //                     '<span class="' +
+    //                     secondStar +
+    //                     '"></span>' +
+    //                     '<span class="' +
+    //                     thirdStar +
+    //                     '"></span>' +
+    //                     '<span class="' +
+    //                     fourthStar +
+    //                     '"></span>' +
+    //                     '<span class="' +
+    //                     fifthStar +
+    //                     '"></span>'
+    //                 );
+    //             }
+    //             var fiveStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star"
+    //             );
+    //             var fourHalfStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star half"
+    //             );
+    //             var fourStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star empty"
+    //             );
+    //             var threeHalfStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star half",
+    //                 "star empty"
+    //             );
+    //             var threeStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star",
+    //                 "star empty",
+    //                 "star empty"
+    //             );
+    //             var twoHalfStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star half",
+    //                 "star empty",
+    //                 "star empty"
+    //             );
+    //             var twoStars = starsOutput(
+    //                 "star",
+    //                 "star",
+    //                 "star empty",
+    //                 "star empty",
+    //                 "star empty"
+    //             );
+    //             var oneHalfStar = starsOutput(
+    //                 "star",
+    //                 "star half",
+    //                 "star empty",
+    //                 "star empty",
+    //                 "star empty"
+    //             );
+    //             var oneStar = starsOutput(
+    //                 "star",
+    //                 "star empty",
+    //                 "star empty",
+    //                 "star empty",
+    //                 "star empty"
+    //             );
+    //             if (dataRating >= 4.75) {
+    //                 $(this).append(fiveStars);
+    //             } else if (dataRating >= 4.25) {
+    //                 $(this).append(fourHalfStars);
+    //             } else if (dataRating >= 3.75) {
+    //                 $(this).append(fourStars);
+    //             } else if (dataRating >= 3.25) {
+    //                 $(this).append(threeHalfStars);
+    //             } else if (dataRating >= 2.75) {
+    //                 $(this).append(threeStars);
+    //             } else if (dataRating >= 2.25) {
+    //                 $(this).append(twoHalfStars);
+    //             } else if (dataRating >= 1.75) {
+    //                 $(this).append(twoStars);
+    //             } else if (dataRating >= 1.25) {
+    //                 $(this).append(oneHalfStar);
+    //             } else if (dataRating < 1.25) {
+    //                 $(this).append(oneStar);
+    //             }
+    //         });
+    //     }
+    //     starRating(".star-rating");
+
+    //     var mapZoomAttr = $("#map").attr("data-map-zoom");
+    //     var mapScrollAttr = $("#map").attr("data-map-scroll");
+    //     if (typeof mapZoomAttr !== typeof undefined && mapZoomAttr !== false) {
+    //         var zoomLevel = parseInt(mapZoomAttr);
+    //     } else {
+    //         var zoomLevel = 5;
+    //     }
+    //     if (
+    //         typeof mapScrollAttr !== typeof undefined &&
+    //         mapScrollAttr !== false
+    //     ) {
+    //         var scrollEnabled = parseInt(mapScrollAttr);
+    //     } else {
+    //         var scrollEnabled = false;
+    //     }
+    //     var map = new google.maps.Map(document.getElementById("map"), {
+    //         zoom: zoomLevel,
+    //         scrollwheel: false,
+    //         center: new google.maps.LatLng(40.709295, -74.003099),
+    //         mapTypeId: google.maps.MapTypeId.ROADMAP,
+    //         zoomControl: true,
+    //         zoomControlOptions: {
+    //             position: google.maps.ControlPosition.TOP_LEFT,
+    //         },
+    //         mapTypeControl: false,
+    //         scaleControl: false,
+    //         panControl: false,
+    //         navigationControl: false,
+    //         streetViewControl: false,
+    //         gestureHandling: "cooperative",
+    //         styles: [
+    //             {
+    //                 featureType: "all",
+    //                 elementType: "geometry.fill",
+    //                 stylers: [
+    //                     {
+    //                         weight: "2.00",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "all",
+    //                 elementType: "geometry.stroke",
+    //                 stylers: [
+    //                     {
+    //                         color: "#9c9c9c",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "all",
+    //                 elementType: "labels.text",
+    //                 stylers: [
+    //                     {
+    //                         visibility: "on",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "landscape",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         color: "#f2f2f2",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "landscape",
+    //                 elementType: "geometry.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#ffffff",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "landscape.man_made",
+    //                 elementType: "geometry.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#ffffff",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "poi",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         visibility: "off",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         saturation: -100,
+    //                     },
+    //                     {
+    //                         lightness: 45,
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road",
+    //                 elementType: "geometry.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#eeeeee",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road",
+    //                 elementType: "labels.text.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#7b7b7b",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road",
+    //                 elementType: "labels.text.stroke",
+    //                 stylers: [
+    //                     {
+    //                         color: "#ffffff",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road.highway",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         visibility: "simplified",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "road.arterial",
+    //                 elementType: "labels.icon",
+    //                 stylers: [
+    //                     {
+    //                         visibility: "off",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "transit",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         visibility: "off",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "water",
+    //                 elementType: "all",
+    //                 stylers: [
+    //                     {
+    //                         color: "#46bcec",
+    //                     },
+    //                     {
+    //                         visibility: "on",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "water",
+    //                 elementType: "geometry.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#c8d7d4",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "water",
+    //                 elementType: "labels.text.fill",
+    //                 stylers: [
+    //                     {
+    //                         color: "#070707",
+    //                     },
+    //                 ],
+    //             },
+    //             {
+    //                 featureType: "water",
+    //                 elementType: "labels.text.stroke",
+    //                 stylers: [
+    //                     {
+    //                         color: "#ffffff",
+    //                     },
+    //                 ],
+    //             },
+    //         ],
+    //     });
+
+    //     $(".listing-item-container").on("mouseover", function () {
+    //         var listingAttr = $(this).data("marker-id");
+    //         if (listingAttr !== undefined) {
+    //             var listing_id = $(this).data("marker-id") - 1;
+    //             var marker_div = allMarkers[listing_id].div;
+    //             $(marker_div).addClass("clicked");
+    //             $(this).on("mouseout", function () {
+    //                 if ($(marker_div).is(":not(.infoBox-opened)")) {
+    //                     $(marker_div).removeClass("clicked");
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     var boxText = document.createElement("div");
+    //     boxText.className = "map-box";
+    //     var currentInfobox;
+    //     var boxOptions = {
+    //         content: boxText,
+    //         disableAutoPan: false,
+    //         alignBottom: true,
+    //         maxWidth: 0,
+    //         pixelOffset: new google.maps.Size(-134, -55),
+    //         zIndex: null,
+    //         boxStyle: { width: "360px" },
+    //         closeBoxMargin: "0",
+    //         closeBoxURL: "",
+    //         infoBoxClearance: new google.maps.Size(25, 25),
+    //         isHidden: false,
+    //         pane: "floatPane",
+    //         enableEventPropagation: false,
+    //     };
+    //     var markerCluster, overlay, i;
+    //     var allMarkers = [];
+    //     var clusterStyles = [
+    //         { textColor: "white", url: "", height: 50, width: 50 },
+    //     ];
+    //     var markerIco;
+    //     for (i = 0; i < locations.length; i++) {
+    //         markerIco = locations[i][4];
+    //         var overlaypositions = new google.maps.LatLng(
+    //                 locations[i][1],
+    //                 locations[i][2]
+    //             ),
+    //             overlay = new CustomMarker(
+    //                 overlaypositions,
+    //                 map,
+    //                 { marker_id: i },
+    //                 markerIco
+    //             );
+    //         allMarkers.push(overlay);
+    //         google.maps.event.addDomListener(
+    //             overlay,
+    //             "click",
+    //             (function (overlay, i) {
+    //                 return function () {
+    //                     ib.setOptions(boxOptions);
+    //                     boxText.innerHTML = locations[i][0];
+    //                     ib.close();
+    //                     ib.open(map, overlay);
+    //                     currentInfobox = locations[i][3];
+    //                     google.maps.event.addListener(
+    //                         ib,
+    //                         "domready",
+    //                         function () {
+    //                             $(".infoBox-close").click(function (e) {
+    //                                 e.preventDefault();
+    //                                 ib.close();
+    //                                 $(".map-marker-container").removeClass(
+    //                                     "clicked infoBox-opened"
+    //                                 );
+    //                             });
+    //                         }
+    //                     );
+    //                 };
+    //             })(overlay, i)
+    //         );
+    //     }
+    //     var options = {
+    //         imagePath: "images/",
+    //         styles: clusterStyles,
+    //         minClusterSize: 2,
+    //     };
+    //     markerCluster = new MarkerClusterer(map, allMarkers, options);
+    //     google.maps.event.addDomListener(window, "resize", function () {
+    //         var center = map.getCenter();
+    //         google.maps.event.trigger(map, "resize");
+    //         map.setCenter(center);
+    //     });
+    //     var zoomControlDiv = document.createElement("div");
+    //     var zoomControl = new ZoomControl(zoomControlDiv, map);
+    //     function ZoomControl(controlDiv, map) {
+    //         zoomControlDiv.index = 1;
+    //         map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(
+    //             zoomControlDiv
+    //         );
+    //         controlDiv.style.padding = "5px";
+    //         controlDiv.className = "zoomControlWrapper";
+    //         var controlWrapper = document.createElement("div");
+    //         controlDiv.appendChild(controlWrapper);
+    //         var zoomInButton = document.createElement("div");
+    //         zoomInButton.className = "custom-zoom-in";
+    //         controlWrapper.appendChild(zoomInButton);
+    //         var zoomOutButton = document.createElement("div");
+    //         zoomOutButton.className = "custom-zoom-out";
+    //         controlWrapper.appendChild(zoomOutButton);
+    //         google.maps.event.addDomListener(
+    //             zoomInButton,
+    //             "click",
+    //             function () {
+    //                 map.setZoom(map.getZoom() + 1);
+    //             }
+    //         );
+    //         google.maps.event.addDomListener(
+    //             zoomOutButton,
+    //             "click",
+    //             function () {
+    //                 map.setZoom(map.getZoom() - 1);
+    //             }
+    //         );
+    //     }
+    //     var scrollEnabling = $("#scrollEnabling");
+    //     $(scrollEnabling).click(function (e) {
+    //         e.preventDefault();
+    //         $(this).toggleClass("enabled");
+    //         if ($(this).is(".enabled")) {
+    //             map.setOptions({ scrollwheel: true });
+    //         } else {
+    //             map.setOptions({ scrollwheel: false });
+    //         }
+    //     });
+    //     $("#geoLocation, .input-with-icon.location a").click(function (e) {
+    //         e.preventDefault();
+    //         geolocate();
+    //     });
+
+    //     function geolocate() {
+    //         if (navigator.geolocation) {
+    //             navigator.geolocation.getCurrentPosition(function (position) {
+    //                 var pos = new google.maps.LatLng(
+    //                     position.coords.latitude,
+    //                     position.coords.longitude
+    //                 );
+    //                 map.setCenter(pos);
+    //                 map.setZoom(12);
+    //             });
+    //         }
+    //     }
+    // }
+    // var map = document.getElementById("map");
+    // if (typeof map != "undefined" && map != null) {
+    //     google.maps.event.addDomListener(window, "load", mainMap);
+    // }
+
     function mainMap() {
-        var ib = new InfoBox();
+
+        // var coteDIvoireBounds = [
+        //     [4.333, -8.599], // Sud-Ouest
+        //     [10.726, -2.504] // Nord-Est
+        // ];
+        // // Initialiser la carte centrée sur à Abidjan
+        // var map = L.map('map').setView([7.539989, -5.547080], 7).setMaxBounds
+        // Initialiser la carte Leaflet
+        var coteDIvoireBounds = [
+            [4.333, -8.599], // Sud-Ouest
+            [10.726, -2.504] // Nord-Est
+        ];
+        // var map = L.map('map').setView([40.709295, -74.003099], 16);
+       var map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
+        // Initialiser la carte centrée sur à Abidjan
+        // var map = L.map('map').setView([7.539989, -5.547080], 7).setMaxBounds(coteDIvoireBounds);
+        // Ajouter le fond de carte
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Ajouter le contrôle de recherche
+        L.Control.geocoder().addTo(map);
+
+        // Fonction de création du contenu des popups
         function locationData(mapImg, mapURL, mapTitle, mapLocation) {
-            return (
-                "" +
-                '<div class="map-listing-item">' +
-                '<div class="inner-box">' +
-                '<div class="infoBox-close"><i class="icon icon-close2"></i></div>' +
-                '<div class="image-box">' +
-                '<img src="' +
-                mapImg +
-                '" alt="">' +
-                "</div>" +
-                '<div class="content">' +
-                '<p class="location">' +
-                '<span class="icon icon-mapPin"+"></span>' +
-                mapLocation +
-                "</p>" +
-                '<div class="title"><a href=' +
-                mapURL +
-                ">" +
-                mapTitle +
-                "</a></div>" +
-                '<ul class="list-info">' +
-                '<li><span class="icon icon-bed"></span>3</li>' +
-                '<li><span class="icon icon-bathtub"></span>2</li>' +
-                '<li><span class="icon icon-ruler"></span>600 SqFT</li>' +
-                "</ul>" +
-                "</div>" +
-                "</div>"
-            );
+            return `
+                <div class="map-listing-item">
+                    <div class="inner-box">
+                        <div class="infoBox-close"><i class="icon icon-close2"></i></div>
+                        <div class="image-box">
+                            <img src="${mapImg}" alt="${mapTitle}">
+                        </div>
+                        <div class="content">
+                            <p class="location">
+                                <span class="icon icon-mapPin"></span>
+                                ${mapLocation}
+                            </p>
+                            <div class="title"><a href="${mapURL}">${mapTitle}</a></div>
+                            
+                        </div>
+                    </div>
+                </div>`;
         }
-
-        var locations = [
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/36/f0/a1/36f0a1b18f37e50dac6513b8445928d4.jpg",
-                    "/reservation",
-                    "Villa Rose Canaan...",
-                    "100 km de mon domicile"
-                ),
-
-                40.711536,
-                -73.994601,
-                1,
-                "<div></div>",
-            ],
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/66/85/7c/66857c67d85932c2e2c9b0904e15ce4d.jpg",
-                    "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km de mon domicile"
-                ),
-
-                40.710885,
-                -74.016245,
-                2,
-                "<div></div>",
-            ],
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
-                    "/reservation",
-                    "Villa Avenu Nodes, Malibu...",
-                    "100 km de mon domicile"
-                ),
-
-                40.715504,
-                -74.010316,
-                3,
-                "<div></div>",
-            ],
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
-                    "/reservation",
-                    "Villa del Mar Retreat, Malibu...",
-                    "100 km de mon domicile"
-                ),
-
-                40.711926,
-                -74.006623,
-                4,
-                "<div></div>",
-            ],
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
-                    "/reservation",
-                    "Residence Noya, Kesse...",
-                    "100 km de mon domicile"
-                ),
-
-                40.709024,
-                -74.012139,
-                5,
-                "<div></div>",
-            ],
-            [
-                locationData(
-                    "https://i.pinimg.com/736x/6c/32/19/6c3219aba6b9e4f1a1014fc9658d4c6e.jpg",
-                    "/reservation",
-                    "Immeuble Diakite, Malibu...",
-                    "80 km de mon domicile"
-                ),
-
-                40.704015,
-                -73.992613,
-                6,
-                "<div></div>",
-            ],
-        ];
-
-        function numericalRating(ratingElem) {
-            $(ratingElem).each(function () {
-                var dataRating = $(this).attr("data-rating");
-                if (dataRating >= 4.0) {
-                    $(this).addClass("high");
-                } else if (dataRating >= 3.0) {
-                    $(this).addClass("mid");
-                } else if (dataRating < 3.0) {
-                    $(this).addClass("low");
-                }
-            });
-        }
-        numericalRating(".numerical-rating");
-
-        function starRating(ratingElem) {
-            $(ratingElem).each(function () {
-                var dataRating = $(this).attr("data-rating");
-
-                function starsOutput(
-                    firstStar,
-                    secondStar,
-                    thirdStar,
-                    fourthStar,
-                    fifthStar
-                ) {
-                    return (
-                        "" +
-                        '<span class="' +
-                        firstStar +
-                        '"></span>' +
-                        '<span class="' +
-                        secondStar +
-                        '"></span>' +
-                        '<span class="' +
-                        thirdStar +
-                        '"></span>' +
-                        '<span class="' +
-                        fourthStar +
-                        '"></span>' +
-                        '<span class="' +
-                        fifthStar +
-                        '"></span>'
+        // var APP_URL = '{{ asset('/') }}';
+        window.MAP_ICON_PATH = "{{ asset('assets/images/location/map-icon1.png') }}";
+        // Récupération des propriétés via AJAX
+        $.ajax({
+            url: '/api/get-all-properties',
+            type: 'GET',
+            success: function(properties) {
+                properties.forEach(function(property) {
+                    var popupContent = locationData(
+                        'media/properties/'+property.property_code+'/' + property.image_property,
+                        '/reservation',
+                        property.title,
+                        "Distance à calculer"
                     );
-                }
-                var fiveStars = starsOutput(
-                    "star",
-                    "star",
-                    "star",
-                    "star",
-                    "star"
-                );
-                var fourHalfStars = starsOutput(
-                    "star",
-                    "star",
-                    "star",
-                    "star",
-                    "star half"
-                );
-                var fourStars = starsOutput(
-                    "star",
-                    "star",
-                    "star",
-                    "star",
-                    "star empty"
-                );
-                var threeHalfStars = starsOutput(
-                    "star",
-                    "star",
-                    "star",
-                    "star half",
-                    "star empty"
-                );
-                var threeStars = starsOutput(
-                    "star",
-                    "star",
-                    "star",
-                    "star empty",
-                    "star empty"
-                );
-                var twoHalfStars = starsOutput(
-                    "star",
-                    "star",
-                    "star half",
-                    "star empty",
-                    "star empty"
-                );
-                var twoStars = starsOutput(
-                    "star",
-                    "star",
-                    "star empty",
-                    "star empty",
-                    "star empty"
-                );
-                var oneHalfStar = starsOutput(
-                    "star",
-                    "star half",
-                    "star empty",
-                    "star empty",
-                    "star empty"
-                );
-                var oneStar = starsOutput(
-                    "star",
-                    "star empty",
-                    "star empty",
-                    "star empty",
-                    "star empty"
-                );
-                if (dataRating >= 4.75) {
-                    $(this).append(fiveStars);
-                } else if (dataRating >= 4.25) {
-                    $(this).append(fourHalfStars);
-                } else if (dataRating >= 3.75) {
-                    $(this).append(fourStars);
-                } else if (dataRating >= 3.25) {
-                    $(this).append(threeHalfStars);
-                } else if (dataRating >= 2.75) {
-                    $(this).append(threeStars);
-                } else if (dataRating >= 2.25) {
-                    $(this).append(twoHalfStars);
-                } else if (dataRating >= 1.75) {
-                    $(this).append(twoStars);
-                } else if (dataRating >= 1.25) {
-                    $(this).append(oneHalfStar);
-                } else if (dataRating < 1.25) {
-                    $(this).append(oneStar);
-                }
-            });
-        }
-        starRating(".star-rating");
-
-        var mapZoomAttr = $("#map").attr("data-map-zoom");
-        var mapScrollAttr = $("#map").attr("data-map-scroll");
-        if (typeof mapZoomAttr !== typeof undefined && mapZoomAttr !== false) {
-            var zoomLevel = parseInt(mapZoomAttr);
-        } else {
-            var zoomLevel = 5;
-        }
-        if (
-            typeof mapScrollAttr !== typeof undefined &&
-            mapScrollAttr !== false
-        ) {
-            var scrollEnabled = parseInt(mapScrollAttr);
-        } else {
-            var scrollEnabled = false;
-        }
-        var map = new google.maps.Map(document.getElementById("map"), {
-            zoom: zoomLevel,
-            scrollwheel: false,
-            center: new google.maps.LatLng(40.709295, -74.003099),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoomControl: true,
-            zoomControlOptions: {
-                position: google.maps.ControlPosition.TOP_LEFT,
+                    
+                    // Création du marqueur avec icône personnalisée
+                    var customIcon = L.divIcon({
+                        className: 'map-marker-container',
+                        html: `
+                            <div class="marker-container">
+                                <div class="marker-card">
+                                    <div class="front face">
+                                        <div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="back face">
+                                        <div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="marker-arrow"></div>
+                                </div>
+                            </div>`,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40]
+                    });
+                    
+                    // Ajout du marqueur à la carte
+                    L.marker([property.latitude, property.longitude], {icon: customIcon})
+                        .addTo(map)
+                        .bindPopup(popupContent);
+                });
             },
-            mapTypeControl: false,
-            scaleControl: false,
-            panControl: false,
-            navigationControl: false,
-            streetViewControl: false,
-            gestureHandling: "cooperative",
-            styles: [
-                {
-                    featureType: "all",
-                    elementType: "geometry.fill",
-                    stylers: [
-                        {
-                            weight: "2.00",
-                        },
-                    ],
-                },
-                {
-                    featureType: "all",
-                    elementType: "geometry.stroke",
-                    stylers: [
-                        {
-                            color: "#9c9c9c",
-                        },
-                    ],
-                },
-                {
-                    featureType: "all",
-                    elementType: "labels.text",
-                    stylers: [
-                        {
-                            visibility: "on",
-                        },
-                    ],
-                },
-                {
-                    featureType: "landscape",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            color: "#f2f2f2",
-                        },
-                    ],
-                },
-                {
-                    featureType: "landscape",
-                    elementType: "geometry.fill",
-                    stylers: [
-                        {
-                            color: "#ffffff",
-                        },
-                    ],
-                },
-                {
-                    featureType: "landscape.man_made",
-                    elementType: "geometry.fill",
-                    stylers: [
-                        {
-                            color: "#ffffff",
-                        },
-                    ],
-                },
-                {
-                    featureType: "poi",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            visibility: "off",
-                        },
-                    ],
-                },
-                {
-                    featureType: "road",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            saturation: -100,
-                        },
-                        {
-                            lightness: 45,
-                        },
-                    ],
-                },
-                {
-                    featureType: "road",
-                    elementType: "geometry.fill",
-                    stylers: [
-                        {
-                            color: "#eeeeee",
-                        },
-                    ],
-                },
-                {
-                    featureType: "road",
-                    elementType: "labels.text.fill",
-                    stylers: [
-                        {
-                            color: "#7b7b7b",
-                        },
-                    ],
-                },
-                {
-                    featureType: "road",
-                    elementType: "labels.text.stroke",
-                    stylers: [
-                        {
-                            color: "#ffffff",
-                        },
-                    ],
-                },
-                {
-                    featureType: "road.highway",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            visibility: "simplified",
-                        },
-                    ],
-                },
-                {
-                    featureType: "road.arterial",
-                    elementType: "labels.icon",
-                    stylers: [
-                        {
-                            visibility: "off",
-                        },
-                    ],
-                },
-                {
-                    featureType: "transit",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            visibility: "off",
-                        },
-                    ],
-                },
-                {
-                    featureType: "water",
-                    elementType: "all",
-                    stylers: [
-                        {
-                            color: "#46bcec",
-                        },
-                        {
-                            visibility: "on",
-                        },
-                    ],
-                },
-                {
-                    featureType: "water",
-                    elementType: "geometry.fill",
-                    stylers: [
-                        {
-                            color: "#c8d7d4",
-                        },
-                    ],
-                },
-                {
-                    featureType: "water",
-                    elementType: "labels.text.fill",
-                    stylers: [
-                        {
-                            color: "#070707",
-                        },
-                    ],
-                },
-                {
-                    featureType: "water",
-                    elementType: "labels.text.stroke",
-                    stylers: [
-                        {
-                            color: "#ffffff",
-                        },
-                    ],
-                },
-            ],
-        });
-
-        $(".listing-item-container").on("mouseover", function () {
-            var listingAttr = $(this).data("marker-id");
-            if (listingAttr !== undefined) {
-                var listing_id = $(this).data("marker-id") - 1;
-                var marker_div = allMarkers[listing_id].div;
-                $(marker_div).addClass("clicked");
-                $(this).on("mouseout", function () {
-                    if ($(marker_div).is(":not(.infoBox-opened)")) {
-                        $(marker_div).removeClass("clicked");
-                    }
-                });
+            error: function() {
+                console.error('Erreur lors du chargement des propriétés');
             }
         });
 
-        var boxText = document.createElement("div");
-        boxText.className = "map-box";
-        var currentInfobox;
-        var boxOptions = {
-            content: boxText,
-            disableAutoPan: false,
-            alignBottom: true,
-            maxWidth: 0,
-            pixelOffset: new google.maps.Size(-134, -55),
-            zIndex: null,
-            boxStyle: { width: "360px" },
-            closeBoxMargin: "0",
-            closeBoxURL: "",
-            infoBoxClearance: new google.maps.Size(25, 25),
-            isHidden: false,
-            pane: "floatPane",
-            enableEventPropagation: false,
-        };
-        var markerCluster, overlay, i;
-        var allMarkers = [];
-        var clusterStyles = [
-            { textColor: "white", url: "", height: 50, width: 50 },
-        ];
-        var markerIco;
-        for (i = 0; i < locations.length; i++) {
-            markerIco = locations[i][4];
-            var overlaypositions = new google.maps.LatLng(
-                    locations[i][1],
-                    locations[i][2]
-                ),
-                overlay = new CustomMarker(
-                    overlaypositions,
-                    map,
-                    { marker_id: i },
-                    markerIco
-                );
-            allMarkers.push(overlay);
-            google.maps.event.addDomListener(
-                overlay,
-                "click",
-                (function (overlay, i) {
-                    return function () {
-                        ib.setOptions(boxOptions);
-                        boxText.innerHTML = locations[i][0];
-                        ib.close();
-                        ib.open(map, overlay);
-                        currentInfobox = locations[i][3];
-                        google.maps.event.addListener(
-                            ib,
-                            "domready",
-                            function () {
-                                $(".infoBox-close").click(function (e) {
-                                    e.preventDefault();
-                                    ib.close();
-                                    $(".map-marker-container").removeClass(
-                                        "clicked infoBox-opened"
-                                    );
-                                });
-                            }
-                        );
-                    };
-                })(overlay, i)
-            );
-        }
-        var options = {
-            imagePath: "images/",
-            styles: clusterStyles,
-            minClusterSize: 2,
-        };
-        markerCluster = new MarkerClusterer(map, allMarkers, options);
-        google.maps.event.addDomListener(window, "resize", function () {
-            var center = map.getCenter();
-            google.maps.event.trigger(map, "resize");
-            map.setCenter(center);
-        });
-        var zoomControlDiv = document.createElement("div");
-        var zoomControl = new ZoomControl(zoomControlDiv, map);
-        function ZoomControl(controlDiv, map) {
-            zoomControlDiv.index = 1;
-            map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(
-                zoomControlDiv
-            );
-            controlDiv.style.padding = "5px";
-            controlDiv.className = "zoomControlWrapper";
-            var controlWrapper = document.createElement("div");
-            controlDiv.appendChild(controlWrapper);
-            var zoomInButton = document.createElement("div");
-            zoomInButton.className = "custom-zoom-in";
-            controlWrapper.appendChild(zoomInButton);
-            var zoomOutButton = document.createElement("div");
-            zoomOutButton.className = "custom-zoom-out";
-            controlWrapper.appendChild(zoomOutButton);
-            google.maps.event.addDomListener(
-                zoomInButton,
-                "click",
-                function () {
-                    map.setZoom(map.getZoom() + 1);
-                }
-            );
-            google.maps.event.addDomListener(
-                zoomOutButton,
-                "click",
-                function () {
-                    map.setZoom(map.getZoom() - 1);
-                }
-            );
-        }
-        var scrollEnabling = $("#scrollEnabling");
-        $(scrollEnabling).click(function (e) {
-            e.preventDefault();
-            $(this).toggleClass("enabled");
-            if ($(this).is(".enabled")) {
-                map.setOptions({ scrollwheel: true });
-            } else {
-                map.setOptions({ scrollwheel: false });
-            }
-        });
-        $("#geoLocation, .input-with-icon.location a").click(function (e) {
-            e.preventDefault();
-            geolocate();
-        });
-
-        function geolocate() {
+        // Géolocalisation sécurisée (HTTPS seulement)
+        if (window.location.protocol === 'https:') {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var pos = new google.maps.LatLng(
-                        position.coords.latitude,
-                        position.coords.longitude
-                    );
-                    map.setCenter(pos);
-                    map.setZoom(12);
-                });
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var userLatLng = [position.coords.latitude, position.coords.longitude];
+                        
+                        // Marqueur pour la position utilisateur
+                        var userIcon = L.divIcon({
+                            className: 'user-location-marker',
+                            html: '<div class="user-marker"></div>',
+                            iconSize: [20, 20]
+                        });
+                        
+                        L.marker(userLatLng, {icon: userIcon})
+                            .addTo(map)
+                            .bindPopup('Votre position')
+                            .openPopup();
+                            
+                        // Recentrer la carte sur la position
+                        map.setView(userLatLng, 16);
+                    },
+                    function(error) {
+                        console.log('Erreur de géolocalisation:', error.message);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                console.log('Géolocalisation non supportée par le navigateur');
             }
+        } else {
+            console.log('La géolocalisation nécessite une connexion HTTPS');
         }
     }
     
@@ -602,6 +739,11 @@
     if (typeof map != "undefined" && map != null) {
         google.maps.event.addDomListener(window, "load", mainMap);
     }
+
+    // Initialiser la carte quand le DOM est prêt
+    $(document).ready(function() {
+        mainMap();
+    });
 
     function singleListingMap() {
         var myLatlng = new google.maps.LatLng({

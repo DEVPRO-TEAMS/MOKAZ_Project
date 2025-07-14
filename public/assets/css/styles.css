@@ -6672,8 +6672,8 @@ label {
 
 .marker-card .face {
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   text-align: center;
@@ -7423,6 +7423,7 @@ label {
   content: none;
 }
 .map-single .marker-card .face div {
+  /* background-image: url("../images/location/map-icon1.png"); */
   background-image: url("../images/location/map-icon.png");
   width: 60px;
   height: 60px;

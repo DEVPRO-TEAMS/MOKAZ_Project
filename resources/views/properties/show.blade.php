@@ -346,7 +346,7 @@
                     <h3 class="title">Détails de la propriété</h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
-                    <a class="tf-btn primary" href="{{ route('partner.properties.create') }}"><i class="icon icon-plus"></i>
+                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->property_code) }}"><i class="icon icon-plus"></i>
                         Ajouter un appartement</a>
                 </div>
             </div>
