@@ -359,7 +359,7 @@
                         <div class="row g-0">
                             <div class="property-image-container col-12 mb-3" style="height: 350px;">
                                 @if ($property->image_property)
-                                    <img src="{{ asset('media/properties/' . $property->image_property) }}"
+                                    <img src="{{ asset('media/properties'.$property->property_code .'/'.$property->image_property)}}"
                                         alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
                                         style="height: 100%; object-fit: cover;">
                                 @else

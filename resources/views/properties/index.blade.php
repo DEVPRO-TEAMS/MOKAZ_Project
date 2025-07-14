@@ -59,7 +59,7 @@
                                     <td>
                                         <div class="listing-box">
                                             <div class="images">
-                                                <img src="{{ asset('media/properties/'.$property->image_property)}}" alt="images">
+                                                <img src="{{ asset('media/properties'.$property->property_code .'/'.$property->image_property)}}" alt="images">
                                             </div>
                                             <div class="content">
                                                 <div class="title"><a href="property-details-v1.html" class="link"> {{ $property->title}} </a> </div>
