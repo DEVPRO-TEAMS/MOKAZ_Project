@@ -2,6 +2,7 @@
 @section('content')
     <!-- Map -->
     <section class="flat-map">
+        {{-- <div id="map-properties-show" class="top-map" data-map-zoom="16" data-map-scroll="true"></div> --}}
         <div id="map" class="top-map" data-map-zoom="16" data-map-scroll="true"></div>
 
         <div class="container">
@@ -14,8 +15,8 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade active show" role="tabpanel">
-                            <div class="form-sl">
-                                <form method="post">
+                            <div class="form-sl mt-5 pt-5">
+                                <form method="post" >
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
                                             <div class="form-group-1 search-form form-style">
@@ -335,269 +336,55 @@
                 <h4 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h4>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom1.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 Fcfa/jour</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom7.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                               
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 Fdfa/jour</span>
-                                    </li>
-                                </ul>
+                @foreach ($apparts as $item)
+                    <div class="col-xl-4 col-md-6">
+                        <div class="homeya-box style-3">
+                            <div class="images-group">
+                                <div class="images-style">
+                                    @php
+                                        $imagePath = 'media/properties_' . $item->property_code . '/apparts' . $item->appartement_code . '/' . $item->main_image;
+                                    @endphp
+                                    <img src="{{ asset($imagePath) }}" alt="img">
+                                </div>
+                                <div class="top">
+                                    <ul class="d-flex gap-8">
+                                        <li class="flag-tag success">En vedette</li>
+                                    </ul>
+                                    <ul class="d-flex gap-4">
+                                        <li class="box-icon w-32">
+                                            <span class="icon icon-arrLeftRight"></span>
+                                        </li>
+                                        <li class="box-icon w-32">
+                                            <span class="icon icon-heart"></span>
+                                        </li>
+                                        <li class="box-icon w-32">
+                                            <span class="icon icon-eye"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
+                                            class="link text-white">Casa Lomas de Machalí Machas</a></div>
+                                    <ul class="meta-list">
+                                        <li class="item">
+                                            <i class="icon icon-bed"></i>
+                                            <span>3</span>
+                                        </li>
+                                        <li class="item">
+                                            <i class="icon icon-bathtub"></i>
+                                            <span>2</span>
+                                        </li>
+                                        <li class="item">
+                                            <i class="icon icon-ruler"></i>
+                                            <span>600 Fcfa/jour</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom3.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                               
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 Fcfa</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom5.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                               
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 Fcfa</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom6.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                               
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 Fcfa</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="homeya-box style-3">
-                        <div class="images-group">
-                            <div class="images-style">
-                                <img src="{{ asset('assets/images/home/bedroom2.jpg') }}" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-8">
-                                    <li class="flag-tag success">En vedette</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-32">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="content">
-                                <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                        class="link text-white">Casa Lomas de Machalí Machas</a></div>
-                               
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>3</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 fcfa</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+                
             </div>
             <div class="text-center">
                 <a href="#" class="tf-btn primary size-1">Voir tous les biens</a>

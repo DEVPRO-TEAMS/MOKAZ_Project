@@ -50,7 +50,7 @@ class PropertyController extends Controller
             if ($request->hasFile('image_property')) {
             $file = $request->file('image_property');
             $imageName = $property_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-            $file->move(public_path('media/properties/'), $imageName);
+            $file->move(public_path('media/properties_/'.$property_code), $imageName);
         }
             $property = Property::create(
                 [ 
