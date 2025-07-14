@@ -597,6 +597,7 @@
             }
         }
     }
+    
     var map = document.getElementById("map");
     if (typeof map != "undefined" && map != null) {
         google.maps.event.addDomListener(window, "load", mainMap);
