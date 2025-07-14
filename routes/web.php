@@ -9,6 +9,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Partner\PartnerController;
+use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\Properties\PropertyController;
 
 /*
@@ -83,6 +84,7 @@ Route::prefix('partner')->name('partner.')->group(function(){
         Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
         // Route::post('/property/store', [PropertyController::class, 'store'])->name('properties.store') api property dans api.php;
         Route::get('/property/show/{property_code}', [PropertyController::class, 'show'])->name('properties.show');
+        Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
     });
 });
 

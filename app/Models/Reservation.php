@@ -19,9 +19,13 @@ class Reservation extends Model
         'end_time',
         'statut_paiement',
         'status',
+        'traited_by',
+        'traited_at',
         'notes',
         'unit_price',
         'total_price',
     ];
+
+    
 }
 

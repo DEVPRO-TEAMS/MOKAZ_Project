@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('statut_paiement',['pending', 'paid'])->default('pending');
             $table->enum('status', ['pending', 'confirmed', 'cancelled','reconducted'])->default('pending');
             $table->text('notes')->nullable();
+            $table->string('traited_by')->nullable();
+            $table->dateTime('traited_at')->nullable();
             $table->decimal('total_price', 8, 2)->nullable();
             $table->decimal('unit_price', 8, 2)->nullable();
             $table->timestamps();

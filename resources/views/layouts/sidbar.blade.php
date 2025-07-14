@@ -80,6 +80,8 @@
     <div class="sidebar-menu-dashboard">
         <ul class="box-menu-dashboard">
 
+           
+
             <li class="nav-menu-item active">
                 @if (Auth::user()->user_type == 'admin')
                     <a class="nav-menu-link" href="{{ route('admin.index') }}">
@@ -91,6 +93,12 @@
                     </a>
                 @endif
                 
+            </li>
+             <li class="nav-menu-item">
+                <a class="nav-menu-link" href="{{ route('partner.reservation.index') }}">
+                    <span class="icon icon-list-dashes"></span>
+                    Réservations
+                </a>
             </li>
             @if (Auth::user()->user_type == 'admin')
             <li class="nav-menu-item">
