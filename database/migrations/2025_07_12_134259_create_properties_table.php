@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('partner_code')->nullable();
             $table->string('image_property')->nullable();
             $table->string('title')->nullable();
+            $table->string('Type')->nullable();
              $table->string('address')->nullable();
             $table->string('zipCode')->nullable();
             $table->string('country')->nullable();

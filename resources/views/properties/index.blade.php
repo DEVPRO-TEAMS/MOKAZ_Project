@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-content-inner wrap-dashboard-content">
+    <div class="main-content-inne wrap-dashboard-content">
         <div class="button-show-hide show-mb">
             <span class="body-1">Afficher le tableau de bord</span>
         </div>
@@ -9,32 +9,23 @@
             <div class="col-md-3">
                 <fieldset class="box-fieldset">
                     <label for="title">
-                        Post Status:<span>*</span>
+                        Status:<span>*</span>
                     </label>
-                    <div class="nice-select" tabindex="0"><span class="current">Select</span>
-                        <ul class="list">
-                            <li data-value="1" class="option selected">Select</li>
-                            <li data-value="2" class="option">Publish</li>
-                            <li data-value="3" class="option">Pending</li>
-                            <li data-value="3" class="option">Hidden</li>
-                            <li data-value="3" class="option">Sold</li>
-                        </ul>
-                    </div>
+                    <select name="status" class="nice-select list style-1" id="">
+                        <option value="" selected>Choisir</option>
+                        <option value="Pending">En attente</option>
+                        <option value="Published">Publier</option>
+                        <option value="Unpublished">Non publier</option>
+                    </select>
+                    
                 </fieldset>
             </div>
-            <div class="col-md-9">
-                <fieldset class="box-fieldset">
-                    <label for="title">
-                        Post Status:<span>*</span>
-                    </label>
-                    <input type="text" class="form-control style-1" placeholder="Search by title">
-                </fieldset>
-            </div>
+            
         </div>
         <div class="widget-box-2 wd-listing">
             <div class="row align-items-center justify-content-center">
                 <div class="flat-bt-top col-md-9">
-                    <h6 class="title">My Properties</h6>
+                    <h6 class="title">Mes Properties</h6>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
                     <a class="tf-btn primary" href="{{ route('partner.properties.create') }}"><i class="icon icon-plus"></i> Ajouter une propriété</a>
@@ -43,24 +34,31 @@
              
             <div class="wrap-table">
                 <div class="table-responsive">
-                    <table>
+                    <table class="table table-hover align-middle mb-0" id="example">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Titre</th>
                                 <th>Date de création</th>
                                 <th>Status</th>
-                                <th>Feature</th>
+                                <th>Nombre d'appartements</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            
                             @foreach ($properties as $property)
                                 <tr class="file-delete">
                                     <td>
                                         <div class="listing-box">
                                             <div class="images">
-                                                <img src="{{ asset('media/properties'.$property->property_code .'/'.$property->image_property)}}" alt="images">
+                                                <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property) }}" alt="images">
                                             </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="listing-box">
+                                            
                                             <div class="content">
                                                 <div class="title"><a href="property-details-v1.html" class="link"> {{ $property->title}} </a> </div>
                                                 <div class="text-date"> {{ $property->address}} </div>
@@ -77,11 +75,11 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span>No</span>
+                                        <span>{{ $property->appartements->count()}}</span>
                                     </td>
                                     <td>
                                         <ul class="list-action d-flex align-items-center justify-content-center">
-                                            <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-edit"></i></a></li>
+                                            {{-- <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-edit"></i></a></li> --}}
                                             <li class="border rounded me-2"><a class="item p-2" href="{{ route('partner.properties.show', $property->property_code) }}"><i class="icon icon-eye"></i></a></li>
                                             <li class="border rounded me-2"><a class="item p-2"><i class="icon icon-trash"></i></a></li>
                                         </ul>
@@ -92,12 +90,7 @@
                     </table>
                 </div>
 
-                <ul class="wd-navigation">
-                    <li><a href="#" class="nav-item active">1</a></li>
-                    <li><a href="#" class="nav-item">2</a></li>
-                    <li><a href="#" class="nav-item">3</a></li>
-                    <li><a href="#" class="nav-item"><i class="icon icon-arr-r"></i></a></li>
-                </ul>
+                
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
         <form id="addAppartForm" enctype="multipart/form-data">
             {{-- @csrf --}}
             <input type="hidden" name="partner_code" value="{{ Auth::user()->email ?? '' }}">
-            <input type="hidden" name="property_code" value="{{ $property_code }}">
+            <input type="hidden" name="property_code" id="property_code" value="{{ $property_code }}">
             <div class="widget-box-2">
                 <h6 class="title">Charger l'images de l'appartement</h6>
                 <div class="box-uploadfile text-center">
@@ -175,24 +175,6 @@
                     </label>
                 </div>
             </div>
-            {{-- <div class="widget-box-2">
-                <h6 class="title">Virtual Tour 360</h6>
-                <div class="box-radio-check">
-                    <div class="fw-7">Virtual Tour Type:</div>
-                    <fieldset class="fieldset-radio">
-                        <input type="radio" class="tf-radio" name="radio" id="radio1" checked>
-                        <label for="radio1" class="text-radio">Embedded code</label>
-                    </fieldset>
-                    <fieldset class="fieldset-radio">
-                        <input type="radio" class="tf-radio" name="radio" id="radio2">
-                        <label for="radio2" class="text-radio">Upload image</label>
-                    </fieldset>
-                </div>
-                <fieldset class="box-fieldset">
-                    <label for="embedded">Embedded Code Virtual 360</label>
-                    <textarea class="textarea"></textarea>
-                </fieldset>
-            </div> --}}
             <div class="widget-box-2">
                 <h6 class="title">Videos de l'appartement</h6>
                 <fieldset class="box-fieldset">
@@ -203,7 +185,7 @@
             <div class="d-flex justify-content-end">
                 <button type="submit" class="tf-btn primary"> Ajouter</button>
             </div>
-            {{-- <a href="#" class="tf-btn primary">Add Property</a> --}}
+            
         </form>
 
     </div>
@@ -212,6 +194,7 @@
 
         document.getElementById('addAppartForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const property_code = document.getElementById('property_code').value;
 
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -263,6 +246,9 @@
                 // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
                 // modal.hide();
                 this.reset();
+                setTimeout(() => {
+                    window.location.href = 'partner/property/show/' + property_code;
+                }, 3000);
 
             } catch (error) {
                 console.error('Erreur:', error);

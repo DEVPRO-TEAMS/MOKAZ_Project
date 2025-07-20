@@ -13,7 +13,7 @@
                     </div>
                     <center class="d-none d-lg-block">
                         <div class="flat-bt-top">
-                            <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
+                            <a class="tf-btn primary" href="{{ route('reservation') }}">Découvrire nos biens</a>
                         </div>
                     </center>
 
@@ -31,7 +31,7 @@
                         @if (Auth::check())
                             <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                                 <div class="avatar avt-40 round">
-                                    <img src="{{asset('assets/images/avatar/avt-2.jpg')}}" alt="avt">
+                                    <img src="{{asset('assets/images/avatar/user-profile.webp')}}" alt="avt">
                                 </div>
                                 <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span class="icon icon-arr-down"></span></p>
                                 <div class="dropdown-menu">
@@ -67,16 +67,37 @@
     <div class="mobile-menu">
         <div class="menu-backdrop"></div>
         <nav class="menu-box">
-            <div class="nav-logo"><a href="{{ route('welcome') }}"><img
-                    src="{{ asset('assets/images/logo/logo-main.png') }}" alt="nav-logo"  width="60%"></a>
+            <div class="nav-logo">
+                <a href="{{ route('welcome') }}">
+                    <img src="{{ asset('assets/images/logo/logo-main.png') }}" alt="nav-logo"  width="60%">
+                </a>
                 </div>
             <div class="bottom-canvas">
-                <div class="login-box flex align-items-center">
-                    <a href="#modalLogin" data-bs-toggle="modal">Connexion</a>
-                </div>
+                @if (Auth::check())
+                    <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                        <div class="avatar avt-40 round">
+                            <img src="{{asset('assets/images/avatar/user-profile.webp')}}" alt="avt">
+                        </div>
+                        <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span class="icon icon-arr-down"></span></p>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index') ) }}">Tableau de bord</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">Se deconnecter</a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </a>
+                @else
+                    <div class="login-box flex align-items-center">
+                        <a href="#modalLogin" data-bs-toggle="modal">Connexion</a>
+                    </div>
+                @endif
+                
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
-                    <a class="tf-btn primary" href="{{ route('reservation') }}">Faire une reservation</a>
+                    <a class="tf-btn primary" href="{{ route('reservation') }}">Découvrire nos biens</a>
                 </div>
                 
 

@@ -6,6 +6,8 @@ use App\Models\Appartement;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
+use function PHPSTORM_META\type;
+
 class PagesController extends Controller
 {
     public function index()
@@ -16,7 +18,7 @@ class PagesController extends Controller
     public function getAllProperties()
     {
         // Récupérer tous les propriétés avec latitude et longitude
-        $properties = Property::select('property_code','title', 'longitude', 'latitude', 'image_property')->where(['etat'=>'inactif'])->get();
+        $properties = Property::where(['etat'=>'pending'])->get();
         // $properties = Property::select('title', 'longitude', 'latitude', 'image_property')->where(['etat'=>'Actif'])->get();
         return response()->json($properties);
     }

@@ -726,9 +726,9 @@ label {
 }
 
 .main-header {
-  z-index: 999;
+  z-index: 9999;
   width: 100%;
-  height: 100px;
+  height: 80px;
   position: relative;
   border-bottom: 1px solid #e4e4e4;
   background-color: #ffffff;
@@ -6857,8 +6857,8 @@ label {
 }
 
 .flat-map .top-map {
-  height: calc(100vh - 188px);
-  /* height: 100vh; */
+  /* height: calc(100vh - 188px); */
+  height: 88vh;
   /* height: 460px; */
 }
 .flat-map .wrap-filter-search {
@@ -9539,9 +9539,9 @@ tr {
     display: none;
   }
 
-  .main-header {
+  /* .main-header {
     padding: 15px;
-  }
+  } */
 
   .mobile-button, .mobile-admin-button {
     display: block !important;

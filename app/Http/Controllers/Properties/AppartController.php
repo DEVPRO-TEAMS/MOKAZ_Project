@@ -41,7 +41,7 @@ class AppartController extends Controller
             if ($request->hasFile('main_image')) {
             $file = $request->file('main_image');
             $imageName = $appartement_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-            $file->move(public_path('media/properties_/'.$property_code.'/apparts_'.$appartement_code), $imageName);
+            $file->move(public_path('media/properties_'.$property_code.'/apparts_'.$appartement_code), $imageName);
         }
             $appartement = Appartement::create(
                 [ 
@@ -66,18 +66,18 @@ class AppartController extends Controller
                 AppartDoc::create([
                     'appartement_code' => $appartement_code,
                     'doc_name' => $imageName,
-                    'doc_url' => 'media/properties_/'.$property_code.'/apparts_'.$appartement_code . '/' . $imageName
+                    'doc_url' => 'media/properties_'.$property_code.'/apparts_'.$appartement_code . '/' . $imageName
                 ]);
 
                 if ($request->hasFile('images_appart')) {
                     $files = $request->file('images_appart');
                     foreach ($files as $file) {
                         $image = $appartement_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-                        $file->move(public_path('media/properties_/'.$property_code.'/apparts'.$appartement_code), $image);
+                        $file->move(public_path('media/properties_'.$property_code.'/apparts'.$appartement_code), $image);
                         AppartDoc::create([
                             'appartement_code' => $appartement_code,
                             'doc_name' => $image,
-                            'doc_url' => 'media/properties_/'.$property_code.'/apparts_'.$appartement_code . '/' . $image
+                            'doc_url' => 'media/properties_'.$property_code.'/apparts_'.$appartement_code . '/' . $image
                         ]);
                     }
                 }

@@ -603,6 +603,7 @@
     // }
 
     function mainMap() {
+        
 
         // var coteDIvoireBounds = [
         //     [4.333, -8.599], // Sud-Ouest
@@ -628,25 +629,56 @@
         L.Control.geocoder().addTo(map);
 
         // Fonction de création du contenu des popups
-        function locationData(mapImg, mapURL, mapTitle, mapLocation) {
-            return `
-                <div class="map-listing-item">
-                    <div class="inner-box">
-                        <div class="infoBox-close"><i class="icon icon-close2"></i></div>
-                        <div class="image-box">
-                            <img src="${mapImg}" alt="${mapTitle}">
-                        </div>
-                        <div class="content">
-                            <p class="location">
-                                <span class="icon icon-mapPin"></span>
-                                ${mapLocation}
-                            </p>
-                            <div class="title"><a href="${mapURL}">${mapTitle}</a></div>
-                            
-                        </div>
+        function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType) {
+    return `
+        <div class="map-listing-ite">
+            <div class="inner-box">
+                <div class="infoBox-close"><i class="icon icon-close"></i></div>
+                
+                <!-- Image -->
+                <div class="image-box">
+                    <img src="${mapImg}" alt="${mapTitle}">
+                </div>
+                
+                <!-- Contenu -->
+                <div class="content">
+                    
+                    <!-- Localisation -->
+                    <p class="location">
+                        <span class="icon icon-mapPin"></span>
+                        ${mapLocation}
+                    </p>
+                    
+                    <!-- Titre -->
+                    <div class="title">
+                        <a href="${mapURL}">${mapTitle}</a>
                     </div>
-                </div>`;
-        }
+                    
+                    <!-- Étoiles de notation -->
+                    <div class="rating">
+                        <span class="star">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                        <span class="star half">&#9733;</span>
+                        <span class="rating-score">(4.5/5)</span>
+                    </div>
+                    
+                    <!-- Info supplémentaire -->
+                    <div class="extra-info">
+                        <span class="category">🏨 ${mapType} </span> • <span class="price">À partir de 50 €/nuit</span>
+                    </div>
+                    
+                    <!-- Bouton -->
+                    <div class="actions">
+                        <a href="${mapURL}" class="btn-view">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
         // var APP_URL = '{{ asset('/') }}';
         window.MAP_ICON_PATH = "{{ asset('assets/images/location/map-icon1.png') }}";
         // Récupération des propriétés via AJAX
@@ -656,10 +688,12 @@
             success: function(properties) {
                 properties.forEach(function(property) {
                     var popupContent = locationData(
-                        'media/properties/'+property.property_code+'/' + property.image_property,
+                        'media/properties_'+property.property_code+'/' + property.image_property,
                         '/reservation',
                         property.title,
-                        "Distance à calculer"
+                        "Distance à calculer",
+                        property.Type
+
                     );
                     
                     // Création du marqueur avec icône personnalisée

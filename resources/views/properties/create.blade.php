@@ -24,13 +24,26 @@
             <div class="widget-box-2">
                 <h6 class="title">Information sur la propriété</h6>
                 <div class="box-info-property">
-                    <fieldset class="box box-fieldset">
-                        <label for="title">
-                            Titre:<span>*</span>
-                        </label>
-                        <input type="text" class="form-control style-1" value=""
-                            placeholder="Entrer le titre de la propriété" name="title">
-                    </fieldset>
+                    <div class="box grid-2 gap-30">
+                        <fieldset class="box box-fieldset">
+                            <label for="title">
+                                Titre:<span>*</span>
+                            </label>
+                            <input type="text" class="form-control style-1" value=""
+                                placeholder="Entrer le titre de la propriété" name="title">
+                        </fieldset>
+                        <fieldset class="box box-fieldset">
+                            <label for="type">
+                                Type de propriété:<span>*</span>
+                            </label>
+                            <select name="type" class="nice-select form-select list style-1" required id="type">
+                                <option value="Hotel">Hôtel</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Bureau">Bureau</option>
+                                <option value="Maison de campagne">Maison de campagne</option>
+                            </select>
+                        </fieldset>
+                    </div>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
                         <textarea class="textarea-tinymc" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" id="desc"></textarea>
@@ -206,6 +219,10 @@
                 // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
                 // modal.hide();
                 this.reset();
+                // rediriger vers la page des propriétés /partner/my-properties 2 seconde
+                setTimeout(() => {
+                    window.location.href = '/partner/my-properties';
+                }, 3000);
                 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -259,7 +276,15 @@ document.addEventListener('DOMContentLoaded', function () {
     locationButton.addEventListener('click', function (e) {
         e.preventDefault();
         if (!navigator.geolocation) {
-            alert('La géolocalisation n’est pas supportée par ce navigateur.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'La géolocalisation n’est pas supportée par ce navigateur.',
+                timer: 2500,
+                showConfirmButton: false,
+                position: 'top-end',
+                toast: true
+            })
             return;
         }
 

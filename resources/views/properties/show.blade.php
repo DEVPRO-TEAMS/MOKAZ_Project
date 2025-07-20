@@ -336,14 +336,14 @@
         }
     </style>
     <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hide show-mb">
-            <span class="body-1">Afficher le tableau de bord</span>
+        <div class="button-show-hid">
+            <span class="body-1">Détails de la propriété</span>
         </div>
 
         <div class=" widget-box-2 wd-listing">
             <div class="row align-items-center justify-content-center">
                 <div class="flat-bt-top col-md-9">
-                    <h3 class="title">Détails de la propriété</h3>
+                    <h3 class="title"></h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
                     <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->property_code) }}"><i class="icon icon-plus"></i>
@@ -359,7 +359,7 @@
                         <div class="row g-0">
                             <div class="property-image-container col-12 mb-3" style="height: 350px;">
                                 @if ($property->image_property)
-                                    <img src="{{ asset('media/properties'.$property->property_code .'/'.$property->image_property)}}"
+                                    <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property)}}"
                                         alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
                                         style="height: 100%; object-fit: cover;">
                                 @else
@@ -435,7 +435,7 @@
                                         <i class="fas fa-home text-muted"></i>
                                         Ville :
                                     </div>
-                                    <div class="info-value" id="show-property-type">{{ $property->city ?? '' }}</div>
+                                    <div class="info-value" id="show-property-type">{{ $property->ville->label ?? '' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -444,7 +444,7 @@
                                         <i class="fas fa-map-marker-alt text-muted"></i>
                                         Pays :
                                     </div>
-                                    <div class="info-value" id="show-activity-zone">{{ $property->country ?? '' }}</div>
+                                    <div class="info-value" id="show-activity-zone">{{ $property->pays->label ?? '' }}</div>
                                 </div>
                             </div>
 
@@ -492,147 +492,47 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th width="80">Code</th>
-                                                <th>Propriété</th>
-                                                <th>Localisation</th>
-                                                <th>Partenaire</th>
+                                                <th>Libellé</th>
+                                                <th>Type d'appart</th>
+                                                <th>Prix</th>
                                                 <th width="140">Date</th>
-                                                <th width="120">Statut</th>
+                                                <th width="120">Disponibilité</th>
                                                 <th width="140">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="7" class="text-center py-5">
-                                                    <div class="d-flex flex-column align-items-center">
-                                                        <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
-                                                        <h5 class="fw-semibold">Aucune propriété trouvée</h5>
-                                                        <p class="text-muted">Aucune propriété ne correspond à vos
-                                                            critères de recherche</p>
-                                                        
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            {{-- @forelse ($properties as $property)
+                                            @forelse ($property->apartements as $apartement)
                                                 <tr class="position-relative">
-                                                    <td class="fw-semibold">#{{ $property->property_code ?? '' }}</td>
+                                                    <td class="fw-semibold">#{{ $apartement->appartement_code ?? '' }}</td>
+                                                    <td class="fw-semibold">{{ $apartement->title ?? '' }}</td>
+                                                    <td class="fw-semibold">{{ $apartement->appartType ?? '' }}</td>
+                                                    <td class="fw-semibold">{{ $apartement->price ?? '' }} FCFA</td>
+                                                    <td class="fw-semibold">{{ $apartement->created_at->format('d/M/Y') ?? '' }}</td>
+                                                    <td class="fw-semibold">{{ $apartement->available ?? '0' }}</td>
                                                     <td>
                                                         <div class="d-flex align-items-center">
-                                                            <div class="property-image me-3">
-                                                                @if ($property->image_property)
-                                                                    <img src="{{ asset('media/properties/' . $property->image_property) }}"
-                                                                        alt="{{ $property->title }}" class="rounded-2"
-                                                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                                                @else
-                                                                    <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
-                                                                        style="width: 50px; height: 50px;">
-                                                                        <i class="fas fa-home"></i>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div>
-                                                                <h6 class="mb-0 fw-semibold">{{ $property->title ?? '' }}
-                                                                </h6>
-                                                                <small
-                                                                    class="text-muted d-block">{{ Str::limit($property->description ?? '', 50) }}</small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex flex-column">
-                                                            <span class="fw-semibold">{{ $property->city->label ?? '' }},
-                                                                {{ $property->country->label ?? '' }}</span>
-                                                            <small
-                                                                class="text-muted">{{ $property->address ?? '' }}</small>
-                                                            @if ($property->zipCode)
-                                                                <small class="text-muted">{{ $property->zipCode }}</small>
-                                                            @endif
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge bg-info bg-opacity-10 text-info">
-                                                            <i class="fas fa-handshake me-1"></i>
-                                                            {{ $property->partner_code ?? 'Non assigné' }}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex flex-column">
-                                                            <span>{{ $property->created_at->format('d/m/Y') ?? '' }}</span>
-                                                            <small
-                                                                class="text-muted">{{ $property->created_at->diffForHumans() ?? '' }}</small>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        @if ($property->etat == 'actif')
-                                                            <span
-                                                                class="badge rounded-pill bg-success bg-opacity-10 text-success">
-                                                                <i class="fas fa-check-circle me-1"></i> Active
-                                                            </span>
-                                                        @elseif ($property->etat == 'inactif')
-                                                            <span
-                                                                class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
-                                                                <i class="fas fa-times-circle me-1"></i> Inactive
-                                                            </span>
-                                                        @else
-                                                            <span
-                                                                class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
-                                                                <i class="fas fa-clock me-1"></i> En attente
-                                                            </span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <button
-                                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#showPropertyModal{{ $property->id }}"
+                                                            <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
+                                                               data-bs-toggle="modal" data-bs-target="#showApartmentModal{{ $apartement->apartement_code }}"
                                                                 title="Voir détails">
-                                                                <i class="fas fa-eye"></i>
-                                                            </button>
-
-                                                            <button
-                                                                class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                                                onclick="editProperty({{ $property->id }})"
-                                                                title="Modifier">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-
-                                                            @if ($property->etat == 'pending')
-                                                                <button
-                                                                    class="btn btn-sm btn-icon btn-outline-success rounded-circle"
-                                                                    onclick="approveProperty({{ $property->id }})"
-                                                                    title="Approuver">
-                                                                    <i class="fas fa-check"></i>
-                                                                </button>
-
-                                                                <button
-                                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle"
-                                                                    onclick="rejectProperty({{ $property->id }})"
-                                                                    title="Rejeter">
-                                                                    <i class="fas fa-times"></i>
-                                                                </button>
-                                                            @endif
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
                                                         </div>
                                                     </td>
                                                 </tr>
-
-                                                @include('admins.pages.propreties.showPropretyModal')
+                                                
                                             @empty
                                                 <tr>
                                                     <td colspan="7" class="text-center py-5">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
-                                                            <h5 class="fw-semibold">Aucune propriété trouvée</h5>
-                                                            <p class="text-muted">Aucune propriété ne correspond à vos
-                                                                critères de recherche</p>
-                                                            <a href="{{ route('admin.proprety.view') }}"
-                                                                class="btn btn-sm btn-outline-primary mt-2">
-                                                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser les
-                                                                filtres
-                                                            </a>
+                                                            <h5 class="fw-semibold">Aucun appartement trouvée</h5>
+                                                            <p class="text-muted">Aucun appartement n'est associé à la propriété</p>
+                                                            
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforelse --}}
+                                            @endforelse
+                                            
 
                                         </tbody>
                                     </table>
@@ -646,11 +546,16 @@
         </div>
     </div>
 
+    @foreach($property->apartements as $apartement)
+        @include('properties.apparts.showModal')
+    @endforeach
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Récupération des coordonnées depuis les variables Blade (Laravel)
-            const latitude = {{ json_encode($property->latitude ?? 5.3361) }};
-            const longitude = {{ json_encode($property->longitude ?? -4.0268) }};
+            const latitude = @json($property->latitude);
+            const longitude = @json($property->longitude);
+            
 
             // Initialisation de la carte
             const map = L.map('map-location-property').setView([latitude, longitude], 16);

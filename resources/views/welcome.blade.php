@@ -1,8 +1,16 @@
 @extends('layouts.main')
 @section('content')
+<style>
+        @media (max-width: 768px) {
+        /* Moyens écrans et plus */
+        .flat-map.my-content {
+            margin-top: 80px;
+        }
+    }
+</style>
     <!-- Map -->
-    <section class="flat-map">
-        {{-- <div id="map-properties-show" class="top-map" data-map-zoom="16" data-map-scroll="true"></div> --}}
+    <section class="flat-map my-content">
+        
         <div id="map" class="top-map" data-map-zoom="16" data-map-scroll="true"></div>
 
         <div class="container">
@@ -10,13 +18,13 @@
                 <div class="flat-tab flat-tab-form">
                     <ul class="nav-tab-form style-3 justify-content-center" role="tablist">
                         <li class="nav-tab-item" role="presentation">
-                            <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">Location </a>
+                            <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">Localisation </a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade active show" role="tabpanel">
-                            <div class="form-sl mt-5 pt-5">
-                                <form method="post" >
+                            <div class="form-sl pt-5">
+                                <form action="">
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
                                             <div class="form-group-1 search-form form-style">
@@ -29,9 +37,9 @@
                                                 <label>Localisation</label>
                                                 <div class="group-ip">
                                                     <input type="text" class="form-control"
-                                                        placeholder="Search Localisation" value="" name="s"
+                                                        placeholder="rechercher par Localisation" value="" name="s"
                                                         title="Search for" required="">
-                                                    <a href="#" class="icon icon-location"></a>
+                                                    {{-- <a href="#" class="icon icon-location"></a> --}}
                                                 </div>
                                             </div>
                                             <div class="form-group-3 form-style">
@@ -178,144 +186,7 @@
 
                                         </div>
 
-                                        {{-- <div class="group-checkbox">
-                                            <div class="text-1">Amenities:</div>
-                                            <div class="group-amenities mt-8 grid-6">
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1" id="cb1"
-                                                            checked>
-                                                        <label for="cb1" class="text-cb-amenities">Air
-                                                            Condition</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb2">
-                                                        <label for="cb2" class="text-cb-amenities">Cable TV</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb3">
-                                                        <label for="cb3" class="text-cb-amenities">Ceiling
-                                                            Height</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb4">
-                                                        <label for="cb4" class="text-cb-amenities">Fireplace</label>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb5">
-                                                        <label for="cb5" class="text-cb-amenities">Disabled
-                                                            Access</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1" id="cb6"
-                                                            checked>
-                                                        <label for="cb6" class="text-cb-amenities">Elevator</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb7">
-                                                        <label for="cb7" class="text-cb-amenities">Fence</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb8">
-                                                        <label for="cb8" class="text-cb-amenities">Garden</label>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1" id="cb9"
-                                                            checked>
-                                                        <label for="cb9" class="text-cb-amenities">Floor</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb10">
-                                                        <label for="cb10" class="text-cb-amenities">Furnishing</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1" id="cb11"
-                                                            checked>
-                                                        <label for="cb11" class="text-cb-amenities">Garage</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb12">
-                                                        <label for="cb12" class="text-cb-amenities">Pet
-                                                            Friendly</label>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb13">
-                                                        <label for="cb13" class="text-cb-amenities">Heating</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb14">
-                                                        <label for="cb14" class="text-cb-amenities">Intercom</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb15">
-                                                        <label for="cb15" class="text-cb-amenities">Parking</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb16">
-                                                        <label for="cb16" class="text-cb-amenities">WiFi</label>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb17">
-                                                        <label for="cb17" class="text-cb-amenities">Renovation</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb18">
-                                                        <label for="cb18" class="text-cb-amenities">Security</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb19">
-                                                        <label for="cb19" class="text-cb-amenities">Swimming
-                                                            Pool</label>
-                                                    </fieldset>
-
-                                                </div>
-                                                <div class="box-amenities">
-                                                    <fieldset class="amenities-item">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb20">
-                                                        <label for="cb20" class="text-cb-amenities">Window
-                                                            Type</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb21">
-                                                        <label for="cb21" class="text-cb-amenities">Search
-                                                            property</label>
-                                                    </fieldset>
-                                                    <fieldset class="amenities-item mt-12">
-                                                        <input type="checkbox" class="tf-checkbox style-1"
-                                                            id="cb22">
-                                                        <label for="cb22" class="text-cb-amenities">Construction
-                                                            Year</label>
-                                                    </fieldset>
-                                                </div>
-
-                                            </div>
-
-                                        </div> --}}
+                                        
                                     </div>
                                 </form>
                             </div>
@@ -342,7 +213,7 @@
                             <div class="images-group">
                                 <div class="images-style">
                                     @php
-                                        $imagePath = 'media/properties_' . $item->property_code . '/apparts' . $item->appartement_code . '/' . $item->main_image;
+                                        $imagePath = 'media/properties_' . $item->property_code . '/apparts_' . $item->appartement_code . '/' . $item->main_image;
                                     @endphp
                                     <img src="{{ asset($imagePath) }}" alt="img">
                                 </div>
@@ -364,19 +235,19 @@
                                 </div>
                                 <div class="content">
                                     <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
-                                            class="link text-white">Casa Lomas de Machalí Machas</a></div>
+                                            class="link text-white">{{ $item->title ?? '' }}</a></div>
                                     <ul class="meta-list">
                                         <li class="item">
                                             <i class="icon icon-bed"></i>
-                                            <span>3</span>
+                                            <span>{{ $item->bedroomsNumber ?? 0 }}</span>
                                         </li>
                                         <li class="item">
                                             <i class="icon icon-bathtub"></i>
-                                            <span>2</span>
+                                            <span>{{ $item->bathroomsNumber ?? 0 }}</span>
                                         </li>
                                         <li class="item">
                                             <i class="icon icon-ruler"></i>
-                                            <span>600 Fcfa/jour</span>
+                                            <span>{{ $item->price ?? 0 }} Fcfa/jour</span>
                                         </li>
                                     </ul>
                                 </div>
