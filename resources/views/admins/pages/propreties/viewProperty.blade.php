@@ -160,8 +160,9 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="property-image me-3">
+                                                    
                                                     @if($property->image_property)
-                                                        <img src="{{ asset('media/properties/'.$property->image_property)}}" 
+                                                        <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property) }}" 
                                                              alt="{{ $property->title }}" 
                                                              class="rounded-2" 
                                                              style="width: 50px; height: 50px; object-fit: cover;">

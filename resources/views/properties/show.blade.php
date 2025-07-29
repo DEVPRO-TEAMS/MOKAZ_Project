@@ -335,9 +335,15 @@
             margin-top: 0.25rem;
         }
     </style>
-    <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hid">
-            <span class="body-1">Détails de la propriété</span>
+    <div class="main-content-inne wrap-dashboard-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-home me-2 text-danger"></i> Détails de la propriété
+                    </h3>
+                </div>
+            </div>
         </div>
 
         <div class=" widget-box-2 wd-listing">

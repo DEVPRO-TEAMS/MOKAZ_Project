@@ -10,20 +10,18 @@ class Appartement extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'appartement_code',
-        'property_code',
+        'uuid',
+        'code',
+        'property_uuid',
+        'image',
         'title',
-        'price',
-        'available',
-        'appartType',
-        'bedroomsNumber',
-        'bathroomsNumber',
-        'CommoditiesHomesafety',
-        'CommoditiesBedroom',
-        'CommoditiesKitchen',
-        'video_url',
-        'main_image',
         'description',
+        'type_uuid',
+        'commodity_uuid',
+        'nbr_room',
+        'nbr_bathroom',
+        'nbr_available',
+        'video_url',
         'updated_by',
         'created_by',
         'deleted_by',
@@ -31,11 +29,14 @@ class Appartement extends Model
     ];
     public function property()
     {
-        return $this->belongsTo(Property::class, 'property_code', 'property_code');
+        return $this->belongsTo(Property::class, 'property_uuid', 'uuid');
     }
     public function images()
     {
         return $this->hasMany(AppartDoc::class, 'appartement_code', 'appartement_code');
     }
-
+    public function tarifications()
+    {
+        return $this->hasMany(Tarification::class, 'appartement_code', 'appartement_code');
+    }
 }

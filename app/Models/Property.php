@@ -13,13 +13,13 @@ class Property extends Model
     use HasFactory;
 
     protected $fillable = [
-        'property_code',
-        'partner_code',
-        'image_property',
+        'uuid',
+        'code',
+        'partner_uuid',
+        'image',
         'title',
-        'Type',
+        'type_uuid',
         'address',
-        'zipCode',
         'country',
         'city',
         'longitude',

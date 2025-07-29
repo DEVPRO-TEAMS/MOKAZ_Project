@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
@@ -30,6 +31,20 @@ use App\Http\Controllers\Properties\PropertyController;
 // })->name('welcome');
 
 Auth::routes();
+
+Route::get('storage/files/{file}', function ($file) {
+    $path = base_path(env('STORAGE_FILES') . $file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
 
 Route::get('/', [PagesController::class, 'index'])->name('welcome');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -92,7 +107,7 @@ Route::prefix('partner')->name('partner.')->group(function(){
         Route::get('/property/show/{property_code}', [PropertyController::class, 'show'])->name('properties.show');
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
 
-
+        Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');
         // Route apparts
         Route::get('/appart/create/{property_code}', [AppartController::class, 'create'])->name('apartments.create');
     });

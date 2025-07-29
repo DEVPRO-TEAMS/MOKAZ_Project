@@ -33,7 +33,7 @@
                                 @endif
                                 {{-- <p class="name">{{ Auth::user()->name ?? ''}} {{ Auth::user()->lastname ?? '' }} <span class="icon icon-arr-down"></span></p> --}}
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="my-profile.html">My Profile</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Mon Profile</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Se deconnecter</a>
                                 </div>
@@ -77,10 +77,51 @@
     </header>
     <!-- end header -->
     <!-- sidebar dashboard -->
-    <div class="sidebar-menu-dashboard bg-white border-end">
-        <div class="d-flex flex-column h-100">
-            <!-- Header du menu -->
+        <div class="sidebar-menu-dashboard">
+            {{-- <ul class="box-menu-dashboard">
+
             
+
+                <li class="nav-menu-item active">
+                    @if (Auth::user()->user_type == 'admin')
+                        <a class="nav-menu-link" href="{{ route('admin.index') }}">
+                            <span class="icon icon-dashboard"></span> Tableau de Bord
+                        </a>
+                    @else
+                        <a class="nav-menu-link" href="{{ route('partner.index') }}">
+                            <span class="icon icon-dashboard"></span> Tableau de Bord
+                        </a>
+                    @endif
+                    
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="{{ route('partner.reservation.index') }}">
+                        <span class="icon icon-list-dashes"></span>
+                        Réservations
+                    </a>
+                </li>
+                @if (Auth::user()->user_type == 'admin')
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="{{ route('admin.demande.view') }}">
+                        <span class="icon icon-list-dashes"></span>
+                        Demandes de partenariat
+                    </a>
+                </li>
+                @endif
+                @if (Auth::user()->user_type == 'admin')
+                    <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('admin.proprety.view') }}">
+                        <span class="icon icon-list-dashes"></span>Propriétés</a>
+                    </li>
+                @else
+                    <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('partner.properties.index') }}">
+                        <span class="icon icon-list-dashes"></span>Mes Propriétés</a>
+                    </li>
+                @endif
+                @if (Auth::user()->user_type == 'admin')
+                    <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('admin.partner.index') }}"><span class="icon icon-list-dashes"></span>Partenaires</a></li>
+                @endif 
+            </ul>      --}}
+
             <!-- Menu principal -->
             <nav class="flex-grow-1 p-2">
                 <ul class="nav nav-pills flex-column">
@@ -95,7 +136,7 @@
                             </a>
                         @else
                             <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                            href="dashboard.html">
+                            href="{{ route('partner.index') }}">
                                 <i class="bi bi-house-door me-3 fs-5"></i>
                                 <span>Tableau de Bord</span>
                             </a>
@@ -109,7 +150,8 @@
                         href="{{ route('partner.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_id', Auth::user()->id)->count() }}</span>
+                            <span class="badge bg-danger ms-auto">5</span>
+                            {{-- <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_id', Auth::user()->id)->count() ?? 0 }}</span> --}}
                         </a>
                     </li>
                     @else
@@ -257,45 +299,44 @@
                 </form>
             </div>
         </div>
-    </div>
 
     <!-- CSS minimal nécessaire -->
     <style>
-    .sidebar-menu-dashboard {
-        min-height: 100vh;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
+        .sidebar-menu-dashboard {
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
 
-    .nav-link {
-        transition: all 0.3s ease;
-    }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
 
-    .nav-link:hover {
-        background-color: rgba(220, 53, 69, 0.1) !important;
-        color: var(--bs-danger) !important;
-    }
+        .nav-link:hover {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+            color: var(--bs-danger) !important;
+        }
 
-    .nav-link.active {
-        background-color: rgba(220, 53, 69, 0.1) !important;
-        color: var(--bs-danger) !important;
-    }
+        .nav-link.active {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+            color: var(--bs-danger) !important;
+        }
 
-    .avatar-sm {
-        width: 35px;
-        height: 35px;
-    }
+        .avatar-sm {
+            width: 35px;
+            height: 35px;
+        }
 
-    /* Animation pour les flèches des menus déroulants */
-    .nav-link[aria-expanded="true"] .bi-chevron-down {
-        transform: rotate(180deg);
-    }
+        /* Animation pour les flèches des menus déroulants */
+        .nav-link[aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+        }
 
-    .transition-all {
-        transition: all 0.3s ease;
-    }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
 
-    /* Effet de survol pour les sous-menus */
-    .collapse .nav-link:hover {
-        background-color: rgba(0, 0, 0, 0.05) !important;
-    }
+        /* Effet de survol pour les sous-menus */
+        .collapse .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+        }
     </style>

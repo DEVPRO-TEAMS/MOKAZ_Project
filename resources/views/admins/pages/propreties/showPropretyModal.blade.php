@@ -6,7 +6,7 @@
                 <div class="d-flex align-items-center">
                     <div class="property-image me-3">
                         @if($property->image_property)
-                            <img src="{{ asset('media/properties/'.$property->image_property)}}" 
+                            <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property) }}" 
                                  alt="{{ $property->title }}" 
                                  class="rounded-2" 
                                  style="width: 40px; height: 40px; object-fit: cover;">
@@ -33,7 +33,7 @@
                     <div class="col-md-5 mb-4">
                         <div class="property-image-container">
                             @if($property->image_property)
-                                <img src="{{ asset('media/properties/'.$property->image_property)}}" 
+                                <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property) }}" 
                                      alt="{{ $property->title }}" 
                                      class="img-fluid rounded-3 shadow-sm w-100" 
                                      style="height: 200px; object-fit: cover;">

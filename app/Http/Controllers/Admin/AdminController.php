@@ -116,12 +116,15 @@ class AdminController extends Controller
     public function importCityCountry(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls,csv',
+            'file' => 'required',
         ]);
         
 
-        Excel::import(new CityCountryImport, $request->file('file'));
+        $imported = Excel::import(new CityCountryImport, $request->file('file'));
 
+        if (!$imported) {
+            return back()->with('error', 'Importation echouée.');
+        }
         return back()->with('success', 'Importation réussie.');
     }
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-content-inner wrap-dashboard-content">
+    <div class="main-content-inne wrap-dashboard-content">
         <div class="button-show-hide show-mb">
             <span class="body-1">Afficher le tableau de bord</span>
         </div>
@@ -36,7 +36,7 @@
                             <label for="type">
                                 Type de propriété:<span>*</span>
                             </label>
-                            <select name="type" class="nice-select form-select list style-1" required id="type">
+                            <select name="type" class="nice-selec form-select list style-1" required id="type">
                                 <option value="Hotel">Hôtel</option>
                                 <option value="Villa">Villa</option>
                                 <option value="Bureau">Bureau</option>
@@ -71,7 +71,7 @@
                             <label for="country">
                                 Pays:<span>*</span>
                             </label>
-                            <select name="country" class="nice-select list style-1" id="country" required>
+                            <select name="country" class="nice-select form-select list style-1" id="country" required>
                                 @foreach ($countries as $country)
                                     <option value="{{ $country->code }}" @if ($country->code == 'CIV') selected @endif>{{ $country->label }}</option>
                                 @endforeach

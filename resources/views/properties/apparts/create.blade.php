@@ -1,9 +1,122 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hide show-mb">
-            <span class="body-1">Afficher le tableau de bord</span>
+
+<style>
+    /* Styles pour la liste des fichiers */
+        .files-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .files-list.show {
+            display: block;
+        }
+
+        .files-list h6 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .file-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .file-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name-display {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .file-size {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-remove:hover {
+            background: #c82333;
+        }
+
+        .files-count {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .preview-container img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        }
+
+        .preview-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+</style>
+    <div class="main-content-inne wrap-dashboard-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-home me-2 text-danger"></i> Ajout d'appart dans la propriété #{{ $property_code }}
+                    </h3>
+                </div>
+            </div>
         </div>
         <form id="addAppartForm" enctype="multipart/form-data">
             {{-- @csrf --}}
@@ -16,7 +129,7 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir l'image</a>
-                            <input type="file" class="ip-file" name="main_image" required>
+                            <input type="file" class="ip-file" name="main_image" accept="image/*" required>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'images ici</p>
                     </label>
@@ -34,7 +147,7 @@
                     </fieldset>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
-                        <textarea class="textarea-tinymc" name="description" placeholder="Entrer la description de la propriété"
+                        <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété"
                             cols="30" rows="10" id="desc"></textarea>
                     </fieldset>
 
@@ -42,34 +155,57 @@
 
                 </div>
             </div>
+
             <div class="widget-box-2">
-                <h6 class="title">Prix</h6>
-                <div class="box-price-property">
-                    <div class="box grid-2 gap-30">
-                        <fieldset class="box-fieldset">
-                            <label for="price">
-                                Prix unitaire:<span>*</span>
-                            </label>
-                            <input type="number" name="price" class="form-control style-1" placeholder="Example value: 12345.67">
-                        </fieldset>
-                        <fieldset class="box-fieldset">
-                            <label for="neighborhood">
-                                Nombre disponible:<span>*</span>
-                            </label>
-                            <input type="number" name="available" class="form-control style-1" placeholder="Example value: 12345.67">
-                        </fieldset>
+                <h6 class="title">Tarifs</h6>
+                <div id="tarifs-container">
+                    <div class="box-price-property tarif-block mb-3">
+                        <div class="row box">
+                            <fieldset class="box-fieldset col-md-4">
+                                <label for="sejour_en_0">
+                                    Séjour en:<span>*</span>
+                                </label>
+                                <select class="form-select list style-1 nice-select" id="sejour_en_0" name="sejour_en[]" required>
+                                    <option value="">Sélectionnez...</option>
+                                    <option value="Jour">Jour</option>
+                                    <option value="Heure">Heure</option>
+                                    <option value="Semaine">Semaine</option>
+                                </select>
+                            </fieldset>
+                            <fieldset class="box-fieldset col-md-4">
+                                <label>
+                                    Nombre:<span>*</span>
+                                </label>
+                                <input type="number" name="temps[]" class="form-control style-1" placeholder="Exemple value: 1" required>
+                            </fieldset>
+                            <fieldset class="box-fieldset col-md-3">
+                                <label>
+                                    Coût:<span>*</span>
+                                </label>
+                                <input type="number" name="prix[]" class="form-control style-1" placeholder="Exemple value: 1" required>
+                            </fieldset>
+
+                            <fieldset class="box-fieldset col-md-1 pt-md-2 pt-lg-2" id="removeTarifBtnContainer">
+                                {{-- Afficher le bouton de suppression ici --}}
+                            </fieldset>
+                        </div>
                     </div>
                 </div>
+
+                <div class="mt-3">
+                    <button type="button" id="addTarifBtn" class="tf-btn primary">+ Ajouter un tarif</button>
+                </div>
             </div>
+
             <div class="widget-box-2">
                 <h6 class="title">Informations complémentaires</h6>
-                <div class="box grid-3 gap-30">
-                    <fieldset class="box-fieldset">
+                <div class="row box">
+                    <fieldset class="box-fieldset col-md-3">
                         <label for="appartType">
                             Type de l'appartment:<span>*</span>
                         </label>
                         
-                        <select class="form-select nice-select" id="appartType" name="appartType" required>
+                        <select class="form-select nice-select list style-1" id="appartType" name="appartType" required>
                             <option value="" >Sélectionnez...</option>
                             <option value="Villa">Villa</option>
                             <option value="Studio">Studio</option>
@@ -77,18 +213,24 @@
                             <option value="Maison de ville">Maison de ville</option>
                         </select>
                     </fieldset>
-                    <fieldset class="box-fieldset">
+                    <fieldset class="box-fieldset col-md-3">
                         <label for="bedrooms">
                             Nombre de chambres:<span>*</span>
                         </label>
-                        <input type="number" name="bedroomsNumber" class="form-control style-1">
+                        <input type="number" name="bedroomsNumber" class="form-control style-1" placeholder="Exemple valeur: 1">
                     </fieldset>
-                    <fieldset class="box-fieldset">
+                    <fieldset class="box-fieldset col-md-3">
                         <label for="bathrooms">
                             Nombre de salles de bain:<span>*</span>
                         </label>
-                        <input type="number" name="bathroomsNumber" class="form-control style-1">
-                    </fieldset> 
+                        <input type="number" name="bathroomsNumber" class="form-control style-1" placeholder="Exemple valeur: 1">
+                    </fieldset>
+                    <fieldset class="box-fieldset col-md-3">
+                        <label for="neighborhood">
+                            Nombre disponible:<span>*</span>
+                        </label>
+                        <input type="number" name="available" class="form-control style-1" placeholder="Exemple valeur: 1">
+                    </fieldset>
                 </div>
             </div>
             <div class="widget-box-2">
@@ -162,6 +304,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="widget-box-2">
                 <h6 class="title">Charger les images de l'appartement</h6>
                 <div class="box-uploadfile text-center">
@@ -169,11 +312,15 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir au moins une image</a>
-                            <input type="file" class="ip-file" name="images_appart" required multiple>
+                            <input type="file" class="ip-file ip-files" name="images_appart[]" id="imagesInput" multiple accept="image/*">
                         </div>
-                        <p class="file-name fw-5">Ou glisser déposez les images ici</p>
+                        <p class="file-nam fw-5">
+                            Fichiers sélectionnés (<span class="files-count text-danger" id="filesCount">0</span>)
+                        </p>
                     </label>
                 </div>
+
+                <div id="previewContainer" class="preview-container d-flex flex-wrap gap-3 mt-3"></div>
             </div>
             <div class="widget-box-2">
                 <h6 class="title">Videos de l'appartement</h6>
@@ -264,6 +411,62 @@
         });
     </script>
 
+
+    <script>
+        const imagesInput = document.getElementById('imagesInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const filesCount = document.getElementById('filesCount');
+
+        let imageFiles = [];
+
+        imagesInput.addEventListener('change', function () {
+            const newFiles = Array.from(imagesInput.files);
+
+            // Fusionner les fichiers actuels et nouveaux sans doublon
+            for (const file of newFiles) {
+                if (!imageFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)) {
+                    imageFiles.push(file);
+                }
+            }
+
+            renderPreviews();
+        });
+
+        function renderPreviews() {
+            previewContainer.innerHTML = '';
+            filesCount.textContent = imageFiles.length;
+
+            imageFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const div = document.createElement('div');
+                    div.classList.add('preview-item');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.innerHTML = 'x';
+                    removeBtn.onclick = () => {
+                        imageFiles.splice(index, 1);
+                        renderPreviews();
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Mettre à jour l'input pour correspondre aux fichiers sélectionnés
+            const dataTransfer = new DataTransfer();
+            imageFiles.forEach(file => dataTransfer.items.add(file));
+            imagesInput.files = dataTransfer.files;
+        }
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mapElement = document.getElementById('map-single-property');
@@ -336,4 +539,44 @@
                 .addTo(map);
         });
     </script>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addTarifBtn = document.getElementById('addTarifBtn'); // Récupère le bouton "Ajouter un tarif"
+        const tarifsContainer = document.getElementById('tarifs-container'); // Récupère le container des tarifs
+        const tarifBlock = document.querySelector('.tarif-block'); // Récupère le premier bloc de tarif (à cloner)
+
+        // Fonction pour cloner un bloc de tarif
+        addTarifBtn.addEventListener('click', function () {
+            const newTarifBlock = tarifBlock.cloneNode(true); // Clone le premier bloc de tarif
+
+            // Crée un bouton de suppression
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Supprimer';
+            deleteBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4'); // Ajoute des classes au bouton de suppression
+            // deleteBtn.style.marginTop = '40px';
+
+            // Ajoute l'écouteur d'événement pour supprimer le bloc
+            deleteBtn.addEventListener('click', function () {
+                newTarifBlock.remove(); // Supprime le bloc cloné
+            });
+
+            // Trouve l'endroit pour insérer le bouton dans le bloc cloné
+            const removeTarifBtnContainer = newTarifBlock.querySelector('#removeTarifBtnContainer');
+            removeTarifBtnContainer.appendChild(deleteBtn); // Ajoute le bouton de suppression au bloc cloné
+
+            // Ajoute le bloc cloné dans le container
+            tarifsContainer.appendChild(newTarifBlock);
+        });
+    });
+</script>
+
+
+
+
+
+
+
 @endsection

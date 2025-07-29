@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Partner;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -19,19 +20,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'uuid',
+        'code',
         'name',
         'lastname',
-        'company',
         'phone',
         'email',
-        'user_type',
-        'role_id',
         'password',
-        'token',
+        'password_edit',
+        'user_type',
+        'partner_uuid',
+        'etat',
         'last_login',
         'is_logged_in',
+        'email_verified_at',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,4 +52,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');
+    }
 }
