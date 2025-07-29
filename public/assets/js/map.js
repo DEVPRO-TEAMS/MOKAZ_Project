@@ -601,7 +601,7 @@
     // if (typeof map != "undefined" && map != null) {
     //     google.maps.event.addDomListener(window, "load", mainMap);
     // }
-
+// '../public_html/uploads/properties_'+property.property_code+'/' + property.image_property,
     function mainMap() {
         
 
@@ -630,6 +630,8 @@
 
         // Fonction de création du contenu des popups
         function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType) {
+            // console.log("dadddd" + mapImg, mapURL, mapTitle, mapLocation, mapType);
+        
     return `
         <div class="map-listing-ite">
             <div class="inner-box">
@@ -688,15 +690,16 @@
             success: function(properties) {
                 properties.forEach(function(property) {
                     var popupContent = locationData(
-                        'media/properties_'+property.property_code+'/' + property.image_property,
-                        '/reservation',
-                        property.title,
-                        "Distance à calculer",
-                        property.Type
-
-                    );
-                    
-                    // Création du marqueur avec icône personnalisée
+                         property.image,
+                         '/reservation',
+                         property.title,
+                         "Distance à calculer",
+                         property.type_uuid
+                         
+                        );
+                        
+                        
+                        // Création du marqueur avec icône personnalisée
                     var customIcon = L.divIcon({
                         className: 'map-marker-container',
                         html: `

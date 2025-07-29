@@ -146,23 +146,6 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="row">
-            <div class="col-md-3">
-                <fieldset class="box-fieldset">
-                    <label for="title">
-                        Status:<span>*</span>
-                    </label>
-                    <select name="status" class="nice-select list style-1" id="">
-                        <option value="" selected>Choisir</option>
-                        <option value="Pending">En attente</option>
-                        <option value="Published">Publier</option>
-                        <option value="Unpublished">Non publier</option>
-                    </select>
-
-                </fieldset>
-            </div>
-
-        </div> --}}
         <div class="widget-box-2 wd-listing">
             <div class="row align-items-center justify-content-center">
                 <div class="flat-bt-top col-md-9">
@@ -199,8 +182,8 @@
                                                     <div class="d-flex align-items-center">
                                                         <div class="property-image me-3">
 
-                                                            @if ($property->image_property)
-                                                                <img src="{{ asset('media/properties_' . $property->property_code . '/' . $property->image_property) }}"
+                                                            @if ($property->image)
+                                                                <img src="{{ asset($property->image) }}"
                                                                     alt="{{ $property->title }}" class="rounded-2"
                                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                                             @else
@@ -222,9 +205,9 @@
                                                         <span class="fw-semibold">{{ $property->ville->label ?? '' }},
                                                             {{ $property->pays->label ?? '' }}</span>
                                                         <small class="text-muted">{{ $property->address ?? '' }}</small>
-                                                        @if ($property->zipCode)
-                                                            <small class="text-muted">{{ $property->zipCode }}</small>
-                                                        @endif
+                                                        {{-- @if ($property->zipCode)
+                                                            <small class="text-muted">{{ $property->zipCode ?? '' }}</small>
+                                                        @endif --}}
                                                     </div>
                                                 </td>
                                                 <td>
@@ -259,7 +242,7 @@
                                                     <div class="d-flex gap-2">
                                                         <a title="Voir détails"
                                                             class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
-                                                            href="{{ route('partner.properties.show', $property->property_code) }}">
+                                                            href="{{ route('partner.properties.show', $property->uuid) }}">
                                                             {{-- <i class="icon icon-eye"></i> --}}
                                                             <i class="fas fa-eye"></i>
                                                         </a>

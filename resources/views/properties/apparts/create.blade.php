@@ -113,15 +113,16 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-home me-2 text-danger"></i> Ajout d'appart dans la propriété #{{ $property_code }}
+                        <i class="fas fa-home me-2 text-danger"></i> Ajout d'appart dans la propriété #{{ $property->code }}
                     </h3>
                 </div>
             </div>
         </div>
         <form id="addAppartForm" enctype="multipart/form-data">
             {{-- @csrf --}}
-            <input type="hidden" name="partner_code" value="{{ Auth::user()->email ?? '' }}">
-            <input type="hidden" name="property_code" id="property_code" value="{{ $property_code }}">
+            <input type="hidden" name="user_uuid" value="{{ Auth::user()->uuid ?? '' }}">
+            <input type="hidden" name="partner_uuid" value="{{ Auth::user()->partner_uuid ?? '' }}">
+            <input type="hidden" name="property_uuid" id="property_uuid" value="{{ $uuid }}">
             <div class="widget-box-2">
                 <h6 class="title">Charger l'images de l'appartement</h6>
                 <div class="box-uploadfile text-center">
@@ -129,7 +130,7 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir l'image</a>
-                            <input type="file" class="ip-file" name="main_image" accept="image/*" required>
+                            <input type="file" class="ip-file" name="image" accept="image/*" required>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'images ici</p>
                     </label>
@@ -205,7 +206,7 @@
                             Type de l'appartment:<span>*</span>
                         </label>
                         
-                        <select class="form-select nice-select list style-1" id="appartType" name="appartType" required>
+                        <select class="form-select nice-select list style-1" id="appartType" name="type_uuid" required>
                             <option value="" >Sélectionnez...</option>
                             <option value="Villa">Villa</option>
                             <option value="Studio">Studio</option>
@@ -217,19 +218,19 @@
                         <label for="bedrooms">
                             Nombre de chambres:<span>*</span>
                         </label>
-                        <input type="number" name="bedroomsNumber" class="form-control style-1" placeholder="Exemple valeur: 1">
+                        <input type="number" name="nbr_room" class="form-control style-1" placeholder="Exemple valeur: 1">
                     </fieldset>
                     <fieldset class="box-fieldset col-md-3">
                         <label for="bathrooms">
                             Nombre de salles de bain:<span>*</span>
                         </label>
-                        <input type="number" name="bathroomsNumber" class="form-control style-1" placeholder="Exemple valeur: 1">
+                        <input type="number" name="nbr_bathroom" class="form-control style-1" placeholder="Exemple valeur: 1">
                     </fieldset>
                     <fieldset class="box-fieldset col-md-3">
                         <label for="neighborhood">
                             Nombre disponible:<span>*</span>
                         </label>
-                        <input type="number" name="available" class="form-control style-1" placeholder="Exemple valeur: 1">
+                        <input type="number" name="nbr_available" class="form-control style-1" placeholder="Exemple valeur: 1">
                     </fieldset>
                 </div>
             </div>
@@ -237,67 +238,67 @@
                 <h6 class="title">Commodités <span>*</span></h6>
                 <div class="box-amenities-property">
                     <div class="box-amenities">
-                        <div class="title-amenities fw-7">Sécurité à domicile ::</div>
+                        <div class="title-amenities fw-7">Sécurité à domicile :</div>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Détecteur de fumée" name="CommoditiesHomesafety" class="tf-checkbox style-1 primary" id="cb1" checked>
+                            <input type="checkbox" value="Détecteur de fumée" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb1" checked>
                             <label for="cb1" class="text-cb-amenities">Détecteur de fumée</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Détecteur de monoxyde de carbone" name="CommoditiesHomesafety" class="tf-checkbox style-1 primary" id="cb2">
+                            <input type="checkbox" value="Détecteur de monoxyde de carbone" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb2">
                             <label for="cb2" class="text-cb-amenities">Détecteur de monoxyde de carbone</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Trousse de secours" name="CommoditiesHomesafety" class="tf-checkbox style-1 primary" id="cb3" checked>
+                            <input type="checkbox" value="Trousse de secours" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb3" checked>
                             <label for="cb3" class="text-cb-amenities">Trousse de secours</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Enregistrement automatique avec boîte à clé" name="CommoditiesHomesafety" class="tf-checkbox style-1 primary" id="cb4" checked>
+                            <input type="checkbox" value="Enregistrement automatique avec boîte à clé" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb4" checked>
                             <label for="cb4" class="text-cb-amenities">Enregistrement automatique avec boîte à clé</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" name="CommoditiesHomesafety" value="Caméras de sécurité" class="tf-checkbox style-1 primary" id="cb5">
+                            <input type="checkbox" name="commodity_uuid" value="Caméras de sécurité" class="tf-checkbox style-1 primary" id="cb5">
                             <label for="cb5" class="text-cb-amenities">Caméras de sécurité</label>
                         </fieldset>
                     </div>
                     <div class="box-amenities">
                         <div class="title-amenities fw-7">Chambre à coucher:</div>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="cintres" name="CommoditiesBedroom" class="tf-checkbox style-1 primary" id="cb6">
+                            <input type="checkbox" value="cintres" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb6">
                             <label for="cb6" class="text-cb-amenities">cintres</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Linge de lit" name="CommoditiesBedroom" class="tf-checkbox style-1 primary" id="cb7" checked>
+                            <input type="checkbox" value="Linge de lit" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb7" checked>
                             <label for="cb7" class="text-cb-amenities">Linge de lit</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Oreillers et couvertures supplémentaires" name="CommoditiesBedroom" class="tf-checkbox style-1 primary" id="cb8">
+                            <input type="checkbox" value="Oreillers et couvertures supplémentaires" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb8">
                             <label for="cb8" class="text-cb-amenities">Oreillers et couvertures supplémentaires</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Fer à repasser" name="CommoditiesBedroom" class="tf-checkbox style-1 primary" id="cb9">
+                            <input type="checkbox" value="Fer à repasser" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb9">
                             <label for="cb9" class="text-cb-amenities">Fer à repasser</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Téléviseur avec câble standard" name="CommoditiesBedroom" class="tf-checkbox style-1 primary" id="cb10" checked>
+                            <input type="checkbox" value="Téléviseur avec câble standard" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb10" checked>
                             <label for="cb10" class="text-cb-amenities">Téléviseur avec câble standard</label>
                         </fieldset>
                     </div>
                     <div class="box-amenities">
                         <div class="title-amenities fw-7">Cuisine:</div>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Réfrigérateur" name="CommoditiesKitchen" class="tf-checkbox style-1 primary" id="cb11">
+                            <input type="checkbox" value="Réfrigérateur" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb11">
                             <label for="cb11" class="text-cb-amenities">Réfrigérateur</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Micro-ondes" name="CommoditiesKitchen" class="tf-checkbox style-1 primary" id="cb12">
+                            <input type="checkbox" value="Micro-ondes" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb12">
                             <label for="cb12" class="text-cb-amenities">Micro-ondes</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Lave-vaisselle" name="CommoditiesKitchen" class="tf-checkbox style-1 primary" id="cb13">
+                            <input type="checkbox" value="Lave-vaisselle" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb13">
                             <label for="cb13" class="text-cb-amenities">Lave-vaisselle</label>
                         </fieldset>
                         <fieldset class="amenities-item">
-                            <input type="checkbox" value="Cafetière" name="CommoditiesKitchen" class="tf-checkbox style-1 primary" id="cb14">
+                            <input type="checkbox" value="Cafetière" name="commodity_uuid" class="tf-checkbox style-1 primary" id="cb14">
                             <label for="cb14" class="text-cb-amenities">Cafetière</label>
                         </fieldset>
 
@@ -341,7 +342,7 @@
 
         document.getElementById('addAppartForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const property_code = document.getElementById('property_code').value;
+            const property_uuid = document.getElementById('property_uuid').value;
 
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -394,7 +395,7 @@
                 // modal.hide();
                 this.reset();
                 setTimeout(() => {
-                    window.location.href = 'partner/property/show/' + property_code;
+                    window.location.href = '/partner/property/show/' + property_uuid;
                 }, 3000);
 
             } catch (error) {

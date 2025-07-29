@@ -352,20 +352,20 @@
                     <h3 class="title"></h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
-                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->property_code) }}"><i class="icon icon-plus"></i>
+                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->uuid) }}"><i class="icon icon-plus"></i>
                         Ajouter un appartement</a>
                 </div>
             </div>
             <div class="wrap-table p-3">
                 <!-- Informations Personnelles -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->property_code }}</h6>
+                    <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->code }}</h6>
                     <div class="partner-info-card">
 
                         <div class="row g-0">
                             <div class="property-image-container col-12 mb-3" style="height: 350px;">
-                                @if ($property->image_property)
-                                    <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property)}}"
+                                @if ($property->image) 
+                                    <img src="{{ asset($property->image) }}"
                                         alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
                                         style="height: 100%; object-fit: cover;">
                                 @else
@@ -390,7 +390,7 @@
                                         <i class="fas fa-handshake me-2"></i>
                                         Partenaire :
                                     </div>
-                                    <div class="info-value" id="show-last-name">{{ $property->partner_code ?? '' }}</div>
+                                    <div class="info-value" id="show-last-name">{{ $property->partner_uuid ?? '' }}</div>
                                 </div>
                             </div>
                         </div>

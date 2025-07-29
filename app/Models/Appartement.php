@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\AppartDoc;
+use App\Models\Tarification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,10 +34,10 @@ class Appartement extends Model
     }
     public function images()
     {
-        return $this->hasMany(AppartDoc::class, 'appartement_code', 'appartement_code');
+        return $this->hasMany(AppartDoc::class, 'appartement_uuid', 'uuid');
     }
     public function tarifications()
     {
-        return $this->hasMany(Tarification::class, 'appartement_code', 'appartement_code');
+        return $this->hasMany(Tarification::class, 'appart_uuid', 'uuid');
     }
 }

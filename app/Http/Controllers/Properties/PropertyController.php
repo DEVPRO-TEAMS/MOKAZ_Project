@@ -43,7 +43,7 @@ class PropertyController extends Controller
             $query->where('etat', $request->etat);
         }
 
-        $properties = $query->where('partner_uuid', Auth::user()->email)->orderBy('created_at', 'desc')->get();
+        $properties = $query->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
         // $properties = Property::where('partner_code', Auth::user()->email)->get();
         return view('properties.index', compact('properties'));
     }
@@ -76,28 +76,34 @@ class PropertyController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
-            $property_code = RefgenerateCode(Property::class, 'PROP-', 'property_code');
+
+            $code = RefgenerateCode(Property::class, 'PROP-', 'code');
             $uuid = Str::uuid();
-            if ($request->hasFile('image_property')) {
-            $file = $request->file('image_property');
-            $imageName = $property_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-            $file->move(public_path('media/properties_'.$property_code), $imageName);
-        }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $imageName = $code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
+
+                $fileDirectory = 'properties_'.$code.'/';
+
+                $file->move($externalUploadDir.$fileDirectory, $imageName);
+                // $file->move(public_path('media/properties_'.$code), $imageName);
+            }
+            $fileUrl = "storage/files/" . $fileDirectory. $imageName;
             $property = Property::create(
                 [ 
                     'uuid' => $uuid,
-                    'code' => $property_code,
-                    'partner_uuid' => $request->partner_code,
-                    'image' => $imageName,
+                    'code' => $code,
+                    'partner_uuid' => $request->partner_uuid,
+                    'image' => $fileUrl,
                     'title' => $request->title,
-                    'type_uuid' => $request->type,
+                    'type_uuid' => $request->type_uuid,
                     'address' => $request->address,
                     'country' => $request->country,
                     'city' => $request->city,
                     'longitude' => $request->longitude,
                     'latitude' => $request->latitude,
                     'description' => $request->description,
-                    'created_by' => $request->partner_code,
+                    'created_by' => $request->user_uuid,
                 ]
             );
             DB::commit();
@@ -122,10 +128,10 @@ class PropertyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $property_code)
+    public function show(string $uuid)
     {
         // $demandePartenariat = Property::find($property_code);
-        $property = Property::where('code', $property_code)->first();
+        $property = Property::where('uuid', $uuid)->first();
         return view('properties.show', compact('property'));
     }
 
@@ -150,6 +156,6 @@ class PropertyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
     }
 }

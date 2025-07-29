@@ -51,6 +51,7 @@ Route::get('/get-cities-by-country', [PropertyController::class, 'getCities']);
 
 // api property
 Route::post('/property/add', [PropertyController::class, 'store']);
+Route::post('/property/destroy{uuid}', [PropertyController::class, 'destroy']);
 Route::get('/get-all-properties', [PagesController::class, 'getAllProperties']);
 
 // api appartements

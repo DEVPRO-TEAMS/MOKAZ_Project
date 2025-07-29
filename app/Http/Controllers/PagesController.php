@@ -18,7 +18,7 @@ class PagesController extends Controller
     public function getAllProperties()
     {
         // Récupérer tous les propriétés avec latitude et longitude
-        $properties = Property::where(['etat'=>'pending'])->get();
+        $properties = Property::where(['etat'=>'actif'])->get();
         // $properties = Property::select('title', 'longitude', 'latitude', 'image_property')->where(['etat'=>'Actif'])->get();
         return response()->json($properties);
     }

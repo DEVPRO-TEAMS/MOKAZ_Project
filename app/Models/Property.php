@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\city;
+use App\Models\User;
 use App\Models\country;
+use App\Models\Partner;
 use App\Models\Appartement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,10 +42,19 @@ class Property extends Model
         return $this->belongsTo(city::class, 'city', 'code');
     }
 
-
     public function apartements()
     {
-        return $this->hasMany(Appartement::class, 'property_code', 'property_code');
+        return $this->hasMany(Appartement::class, 'property_uuid', 'uuid');
     }
+
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'created_by', 'uuid');
+    // }
+
+    // public function user()
+    // {
+    //     return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');
+    // }
 
 }
