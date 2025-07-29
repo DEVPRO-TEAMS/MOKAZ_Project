@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Variable;
 use App\Models\Commodity;
+use Illuminate\Support\Str;
 use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,47 +12,66 @@ use App\Http\Controllers\Controller;
 
 class SettingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('settings.pages.index');
+         $query = Variable::query();
+
+        // Filtres dynamiques
+        if ($request->filled('keyword')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('libelle', 'like', '%' . $request->keyword . '%')
+                ->orWhere('description', 'like', '%' . $request->keyword . '%');
+            });
+        }
+
+        if ($request->filled('code')) {
+            $query->where('code', 'like', '%' . $request->code . '%');
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('category')) { 
+            $query->where('category', $request->category);
+        }
+
+        $variables = $query->latest()->paginate(10);
+
+        // Pour le graphique
+        $chartData = Variable::select('type', \DB::raw('count(*) as total'))
+        ->groupBy('type')
+        ->get();
+        return view('settings.pages.index', compact('variables','chartData'));
     }
-    
 
-
-    // Commodity
-
-    public function listCommodity()
-    {
-       
-        $commodities = Commodity::all();
-        return response()->json([
-            'status' => true,
-            'message' => 'Liste des commodités',
-            'commodities' => $commodities], 200);
-    }
-
-    public function store(Request $request)
+    public function storeVariable(Request $request)
     {
 
-        // var_dump($request->all());
 
         DB::beginTransaction();
         try{
 
             $validated = $request->validate([
-                'name' => 'required|string|max:255',
+                'libelle' => 'required|string|max:255',
                 'description' => 'nullable|string|max:500',
                 'etat' => 'nullable|string|in:actif,inactif',
             ]);
 
-            $commodity = Commodity::create([
-                'name' => $validated['name'],
+            $saving = Variable::create([
+                'uuid' => Str::uuid(),
+                'code' => Refgenerate(Variable::class, 'V', 'code'),
+                'libelle' => $validated['libelle'],
                 'description' => $validated['description'],
+                'type' => $request->type,
+                'category' => $request->category,
                 'etat' => "actif",
             ]);
 
             DB::commit();
-            return response()->json(['message' => 'Commodity créée avec succès', 'commodity' => $commodity], 201);
+            return response()->json([
+                'message' => 'Commodity créée avec succès', 
+                'data' => $saving], 201);
 
         }catch(\Exception $e){
             DB::rollBack();

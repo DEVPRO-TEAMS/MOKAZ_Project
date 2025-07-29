@@ -37,4 +37,5 @@ class Appartement extends Model
     {
         return $this->hasMany(AppartDoc::class, 'appartement_code', 'appartement_code');
     }
+
 }

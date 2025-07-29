@@ -8,6 +8,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Partner\PartnerController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\Properties\AppartController;
@@ -62,6 +63,9 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
         Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
         Route::get('/partner/list', [PartnerController::class, 'index'])->name('partner.index');
+
+        // reservation
+        Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
     });
 });
 
@@ -99,6 +103,8 @@ Route::prefix('setting')->name('setting.')->group(function(){
     Route::middleware('guest', 'PreventBackHistory')->group(function(){
     });
     Route::middleware(['auth'])->group(function () {
+        Route::get('/index', [SettingController::class, 'index'])->name('index');
+        Route::post('/variable/store', [SettingController::class, 'storeVariable'])->name('storeVariable');
     });
 });
 

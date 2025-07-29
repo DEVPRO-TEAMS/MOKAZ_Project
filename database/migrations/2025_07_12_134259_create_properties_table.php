@@ -13,22 +13,28 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->string('property_code')->unique();
-            $table->string('partner_code')->nullable();
-            $table->string('image_property')->nullable();
+            $table->string('uuid')->unique();
+            $table->string('code')->nullable();
+
+            $table->string('partner_uuid')->nullable();
+            $table->string('image')->nullable();
             $table->string('title')->nullable();
-            $table->string('Type')->nullable();
-             $table->string('address')->nullable();
-            $table->string('zipCode')->nullable();
+            $table->longText('description')->nullable();
+
+            $table->string('type_uuid')->nullable();
+            $table->string('address')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
+
             $table->string('longitude')->nullable();
             $table->string('latitude')->nullable();
-            $table->longText('description')->nullable();
+
+
             $table->string('updated_by')->nullable();
             $table->string('created_by')->nullable();
             $table->string('deleted_by')->nullable();
-            $table->string('etat')->nullable()->default('pending');
+
+            $table->string('etat')->nullable()->default('actif');
             $table->softDeletes();
             $table->timestamps();
         });

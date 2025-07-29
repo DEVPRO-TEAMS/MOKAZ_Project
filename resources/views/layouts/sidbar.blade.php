@@ -77,70 +77,219 @@
     </header>
     <!-- end header -->
     <!-- sidebar dashboard -->
-    <div class="sidebar-menu-dashboard">
-        <ul class="box-menu-dashboard">
-
-           
-
-            <li class="nav-menu-item active">
-                @if (Auth::user()->user_type == 'admin')
-                    <a class="nav-menu-link" href="{{ route('admin.index') }}">
-                        <span class="icon icon-dashboard"></span> Tableau de Bord
-                    </a>
-                @else
-                    <a class="nav-menu-link" href="dashboard.html">
-                        <span class="icon icon-dashboard"></span> Tableau de Bord
-                    </a>
-                @endif
-                
-            </li>
-             <li class="nav-menu-item">
-                <a class="nav-menu-link" href="{{ route('partner.reservation.index') }}">
-                    <span class="icon icon-list-dashes"></span>
-                    Réservations
-                </a>
-            </li>
-            @if (Auth::user()->user_type == 'admin')
-            <li class="nav-menu-item">
-                <a class="nav-menu-link" href="{{ route('admin.demande.view') }}">
-                    <span class="icon icon-list-dashes"></span>
-                    Demandes de partenariat
-                </a>
-            </li>
-            @endif
-            @if (Auth::user()->user_type == 'admin')
-                <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('admin.proprety.view') }}">
-                    <span class="icon icon-list-dashes"></span>Propriétés</a>
-                </li>
-            @else
-                <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('partner.properties.index') }}">
-                    <span class="icon icon-list-dashes"></span>Mes Propriétés</a>
-                </li>
-            @endif
-            @if (Auth::user()->user_type == 'admin')
-                <li class="nav-menu-item"><a class="nav-menu-link" href="{{ route('admin.partner.index') }}"><span class="icon icon-list-dashes"></span>Partenaires</a></li>
-            @endif
-            <li class="nav-menu-item">
-                <a class="nav-menu-link" href="my-invoices.html"><span class="icon icon-file-text"></span> My Invoices</a>
-            </li>
-
+    <div class="sidebar-menu-dashboard bg-white border-end">
+        <div class="d-flex flex-column h-100">
+            <!-- Header du menu -->
             
-            {{-- <li class="nav-menu-item"><a class="nav-menu-link" href="my-invoices.html"><span class="icon icon-file-text"></span> My Invoices</a></li>
-            <li class="nav-menu-item"><a class="nav-menu-link" href="my-favorites.html"><span class="icon icon-heart"></span>My Favorites</a></li>
-            <li class="nav-menu-item"><a class="nav-menu-link" href="reviews.html"><span class="icon icon-review"></span> Reviews</a></li>
-            <li class="nav-menu-item"><a class="nav-menu-link" href="my-profile.html"><span class="icon icon-profile"></span> My Profile</a></li>
-            <li class="nav-menu-item"><a class="nav-menu-link" href="add-property.html">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19.5 3H4.5C4.10218 3 3.72064 3.15804 3.43934 3.43934C3.15804 3.72064 3 4.10218 3 4.5V19.5C3 19.8978 3.15804 20.2794 3.43934 20.5607C3.72064 20.842 4.10218 21 4.5 21H19.5C19.8978 21 20.2794 20.842 20.5607 20.5607C20.842 20.2794 21 19.8978 21 19.5V4.5C21 4.10218 20.842 3.72064 20.5607 3.43934C20.2794 3.15804 19.8978 3 19.5 3ZM19.5 19.5H4.5V4.5H19.5V19.5ZM16.5 12C16.5 12.1989 16.421 12.3897 16.2803 12.5303C16.1397 12.671 15.9489 12.75 15.75 12.75H12.75V15.75C12.75 15.9489 12.671 16.1397 12.5303 16.2803C12.3897 16.421 12.1989 16.5 12 16.5C11.8011 16.5 11.6103 16.421 11.4697 16.2803C11.329 16.1397 11.25 15.9489 11.25 15.75V12.75H8.25C8.05109 12.75 7.86032 12.671 7.71967 12.5303C7.57902 12.3897 7.5 12.1989 7.5 12C7.5 11.8011 7.57902 11.6103 7.71967 11.4697C7.86032 11.329 8.05109 11.25 8.25 11.25H11.25V8.25C11.25 8.05109 11.329 7.86032 11.4697 7.71967C11.6103 7.57902 11.8011 7.5 12 7.5C12.1989 7.5 12.3897 7.57902 12.5303 7.71967C12.671 7.86032 12.75 8.05109 12.75 8.25V11.25H15.75C15.9489 11.25 16.1397 11.329 16.2803 11.4697C16.421 11.6103 16.5 11.8011 16.5 12Z" fill="#A3ABB0"/>
-                </svg>
-                    Add Property</a></li> --}}
-            <li class="nav-menu-item">
-                <a class="nav-menu-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                    <span class="icon icon-sign-out"></span> Se deconnecter</a></li>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </ul>
+            <!-- Menu principal -->
+            <nav class="flex-grow-1 p-2">
+                <ul class="nav nav-pills flex-column">
+                    
+                    <!-- Tableau de Bord -->
+                    <li class="nav-item mb-1">
+                        @if (Auth::user()->user_type == 'admin')
+                            <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
+                            href="{{ route('admin.index') }}">
+                                <i class="bi bi-house-door me-3 fs-5"></i>
+                                <span>Tableau de Bord</span>
+                            </a>
+                        @else
+                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                            href="dashboard.html">
+                                <i class="bi bi-house-door me-3 fs-5"></i>
+                                <span>Tableau de Bord</span>
+                            </a>
+                        @endif
+                    </li>
 
+                    @if (Auth::user()->user_type == 'partner')
+                    <!-- Réservations -->
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ route('partner.reservation.index') }}">
+                            <i class="bi bi-calendar-check me-3 fs-5"></i>
+                            <span>Réservations</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_id', Auth::user()->id)->count() }}</span>
+                        </a>
+                    </li>
+                    @else
+                     <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ route('admin.reservation.index') }}">
+                            <i class="bi bi-calendar-check me-3 fs-5"></i>
+                            <span>Réservations</span>
+                            <span class="badge bg-danger ms-auto">5</span>
+                        </a>
+                    </li>
+                    @endif
+
+                    <!-- Demandes de partenariat (Admin seulement) -->
+                    @if (Auth::user()->user_type == 'admin')
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ route('admin.demande.view') }}">
+                            <i class="bi bi-handshake me-3 fs-5"></i>
+                            <span>Demandes de partenariat</span>
+                            <span class="badge bg-warning text-dark ms-auto">3</span>
+                        </a>
+                    </li>
+                    @endif
+
+                    <!-- Propriétés -->
+                    <li class="nav-item mb-1">
+                        @if (Auth::user()->user_type == 'admin')
+                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                            href="{{ route('admin.proprety.view') }}">
+                                <i class="bi bi-building me-3 fs-5"></i>
+                                <span>Propriétés</span>
+                            </a>
+                        @else
+                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                            href="{{ route('partner.properties.index') }}">
+                                <i class="bi bi-house-heart me-3 fs-5"></i>
+                                <span>Mes Propriétés</span>
+                            </a>
+                        @endif
+                    </li>
+
+                    <!-- Partenaires (Admin seulement) -->
+                    @if (Auth::user()->user_type == 'admin')
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ route('admin.partner.index') }}">
+                            <i class="bi bi-people me-3 fs-5"></i>
+                            <span>Partenaires</span>
+                        </a>
+                    </li>
+                    @endif
+
+                    <!-- Menu déroulant Dashboard -->
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark collapsed" 
+                        data-bs-toggle="collapse" 
+                        href="#dashboardSubmenu" 
+                        role="button" 
+                        aria-expanded="false" 
+                        aria-controls="dashboardSubmenu">
+                            <i class="bi bi-grid-3x3-gap me-3 fs-5"></i>
+                            <span>Paramettres</span>
+                            <i class="bi bi-chevron-down ms-auto transition-all"></i>
+                        </a>
+                        <div class="collapse" id="dashboardSubmenu">
+                            <ul class="nav nav-pills flex-column ms-3 mt-2">
+                                <li class="nav-item">
+                                    <a href="{{ route('setting.index') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                        <i class="bi bi-circle me-2"></i>
+                                        <span>Type de proprieté</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="index2.html" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                        <i class="bi bi-circle me-2"></i>
+                                        <span>Type de appartement</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="index3.html" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                        <i class="bi bi-circle me-2"></i>
+                                        <span>Commodités</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Séparateur -->
+                    <hr class="my-3">
+
+                    <!-- Profil utilisateur -->
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="#profile">
+                            <i class="bi bi-person-circle me-3 fs-5"></i>
+                            <span>Mon Profil</span>
+                        </a>
+                    </li>
+
+                    <!-- Paramètres -->
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="#settings">
+                            <i class="bi bi-gear me-3 fs-5"></i>
+                            <span>Paramètres</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <!-- Footer du menu -->
+            <div class="sidebar-footer p-3 border-top">
+                <!-- Informations utilisateur -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar-sm bg-danger rounded-circle d-flex align-items-center justify-content-center me-2 text-white">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 text-truncate">{{ Auth::user()->name ?? 'Utilisateur' }}</h6>
+                        <small class="text-muted">
+                            {{ Auth::user()->user_type == 'admin' ? 'Administrateur' : 'Partenaire' }}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Bouton de déconnexion -->
+                <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center" 
+                href="{{ route('logout') }}" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Se déconnecter
+                </a>
+                
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!-- CSS minimal nécessaire -->
+    <style>
+    .sidebar-menu-dashboard {
+        min-height: 100vh;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-link {
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        color: var(--bs-danger) !important;
+    }
+
+    .nav-link.active {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        color: var(--bs-danger) !important;
+    }
+
+    .avatar-sm {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Animation pour les flèches des menus déroulants */
+    .nav-link[aria-expanded="true"] .bi-chevron-down {
+        transform: rotate(180deg);
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    /* Effet de survol pour les sous-menus */
+    .collapse .nav-link:hover {
+        background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+    </style>

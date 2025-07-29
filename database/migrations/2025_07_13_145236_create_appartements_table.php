@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('appartements', function (Blueprint $table) {
             $table->id();
-            $table->string('appartement_code')->unique();
-            $table->string('property_code')->unique();
+            $table->uuid('uuid')->unique();
+            $table->string('code')->nullable();
+            $table->string('property_uuid')->nullable();
+            $table->string('image')->nullable();
             $table->string('title')->nullable();
-             $table->string('price')->nullable();
-            $table->string('available')->nullable();
-            $table->string('appartType')->nullable();
-            $table->string('bedroomsNumber')->nullable();
-            $table->string('bathroomsNumber')->nullable();
-            $table->string('CommoditiesHomesafety')->nullable();
-            $table->string('CommoditiesBedroom')->nullable();
-            $table->string('CommoditiesKitchen')->nullable();
+             $table->longText('description')->nullable();
+
+             $table->string('type_uuid')->nullable();
+            $table->string('commodity_uuid')->nullable();
+            $table->integer('nbr_room')->default(0)->nullable();
+            $table->integer('nbr_bathroom')->default(0)->nullable();
+            $table->integer('nbr_available')->default(0)->nullable();
+            
             $table->string('video_url')->nullable();
-            $table->string('main_image')->nullable();
-            $table->longText('description')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('created_by')->nullable();
             $table->string('deleted_by')->nullable();

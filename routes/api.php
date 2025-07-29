@@ -22,14 +22,15 @@ use App\Http\Controllers\Properties\PropertyController;
 |
 */
 
+// parametrage
+
+Route::post('/variable/store', [SettingController::class, 'storeVariable'])->name('storeVariable');
+
 // reservations 
 Route::post('/reservation/store', [ReservationController::class, 'store']);
 
 
-Route::get('setting/index/commodity', [SettingController::class, 'listCommodity'])->name('store.commodity');
-Route::post('setting/store/commodity', [SettingController::class, 'store'])->name('store.commodity');
-Route::post('setting/update/{id}/commodity', [SettingController::class, 'update'])->name('update.commodity');
-Route::delete('setting/destroy/{id}/commodity', [SettingController::class, 'destroy'])->name('destroy.commodity');
+
 
 
 

@@ -33,6 +33,10 @@
 
 <body class="body counter-scroll">
 
+    @php
+        $reservations = App\Models\Reservation::all();
+    @endphp
+
     <div class="preload preload-container">
         <div class="boxes ">
             <div class="box">

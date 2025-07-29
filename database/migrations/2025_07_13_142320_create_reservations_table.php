@@ -13,20 +13,31 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
+            $table->string('code')->nullable();
             $table->string('nom')->nullable();
             $table->string('prenoms')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('room_id')->nullable();
+            $table->string('appart_uuid')->nullable();
+            $table->string('sejour')->nullable();
             $table->date('start_time')->nullable();
             $table->date('end_time')->nullable();
-            $table->enum('statut_paiement',['pending', 'paid'])->default('pending');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled','reconducted'])->default('pending');
-            $table->text('notes')->nullable();
-            $table->string('traited_by')->nullable();
-            $table->dateTime('traited_at')->nullable();
+
+            $table->integer('nbr_of_sejour')->nullable();
+
             $table->decimal('total_price', 8, 2)->nullable();
             $table->decimal('unit_price', 8, 2)->nullable();
+
+            $table->enum('statut_paiement',['pending', 'paid'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled','reconducted'])->default('pending');
+            $table->longText('notes')->nullable();
+
+            $table->string('traited_by')->nullable();
+            $table->dateTime('traited_at')->nullable();
+
+            $table->string('etat')->default('actif')->nullable();
+            
             $table->timestamps();
         });
     }

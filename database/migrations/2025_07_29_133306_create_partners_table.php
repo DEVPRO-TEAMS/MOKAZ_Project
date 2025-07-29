@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appart_docs', function (Blueprint $table) {
+        Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('code')->nullable();
-            $table->string('appartement_uuid')->nullable();
-            $table->string('doc_name')->nullable();
-            $table->string('doc_url')->nullable();
-            $table->string('etat')->default('actif')->nullable();
+            $table->string('raison_social')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->string('adresse')->nullable();
+            $table->string('etat')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appart_docs');
+        Schema::dropIfExists('partners');
     }
 };

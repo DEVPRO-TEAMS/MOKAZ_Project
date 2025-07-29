@@ -14,18 +14,19 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->uuid('code')->nullable();
 
             $table->string('name')->nullable();
             $table->string('lastname')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->unique();
+            $table->string('password')->nullable();
+            $table->string('password_edit')->nullable();
 
             $table->string('user_type')->nullable();
+            $table->string('partner_uuid')->nullable();
 
-            $table->string('role_id')->nullable();
-
-            $table->string('password');
-            $table->string('token')->nullable();
+            $table->string('etat')->nullable();
 
             $table->date('last_login')->nullable();
             $table->boolean('is_logged_in')->default(false);
