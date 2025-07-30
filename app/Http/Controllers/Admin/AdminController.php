@@ -200,17 +200,21 @@ class AdminController extends Controller
 
             // Création du partenariat
             $partner = User::create([
+                Log::info('Creation du partenariat'),
                 'uuid' => Str::uuid(),
                 'company' => $demande->company,
+                Log::info('Creation du company'),
                 'name' => $demande->first_name,
                 'lastname' => $demande->last_name,
                 'user_type' => 'partner',
+                Log::info('Creation du user_type'),
                 'phone' => $demande->phone,
                 'role_id' => 1,
                 'email' => $demande->email,
+                Log::info('Creation du email'),
                 'password' => Hash::make('password123'),
-                'token' => null,
-            ]);
+                Log::info('Creation du password'),
+            ])->save();
 
             Log::info('Partenaire cree', ['partner' => $partner]);
 
