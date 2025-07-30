@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Imports\CityCountryImport;
 use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -161,6 +162,7 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
+            Log::info('Accepter demande de partenariat');
             // Validation de l'ID
             if (!is_numeric($id)) {
                 return response()->json([
@@ -170,9 +172,11 @@ class AdminController extends Controller
             }
 
             $demande = PartnershipRequest::find($id);
+            Log::info('Demande trouve', ['demande' => $demande]);
             
             // Vérification si la demande existe
             if (!$demande) {
+                Log::info('Demande non trouvee donca 404 error');
                 return response()->json([
                     'status' => false,
                     'message' => 'Demande non trouvée'
@@ -181,6 +185,7 @@ class AdminController extends Controller
 
             // Vérification si la demande n'est pas déjà approuvée
             if ($demande->etat === 'actif') {
+                Log::info('Demande deja approuvee donca actif');
                 return response()->json([
                     'status' => false,
                     'message' => 'Cette demande a déjà été approuvée'
@@ -190,6 +195,8 @@ class AdminController extends Controller
             // Mise à jour de l'état
             $demande->etat = 'actif';
             $demande->save();
+
+            Log::info('Demande mise a jour', ['demande' => $demande]);
 
             // Création du partenariat
             $partner = User::create([
@@ -204,6 +211,8 @@ class AdminController extends Controller
                 'password' => Hash::make('password123'),
                 'token' => null,
             ]);
+
+            Log::info('Partenaire cree', ['partner' => $partner]);
 
             DB::commit();
             
