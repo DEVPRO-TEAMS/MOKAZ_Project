@@ -27,7 +27,7 @@ use App\Http\Controllers\Properties\PropertyController;
 Route::post('/variable/store', [SettingController::class, 'storeVariable'])->name('storeVariable');
 
 // reservations 
-Route::post('/reservation/store', [ReservationController::class, 'store']);
+
 
 
 

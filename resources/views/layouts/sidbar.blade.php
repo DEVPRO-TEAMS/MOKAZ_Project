@@ -123,6 +123,10 @@
                     </li>
                     @endif
 
+                    @php
+                        $demandes = App\Models\PartnershipRequest::all();
+                    @endphp
+
                     <!-- Demandes de partenariat (Admin seulement) -->
                     @if (Auth::user()->user_type == 'admin')
                     <li class="nav-item mb-1">
@@ -130,7 +134,9 @@
                         href="{{ route('admin.demande.view') }}">
                             <i class="bi bi-handshake me-3 fs-5"></i>
                             <span>Demandes de partenariat</span>
-                            <span class="badge bg-warning text-dark ms-auto">3</span>
+                            <span class="badge bg-warning text-dark ms-auto">
+                                {{ $demandes->where('etat', 'pending')->count() }}
+                            </span>
                         </a>
                     </li>
                     @endif
@@ -178,19 +184,19 @@
                         <div class="collapse" id="dashboardSubmenu">
                             <ul class="nav nav-pills flex-column ms-3 mt-2">
                                 <li class="nav-item">
-                                    <a href="{{ route('setting.index') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                    <a href="{{ route('setting.indexProperty') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Type de proprieté</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="index2.html" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                    <a href="{{ route('setting.indexAppart') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Type de appartement</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="index3.html" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                    <a href="{{ route('setting.indexCommodity') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Commodités</span>
                                     </a>

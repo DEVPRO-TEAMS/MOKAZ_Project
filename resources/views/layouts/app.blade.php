@@ -24,6 +24,8 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+
         <!-- Favicon and Touch Icons  -->
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
@@ -64,7 +66,7 @@
 
         <!-- /preload -->
 
-        <div id="wrapper">
+        <div id="wrapper" class="wrapper">
             <div id="page" class="clearfix">
                 <div class="layout-wrap">
                     <!-- sidebar dashboard -->
@@ -120,6 +122,7 @@
         <script type="text/javascript" src="{{ asset('assets/js/jqueryui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/custom.js') }}"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

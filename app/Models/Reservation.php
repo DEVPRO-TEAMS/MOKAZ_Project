@@ -10,21 +10,27 @@ class Reservation extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
+        'code',
         'nom',
         'prenoms',
         'email',
         'phone',
-        'room_id',
+        'appart_uuid',
+        'sejour',
         'start_time',
         'end_time',
+        'nbr_of_sejour',
+        'total_price',
+        'unit_price',
         'statut_paiement',
         'status',
+        'notes',
         'traited_by',
         'traited_at',
-        'notes',
-        'unit_price',
-        'total_price',
+        'etat',
     ];
+
 
     
 }

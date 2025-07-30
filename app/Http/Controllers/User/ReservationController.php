@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Reservation;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,33 +15,88 @@ class ReservationController extends Controller
     // Liste des réservations
     public function index()
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::where('etat', 'actif')->get();
 
         return view('reservations.index', compact('reservations'));
     }
+    
 
     // Créer une réservation
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:255',
-            'prenoms' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string',
-            'room_id' => 'required|integer',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'unit_price' => 'required|numeric',
-            'total_price' => 'required|numeric',
-        ]);
+        DB::beginTransaction();
+        try {
+            $validated = $request->validate([
+                'nom' => 'required|string|max:255',
+                'prenoms' => 'required|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:50',
+                'appart_uuid' => 'required|string',
+                'sejour' => 'nullable|string|max:255',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after_or_equal:start_time',
+                'nbr_of_sejour' => 'nullable|integer|min:1',
+                'total_price' => 'nullable|numeric|min:0',
+                'unit_price' => 'nullable|numeric|min:0',
+                'statut_paiement' => 'nullable|in:pending,paid',
+                'status' => 'nullable|in:pending,confirmed,cancelled,reconducted',
+                'notes' => 'nullable|string',
+                'traited_by' => 'nullable|string|max:255',
+                'traited_at' => 'nullable|date',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            $saving = Reservation::create([
+                'uuid' => Str::uuid(),
+                'code' => Refgenerate(Reservation::class, 'RES', 'code'),
+                'nom' => $validated['nom'],
+                'prenoms' => $validated['prenoms'],
+                'email' => $validated['email'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'appart_uuid' => $validated['appart_uuid'],
+                'sejour' => $validated['sejour'] ?? null,
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'nbr_of_sejour' => $validated['nbr_of_sejour'] ?? null,
+                'total_price' => $validated['total_price'] ?? null,
+                'unit_price' => $validated['unit_price'] ?? null,
+                'statut_paiement' => $validated['statut_paiement'] ?? 'pending',
+                'status' => $validated['status'] ?? 'pending',
+                'notes' => $validated['notes'] ?? null,
+                'traited_by' => Auth::user()->uuid ?? null,
+                'traited_at' => $validated['traited_at'] ?? null,
+                'etat' => 'actif',
+            ]);
+
+            if ($saving) {
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => 'back',
+                    'message' => 'Réservation enregistrée avec succès !',
+                    'data' => $saving,
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollBack();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de l'enregistrement !",
+                    'data' => $saving,
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système ! $th",
+                'code' => 500,
+            ];
         }
 
-        $reservation = Reservation::create($request->all());
-
-        return response()->json(['success' => true, 'message' => 'Réservation créée avec succès', 'data' => $reservation]);
+        return response()->json($dataResponse);
     }
 
     // Afficher une réservation

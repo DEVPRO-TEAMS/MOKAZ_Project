@@ -103,8 +103,15 @@ Route::prefix('setting')->name('setting.')->group(function(){
     Route::middleware('guest', 'PreventBackHistory')->group(function(){
     });
     Route::middleware(['auth'])->group(function () {
-        Route::get('/index', [SettingController::class, 'index'])->name('index');
+        Route::get('/index/commodity', [SettingController::class, 'indexCommodity'])->name('indexCommodity');
+        Route::get('/index/appart', [SettingController::class, 'indexAppart'])->name('indexAppart');
+        Route::get('/index/property', [SettingController::class, 'indexProperty'])->name('indexProperty');
         Route::post('/variable/store', [SettingController::class, 'storeVariable'])->name('storeVariable');
+        Route::post('/variable/update/{uuid}', [SettingController::class, 'updateVariable'])->name('updateVariable');
+        Route::post('/variable/destroy/{uuid}', [SettingController::class, 'destroyVariable'])->name('destroyVariable');
+
+        // type de variable
+        
     });
 });
 

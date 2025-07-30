@@ -1,79 +1,119 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb bg-white p-2 rounded shadow-sm">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Accueil</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Liste des variables</li>
-        </ol>
-    </nav>
 
-    <!-- Filtres -->
-    <form method="GET" class="mb-4">
-        <div class="row g-2">
-            <div class="col-md-3">
-                <input type="text" name="keyword" class="form-control" placeholder="Mot-clé" value="{{ request('keyword') }}">
-            </div>
-            <div class="col-md-2">
-                <input type="text" name="code" class="form-control" placeholder="Code" value="{{ request('code') }}">
-            </div>
-            <div class="col-md-3">
-                <input type="text" name="type" class="form-control" placeholder="Type" value="{{ request('type') }}">
-            </div>
-            <div class="col-md-3">
-                <input type="text" name="category" class="form-control" placeholder="Catégorie" value="{{ request('category') }}">
-            </div>
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+    <div class="main-content-inn">
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-handshake me-2 text-danger"></i> Reglages
+                    </h3>
+                    
+                </div>
             </div>
         </div>
-    </form>
 
-    <!-- Tableau -->
-    <div class="card">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">Liste des variables</h5>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Code</th>
-                        <th>Libellé</th>
-                        <th>Description</th>
-                        <th>Type</th>
-                        <th>Catégorie</th>
-                        <th>État</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($variables as $variable)
-                        <tr>
-                            <td>{{ $variable->code ?? '' }}</td>
-                            <td>{{ $variable->libelle ?? '' }}</td>
-                            <td>{{ Str::limit($variable->description, 50) ?? '' }}</td>
-                            <td>{{ $variable->type ?? '' }}</td>
-                            <td>{{ $variable->category ?? '' }}</td>
-                            <td>
-                                @if ($variable->etat == 'actif')
-                                    <span class="text-light badge bg-success"><i class="bi bi-check-circle"></i>Actif</span>
-                                @else
-                                    <span class="text-light badge bg-danger"><i class="bi bi-check-circle"></i> Inactif</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">Aucune variable trouvée.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="container-fluid py-4">
+            <!-- Breadcrumb -->
+
+            <!-- Header avec bouton d'ajout -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <small class="mb-0">Gestion des Variables</small>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addVariableModal">
+                    <i class="bi bi-plus-circle me-2"></i>Nouvelle Variable
+                </button>
+            </div>
+
+            <!-- Tableau -->
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Liste des variables</h5>
+                    <span id="totalCount" class="badge bg-secondary">{{ $variables->count() }} variables</span>
+                </div>
+                <div class="table-responsive table-container">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Code</th>
+                                <th>Libellé</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Catégorie</th>
+                                <th>État</th>
+                                <th width="100">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           @foreach ($variables as $item)
+                               <tr>
+                                   <td class="fw-semibold">#{{ $item->code ?? '' }}</td>
+                                   <td>{{ $item->libelle ?? '' }}</td>
+                                   <td>{{ $item->description ?? '' }}</td>
+                                   <td>
+
+                                        @if ($item->type == 'commodity')
+                                            <span class="badge bg-primary text-light">Commodité</span>
+                                        @elseif ($item->type == 'type_of_property')
+                                            <span class="badge bg-warning text-light">Type de bien</span>
+                                        @elseif ($item->type == 'type_of_appart')
+                                            <span class="badge bg-success text-light">Type d'appart</span>
+                                        @elseif ($item->type == 'autre')
+                                            <span>Autre</span>
+                                        @endif
+
+                                   </td>
+                                   <td>{{ $item->category ?? '' }}</td>
+                                   <td>
+                                    @if ($item->etat == 'actif')
+                                        <span class="badge bg-success  text-light">
+                                           <i class="fas fa-check me-1"></i>
+                                           Actif
+                                       </span>
+                                    @else
+                                        <span class="badge bg-danger text-light">
+                                           <i class="fas fa-check me-1"></i>
+                                           Inactif
+                                       </span>
+                                    @endif
+                                   </td>
+                                   <td>
+                                       <div class="d-flex justify-content-between align-items-center">
+                                           <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
+                                              data-bs-toggle="modal" data-bs-target="#editVariableModal{{ $item->uuid }}"
+                                               title="Modifier">
+                                           <i class="fas fa-edit"></i>
+                                           </button>
+                                           <button class="btn btn-sm btn-icon btn-outline-danger rounded-circle">
+                                            <a class="deleteConfirmation" data-uuid="{{$item->uuid}}"
+                                            data-type="confirmation_redirect" data-placement="top"
+                                            data-token="{{ csrf_token() }}"
+                                            data-url="{{route('setting.destroyVariable',$item->uuid)}}"
+                                            data-title="Vous êtes sur le point de supprimer {{$item->libelle}} "
+                                            data-id="{{$item->uuid}}" data-param="0"
+                                            data-route="{{route('setting.destroyVariable',$item->uuid)}}"><i
+                                                class='fas fa-trash' style="cursor: pointer"></i></a>
+                                           </button>
+                                       </div>
+                                   </td>
+                               </tr>
+
+                               @include('admins.components.editVariableModal')
+                           @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Pagination" class="mt-4">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Pagination sera générée ici -->
+                </ul>
+            </nav>
         </div>
     </div>
-</div>
+
+    @include('admins.components.addVariableModal')
 @endsection
-
-

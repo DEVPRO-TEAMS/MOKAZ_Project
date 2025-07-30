@@ -12,37 +12,23 @@ use App\Http\Controllers\Controller;
 
 class SettingController extends Controller
 {
-    public function index(Request $request)
+    public function indexCommodity(Request $request)
     {
-         $query = Variable::query();
+        $variables = Variable::where(['type'=> 'commodity', 'etat' => 'actif'])->get();
 
-        // Filtres dynamiques
-        if ($request->filled('keyword')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('libelle', 'like', '%' . $request->keyword . '%')
-                ->orWhere('description', 'like', '%' . $request->keyword . '%');
-            });
-        }
+        return view('settings.pages.index', compact('variables'));
+    }
+    public function indexAppart(Request $request)
+    {
+        $variables = Variable::where(['type'=> 'type_of_appart','etat' => 'actif'])->get();
 
-        if ($request->filled('code')) {
-            $query->where('code', 'like', '%' . $request->code . '%');
-        }
+        return view('settings.pages.index', compact('variables'));
+    }
+    public function indexProperty(Request $request)
+    {
+        $variables = Variable::where(['type'=> 'type_of_property','etat' => 'actif'])->get();
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('category')) { 
-            $query->where('category', $request->category);
-        }
-
-        $variables = $query->latest()->paginate(10);
-
-        // Pour le graphique
-        $chartData = Variable::select('type', \DB::raw('count(*) as total'))
-        ->groupBy('type')
-        ->get();
-        return view('settings.pages.index', compact('variables','chartData'));
+        return view('settings.pages.index', compact('variables'));
     }
 
     public function storeVariable(Request $request)
@@ -68,68 +54,128 @@ class SettingController extends Controller
                 'etat' => "actif",
             ]);
 
-            DB::commit();
-            return response()->json([
-                'message' => 'Commodity créée avec succès', 
-                'data' => $saving], 201);
+            if ($saving) {
 
-        }catch(\Exception $e){
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Enregistré avec succes!",
+                    'data'=>$saving,
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de l'enregistrement!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
             DB::rollBack();
-
-            return response()->json(['message' => 'Une erreur s’est produite lors de la création de la commodité.' . $e], 500);
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
         }
+        return response()->json($dataResponse);
         
     }
 
-     public function update(Request $request, $id)
+     public function updateVariable(Request $request, $uuid)
     {
 
         try{
             DB::beginTransaction();
 
-             $commodity = Commodity::findOrFail($id);
-
-            $validated = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'description' => 'nullable|string|max:500',
-            ]);
+             $variable = Variable::where('uuid', $uuid)->first();
 
             
 
-            $commodity->update([
-                'name' => $validated['name'],
-                'description' => $validated['description'],
+            $updating = $variable->update([
+                'libelle' => $request->libelle,
+                'description' => $request->description,
+                'type' => $request->type,
+                'category' => $request->category,
             ]);
 
-            DB::commit();
+            if ($updating) {
 
-            return response()->json(['message' => 'Commodity mise à jour avec succès', 'commodity' => $commodity], 201);
-        }catch(\Exception $e){
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Mis a jour avec succes!",
+                    'data'=>$updating,
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la mise a jour!",
+                    'code'=>500,
+                ];
+            }
+        } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => 'Une erreur s’est produite lors de la mise à jour de la commodité.' . $e], 500);
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
         }
+        return response()->json($dataResponse);
        
     }
 
-    public function destroy($id)
+
+    public function destroyVariable(string $uuid)
     {
+        
+        DB::beginTransaction();
+        try {
 
-        try{
-            DB::beginTransaction();
+            $saving= Variable::where('uuid', $uuid)->update([
+                'etat' => 'inactif',
+            ]);
 
-            $commodity = Commodity::findOrFail($id);
-            $commodity->delete();
+            if ($saving) {
 
-            DB::commit();
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"supprimé avec succes!",
+                    'code'=>200,
+                ];
+                DB::commit();
+           } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de l'enregistrement!",
+                    'code'=>500,
+                ];
+           }
 
-            return response()->json(['message' => 'Commodity supprimée avec succès', 'commodity' => $commodity], 201);
-
-        }catch(\Exception $e){
+        } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => 'Une erreur s’est produite lors de la suppression de la commodité.' . $e], 500);
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
         }
-       
-
+        return response()->json($dataResponse);
     }
 
     // End Commodity
