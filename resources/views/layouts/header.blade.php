@@ -13,13 +13,12 @@
                     </div>
                     <center class="d-none d-lg-block">
                         <div class="flat-bt-top">
-                            <a class="tf-btn primary" href="{{ route('reservation') }}">Découvrire nos biens</a>
+                            <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrire nos biens</a>
                         </div>
                     </center>
 
                     
                     <div class="header-account">
-
                         <ul class="icon-box">
                             <li title="Mes Souhaits">
                                 <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">

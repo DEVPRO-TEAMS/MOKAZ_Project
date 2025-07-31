@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('created_by')->nullable();
             $table->string('deleted_by')->nullable();
 
-            $table->string('etat')->nullable()->default('actif');
+            $table->string('etat')->nullable()->default('pending');
             $table->softDeletes();
             $table->timestamps();
         });

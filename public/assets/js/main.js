@@ -413,10 +413,7 @@
     $(".mobile-nav-admin-toggler").on("click", function () {
         $("body").addClass("mobile-admin-visible");
     });
-    // // Bouton toggle du menu mobile
-    // $(".mobile-admin-button").on("click", function () {
-    //     $("body").addClass("mobile-admin-visible");
-    // });
+    
 
     // Fermer le menu mobile
     $(".mobile-admin-menu .menu-backdrop, .close-admin-btn").on("click", function () {

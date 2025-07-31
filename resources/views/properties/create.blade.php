@@ -1,13 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hide show-mb">
-            <span class="body-1">Afficher le tableau de bord</span>
+    <div class="main-content-inne pt-5 mt-5 wrap-dashboard-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-home me-2 text-danger"></i> Ajout de propriété
+                    </h3>
+                </div>
+            </div>
         </div>
         <form id="addPropertyForm" enctype="multipart/form-data">
             {{-- @csrf --}}
-            <input type="hidden" name="partner_code" value="{{ Auth::user()->email ?? ''}}">
+            <input type="hidden" name="partner_uuid" value="{{ Auth::user()->partner_uuid ?? ''}}">
+            <input type="hidden" name="user_uuid" value="{{ Auth::user()->uuid ?? ''}}">
             <div class="widget-box-2">
                 <h6 class="title">Charger l'image de la propriété</h6>
                 <div class="box-uploadfile text-center">
@@ -15,7 +22,7 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir une image</a>
-                            <input type="file" class="ip-file" name="image_property" required>
+                            <input type="file" class="ip-file" name="image" required>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'image ici</p>
                     </label>
@@ -36,17 +43,17 @@
                             <label for="type">
                                 Type de propriété:<span>*</span>
                             </label>
-                            <select name="type" class="nice-select form-select list style-1" required id="type">
-                                <option value="Hotel">Hôtel</option>
-                                <option value="Villa">Villa</option>
-                                <option value="Bureau">Bureau</option>
-                                <option value="Maison de campagne">Maison de campagne</option>
+                            <select name="type_uuid" class="nice-select form-select list style-1" required id="type">
+                                <option value="" disabled selected>-- Choisir le type de propriété --</option>
+                                @foreach ($variables as $item)
+                                    <option value="{{ $item->uuid }}">{{ $item->libelle }}</option>
+                                @endforeach
                             </select>
                         </fieldset>
                     </div>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
-                        <textarea class="textarea-tinymc" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" id="desc"></textarea>
+                        <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" id="desc"></textarea>
                     </fieldset>
 
                     <div class="box grid-2 gap-30">
@@ -71,7 +78,7 @@
                             <label for="country">
                                 Pays:<span>*</span>
                             </label>
-                            <select name="country" class="nice-select list style-1" id="country" required>
+                            <select name="country" class="nice-select form-select list style-1" id="country" required>
                                 @foreach ($countries as $country)
                                     <option value="{{ $country->code }}" @if ($country->code == 'CIV') selected @endif>{{ $country->label }}</option>
                                 @endforeach
@@ -195,7 +202,7 @@
 
                 const data = await response.json();
 
-                console.log('Response:', data);
+                // console.log('Response:', data);
 
                 if (!response.ok) {
                     if (data.errors) {
@@ -238,86 +245,86 @@
         });
     </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const mapElement = document.getElementById('map-single-property');
-    const latitudeInput = document.querySelector('input[name="latitude"]');
-    const longitudeInput = document.querySelector('input[name="longitude"]');
-    const locationButton = document.querySelector('.btn-location');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapElement = document.getElementById('map-single-property');
+            const latitudeInput = document.querySelector('input[name="latitude"]');
+            const longitudeInput = document.querySelector('input[name="longitude"]');
+            const locationButton = document.querySelector('.btn-location');
 
-    // Valeurs par défaut (centre sur Abidjan si vide)
-    const defaultLat = 5.3361;
-    const defaultLng = -4.0268;
+            // Valeurs par défaut (centre sur Abidjan si vide)
+            const defaultLat = 5.3361;
+            const defaultLng = -4.0268;
 
-    const initialLat = parseFloat(latitudeInput.value) || defaultLat;
-    const initialLng = parseFloat(longitudeInput.value) || defaultLng;
+            const initialLat = parseFloat(latitudeInput.value) || defaultLat;
+            const initialLng = parseFloat(longitudeInput.value) || defaultLng;
 
-    // Initialisation de la carte
-    const map = L.map(mapElement).setView([initialLat, initialLng], 16);
+            // Initialisation de la carte
+            const map = L.map(mapElement).setView([initialLat, initialLng], 16);
 
-    // Ajouter le fond de carte
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap',
-    }).addTo(map);
+            // Ajouter le fond de carte
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+            }).addTo(map);
 
-    // Ajout du marqueur
-    let marker = L.marker([initialLat, initialLng], {
-        draggable: true
-    }).addTo(map);
+            // Ajout du marqueur
+            let marker = L.marker([initialLat, initialLng], {
+                draggable: true
+            }).addTo(map);
 
-    // Mettre à jour les champs quand on déplace le marqueur
-    marker.on('dragend', function (e) {
-        const pos = marker.getLatLng();
-        latitudeInput.value = pos.lat.toFixed(6);
-        longitudeInput.value = pos.lng.toFixed(6);
-    });
+            // Mettre à jour les champs quand on déplace le marqueur
+            marker.on('dragend', function (e) {
+                const pos = marker.getLatLng();
+                latitudeInput.value = pos.lat.toFixed(6);
+                longitudeInput.value = pos.lng.toFixed(6);
+            });
 
-    // Bouton pour localiser automatiquement l'utilisateur
-    locationButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (!navigator.geolocation) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'La géolocalisation n’est pas supportée par ce navigateur.',
-                timer: 2500,
-                showConfirmButton: false,
-                position: 'top-end',
-                toast: true
+            // Bouton pour localiser automatiquement l'utilisateur
+            locationButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (!navigator.geolocation) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'La géolocalisation n’est pas supportée par ce navigateur.',
+                        timer: 2500,
+                        showConfirmButton: false,
+                        position: 'top-end',
+                        toast: true
+                    })
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    latitudeInput.value = lat.toFixed(6);
+                    longitudeInput.value = lng.toFixed(6);
+
+                    // Déplacer le marqueur et centrer la carte
+                    marker.setLatLng([lat, lng]);
+                    map.setView([lat, lng], 16);
+                }, function (error) {
+                    alert("Impossible d'obtenir votre position.");
+                    console.error(error);
+                });
+            });
+
+            // Geocoder (recherche d’adresse)
+            L.Control.geocoder({
+                defaultMarkGeocode: false
             })
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-
-            latitudeInput.value = lat.toFixed(6);
-            longitudeInput.value = lng.toFixed(6);
-
-            // Déplacer le marqueur et centrer la carte
-            marker.setLatLng([lat, lng]);
-            map.setView([lat, lng], 16);
-        }, function (error) {
-            alert("Impossible d'obtenir votre position.");
-            console.error(error);
+            .on('markgeocode', function(e) {
+                const center = e.geocode.center;
+                map.setView(center, 16);
+                marker.setLatLng(center);
+                latitudeInput.value = center.lat.toFixed(6);
+                longitudeInput.value = center.lng.toFixed(6);
+            })
+            .addTo(map);
         });
-    });
-
-    // Geocoder (recherche d’adresse)
-    L.Control.geocoder({
-        defaultMarkGeocode: false
-    })
-    .on('markgeocode', function(e) {
-        const center = e.geocode.center;
-        map.setView(center, 16);
-        marker.setLatLng(center);
-        latitudeInput.value = center.lat.toFixed(6);
-        longitudeInput.value = center.lng.toFixed(6);
-    })
-    .addTo(map);
-});
-</script>
+    </script>
 
 
 @endsection

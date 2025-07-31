@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Models\city;
+use App\Models\User;
 use App\Models\country;
+use App\Models\Partner;
+use App\Models\Variable;
 use App\Models\Appartement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,13 +16,13 @@ class Property extends Model
     use HasFactory;
 
     protected $fillable = [
-        'property_code',
-        'partner_code',
-        'image_property',
+        'uuid',
+        'code',
+        'partner_uuid',
+        'image',
         'title',
-        'Type',
+        'type_uuid',
         'address',
-        'zipCode',
         'country',
         'city',
         'longitude',
@@ -31,6 +34,7 @@ class Property extends Model
         'etat',
     ];
 
+    
     public function pays()
     {
         return $this->belongsTo(country::class, 'country', 'code');
@@ -40,10 +44,26 @@ class Property extends Model
         return $this->belongsTo(city::class, 'city', 'code');
     }
 
-
     public function apartements()
     {
-        return $this->hasMany(Appartement::class, 'property_code', 'property_code');
+        return $this->hasMany(Appartement::class, 'property_uuid', 'uuid');
     }
+
+    public function type()
+    {
+        return $this->belongsTo(Variable::class, 'type_uuid', 'uuid');
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'uuid');
+    }
+
+
 
 }

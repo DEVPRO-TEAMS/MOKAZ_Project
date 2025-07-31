@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Properties;
 
 use App\Models\Property;
+use App\Models\Variable;
 use App\Models\AppartDoc;
 use App\Models\Appartement;
+use Illuminate\Support\Str;
+use App\Models\Tarification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -14,18 +17,16 @@ class AppartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create($property_code)
+    public function create($uuid)
     {
-        $property = Property::where('property_code', $property_code)->first();
-        return view('properties.apparts.create', compact('property', 'property_code'));
+        $property = Property::where('uuid', $uuid)->first();
+        $variables = Variable::where(['type'=> 'type_of_appart','etat' => 'actif'])->get();
+        return view('properties.apparts.create', compact('property', 'uuid', 'variables'));
     }
 
     /**
@@ -33,51 +34,92 @@ class AppartController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         DB::beginTransaction();
-        try{
-            $appartement_code = RefgenerateCode(Appartement::class, 'APPART-', 'appartement_code');
-            $property_code = $request->property_code;
+        try {
+            $externalUploadDir = base_path(env('STORAGE_FILES'));
+                
+            if (!is_dir($externalUploadDir)) {
+                mkdir($externalUploadDir, 0777, true);
+            }
 
-            if ($request->hasFile('main_image')) {
-            $file = $request->file('main_image');
-            $imageName = $appartement_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-            $file->move(public_path('media/properties_'.$property_code.'/apparts_'.$appartement_code), $imageName);
-        }
+            $code = RefgenerateCode(Appartement::class, 'APPART-', 'code');
+            $uuid = Str::uuid();
+            $property_uuid = $request->property_uuid;
+            $property = Property::where('uuid', $property_uuid)->first();
+            $property_code = $property->code;
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $imageName = $code . now()->format('YmdHis') .$uuid . '.' . $file->extension();
+                $mainFileDirectory = 'properties_' . $property_code . '/apparts_' . $code . '/';
+                $file->move($externalUploadDir . $mainFileDirectory, $imageName);
+                // $file->move(public_path('media/properties_' . $property_code . '/apparts_' . $code), $imageName);
+            }
+            $mainFileUrl = "storage/files/" . $mainFileDirectory. $imageName;
             $appartement = Appartement::create(
-                [ 
-                    'appartement_code' => $appartement_code,
-                    'property_code' => $property_code,
+                [
+                    'uuid' => $uuid,
+                    'code' => $code,
+                    'property_uuid' => $property_uuid,
                     'title' => $request->title,
-                    'price' => $request->price,
-                    'available' => $request->available,
-                    'appartType' => $request->appartType,
-                    'bedroomsNumber' => $request->bedroomsNumber,
-                    'bathroomsNumber' => $request->bathroomsNumber,
-                    'CommoditiesHomesafety' => $request->CommoditiesHomesafety,
-                    'CommoditiesBedroom' => $request->CommoditiesBedroom,
-                    'CommoditiesKitchen' => $request->CommoditiesKitchen,
+                    'nbr_available' => $request->nbr_available,
+                    'type_uuid' => $request->type_uuid,
+                    'commodity_uuid' => $request->commodity_uuid,
+                    'nbr_room' => $request->nbr_room,
+                    'nbr_bathroom' => $request->nbr_bathroom,
                     'video_url' => $request->video_url,
-                    'main_image' => $imageName,
+                    'image' => $mainFileUrl,
                     'description' => $request->description,
-                    'created_by' => $request->property_code,
+                    'created_by' => $request->partner_uuid
                 ]
             );
-            if($appartement){
+
+            if ($appartement) {
+
                 AppartDoc::create([
-                    'appartement_code' => $appartement_code,
+                    'uuid' => Str::uuid(),
+                    'appartement_uuid' => $uuid,
                     'doc_name' => $imageName,
-                    'doc_url' => 'media/properties_'.$property_code.'/apparts_'.$appartement_code . '/' . $imageName
+                    'doc_url' => $mainFileUrl
                 ]);
+
+                //Enregistrer les tarifs
+                if ($request->has('sejour_en') && $request->has('temps') && $request->has('prix')) {
+                    $sejours = $request->input('sejour_en');
+                    $temps = $request->input('temps');
+                    $prix = $request->input('prix');
+
+                    for ($i = 0; $i < count($sejours); $i++) {
+                        if (!empty($sejours[$i]) && !empty($temps[$i]) && !empty($prix[$i])) {
+                            Tarification::create([
+                                'uuid' => Str::uuid(),
+                                'code' => 'TARIF-' . now()->format('YmdHis') . '-' . $i,
+                                'appart_uuid' => $uuid,
+                                'sejour' => $sejours[$i],
+                                'nbr_of_sejour' => $temps[$i],
+                                'price' => $prix[$i],
+                                'created_by' => $request->partner_uuid
+                            ]);
+                        }
+                    }
+                }
 
                 if ($request->hasFile('images_appart')) {
                     $files = $request->file('images_appart');
                     foreach ($files as $file) {
-                        $image = $appartement_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-                        $file->move(public_path('media/properties_'.$property_code.'/apparts'.$appartement_code), $image);
+                        $uuidDoc = Str::uuid();
+                        $image = $code . now()->format('YmdHis') .$uuidDoc . '.' . $file->extension();
+                        $fileDirectory = 'properties_' . $property_code . '/apparts_' . $code . '/';
+                        $file->move($externalUploadDir . $fileDirectory, $image);
+
+                        $fileUrl = "storage/files/" . $fileDirectory. $image;
+                        // $file->move(public_path('media/properties_' . $property_code . '/apparts' . $appartement_code), $image);
                         AppartDoc::create([
-                            'appartement_code' => $appartement_code,
+                            'uuid' => $uuidDoc,
+                            'appartement_uuid' => $uuid,
                             'doc_name' => $image,
-                            'doc_url' => 'media/properties_'.$property_code.'/apparts_'.$appartement_code . '/' . $image
+                            'doc_url' => $fileUrl
                         ]);
                     }
                 }
@@ -92,12 +134,12 @@ class AppartController extends Controller
                 ],
                 201
             );
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => false,
-                'message' => "Une erreur s’est produite lors de la création de l'appartement." . $e], 500);
+                'message' => "Une erreur s’est produite lors de la création de l'appartement." . $e
+            ], 500);
         }
     }
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
@@ -31,11 +32,27 @@ use App\Http\Controllers\Properties\PropertyController;
 
 Auth::routes();
 
+Route::get('storage/files/{file}', function ($file) {
+    $path = base_path(env('STORAGE_FILES') . $file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
+
 Route::get('/', [PagesController::class, 'index'])->name('welcome');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // route de navigation
 Route::get('/apropos', [PagesController::class, 'indexApropos'])->name('apropos');
+Route::get('/appart-by-property/{uuid}', [PagesController::class, 'appartByProperty'])->name('appart.by.property');
+Route::get('/all-apparts', [PagesController::class, 'allApparts'])->name('appart.all');
 Route::get('/reservation', [PagesController::class, 'indexReservations'])->name('reservation');
 Route::get('/contact', [PagesController::class, 'indexContact'])->name('contact');
 Route::get('/faq', [PagesController::class, 'indexFaq'])->name('faq');
@@ -89,12 +106,12 @@ Route::prefix('partner')->name('partner.')->group(function(){
         Route::get('/my-properties', [PropertyController::class, 'index'])->name('properties.index');
         Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
         // Route::post('/property/store', [PropertyController::class, 'store'])->name('properties.store') api property dans api.php;
-        Route::get('/property/show/{property_code}', [PropertyController::class, 'show'])->name('properties.show');
+        Route::get('/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
 
-
+        // Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');
         // Route apparts
-        Route::get('/appart/create/{property_code}', [AppartController::class, 'create'])->name('apartments.create');
+        Route::get('/appart/create-in-property/{uuid}', [AppartController::class, 'create'])->name('apartments.create');
     });
 });
 

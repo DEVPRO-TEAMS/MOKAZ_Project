@@ -212,10 +212,7 @@
                         <div class="homeya-box style-3">
                             <div class="images-group">
                                 <div class="images-style">
-                                    @php
-                                        $imagePath = 'media/properties_' . $item->property_code . '/apparts_' . $item->appartement_code . '/' . $item->main_image;
-                                    @endphp
-                                    <img src="{{ asset($imagePath) }}" alt="img">
+                                    <img src="{{ asset($item->image) }}" alt="img">
                                 </div>
                                 <div class="top">
                                     <ul class="d-flex gap-8">
@@ -258,7 +255,7 @@
                 
             </div>
             <div class="text-center">
-                <a href="#" class="tf-btn primary size-1">Voir tous les biens</a>
+                <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
             </div>
         </div>
     </section>

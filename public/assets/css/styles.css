@@ -9527,6 +9527,15 @@ tr {
     grid-template-columns: 1fr 1fr;
   }
 }
+@media only screen and (max-width: 1440px) {
+  .mobile-button, .mobile-admin-button {
+    display: block !important;
+    margin-left: 10px !important;
+  }
+  .header-lower .inner-container .header-account {
+    display: none;
+  }
+}
 @media only screen and (max-width: 991px) {
   .header-search .nav-outer .outer-search {
     display: none;
@@ -9542,10 +9551,9 @@ tr {
   /* .main-header {
     padding: 15px;
   } */
-
-  .mobile-button, .mobile-admin-button {
+/* .mobile-button, .mobile-admin-button {
     display: block !important;
-  }
+  } */
 
   .header-account ul {
     margin-right: 20px;

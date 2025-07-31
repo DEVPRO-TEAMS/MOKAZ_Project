@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Properties;
 use App\Models\city;
 use App\Models\country;
 use App\Models\Property;
+use App\Models\Variable;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +17,35 @@ class PropertyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $properties = Property::where('partner_code', Auth::user()->email)->get();
+        $query = Property::query();
+
+        if($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                ->orWhere('partner_uuid', 'like', '%' . $request->search . '%')
+                ->orWhere('address', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtre par date
+        if($request->filled('date_debut') && $request->filled('date_fin')) {
+            $query->whereBetween('created_at', [
+                $request->date_debut . ' 00:00:00', 
+                $request->date_fin . ' 23:59:59'
+            ]);
+        } elseif ($request->filled('date_debut')) {
+            $query->where('created_at', '>=', $request->date_debut . ' 00:00:00');
+        } elseif ($request->filled('date_fin')) {
+            $query->where('created_at', '<=', $request->date_fin . ' 23:59:59');
+        }
+
+        // Filtre par état
+        if($request->filled('etat')) {
+            $query->where('etat', $request->etat);
+        }
+
+        $properties = $query->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
+        // $properties = Property::where('partner_code', Auth::user()->email)->get();
         return view('properties.index', compact('properties'));
     }
 
@@ -28,7 +55,8 @@ class PropertyController extends Controller
     public function create()
     {
         $countries = country::all();
-        return view('properties.create', compact('countries'));
+        $variables = Variable::where(['type'=> 'type_of_property','etat' => 'actif'])->get();
+        return view('properties.create', compact('countries', 'variables'));
     }
 
     // api pour recuperer la liste des ville par pays
@@ -45,28 +73,39 @@ class PropertyController extends Controller
     {
         DB::beginTransaction();
         try{
-            $property_code = RefgenerateCode(Property::class, 'PROP-', 'property_code');
+            $externalUploadDir = base_path(env('STORAGE_FILES'));
+                
+            if (!is_dir($externalUploadDir)) {
+                mkdir($externalUploadDir, 0777, true);
+            }
 
-            if ($request->hasFile('image_property')) {
-            $file = $request->file('image_property');
-            $imageName = $property_code. now()->format('Y-m-d_H-i-s').'.'.$file->extension();
-            $file->move(public_path('media/properties_'.$property_code), $imageName);
-        }
+            $code = RefgenerateCode(Property::class, 'PROP-', 'code');
+            $uuid = Str::uuid();
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $imageName = $code. now()->format('YmdHis').$uuid.'.'.$file->extension();
+
+                $fileDirectory = 'properties_'.$code.'/';
+
+                $file->move($externalUploadDir.$fileDirectory, $imageName);
+                // $file->move(public_path('media/properties_'.$code), $imageName);
+            }
+            $fileUrl = "storage/files/" . $fileDirectory. $imageName;
             $property = Property::create(
                 [ 
-                    'property_code' => $property_code,
-                    'partner_code' => $request->partner_code,
-                    'image_property' => $imageName,
+                    'uuid' => $uuid,
+                    'code' => $code,
+                    'partner_uuid' => $request->partner_uuid,
+                    'image' => $fileUrl,
                     'title' => $request->title,
-                    'Type' => $request->type,
+                    'type_uuid' => $request->type_uuid,
                     'address' => $request->address,
-                    'zipCode' => $request->zipCode,
                     'country' => $request->country,
                     'city' => $request->city,
                     'longitude' => $request->longitude,
                     'latitude' => $request->latitude,
                     'description' => $request->description,
-                    'created_by' => $request->partner_code,
+                    'created_by' => $request->user_uuid,
                 ]
             );
             DB::commit();
@@ -91,11 +130,11 @@ class PropertyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $property_code)
+    public function show(string $uuid)
     {
-        $demandePartenariat = Property::find($property_code);
-        $property = Property::where('property_code', $property_code)->first();
-        return view('properties.show', compact('demandePartenariat', 'property'));
+        // $demandePartenariat = Property::find($property_code);
+        $property = Property::where('uuid', $uuid)->first();
+        return view('properties.show', compact('property'));
     }
 
     /**
@@ -119,6 +158,6 @@ class PropertyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
     }
 }

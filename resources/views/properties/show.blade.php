@@ -335,9 +335,15 @@
             margin-top: 0.25rem;
         }
     </style>
-    <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hid">
-            <span class="body-1">Détails de la propriété</span>
+    <div class="main-content-inne pt-5 mt-5 wrap-dashboard-content">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-home me-2 text-danger"></i> Détails de la propriété
+                    </h3>
+                </div>
+            </div>
         </div>
 
         <div class=" widget-box-2 wd-listing">
@@ -346,20 +352,20 @@
                     <h3 class="title"></h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
-                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->property_code) }}"><i class="icon icon-plus"></i>
+                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->uuid) }}"><i class="icon icon-plus"></i>
                         Ajouter un appartement</a>
                 </div>
             </div>
             <div class="wrap-table p-3">
                 <!-- Informations Personnelles -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->property_code }}</h6>
+                    <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->code }}</h6>
                     <div class="partner-info-card">
 
                         <div class="row g-0">
                             <div class="property-image-container col-12 mb-3" style="height: 350px;">
-                                @if ($property->image_property)
-                                    <img src="{{ asset('media/properties_'.$property->property_code .'/'.$property->image_property)}}"
+                                @if ($property->image) 
+                                    <img src="{{ asset($property->image) }}"
                                         alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
                                         style="height: 100%; object-fit: cover;">
                                 @else
@@ -384,32 +390,43 @@
                                         <i class="fas fa-handshake me-2"></i>
                                         Partenaire :
                                     </div>
-                                    <div class="info-value" id="show-last-name">{{ $property->partner_code ?? '' }}</div>
+                                    <div class="info-value" id="show-last-name">{{ $property->partner->raison_social ?? '' }}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="contact-actions mt-3">
-                            <div class="info-item">
-                                <div class="info-label">
-                                    <i class="fas fa-toggle-on me-2"></i>Statut :
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-toggle-on me-2"></i>Statut :
+                                    </div>
+                                    <div class="info-value" id="show-last-name">
+                                        <p class="mb-0">
+                                            @if ($property->etat == 'actif')
+                                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                    <i class="fas fa-check-circle me-1"></i> Active
+                                                </span>
+                                            @elseif ($property->etat == 'inactif')
+                                                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                                                    <i class="fas fa-times-circle me-1"></i> Inactive
+                                                </span>
+                                            @else
+                                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                    <i class="fas fa-clock me-1"></i> En attente
+                                                </span>
+                                            @endif
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="info-value" id="show-last-name">
-                                    <p class="mb-0">
-                                        @if ($property->etat == 'actif')
-                                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
-                                                <i class="fas fa-check-circle me-1"></i> Active
-                                            </span>
-                                        @elseif ($property->etat == 'inactif')
-                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
-                                                <i class="fas fa-times-circle me-1"></i> Inactive
-                                            </span>
-                                        @else
-                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
-                                                <i class="fas fa-clock me-1"></i> En attente
-                                            </span>
-                                        @endif
-                                    </p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-handshake me-2"></i>
+                                        Créer par :
+                                    </div>
+                                    <div class="info-value" id="show-last-name">{{ $property->createdBy->email ?? '' }}</div>
                                 </div>
                             </div>
 
@@ -494,21 +511,49 @@
                                                 <th width="80">Code</th>
                                                 <th>Libellé</th>
                                                 <th>Type d'appart</th>
-                                                <th>Prix</th>
                                                 <th width="140">Date</th>
-                                                <th width="120">Disponibilité</th>
+                                                <th>Statut</th>
+                                                <th>Qté disponible</th>
+                                                <th>Etat</th>
                                                 <th width="140">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($property->apartements as $apartement)
                                                 <tr class="position-relative">
-                                                    <td class="fw-semibold">#{{ $apartement->appartement_code ?? '' }}</td>
+                                                    <td class="fw-semibold">#{{ $apartement->code ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->title ?? '' }}</td>
-                                                    <td class="fw-semibold">{{ $apartement->appartType ?? '' }}</td>
-                                                    <td class="fw-semibold">{{ $apartement->price ?? '' }} FCFA</td>
+                                                    <td class="fw-semibold">{{ $apartement->type->libelle ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->created_at->format('d/M/Y') ?? '' }}</td>
-                                                    <td class="fw-semibold">{{ $apartement->available ?? '0' }}</td>
+                                                    <td class="fw-semibold">
+                                                        @if($apartement->nbr_available > 0)
+                                                            <span class="badge bg-success bg-opacity-10 text-success">
+                                                                {{-- <i class="fas fa-handshake me-1"></i> --}}
+                                                                Disponible
+                                                            </span>
+                                                        @else
+                                                            <span class="badge bg-danger bg-opacity-10 text-danger">
+                                                                {{-- <i class="fas fa-handshake me-1"></i> --}}
+                                                                Indisponible
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-semibold">{{ $apartement->nbr_available ?? '0' }}</td>
+                                                    <td class="fw-semibold">
+                                                        @if ($apartement->etat == 'actif')
+                                                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                                <i class="fas fa-check-circle me-1"></i> Active
+                                                            </span>
+                                                        @elseif ($apartement->etat == 'inactif')
+                                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                                                                <i class="fas fa-times-circle me-1"></i> Inactive
+                                                            </span>
+                                                        @else
+                                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                                <i class="fas fa-clock me-1"></i> En attente
+                                                            </span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
@@ -522,7 +567,7 @@
                                                 
                                             @empty
                                                 <tr>
-                                                    <td colspan="7" class="text-center py-5">
+                                                    <td colspan="8" class="text-center py-5">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
                                                             <h5 class="fw-semibold">Aucun appartement trouvée</h5>
