@@ -49,4 +49,11 @@ class Appartement extends Model
         return $this->belongsTo(Variable::class, 'type_uuid', 'uuid');
     }
 
+
+
+    public function commodity()
+    {
+        return $this->belongsTo(Variable::class, 'commodity_uuid', 'uuid');
+    }
+
 }

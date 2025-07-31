@@ -61,14 +61,14 @@
             <div class="card card-body border-0 shadow-sm">
                 <h6>Propriétés enregistrées</h6>
                 <p class="text-muted">Liste des propriétés du partenaire</p>
-                <!-- TODO: ajouter tableau des propriétés -->
+                @include('partners.components.propertiesByPartner', ['properties' => $partner->properties])
             </div>
         </div>
         <div class="tab-pane fade" id="apartments" role="tabpanel">
             <div class="card card-body border-0 shadow-sm">
                 <h6>Appartements liés</h6>
                 <p class="text-muted">Liste des appartements du partenaire</p>
-                <!-- TODO: ajouter tableau des appartements -->
+                @include('partners.components.appartByPartner', ['units' => $appart])
             </div>
         </div>
         <div class="tab-pane fade" id="reservations" role="tabpanel">
