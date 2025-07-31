@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
+use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Partner\PartnerController;
@@ -62,7 +63,16 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
         Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
+
         Route::get('/partner/list', [PartnerController::class, 'index'])->name('partner.index');
+        Route::post('/partner/add', [PartnerController::class, 'storePartner'])->name('storePartner');
+        Route::post('/partner/update/{uuid}', [PartnerController::class, 'updatePartner'])->name('updatePartner');
+        Route::post('/partner/destroy/{uuid}', [PartnerController::class, 'destroyPartner'])->name('destroyPartner');
+        Route::get('/partner/show/{uuid}', [PartnerController::class, 'showPartner'])->name('showPartner');
+
+        // user 
+        Route::post('/update/user/{uuid}', [UserController::class, 'update'])->name('user.update');
+        Route::post('/destroy/user/{uuid}', [UserController::class, 'destroy'])->name('user.destroy');
 
         // reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
@@ -75,6 +85,8 @@ Route::prefix('user')->name('user.')->group(function(){
     });
     Route::middleware(['auth', 'user'])->group(function () {
         Route::get('/dashboard', [UserController::class, 'index'])->name('index');
+        Route::post('/update/user/{uuid}', [UserController::class, 'updateUser'])->name('updateUser');
+        Route::post('/destroy/user/{uuid}', [UserController::class, 'destroy'])->name('destroy');
     });
 });
 
@@ -114,6 +126,8 @@ Route::prefix('setting')->name('setting.')->group(function(){
         
     });
 });
+
+Route::get('/send/email', [MailController::class, 'sendMail'])->name('sendMail');
 
 
 
