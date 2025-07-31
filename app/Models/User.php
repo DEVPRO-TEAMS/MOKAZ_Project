@@ -27,13 +27,16 @@ class User extends Authenticatable
         'password',
         'password_edit',
         'user_type',
+        'role_id',
         'partner_uuid',
         'etat',
         'last_login',
         'is_logged_in',
         'email_verified_at',
+        'deleted_at',
     ];
-    
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

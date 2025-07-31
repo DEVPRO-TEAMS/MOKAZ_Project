@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,29 +24,21 @@ class UserController extends Controller
     {
         DB::beginTransaction();
 
+        $partner_uuid = Auth::user()->partner_uuid;
+
         try{
             
-            $validated = $request->validate([
-                'name'       => 'required|string|max:255',
-                'lastname'   => 'nullable|string|max:255',
-                'phone'      => 'nullable|string|max:20',
-                'email'      => 'required|email|unique:users,email',
-                'password'   => 'required|string|min:8|confirmed',
-                'user_type'  => 'nullable|string',
-                'role_id'    => 'nullable|string',
-            ]);
-
             $user = User::create([
-                'uuid'        => Str::uuid(),
-                'name'        => $validated['name'],
-                'lastname'    => $validated['lastname'] ?? null,
-                'phone'       => $validated['phone'] ?? null,
-                'email'       => $validated['email'],
-                'password'    => Hash::make($validated['password']),
-                'user_type'   => $validated['user_type'] ?? null,
-                'role_id'     => $validated['role_id'] ?? null,
-                'token'       => null,
-                'is_logged_in'=> false,
+                'uuid' => Str::uuid(),
+                'code' => Refgenerate(User::class, 'U', 'code'),
+                'name' => $request->first_name,
+                'lastname' => $request->last_name,
+                'user_type' => 'partner',
+                'phone' => $request->phone,
+                'partner_uuid' => $partner_uuid,
+                'email' => $request->email,
+                'password' => Hash::make('12345678'),
+                'etat' => 'actif',
             ]);
 
             DB::commit();
@@ -61,40 +54,51 @@ class UserController extends Controller
     /**
      * Update an existing user.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
 
         try{
             DB::beginTransaction();
 
-            $user = User::findOrFail($id);
-
-            $validated = $request->validate([
-                'name'       => 'sometimes|string|max:255',
-                'lastname'   => 'nullable|string|max:255',
-                'phone'      => 'nullable|string|max:20',
-                'email'      => 'required|email|unique:users,email,' . $user->id,
-                'password'   => 'nullable|string|min:8|confirmed',
-                'user_type'  => 'nullable|string',
-                'role_id'    => 'nullable|string',
+            $user = User::where('uuid', $uuid)->update([
+                'name'       => $request->name,
+                'lastname'   => $request->lastname,
+                'phone'      => $request->phone,
+                'email'      => $request->email,
             ]);
 
-            $user->update([
-                'name'       => $validated['name'] ?? $user->name,
-                'lastname'   => $validated['lastname'] ?? $user->lastname,
-                'phone'      => $validated['phone'] ?? $user->phone,
-                'email'      => $validated['email'],
-                'user_type'  => $validated['user_type'] ?? $user->user_type,
-                'role_id'    => $validated['role_id'] ?? $user->role_id,
-                'password'   => !empty($validated['password']) ? Hash::make($validated['password']) : $user->password,
-            ]);
+            Log::info('User updated', ['user' => $user]);
 
             DB::commit();
 
-            return response()->json(['message' => 'Utilisateur mis à jour avec succès', 'user' => $user]);
-        }catch (\Exception $e){
-            return response()->json(['message' => 'Une erreur s\'est produite lors de la mise à jour de l\'utilisateur' . $e], 500);
+            if ($user) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Mise à jour reussie!",
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la mise à jour!",
+                    'code'=>500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
         }
+        return response()->json($dataResponse);
         
 
         
@@ -103,21 +107,45 @@ class UserController extends Controller
     /**
      * Remove (soft delete) the specified user.
      */
-    public function destroy($id)
+    public function destroy($uuid)
     {
         try{
             DB::beginTransaction();
 
-            $user = User::findOrFail($id);
+            $user = User::findOrFail($uuid);
             $user->delete();
 
             DB::commit();
 
-            return response()->json(['message' => 'Utilisateur supprimé avec succès']);
+            if ($user) {
 
-        }catch (\Exception $e){
-            return response()->json(['message' => 'Une erreur s\'est produite lors de la suppression de l\'utilisateur' . $e], 500);
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Supprimé avec succes!",
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la suppression!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
         }
+        return response()->json($dataResponse);
         
     }
 }

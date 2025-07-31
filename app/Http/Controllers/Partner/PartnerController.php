@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Models\User;
+use App\Models\Partner;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Mail\NotificationPartenaire;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class PartnerController extends Controller
 {
@@ -17,7 +22,7 @@ class PartnerController extends Controller
     public function index()
     {
 
-        $partners = User::where('user_type', 'partner')->get();
+        $partners = Partner::where('etat', 'actif')->get();
         return view('partners.pages.index', compact('partners'));
     }
     
@@ -78,12 +83,99 @@ class PartnerController extends Controller
       
     }
 
+    public function storePartner(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $partner_uuid = Str::uuid();
+
+            $partner = Partner::create([
+                'uuid' => $partner_uuid,
+                'code' => Refgenerate(Partner::class, 'P', 'code'),
+                'raison_social' => $request->raison_social,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'website' => $request->website,
+                'adresse' => $request->activity_zone,
+                'etat' => 'actif',
+            ]);
+
+            if($partner){
+                $user = User::create([
+                    'uuid' => Str::uuid(),
+                    'code' => Refgenerate(User::class, 'U', 'code'),
+                    'name' => $request->contact_name,
+                    'lastname' => $request->contact_lastname,
+                    'user_type' => 'partner',
+                    'phone' => $request->phone,
+                    'partner_uuid' => $partner_uuid,
+                    'email' => $request->contact_email,
+                    'password' => Hash::make('12345678'),
+                    'etat' => 'actif',
+                ]);
+            }
+
+            if($partner){
+                $nom = $request->contact_name . ' ' . $request->contact_lastname;
+
+                $emailSubject = "Bienvenue ";
+                $message = 'Nous vous recommandons de modifier ce mot de passe après votre première connexion.';
+
+                $emailData = [
+                    'nom' => $nom,
+                    'email' => $request->contact_email,
+                    'password' => '12345678',
+                    'message' => $message,
+                    'url' => env('APP_URL') . '/login',
+                    'buttonText' => 'Finaliser la création du compte',
+                ];
+
+                Mail::to($request->contact_email)->send(new NotificationPartenaire($emailData, $emailSubject));
+            }
+
+            DB::commit();
+
+            if ($partner) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Enregistré avec succes!",
+                    'data'=>$partner,
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de l'enregistrement!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showPartner(string $uuid)
     {
-        //
+        $partner = Partner::where('uuid', $uuid)->first();
+
+        $user = User::where('partner_uuid', $uuid)->first();
+        return view('partners.pages.show', compact('partner', 'user'));
     }
 
     /**
@@ -97,16 +189,96 @@ class PartnerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updatePartner(Request $request, string $uuid)
     {
-        //
+
+        DB::beginTransaction();
+        try{
+
+            $partner = Partner::where('uuid', $uuid)->update([
+                'raison_social' => $request->raison_social,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'website' => $request->website,
+                'adresse' => $request->adresse,
+            ]);
+
+            DB::commit();
+
+            if ($partner) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Mise a jour avec succes!",
+                    'data'=>$partner,
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la mise a jour!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroyPartner(string $uuid)
+     {
+        DB::beginTransaction();
+        try{
+            $partner = Partner::where('uuid', $uuid)->update([
+                'etat' => 'inactif',
+            ]);
+
+            DB::commit();
+
+            if ($partner) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Supprimé avec succes!",
+                    'data'=>$partner,
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la suppression!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
     }
 }

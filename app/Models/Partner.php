@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Partner extends Model
 {
     use HasFactory;
+
+    protected $table = 'partners';
+
     protected $fillable = [
         'uuid',
         'code',
@@ -28,6 +31,11 @@ class Partner extends Model
     }
 
     public function properties()
+    {
+        return $this->hasMany(Property::class, 'partner_uuid', 'uuid');
+    }
+
+    public function property()
     {
         return $this->hasMany(Property::class, 'partner_uuid', 'uuid');
     }

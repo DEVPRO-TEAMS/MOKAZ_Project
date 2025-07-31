@@ -261,6 +261,7 @@
                 confirmButtonText: 'Oui, approuver',
                 cancelButtonText: 'Annuler',
                 showLoaderOnConfirm: true,
+                
                 preConfirm: async () => {
                     try {
                         // Animation du bouton pendant le traitement
@@ -283,9 +284,12 @@
 
                         const result = await response.json();
 
+
                         if (!result.status) {
                             throw new Error(result.message || 'Erreur lors du traitement');
                         }
+
+                        windows.location.reload();
 
                         return result;
                     } catch (error) {

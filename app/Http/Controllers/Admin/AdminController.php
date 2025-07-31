@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Partner;
 use App\Models\Property;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -196,27 +197,33 @@ class AdminController extends Controller
             $demande->etat = 'actif';
             $demande->save();
 
-            Log::info('Demande mise a jour', ['demande' => $demande]);
+            $partner_uuid = Str::uuid();
+
+
+            $partner = Partner::create([
+                'uuid' => $partner_uuid,
+                'code' => Refgenerate(Partner::class, 'P', 'code'),
+                'raison_social' => $demande->company,
+                'email' => $demande->email,
+                'phone' => $demande->phone,
+                'website' => $demande->website,
+                'adresse' => $demande->activity_zone,
+                'etat' => 'actif',
+            ]);
 
             // Création du partenariat
-            $partner = User::create([
-                Log::info('Creation du partenariat'),
+            $partner_user = User::create([
                 'uuid' => Str::uuid(),
-                'company' => $demande->company,
-                Log::info('Creation du company'),
+                'code' => Refgenerate(User::class, 'U', 'code'),
                 'name' => $demande->first_name,
                 'lastname' => $demande->last_name,
                 'user_type' => 'partner',
-                Log::info('Creation du user_type'),
                 'phone' => $demande->phone,
-                'role_id' => 1,
+                'partner_uuid' => $partner_uuid,
                 'email' => $demande->email,
-                Log::info('Creation du email'),
-                'password' => Hash::make('password123'),
-                Log::info('Creation du password'),
-            ])->save();
-
-            Log::info('Partenaire cree', ['partner' => $partner]);
+                'password' => Hash::make('12345678'),
+                'etat' => 'actif',
+            ]);
 
             DB::commit();
             
@@ -224,7 +231,8 @@ class AdminController extends Controller
                 'status' => true,
                 'message' => 'Demande acceptée avec succès',
                 'data' => $demande,
-                'partner' => $partner
+                'partner' => $partner,
+                'partner_user' => $partner_user
             ], 200);
 
         } catch (\Exception $e) {
@@ -238,7 +246,6 @@ class AdminController extends Controller
     }
     public function rejetDemande($id)
     {
-
 
         DB::beginTransaction();
         try {
