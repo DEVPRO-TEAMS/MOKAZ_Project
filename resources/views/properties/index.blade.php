@@ -182,8 +182,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($properties as $property)
-                                            <tr class="position-relative text-wrap">
+                                        @forelse ($properties->where('etat','!=', "inactif") as $property)
+                                            <tr class="position-relative text-wrap property-row">
                                                 <td class="fw-semibold">#{{ $property->property_code ?? '' }}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
@@ -203,7 +203,7 @@
                                                         <div>
                                                             <h6 class="mb-0 fw-semibold">{{ $property->title ?? '' }}</h6>
                                                             <small
-                                                                class="text-muted d-block">{{ Str::limit($property->description ?? '', 50) }}</small>
+                                                                class="text-muted d-block">{!! Str::words($property->description ?? '', 4, '...') !!}</small>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -212,13 +212,11 @@
                                                         <span class="fw-semibold">{{ $property->ville->label ?? '' }},
                                                             {{ $property->pays->label ?? '' }}</span>
                                                         <small class="text-muted">{{ $property->address ?? '' }}</small>
-                                                        {{-- @if ($property->zipCode)
-                                                            <small class="text-muted">{{ $property->zipCode ?? '' }}</small>
-                                                        @endif --}}
+                                                        
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span>{{ count($property->apartements) ?? '0' }}</span>
+                                                    <span>{{ count($property->apartements->where('etat', '!=', 'inactif')) ?? '0' }}</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex flex-column">
@@ -245,7 +243,8 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="">
+                                                    <input type="hidden" name="property_uuid" value="{{ $property->uuid ?? '' }}">
                                                     <div class="d-flex gap-2">
                                                         <a title="Voir détails"
                                                             class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
@@ -254,14 +253,14 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
 
-                                                        <a title="Modifier" href="javascript:void(0)"
+                                                        <a title="Modifier" href="{{ route('partner.properties.edit', $property->uuid) }}"
                                                             class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
                                                             title="Modifier">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a class="btn btn-sm btn-icon btn-outline-danger rounded-circle"
-                                                            href="javascript:void(0)" title="Supprimer"><i
-                                                                class="icon icon-trash"></i></a>
+                                                        <button class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteProperty" title="Supprimer">
+                                                            <i class="icon icon-trash"></i>
+                                                        </button>
 
 
                                                     </div>
@@ -292,4 +291,88 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // supprimer un appartement
+            document.querySelectorAll('.deleteProperty').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const propertyRow = this.closest('.property-row'); // corrige ici le sélecteur
+                    const propertyUuid = propertyRow.querySelector('input[name="property_uuid"]').value;
+
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Cette propriété sera définitivement supprimée.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Oui, supprimer !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Traitement en cours...',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            fetch(`/api/property/destroy/${propertyUuid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Succès',
+                                        text: data.message,
+                                        timer: 1500,
+                                        showConfirmButton: false,
+                                        toast: true,
+                                        position: 'top-end',
+                                        timerProgressBar: true,
+                                    });
+
+                                    // setTimeout(() => {
+                                    //     location.reload();
+                                    // }, 1000);
+
+                                    propertyRow.remove();
+                                    // defaultItem.classList.add();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Erreur',
+                                        text: data.message,
+                                        showConfirmButton: true,
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erreur',
+                                    text: 'Une erreur s’est produite lors de la suppression de la propriété.',
+                                    showConfirmButton: true,
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
 @endsection

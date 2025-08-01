@@ -1,102 +1,163 @@
 <!-- MODAL Bootstrap simplifiée -->
-<div class="modal fade" id="showApartmentModal{{ $apartement->apartement_code }}" tabindex="-1">
+<div class="modal fade" id="showApartmentModal{{ $apartement->code }}" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       
       <!-- Header -->
       <div class="modal-header bg-light">
-        <h5 class="modal-title">
-          <i class="bi bi-building"></i> Appartement Moderne 
-          <span class="badge bg-secondary">APT-001</span>
+        <h5 class="modal-title text-white">
+          <i class="bi bi-building text-white"></i> {{ $apartement->title ?? '' }} 
+          <span class="badge bg-secondary">{{ $apartement->code ?? '' }}</span>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       
       <!-- Body -->
       <div class="modal-body">
-        
+        @php
+            // Récupérer la tarification à l'heure la moins chère
+          $tarifHeure = $apartement->tarifications
+              ->where('sejour', 'Heure')
+              ->sortBy('price')
+              ->first();
+
+          // Récupérer la tarification à la journée la moins chère
+          $tarifJour = $apartement->tarifications
+              ->where('sejour', 'Jour')
+              ->sortBy('price')
+              ->first();
+        @endphp
         <!-- Image principale -->
         <div class="position-relative">
-          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=400&fit=crop" class="img-fluid rounded" alt="Appartement">
-          <span class="badge bg-success position-absolute top-0 start-0 m-3">
-            <i class="bi bi-check-circle"></i> Disponible
-          </span>
+          <img src="{{ asset($apartement->image) ?? '' }}" class="img-fluid rounded" alt="{{ $apartement->title ?? '' }}">
+          @if ($apartement->nbr_available > 0)
+            <span class="badge bg-success position-absolute top-0 start-0 m-3">
+              <i class="bi bi-check-circle"></i> Disponible
+            </span>
+          @else
+            <span class="badge bg-danger position-absolute top-0 start-0 m-3">
+              <i class="bi bi-x-circle"></i> Indisponible
+            </span>
+          @endif
+          
           <span class="badge bg-danger position-absolute bottom-0 end-0 m-3 fs-6">
-            <i class="bi bi-currency-euro"></i> 1 200 €/mois
+             @if ($tarifHeure)
+              À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}h 
+              
+            @elseif ($tarifJour)
+              À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}j 
+            @else
+              Prix non disponible
+            @endif
           </span>
         </div>
 
+        <div class="pt-4">
+            <h6 class="text-danger"><i class="bi bi-images"></i> Images</h6>
+            <div class="row">
+                @foreach ($apartement->images as $image)
+                    <div class="col-4">
+                    <img src="{{ asset($image->doc_url) ?? '' }}" alt="" class="img-fluid rounded img-thumbnail">
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <!-- Infos générales -->
-        <div class="row mt-4">
+        <div class="row pt-4">
           <div class="col-md-6">
             <h6 class="text-danger"><i class="bi bi-info-circle"></i> Informations générales</h6>
             <ul class="list-group list-group-flush small">
-              <li class="list-group-item"><i class="bi bi-house-door"></i> Type : <strong>T3</strong></li>
-              <li class="list-group-item"><i class="bi bi-bed"></i> Chambres : <strong>2</strong></li>
-              <li class="list-group-item"><i class="bi bi-droplet"></i> Salles de bain : <strong>1</strong></li>
-              <li class="list-group-item"><i class="bi bi-geo-alt"></i> Code Propriété : <strong>PROP-001</strong></li>
+              <li class="list-group-item"><i class="bi bi-house-door"></i> Type : <strong> {{ $apartement->type->libelle ?? '' }} </strong></li>
+              <li class="list-group-item"><i class="bi bi-bed"></i> Chambres : <strong>{{ $apartement->nbr_room ?? 0 }}</strong></li>
+              <li class="list-group-item"><i class="bi bi-droplet"></i> Salles de bain : <strong>{{ $apartement->nbr_bathroom ?? 0 }}</strong></li>
+              <li class="list-group-item"><i class="bi bi-geo-alt"></i> Code Propriété : <strong>{{ $apartement->property->code ?? '' }}</strong></li>
             </ul>
           </div>
           <div class="col-md-6">
             <h6 class="text-danger"><i class="bi bi-gear"></i> État & Gestion</h6>
             <ul class="list-group list-group-flush small">
-              <li class="list-group-item"><i class="bi bi-toggle-on"></i> État : <strong>Actif</strong></li>
-              <li class="list-group-item"><i class="bi bi-person-plus"></i> Créé par : <strong>Admin</strong></li>
-              <li class="list-group-item"><i class="bi bi-person-gear"></i> MAJ par : <strong>Manager</strong></li>
-              <li class="list-group-item"><i class="bi bi-calendar3"></i> Dernière MAJ : <strong>Aujourd'hui</strong></li>
+              <li class="list-group-item">
+                <i class="bi bi-toggle-on"></i> État : 
+                <strong>
+                  @if ($apartement->etat == 'actif')
+                      <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                          <i class="fas fa-check-circle me-1"></i> Active
+                      </span>
+                  @elseif ($apartement->etat == 'inactif')
+                      <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                          <i class="fas fa-times-circle me-1"></i> Inactive
+                      </span>
+                  @else
+                      <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                          <i class="fas fa-clock me-1"></i> En attente
+                      </span>
+                  @endif
+                </strong>
+              </li>
+              <li class="list-group-item"><i class="bi bi-person-plus"></i> Créé par : <strong> {{ $apartement->createdBy->email ?? '' }} </strong></li>
+              <li class="list-group-item"><i class="bi bi-person-gear"></i> MAJ par : <strong> {{ $apartement->updatedBy->email ?? 'Aucune MAJ' }} </strong></li>
+              <li class="list-group-item"><i class="bi bi-calendar3"></i> Dernière MAJ : <strong> {{ $apartement->updated_at->diffForHumans() ?? '' }}</strong></li>
             </ul>
           </div>
         </div>
 
         <!-- Description -->
-        <div class="mt-4">
+        <div class="pt-4">
           <h6 class="text-danger"><i class="bi bi-align-start"></i> Description</h6>
-          <p class="text-muted">
-            Magnifique appartement moderne situé dans un quartier calme et résidentiel. 
-            Entièrement rénové avec des finitions de qualité supérieure. Proche commerces et transports.
-          </p>
+          <div class="bg-white border border-danger rounded-3 p-3">
+            <p class="text-muted">
+              {!! $apartement->description ?? '' !!}
+            </p>
+          </div>
         </div>
+        @php
+          
+          if (!function_exists('generateEmbedUrl')) {
+              function generateEmbedUrl($url) {
+                  if (!$url) return null;
 
+                  $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:shorts/|watch\?v=|embed/|v/)|youtu\.be/)([^"&?/ ]{11})%i';
+
+                  preg_match($pattern, $url, $matches);
+
+                  return isset($matches[1]) ? 'https://www.youtube.com/embed/' . $matches[1] : null;
+              }
+          }
+
+          $videoUrl = generateEmbedUrl($apartement->video_url);
+          $commodities = explode(',', $apartement->commodities);
+        @endphp
         <!-- Équipements -->
-        <div class="mt-4">
-          <h6 class="text-danger"><i class="bi bi-star"></i> Équipements & Commodités</h6>
-          <div class="row">
-            <div class="col-md-4">
-              <h6 class="fw-bold small mt-3"><i class="bi bi-shield"></i> Sécurité</h6>
-              <span class="badge rounded-pill bg-light text-danger border">Alarme</span>
-              <span class="badge rounded-pill bg-light text-danger border">Digicode</span>
-              <span class="badge rounded-pill bg-light text-danger border">Interphone</span>
-            </div>
-            <div class="col-md-4">
-              <h6 class="fw-bold small mt-3"><i class="bi bi-bed"></i> Chambre</h6>
-              <span class="badge rounded-pill bg-light text-danger border">Placard</span>
-              <span class="badge rounded-pill bg-light text-danger border">Climatisation</span>
-              <span class="badge rounded-pill bg-light text-danger border">Parquet</span>
-            </div>
-            <div class="col-md-4">
-              <h6 class="fw-bold small mt-3"><i class="bi bi-utensils"></i> Cuisine</h6>
-              <span class="badge rounded-pill bg-light text-danger border">Équipée</span>
-              <span class="badge rounded-pill bg-light text-danger border">Lave-vaisselle</span>
-              <span class="badge rounded-pill bg-light text-danger border">Réfrigérateur</span>
-              <span class="badge rounded-pill bg-light text-danger border">Four</span>
-            </div>
+        @if (!empty($commodities))
+          <div class="pt-4">
+              <h6 class="text-danger"><i class="bi bi-star"></i> Équipements & Commodités</h6>
+              <div class="row py-4">
+                  <div class="col-12">
+                      @foreach ($commodities as $item)
+                          <span class="badge rounded-pill bg-light text-secondary p-3 fs-6 border"><i class="bi bi-star"></i> {{ trim($item) }}</span>
+                      @endforeach
+                  </div>
+              </div>
           </div>
-        </div>
+        @endif
 
-        <!-- Vidéo -->
+
+
         <div class="mt-4">
-          <h6 class="text-danger"><i class="bi bi-camera-video"></i> Visite virtuelle</h6>
-          <div class="ratio ratio-16x9 mt-2">
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Visite virtuelle" allowfullscreen></iframe>
-          </div>
+            <h6 class="text-danger"><i class="bi bi-camera-video"></i> Visite virtuelle</h6>
+            <div class="ratio ratio-16x9 mt-2">
+                <iframe src="{{ $videoUrl ?? '' }}" title="Visite virtuelle" allowfullscreen></iframe>
+            </div>
         </div>
         
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        <button class="btn btn-danger">Réserver</button>
+      <div class="modal-footer btn-container">
+        <input type="hidden" name="appart_uuid" id="appart_uuid" value="{{ $apartement->uuid}}">
+        <button type="button" class="btn btn-danger deleteAppart"> <i class="bi bi-trash"></i> Supprimer</button>
+        <a href="{{ route('partner.apartments.edit', [$apartement->uuid, $apartement->property->uuid]) }}" class="btn btn-success"> <i class="bi bi-pencil"></i> Modifier</a>
       </div>
 
     </div>

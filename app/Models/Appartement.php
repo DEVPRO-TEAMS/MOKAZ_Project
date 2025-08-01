@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Property;
 use App\Models\Variable;
 use App\Models\AppartDoc;
+use App\Models\Commodity;
 use App\Models\Tarification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ class Appartement extends Model
         'title',
         'description',
         'type_uuid',
-        'commodity_uuid',
+        'commodities',
         'nbr_room',
         'nbr_bathroom',
         'nbr_available',
@@ -47,6 +48,19 @@ class Appartement extends Model
     public function type()
     {
         return $this->belongsTo(Variable::class, 'type_uuid', 'uuid');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'uuid');
+    }
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'uuid');
+    }
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by', 'uuid');
     }
 
 }

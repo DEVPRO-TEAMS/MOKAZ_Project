@@ -51,11 +51,18 @@ Route::get('/get-cities-by-country', [PropertyController::class, 'getCities']);
 
 // api property
 Route::post('/property/add', [PropertyController::class, 'store']);
-Route::post('/property/destroy{uuid}', [PropertyController::class, 'destroy']);
+Route::post('/property/update/{uuid}', [PropertyController::class, 'update']);
+Route::post('/property/destroy/{uuid}', [PropertyController::class, 'destroy']);
 Route::get('/get-all-properties', [PagesController::class, 'getAllProperties']);
 
 // api appartements
 Route::post('/appart/add', [AppartController::class, 'store']);
+Route::post('/appart/update/{uuid}/{property_uuid}', [AppartController::class, 'update']);
+Route::post('/appart/destroy/{uuid}', [AppartController::class, 'destroy']);
+Route::post('/delete-appart-image/{uuid}', [AppartController::class, 'deleteAppartImage']);
+Route::post('/delete-appart-tarif/{uuid}', [AppartController::class, 'deleteAppartTarif']);
+
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

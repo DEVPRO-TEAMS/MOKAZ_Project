@@ -79,7 +79,7 @@ class PropertyController extends Controller
                 mkdir($externalUploadDir, 0777, true);
             }
 
-            $code = RefgenerateCode(Property::class, 'PROP-', 'code');
+            $code = RefgenerateCode(Property::class, 'PROP', 'code');
             $uuid = Str::uuid();
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
@@ -106,6 +106,7 @@ class PropertyController extends Controller
                     'latitude' => $request->latitude,
                     'description' => $request->description,
                     'created_by' => $request->user_uuid,
+                    'updated_by' => $request->user_uuid,
                 ]
             );
             DB::commit();
@@ -132,32 +133,111 @@ class PropertyController extends Controller
      */
     public function show(string $uuid)
     {
-        // $demandePartenariat = Property::find($property_code);
-        $property = Property::where('uuid', $uuid)->first();
+        $property = Property::where('uuid', $uuid)
+        ->with(['apartements.tarifications']) // eager load
+        ->first();
         return view('properties.show', compact('property'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        //
+        $countries = country::all();
+        $variables = Variable::where(['type'=> 'type_of_property','etat' => 'actif'])->get();
+        $property = Property::where('uuid', $uuid)->first();
+        return view('properties.edit', compact('property', 'countries', 'variables'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+
+    public function update(Request $request, string $uuid)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $externalUploadDir = base_path(env('STORAGE_FILES'));
+                
+            if (!is_dir($externalUploadDir)) {
+                mkdir($externalUploadDir, 0777, true);
+            }
+            $property = Property::where('uuid', $uuid)->first();
+            $code = $property->code;
+            $mainFileUrl = null;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $imageName = $code . now()->format('YmdHis') .$uuid . '.' . $file->extension();
+                $mainFileDirectory = 'properties_' . $code . '/';
+                $file->move($externalUploadDir . $mainFileDirectory, $imageName);
+                // $file->move(public_path('media/properties_' . $property_code . '/apparts_' . $code), $imageName);
+                $mainFileUrl = "storage/files/" . $mainFileDirectory. $imageName;
+            }
+            $isUpdated = $property->update([
+                'title' => $request->title,
+                'type_uuid' => $request->type_uuid,
+                'address' => $request->address,
+                'country' => $request->country,
+                'city' => $request->city,
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                'description' => $request->description,
+                'image' => ($mainFileUrl != null) ? $mainFileUrl : $property->image,
+                'updated_by' => $request->user_uuid,
+            ]);
+            
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Propriété mise à jour avec succès.',
+                'property' => $property->fresh() // Recharger les données fraîches
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => "Une erreur s’est produite lors de la création de l'appartement." . $e
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
-        
+        $property = Property::where('uuid', $uuid)->first();
+
+        foreach($property->apartements->where('etat', '!=', 'inactif') as $appart){
+
+            foreach($appart->tarifications->where('etat', '!=', 'inactif') as $tarif){
+                $tarif->etat = 'inactif';
+                $tarif->save();
+            }
+
+            foreach($appart->images->where('etat', '!=', 'inactif') as $appartDoc){
+                $appartDoc->etat = 'inactif';
+                $appartDoc->save();
+            }
+            $appart->etat = 'inactif';
+            $appart->deleted_at = now();
+            $appart->save();  
+        }
+        $property->etat = 'inactif';
+        $property->deleted_at = now();
+        $isDeleted = $property->save();
+
+        if (!$isDeleted) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Une erreur s’est produite lors de la suppression de la propriété.'
+            ], 500);
+        }else {
+            return response()->json([
+                'status' => true,
+                'message' => 'propriété supprimée avec succès.'
+            ], 200);
+        }
     }
 }

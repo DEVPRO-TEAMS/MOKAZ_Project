@@ -35,10 +35,23 @@
         <div class="row" id="liste-appartements">
             {{-- @dd($apparts) --}}
             @foreach($apparts as $item)
+                @php
+                        // Récupérer la tarification à l'heure la moins chère
+                        $tarifHeure = $item->tarifications
+                            ->where('sejour', 'Heure')
+                            ->sortBy('price')
+                            ->first();
+
+                        // Récupérer la tarification à la journée la moins chère
+                        $tarifJour = $item->tarifications
+                            ->where('sejour', 'Jour')
+                            ->sortBy('price')
+                            ->first();
+                    @endphp
                 <div class="col-sm-12 col-xl-4 col-lg-4 col-md-6">
                     <div class="homeya-box">
                         <div class="archive-top">
-                            <a href="{{ route('property.show') }}" class="images-group">
+                            <a href="{{ route('appart.detail.show', $item->uuid) }}" class="images-group">
                                 <div class="images-style">
                                     @if($item->images)  
                                         <img src="{{ asset($item->image) ?? '' }}"
@@ -48,12 +61,12 @@
                                 <div class="top">
                                     <ul class="d-flex gap-8">
                                         <li class="flag-tag success">en vedette</li>
-                                        <li class="flag-tag style-1">à vendre</li>
+                                        {{-- <li class="flag-tag style-1">à vendre</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
-                                        <li class="box-icon w-32">
+                                        {{-- <li class="box-icon w-32">
                                             <span class="icon icon-arrLeftRight"></span>
-                                        </li>
+                                        </li> --}}
                                         <li class="box-icon w-32">
                                             <span class="icon icon-heart"></span>
                                         </li>
@@ -67,11 +80,11 @@
                                 </div>
                             </a>
                             <div class="content">
-                                <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
+                                <div class="h7 text-capitalize fw-7"><a href="{{ route('appart.detail.show', $item->uuid) }}"
                                         class="link"> {{ $item->title ?? '' }}</a></div>
                                 <div class="desc">
                                     {{-- <i class="fs-16 icon icon-mapPin"></i> --}}
-                                    <p>{{ Str::limit($item->description ?? '', 30) }}</p>
+                                    <p>{!! Str::words($item->description ?? '', 8, '...') !!}</p>
                                 </div>
                                 <ul class="meta-list">
                                     <li class="item">
@@ -84,7 +97,16 @@
                                     </li>
                                     <li class="item">
                                         <i class="icon icon-money"></i>
-                                        <span>600 </span>
+                                        <span>
+                                            @if ($tarifHeure)
+                                                À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }} 
+                                            
+                                            @elseif ($tarifJour)
+                                                À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }} 
+                                            @else
+                                                Prix non disponible
+                                            @endif
+                                        </span>
                                     </li>
                                 </ul>
                             </div>
@@ -92,15 +114,15 @@
                         <div class="archive-bottom d-flex justify-content-between align-items-center">
                             <div class="d-flex gap-8 align-items-center">
                                 <div class="avatar avt-40 round">
-                                    <img src="https://i.pinimg.com/736x/66/2b/be/662bbef42e07620cbea41e3ac63a74eb.jpg"
+                                    <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
                                         alt="avt">
                                 </div>
-                                <span>Arlene McCoy</span>
+                                <span>{{ $item->property->partner->raison_social ?? 'Anonyme' }}</span>
                             </div>
-                            <div class="d-flex align-items-center">
+                            {{-- <div class="d-flex align-items-center">
                                 <h6>7250,00 Fcfa</h6>
                                 <span class="text-variant-1">/SqFT</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

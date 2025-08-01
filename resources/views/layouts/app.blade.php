@@ -30,7 +30,23 @@
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
 
+    <style>
+        /* Conteneur des champs de saisie pour placer l'icône */
+        /* Applique le style aux éléments en lecture seule */
+        input[readonly], textarea[readonly], select[readonly] {
+            background-color: #f0f0f0;  /* Couleur de fond gris pour les champs en readonly */
+            border: 1px solid #ccc;     /* Bordure gris clair */
+            /* cursor: not-allowed;        Curseur indiquant que l'action est interdite */
+            cursor: no-drop;
+            pointer-events: none;       /* Empêche toute interaction avec ces éléments */
+        }
 
+        /* Remplacer le curseur par l'emoji 🚫 lors du survol des champs readonly */
+        input[readonly]:hover, textarea[readonly]:hover, select[readonly]:hover {
+            cursor: no-drop;
+            /* cursor: wait; */
+        }
+    </style>
     </head>
 
     <body class="body bg-surface counter-scroll">

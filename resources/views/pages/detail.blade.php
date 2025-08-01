@@ -1,65 +1,114 @@
 @extends('layouts.main')
 @section('content')
+    <style>
+        .more-content.collapse:not(.show) {
+            display: block !important;
+            height: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .read-more-toggle {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .read-more-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .read-more-toggle i {
+            transition: transform 0.2s ease;
+        }
+
+        [aria-expanded="true"] .read-more-toggle i {
+            transform: rotate(180deg);
+        }
+    </style>
+
     <section class="flat-location flat-slider-detail-v1">
         <div class="swiper tf-sw-location" data-preview-lg="2.03" data-preview-md="2" data-preview-sm="2" data-space="20"
             data-centered="true" data-loop="true">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <a href="{{ asset('assets/images/banner/banner-property-1.jpg')}}" data-fancybox="gallery" class="box-imgage-detail d-block">
-                        <img src="{{ asset('assets/images/banner/banner-property-1.jpg')}}" alt="img-property">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a href="{{ asset('assets/images/banner/banner-property-3.jpg')}}" data-fancybox="gallery" class="box-imgage-detail d-block">
-                        <img src="{{ asset('assets/images/banner/banner-property-3.jpg')}}" alt="img-property">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a href="{{ asset('assets/images/banner/banner-property-2.jpg')}}" data-fancybox="gallery" class="box-imgage-detail d-block">
-                        <img src="{{ asset('assets/images/banner/banner-property-2.jpg')}}" alt="img-property">
-                    </a>
-                </div>
+                @foreach ($appart->images as $image)
+                    <div class="swiper-slide" style="height: 70vh">
+                        <a href="{{ asset($image->doc_url) }}" target="_blank" data-fancybox="gallery"
+                            class="box-imgage-detail d-block">
+                            <center>
+                                <img src="{{ asset($image->doc_url) }}" class="img-fluid" style="" alt="img-appart">
+                            </center>
+                        </a>
+                    </div>
+                @endforeach
             </div>
             <div class="box-navigation">
                 <div class="navigation swiper-nav-next nav-next-location"><span class="icon icon-arr-l"></span></div>
                 <div class="navigation swiper-nav-prev nav-prev-location"><span class="icon icon-arr-r"></span></div>
             </div>
-            <!-- <div class="icon-box">
-                            <a href="#" class="item"><span class="icon icon-map-trifold"></span></a>
-                            <a href="images/banner/banner-property-1.jpg" class="item active" data-fancybox="gallery"><span class="icon icon-images"></span></a>
-                        </div> -->
         </div>
     </section>
 
     <section class="flat-section pt-0 flat-property-detail">
-        <div class="container">
+        @php
+            // Récupérer la tarification à l'heure la moins chère
+$tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+        @endphp
+        <div class="container border rounded shadow p-4">
             <div class="header-property-detail">
                 <div class="content-top d-flex justify-content-between align-items-center">
                     <div class="box-name">
-                        <a href="#" class="flag-tag primary">En Location</a>
-                        <h4 class="title link">Villa moderne avec vue sur lac</h4>
+                        {{-- <a href="#" class="flag-tag primary">En </a> --}}
+                        <h4 class="title link">{{ $appart->title }}</h4>
                     </div>
                     <div class="box-price d-flex align-items-center">
-                        <h4>250,00 XOF</h4>
-                        <span class="body-1 text-variant-1">/Jour</span>
+                        <span class="body-1 text-variant-1">À partir de &nbsp;&nbsp; </span>
+                        <h4>
+                            @if ($tarifHeure)
+                                {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
+                            @elseif ($tarifJour)
+                                {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
+                            @else
+                                Prix non disponible
+                            @endif
+                        </h4>
+                        <span class="body-1 text-variant-1">
+                            @if ($tarifHeure)
+                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
+                            @elseif ($tarifJour)
+                                /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
+                            @else
+                                Prix non disponible
+                            @endif
+                        </span>
                     </div>
                 </div>
                 <div class="content-bottom">
                     <div class="info-box">
                         <div class="label text-uppercase">caractéristiques:</div>
                         <ul class="meta">
-                            <li class="meta-item"><span class="icon icon-bed"></span> 2 Chambres à couché</li>
-                            <li class="meta-item"><span class="icon icon-bathtub"></span> 2 Salle de bain</li>
-                            <li class="meta-item"><span class="icon icon-ruler"></span> 6,000 m<sup>²</sup></li>
+                            <li class="meta-item"><span class="icon icon-bed"></span> {{ $appart->nbr_room ?? '0' }}
+                                Chambres à couché</li>
+                            <li class="meta-item"><span class="icon icon-bathtub"></span>
+                                {{ $appart->nbr_bathroom ?? '0' }} Salle de bain</li>
+                            {{-- <li class="meta-item"><span class="icon icon-ruler"></span> 6,000 m<sup>²</sup></li> --}}
                         </ul>
                     </div>
                     <div class="info-box">
                         <div class="label">LOCALISATION:</div>
-                        <p class="meta-item"><span class="icon icon-mapPin"></span> 8 avenue, Treichville, Capital</p>
+                        <p class="meta-item"><span
+                                class="icon icon-mapPin"></span>{{ $appart->property->ville->label ?? '' }},
+                            {{ $appart->property->pays->label ?? '' }}</p>
                     </div>
                     <ul class="icon-box">
-                        <li><a href="#" class="item"><span class="icon icon-arrLeftRight"></span> </a></li>
-                        <li><a href="#" class="item"><span class="icon icon-share"></span></a></li>
+                        {{-- <li><a href="#" class="item"><span class="icon icon-arrLeftRight"></span> </a></li>
+                        <li><a href="#" class="item"><span class="icon icon-share"></span></a></li> --}}
                         <li><a href="#" class="item"><span class="icon icon-heart"></span></a></li>
                     </ul>
 
@@ -67,241 +116,207 @@
             </div>
             <div class="row">
                 <div class="col-lg-8">
+                @php
+                    $fullDescription = $appart->description;
+                    $wordLimit = 100;
+
+                    // Nettoyage initial et normalisation des espaces
+                    $normalizedContent = preg_replace('/\s+/', ' ', $fullDescription);
+                    $textOnly = strip_tags($normalizedContent);
+
+                    // Découpage des mots en gérant les espaces particuliers
+                    $words = preg_split('/\s+/', trim($textOnly));
+                    $wordCount = count($words);
+
+                    if ($wordCount > $wordLimit) {
+                        // On prend les premiers mots (sans HTML)
+                        $limitedText = implode(' ', array_slice($words, 0, $wordLimit));
+
+                        // On trouve la position approximative dans le HTML original
+                        $pos = 0;
+                        $currentWordCount = 0;
+                        $pattern = '/(?:<[^>]+>)|(?:\s*\S+\s*)/';
+                        preg_match_all($pattern, $fullDescription, $matches, PREG_OFFSET_CAPTURE);
+
+                        foreach ($matches[0] as $match) {
+                            if (!preg_match('/^<[^>]+>$/', $match[0])) {
+                                // Si ce n'est pas une balise HTML
+                            $currentWordCount++;
+                            if ($currentWordCount >= $wordLimit) {
+                                $pos = $match[1];
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($pos > 0) {
+                        $limitedHtml = substr($fullDescription, 0, $pos);
+                        $remainingHtml = substr($fullDescription, $pos);
+                    } else {
+                        // Fallback si la méthode échoue
+                        $limitedHtml = Str::words($fullDescription, $wordLimit, '');
+                        $remainingHtml = Str::after($fullDescription, $limitedHtml);
+                    }
+                    } else {
+                        $limitedHtml = $fullDescription;
+                        $remainingHtml = '';
+                    }
+
+                    $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
+                @endphp
+
                     <div class="single-property-element single-property-desc">
                         <div class="h7 title fw-7">Description</div>
-                        <p class="body-2 text-variant-1">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime natus voluptates harum. Recusandae nulla consectetur unde temporibus? Dolores quasi deleniti facilis assumenda est, nulla beatae nobis officiis dignissimos esse voluptatibus.</p>
-                        <p class="mt-8 body-2 text-variant-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum vel itaque tempora nisi laboriosam hic labore suscipit cupiditate animi, similique.</p>
-                        <a href="#" class="btn-view"><span class="text">Voir plus</span> </a>
+
+                        <div class="body-2 text-variant-1">
+                            {!! $limitedHtml !!}
+
+                            @if ($hasMoreContent)
+                                <span class="more-content collapse" id="collapseDescription">
+                                    {!! $remainingHtml !!}
+                                </span>
+
+                                <a class="read-more-toggle mt-2 d-inline-block" data-bs-toggle="collapse"
+                                    href="#collapseDescription" role="button" aria-expanded="false"
+                                    aria-controls="collapseDescription">
+                                    <span class="read-more-text">Voir plus</span>
+                                    <span class="read-less-text d-none">Voir moins</span>
+                                </a>
+                            @endif
+                        </div>
                     </div>
                     <div class="single-property-element single-property-overview">
                         <div class="h7 title fw-7">Aperçu</div>
-                        <ul class="info-box">
-                            <li class="item">
+                        <ul class="info-box row">
+                            <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-house-line"></i></a>
                                 <div class="content">
                                     <span class="label">ID:</span>
-                                    <span>2297</span>
+                                    <span>{{ $appart->id  ?? ''}}</span>
                                 </div>
                             </li>
-                            <li class="item">
+                            <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-arrLeftRight"></i></a>
                                 <div class="content">
                                     <span class="label">Type:</span>
-                                    <span>House</span>
+                                    <span>{{ $appart->type->libelle ?? '' }}</span>
                                 </div>
                             </li>
-                            <li class="item">
+                            <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bed"></i></a>
                                 <div class="content">
                                     <span class="label">Chambre à couché:</span>
-                                    <span>2 Chambres</span>
+                                    <span>{{ $appart->nbr_room ?? '0'}} Chambres</span>
                                 </div>
                             </li>
-                            <li class="item">
+                            <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bathtub"></i></a>
                                 <div class="content">
                                     <span class="label">Salle de bain:</span>
-                                    <span>2 salles</span>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <a href="#" class="box-icon w-52"><i class="icon icon-garage"></i></a>
-                                <div class="content">
-                                    <span class="label">Garages:</span>
-                                    <span>2 Places</span>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <a href="#" class="box-icon w-52"><i class="icon icon-ruler"></i></a>
-                                <div class="content">
-                                    <span class="label">Size:</span>
-                                    <span>900 m²</span>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <a href="#" class="box-icon w-52"><i class="icon icon-crop"></i></a>
-                                <div class="content">
-                                    <span class="label">Land Size:</span>
-                                    <span>2,000 m²</span>
-                                </div>
-                            </li>
-                            <li class="item">
-                                <a href="#" class="box-icon w-52"><i class="icon icon-hammer"></i></a>
-                                <div class="content">
-                                    <span class="label">Construite en:</span>
-                                    <span>2024</span>
+                                    <span>{{ $appart->nbr_bathroom ?? '0'}} salles</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
+                     @php
+          
+                        if (!function_exists('generateEmbedUrl')) {
+                            function generateEmbedUrl($url) {
+                                if (!$url) return null;
+
+                                $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:shorts/|watch\?v=|embed/|v/)|youtu\.be/)([^"&?/ ]{11})%i';
+
+                                preg_match($pattern, $url, $matches);
+
+                                return isset($matches[1]) ? 'https://www.youtube.com/embed/' . $matches[1] : null;
+                            }
+                        }
+
+                        $videoUrl = generateEmbedUrl($appart->video_url);
+                        $commodities = explode(',', $appart->commodities);
+                        @endphp
                     <div class="single-property-element single-property-video">
                         <div class="h7 title fw-7">Video</div>
                         <div class="img-video">
-                            <img src="{{ asset('assets/images/banner/img-video.jpg')}}" alt="img-video">
-                            <a href="https://youtu.be/MLpWrANjFbI" data-fancybox="gallery2" class="btn-video"> <span
+                            <img src="{{ asset($appart->image) }}" alt="img-video">
+                            <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video"> <span
                                     class="icon icon-play"></span></a>
                         </div>
                     </div>
                     <div class="single-property-element single-property-info">
-                        <div class="h7 title fw-7">Détails de la propriété</div>
+                        <div class="h7 title fw-7">Détails de la appartement</div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">ID propriété:</span>
-                                    <div class="content fw-7">AVT1020</div>
+                                    <span class="label">Code:</span>
+                                    <div class="content fw-7">{{ $appart->code ?? ''}}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">Bedrooms:</span>
-                                    <div class="content fw-7">4</div>
+                                    <span class="label">Chambre:</span>
+                                    <div class="content fw-7">{{ $appart->nbr_room ?? '0'}}</div>
                                 </div>
                             </div>
+                            
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">Price:</span>
-                                    <div class="content fw-7">$250,00
-                                        <span class="caption-1 fw-4 text-variant-1">/month</span>
+                                    <span class="label">Prix:</span>
+                                    <div class="content fw-7">
+                                        <span class="caption-1 fw-4 text-variant-1">À partir de &nbsp;</span>
+                                         @if ($tarifHeure)
+                                            {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
+                                        @elseif ($tarifJour)
+                                            {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
+                                        @else
+                                            Prix non disponible
+                                        @endif
+                                        <span class="caption-1 fw-4 text-variant-1">
+                                            @if ($tarifHeure)
+                                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
+                                            @elseif ($tarifJour)
+                                                /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
+                                            @else
+                                                Prix non disponible
+                                            @endif
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">Bedrooms:</span>
-                                    <div class="content fw-7">1</div>
+                                    <span class="label">Salle de bain:</span>
+                                    <div class="content fw-7">{{ $appart->nbr_bathroom ?? '0'}}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="inner-box">
-                                    <span class="label">Property Size:</span>
-                                    <div class="content fw-7">1200 SqFt</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Bathsrooms:</span>
-                                    <div class="content fw-7">1</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Year built:</span>
-                                    <div class="content fw-7">2023 - 12 - 11</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Bathsrooms:</span>
-                                    <div class="content fw-7">3</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Property Type:</span>
-                                    <div class="content fw-7">House, Apartment</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Garage:</span>
-                                    <div class="content fw-7">1</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Property Status:</span>
-                                    <div class="content fw-7">For Rent</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="inner-box">
-                                    <span class="label">Garage Size:</span>
-                                    <div class="content fw-7">1200 SqFt</div>
+                                    <span class="label">Type:</span>
+                                    <div class="content fw-7">{{ $appart->type->libelle ?? ''}}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="single-property-element single-property-feature">
-                        <div class="h7 title fw-7">Commodités et caractéristiques</div>
-                        <div class="wrap-feature">
-                            <div class="box-feature">
-                                <div class="fw-7">Home safety:</div>
-                                <ul>
-                                    <li class="feature-item">
-                                        <span class="icon icon-smoke-alarm"></span>
-                                        Smoke alarm
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-carbon"></span>
-                                        Carbon monoxide alarm
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-kit"></span>
-                                        First aid kit
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-lockbox"></span>
-                                        Self check-in with lockbox
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-security"></span>
-                                        Security cameras
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="box-feature">
-                                <div class="fw-7">Bedroom:</div>
-                                <ul>
-                                    <li class="feature-item">
-                                        <span class="icon icon-hanger"></span>
-                                        Hangers
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-bed-line"></span>
-                                        Bed linens
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-pillows"></span>
-                                        Extra pillows & blankets
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-iron"></span>
-                                        Iron
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-tv"></span>
-                                        TV with standard cable
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="box-feature">
-                                <div class="fw-7">Kitchen:</div>
-                                <ul>
-                                    <li class="feature-item">
-                                        <span class="icon icon-refrigerator"></span>
-                                        Refrigerator
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-microwave"></span>
-                                        Microwave
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-microwave"></span>
-                                        Dishwasher
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="icon icon-coffee"></span>
-                                        Coffee maker
-                                    </li>
-
-                                </ul>
+                    @if (!empty($commodities))
+                        <div class="single-property-element single-property-feature">
+                            <div class="h7 title fw-7">Commodités et caractéristiques</div>
+                            <div class="wrap-feature">
+                                <div class="box-feature">
+                                    <ul class="row">
+                                        @foreach ($commodities as $item)
+                                            <li class="feature-item col-md-4">
+                                                <i class="bi bi-star"></i> {{ trim($item) }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="single-property-element single-property-map">
                         <div class="h7 title fw-7">Map</div>
-                        <div id="map-single" class="map-single" data-map-zoom="16" data-map-scroll="true"></div>
-                        <ul class="info-map">
+                        <div id="map-location-property" class="map-single" data-map-zoom="16" data-map-scroll="true"></div>
+                        {{-- <ul class="info-map">
                             <li>
                                 <div class="fw-7">Address</div>
                                 <span class="mt-4 text-variant-1">8 Broadway, Brooklyn, New York</span>
@@ -315,77 +330,13 @@
                                 <div class="fw-7">FLL</div>
                                 <span class="mt-4 text-variant-1">15 min</span>
                             </li>
-                        </ul>
+                        </ul> --}}
                     </div>
-                    {{-- <div class="single-property-element single-property-floor">
-                        <div class="h7 title fw-7">Floor plans</div>
-                        <ul class="box-floor" id="parent-floor">
-                            <li class="floor-item">
-                                <div class="floor-header" data-bs-target="#floor-one" data-bs-toggle="collapse"
-                                    aria-expanded="false" aria-controls="floor-one">
-                                    <div class="inner-left">
-                                        <i class="icon icon-arr-r"></i>
-                                        <span class="fw-7">First Floor</span>
-                                    </div>
-                                    <ul class="inner-right">
-                                        <li class="d-flex align-items-center gap-8">
-                                            <i class="icon icon-bed"></i>
-                                            2 Bedroom
-                                        </li>
-                                        <li class="d-flex align-items-center gap-8">
-                                            <i class="icon icon-bathtub"></i>
-                                            2 Bathroom
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div id="floor-one" class="collapse show" data-bs-parent="#parent-floor">
-                                    <div class="faq-body">
-                                        <div class="box-img">
-                                            <img src="{{ asset('assets/images/banner/floor.png')}}" alt="img-floor">
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="floor-item">
-                                <div class="floor-header collapsed" data-bs-target="#floor-two" data-bs-toggle="collapse"
-                                    aria-expanded="false" aria-controls="floor-two">
-                                    <div class="inner-left">
-                                        <i class="icon icon-arr-r"></i>
-                                        <span class="fw-7">Second Floor</span>
-                                    </div>
-                                    <ul class="inner-right">
-                                        <li class="d-flex align-items-center gap-8">
-                                            <i class="icon icon-bed"></i>
-                                            2 Bedroom
-                                        </li>
-                                        <li class="d-flex align-items-center gap-8">
-                                            <i class="icon icon-bathtub"></i>
-                                            2 Bathroom
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div id="floor-two" class="collapse" data-bs-parent="#parent-floor">
-                                    <div class="faq-body">
-                                        <div class="box-img">
-                                            <img src="{{ asset('assets/images/banner/floor.png')}}" alt="img-floor">
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> --}}
-                    <div class="single-property-element single-property-explore">
-                        <div class="h7 title fw-7">Explorer les biens</div>
-                        <div class="box-img">
-                            <img src="{{ asset('assets/images/banner/img-explore.jpg')}}" alt="img">
-                            <div class="box-icon w-80">
-                                <span class="icon icon-360"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-property-element single-property-nearby">
+                    {{-- <div class="single-property-element single-property-nearby">
                         <div class="h7 title fw-7">Qu'y a-t-il à proximité ?</div>
-                        <p class="body-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse aliquid, quod quisquam debitis exercitationem minima. Ipsam, provident nihil. Dolores a corrupti ipsam nam tempore mollitia quis odio accusantium recusandae sit </p>
+                        <p class="body-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse aliquid, quod
+                            quisquam debitis exercitationem minima. Ipsam, provident nihil. Dolores a corrupti ipsam nam
+                            tempore mollitia quis odio accusantium recusandae sit </p>
                         <div class="grid-2 box-nearby">
                             <ul class="box-left">
                                 <li class="item-nearby">
@@ -425,7 +376,7 @@
                             </ul>
                         </div>
 
-                    </div>
+                    </div> --}}
                     <div class="single-property-element single-wrapper-review">
                         <div class="box-title-review d-flex justify-content-between align-items-center flex-wrap gap-20">
                             <div class="h7 fw-7">Avis des clients</div>
@@ -435,7 +386,7 @@
                             <ul class="box-review">
                                 <li class="list-review-item">
                                     <div class="avatar avt-60 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-2.jpg')}}" alt="avatar">
+                                        <img src="{{ asset('assets/images/avatar/avt-2.jpg') }}" alt="avatar">
                                     </div>
                                     <div class="content">
                                         <div class="name h7 fw-7 text-black">Lorem, ipsum.
@@ -455,28 +406,35 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem laborum quaerat illo nisi id quibusdam, laudantium unde consequuntur. Deserunt repellendus eius numquam atque, recusandae corporis quos voluptate optio dolore. Modi?</p>
+                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur
+                                            adipisicing elit. Exercitationem laborum quaerat illo nisi id quibusdam,
+                                            laudantium unde consequuntur. Deserunt repellendus eius numquam atque,
+                                            recusandae corporis quos voluptate optio dolore. Modi?</p>
                                         <ul class="box-img-review">
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review1.jpg')}}" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review1.jpg') }}"
+                                                        alt="img-review">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review2.jpg')}}" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review2.jpg') }}"
+                                                        alt="img-review">
 
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review3.jpg')}}" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review3.jpg') }}"
+                                                        alt="img-review">
 
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review4.jpg')}}" alt="img-review">
+                                                    <img src="{{ asset('assets/images/blog/review4.jpg') }}"
+                                                        alt="img-review">
 
                                                 </a>
                                             </li>
@@ -532,16 +490,17 @@
                 <div class="col-lg-4 px-1">
                     <div class="widget-sidebar fixed-sidebar wrapper-sidebar-right p-0">
                         <div class="hero-section my-4 card">
-                            <div class="card-header text-center">
-                                <h6><i class="fas fa-hotel text-danger"></i> Hôtel Luxe</h6>
-                            </div>
+                            {{-- <div class="card-header text-center">
+                                <h6><i class="fas fa-hotel text-danger"></i></h6>
+                            </div> --}}
 
                             <div class="card-body">
                                 <p>Découvrez le confort et l'élégance dans notre établissement de prestige</p>
                             </div>
 
                             <div class="card-footer">
-                                <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal" data-bs-target="#reservationModal">
+                                <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal"
+                                    data-bs-target="#reservationModal">
                                     <i class="fas fa-calendar-plus"></i> Reserver maintenant
                                 </button>
                             </div>
@@ -844,7 +803,8 @@
                                                         </a>
                                                     </div>
                                                     <div class="form-style">
-                                                        <button type="submit" class="tf-btn primary" href="#">Trouver des propriétés</button>
+                                                        <button type="submit" class="tf-btn primary"
+                                                            href="#">Trouver des propriétés</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -882,7 +842,7 @@
         </div>
 
     </section>
-    <section class="flat-section pt-0 flat-latest-property">
+    {{-- <section class="flat-section pt-0 flat-latest-property">
         <div class="container">
             <div class="box-title">
                 <div class="text-subtitle text-primary">Propriétés en vedette</div>
@@ -896,7 +856,8 @@
                             <div class="archive-top">
                                 <a href="#" class="images-group">
                                     <div class="images-style">
-                                        <img src="https://i.pinimg.com/736x/1e/d4/b7/1ed4b7b8112f91e889cfe4ce9802eb8e.jpg" alt="img">
+                                        <img src="https://i.pinimg.com/736x/1e/d4/b7/1ed4b7b8112f91e889cfe4ce9802eb8e.jpg"
+                                            alt="img">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
@@ -943,7 +904,7 @@
                             <div class="archive-bottom d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
                                     <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-8.jpg')}}" alt="avt">
+                                        <img src="{{ asset('assets/images/avatar/avt-8.jpg') }}" alt="avt">
                                     </div>
                                     <span>Jacob Jones</span>
                                 </div>
@@ -959,7 +920,8 @@
                             <div class="archive-top">
                                 <a href="#" class="images-group">
                                     <div class="images-style">
-                                        <img src="https://i.pinimg.com/736x/a7/3d/28/a73d28c212b6b76b448dccdc8bf34604.jpg" alt="img">
+                                        <img src="https://i.pinimg.com/736x/a7/3d/28/a73d28c212b6b76b448dccdc8bf34604.jpg"
+                                            alt="img">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
@@ -1006,7 +968,7 @@
                             <div class="archive-bottom d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
                                     <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-6.jpg')}}" alt="avt">
+                                        <img src="{{ asset('assets/images/avatar/avt-6.jpg') }}" alt="avt">
                                     </div>
                                     <span>Kathryn Murphy</span>
                                 </div>
@@ -1020,7 +982,42 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     @include('reservations.reservationModal')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.querySelector('.read-more-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.querySelector('.read-more-text').classList.toggle('d-none', isExpanded);
+                    this.querySelector('.read-less-text').classList.toggle('d-none', !isExpanded);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Récupération des coordonnées depuis les variables Blade (Laravel)
+            const latitude = @json($appart->property->latitude);
+            const longitude = @json($appart->property->longitude);
+            
+
+            // Initialisation de la carte
+            const map = L.map('map-location-property').setView([latitude, longitude], 16);
+
+            // Chargement des tuiles OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }).addTo(map);
+
+            // Ajout d’un marqueur à l’emplacement
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup("Emplacement de la propriété")
+                .openPopup();
+        });
+    </script>
 @endsection

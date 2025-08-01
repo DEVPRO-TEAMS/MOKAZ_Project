@@ -204,10 +204,23 @@
         <div class="container">
             <div class="box-title style-2 text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                 <div class="text-subtitle text-primary">Propriétés en vedette</div>
-                <h4 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h4>
+                <h5 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h5>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                 @foreach ($apparts as $item)
+                    @php
+                        // Récupérer la tarification à l'heure la moins chère
+                        $tarifHeure = $item->tarifications
+                            ->where('sejour', 'Heure')
+                            ->sortBy('price')
+                            ->first();
+
+                        // Récupérer la tarification à la journée la moins chère
+                        $tarifJour = $item->tarifications
+                            ->where('sejour', 'Jour')
+                            ->sortBy('price')
+                            ->first();
+                    @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
                             <div class="images-group">
@@ -219,32 +232,43 @@
                                         <li class="flag-tag success">En vedette</li>
                                     </ul>
                                     <ul class="d-flex gap-4">
-                                        <li class="box-icon w-32">
+                                        {{-- <li class="box-icon w-32">
                                             <span class="icon icon-arrLeftRight"></span>
-                                        </li>
+                                        </li> --}}
                                         <li class="box-icon w-32">
                                             <span class="icon icon-heart"></span>
                                         </li>
                                         <li class="box-icon w-32">
-                                            <span class="icon icon-eye"></span>
+                                            <a href="{{ route('appart.detail.show', $item->uuid) }}">
+                                                <span class="icon icon-eye"></span>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="content">
-                                    <div class="title text-1 text-capitalize"><a href="{{ route('property.show') }}"
+                                    <div class="title text-1 text-capitalize"><a href="{{ route('appart.detail.show', $item->uuid) }}"
                                             class="link text-white">{{ $item->title ?? '' }}</a></div>
                                     <ul class="meta-list">
                                         <li class="item">
                                             <i class="icon icon-bed"></i>
-                                            <span>{{ $item->bedroomsNumber ?? 0 }}</span>
+                                            <span>{{ $item->nbr_room ?? 0 }}</span>
                                         </li>
                                         <li class="item">
                                             <i class="icon icon-bathtub"></i>
-                                            <span>{{ $item->bathroomsNumber ?? 0 }}</span>
+                                            <span>{{ $item->nbr_bathroom ?? 0 }}</span>
                                         </li>
                                         <li class="item">
-                                            <i class="icon icon-ruler"></i>
-                                            <span>{{ $item->price ?? 0 }} Fcfa/jour</span>
+                                            <i class="icon icon-money"></i>
+                                            <span>
+                                                @if ($tarifHeure)
+                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }} 
+                                                
+                                                @elseif ($tarifJour)
+                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }} 
+                                                @else
+                                                    Prix non disponible
+                                                @endif
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -332,7 +356,7 @@
                 <div class="box-left  wow fadeInLeftSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                     <div class="homeya-box lg">
                         <div class="archive-top">
-                            <a href="{{ route('property.show') }}" class="images-group">
+                            <a href="#" class="images-group">
                                 <div class="images-style">
                                     <img src="https://i.pinimg.com/736x/5a/28/de/5a28de8ace9993c432da0d197ba8b4a7.jpg" alt="img">
                                 </div>
@@ -358,7 +382,7 @@
                                 </div>
                             </a>
                             <div class="content">
-                                <h5 class="text-capitalize"><a href="{{ route('property.show') }}" class="link"> Lorem ipsum dolor sit amet</a></h5>
+                                <h5 class="text-capitalize"><a href="#" class="link"> Lorem ipsum dolor sit amet</a></h5>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
                                     <p>Lorem ipsum dolor sit amet consectetur</p>
                                 </div>
@@ -396,7 +420,7 @@
 
                 <div class="box-right wow fadeInRightSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                     <div class="homeya-box list-style-1">
-                        <a href="{{ route('property.show') }}" class="images-group">
+                        <a href="#" class="images-group">
                             <div class="images-style">
                                 <img src="https://i.pinimg.com/736x/36/68/f1/3668f15d041645b979737d94116a1326.jpg" alt="img">
                             </div>
@@ -423,7 +447,7 @@
                         </a>
                         <div class="content">
                             <div class="archive-top">
-                                <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
+                                <div class="h7 text-capitalize fw-7"><a href="#"
                                         class="link">Lorem ipsum dolor sit amet consectetur</a></div>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
                                     <p>Lorem ipsum dolor sit amet consectetur</p>
@@ -458,7 +482,7 @@
 
                     </div>
                     <div class="homeya-box list-style-1">
-                        <a href="{{ route('property.show') }}" class="images-group">
+                        <a href="#" class="images-group">
                             <div class="images-style">
                                 <img src="https://i.pinimg.com/736x/a7/c6/fe/a7c6fe4e1868a144d562024de841cb6d.jpg" alt="img">
                             </div>
@@ -484,7 +508,7 @@
                         </a>
                         <div class="content">
                             <div class="archive-top">
-                                <div class="h7 text-capitalize fw-7"><a href="{{ route('property.show') }}"
+                                <div class="h7 text-capitalize fw-7"><a href="#"
                                         class="link">Lorem ipsum dolor sit amet consectetur</a></div>
                                 <div class="desc"><i class="icon icon-mapPin"></i>
                                     <p>Lorem ipsum dolor sit amet consectetur</p>

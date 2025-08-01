@@ -29,10 +29,12 @@
         // Ajouter le contrôle de recherche
         L.Control.geocoder().addTo(map);
 
-        // Fonction de création du contenu des popups
-        function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType) {
-            // console.log("dadddd" + mapImg, mapURL, mapTitle, mapLocation, mapType);
-        
+        function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType, minTarif, tarifType, nbrSejour) {
+            const plural = nbrSejour > 1 ? 's' : '';
+            const priceLabel = minTarif !== null && tarifType
+                ? `À partir de ${minTarif} FCFA/${nbrSejour}${tarifType.toLowerCase()}${plural}`
+                : 'Tarif non disponible';
+
             return `
                 <div class="map-listing-ite">
                     <div class="inner-box">
@@ -69,7 +71,8 @@
                             
                             <!-- Info supplémentaire -->
                             <div class="extra-info">
-                                <span class="category">🏨 ${mapType} </span> • <span class="price">À partir de 50 €/nuit</span>
+                                <span class="category">🏨 ${mapType}</span> • 
+                                <span class="price">${priceLabel}</span>
                             </div>
                             
                             <!-- Bouton -->
@@ -89,15 +92,17 @@
             url: '/api/get-all-properties',
             type: 'GET',
             success: function(properties) {
-                // console.log(properties);
+                console.log(properties);
                 properties.forEach(function(property) {
                     var popupContent = locationData(
-                         property.image,
-                         '/appart-by-property/' + property.uuid,
-                         property.title,
-                         "Distance à calculer",
-                         property.type.libelle
-                         
+                        property.image,
+                        '/appart-by-property/' + property.uuid,
+                        property.title,
+                        "Distance à calculer",  
+                        property.type.libelle,
+                        property.min_tarif,
+                        property.tarif_type,  // par "Heure" ou "Jour" 
+                        property.nbr_sejour
                         );
                         
                         // Création du marqueur avec icône personnalisée

@@ -504,7 +504,7 @@
                     <div class="partner-info-card">
                         <div class="row g-0">
                             <div class="col-12">
-                                <div class="table-responsive-lg p-3">
+                                <div class="table-responsive p-3">
                                     <table class="table table-hover align-middle mb-0" id="example2">
                                         <thead class="table-light">
                                             <tr>
@@ -518,8 +518,8 @@
                                                 <th width="140">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @forelse ($property->apartements as $apartement)
+                                        <tbody class="apartements-row">
+                                            @forelse ($property->apartements->where('etat','!=', "inactif") as $apartement)
                                                 <tr class="position-relative">
                                                     <td class="fw-semibold">#{{ $apartement->code ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->title ?? '' }}</td>
@@ -557,16 +557,16 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
-                                                               data-bs-toggle="modal" data-bs-target="#showApartmentModal{{ $apartement->apartement_code }}"
+                                                               data-bs-toggle="modal" data-bs-target="#showApartmentModal{{ $apartement->code }}"
                                                                 title="Voir détails">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                
+                                            <input type="hidden" name="appart_uuid" id="appart_uuid" value="{{ $apartement->uuid}}">
                                             @empty
-                                                <tr>
+                                                <tr class="default-row">
                                                     <td colspan="8" class="text-center py-5">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
@@ -577,23 +577,25 @@
                                                     </td>
                                                 </tr>
                                             @endforelse
-                                            
-
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        @foreach($property->apartements->where('etat','!=', "inactif") as $apartement)
+            @include('properties.apparts.showModal' , ['apartement' => $apartement])
+        @endforeach
+
+
+        
     </div>
 
-    @foreach($property->apartements as $apartement)
-        @include('properties.apparts.showModal')
-    @endforeach
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -614,6 +616,90 @@
             L.marker([latitude, longitude]).addTo(map)
                 .bindPopup("Emplacement de la propriété")
                 .openPopup();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // supprimer un appartement
+            document.querySelectorAll('.deleteAppart').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const btnContainer = this.closest('.btn-container'); // corrige ici le sélecteur
+                    // const defaultItem = this.closest('.default-row'); // corrige ici le sélecteur
+                    const appartUuid = btnContainer.querySelector('input[name="appart_uuid"]').value;
+
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Cet appartement sera définitivement supprimée.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Oui, supprimer !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Traitement en cours...',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            fetch(`/api/appart/destroy/${appartUuid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Succès',
+                                        text: data.message,
+                                        timer: 1500,
+                                        showConfirmButton: false,
+                                        toast: true,
+                                        position: 'top-end',
+                                        timerProgressBar: true,
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                    // previewItem.remove();
+                                    // defaultItem.classList.add();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Erreur',
+                                        text: data.message,
+                                        showConfirmButton: true,
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erreur',
+                                    text: 'Une erreur s’est produite lors de la suppression de l’appartement.',
+                                    showConfirmButton: true,
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+
         });
     </script>
 @endsection

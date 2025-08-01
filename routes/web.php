@@ -58,7 +58,7 @@ Route::get('/reservation', [PagesController::class, 'indexReservations'])->name(
 Route::get('/contact', [PagesController::class, 'indexContact'])->name('contact');
 Route::get('/faq', [PagesController::class, 'indexFaq'])->name('faq');
 Route::get('/confidentialite', [PagesController::class, 'indexPolitiq'])->name('politiq');
-Route::get('/detail/property', [PagesController::class, 'show'])->name('property.show');
+Route::get('/detail/appartement/{uuid}', [PagesController::class, 'show'])->name('appart.detail.show');
 
 
 
@@ -117,13 +117,14 @@ Route::prefix('partner')->name('partner.')->group(function(){
         // Route property
         Route::get('/my-properties', [PropertyController::class, 'index'])->name('properties.index');
         Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
-        // Route::post('/property/store', [PropertyController::class, 'store'])->name('properties.store') api property dans api.php;
+        Route::get('/property/edit/{uuid}', [PropertyController::class, 'edit'])->name('properties.edit');
         Route::get('/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
 
         // Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');
         // Route apparts
         Route::get('/appart/create-in-property/{uuid}', [AppartController::class, 'create'])->name('apartments.create');
+        Route::get('/appart/edit-in-property/{uuid}/{property_uuid}', [AppartController::class, 'edit'])->name('apartments.edit');
     });
 });
 

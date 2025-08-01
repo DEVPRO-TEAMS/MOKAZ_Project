@@ -141,16 +141,25 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-home me-2 text-danger"></i> Ajout d'appart dans la propriété #{{ $property->code }}
+                        <i class="fas fa-home me-2 text-danger"></i> Modifier l'appart #{{ $appart->code ?? '' }}
+                        {{-- dans la propriété #{{$appart->property->code}} --}}
                     </h3>
                 </div>
             </div>
         </div>
-        <form id="addAppartForm" enctype="multipart/form-data">
+        <form id="editAppartForm" enctype="multipart/form-data">
             {{-- @csrf --}}
             <input type="hidden" name="user_uuid" value="{{ Auth::user()->uuid ?? '' }}">
-            <input type="hidden" name="partner_uuid" value="{{ Auth::user()->partner_uuid ?? '' }}">
-            <input type="hidden" name="property_uuid" id="property_uuid" value="{{ $uuid }}">
+            <input type="hidden" name="property_uuid" id="property_uuid" value="{{ $appart->property->uuid ?? '' }}">
+            <input type="hidden" name="appart_uuid" id="appart_uuid" value="{{ $appart->uuid ?? '' }}">
+            @php
+                use Illuminate\Support\Str;
+                $cheminExtrait = Str::after($appart->image, 'storage/files/');
+                $imagePath = base_path(env('STORAGE_FILES') . $cheminExtrait);
+
+                $countTarif = $appart->tarifications->count();
+                $countAppartImages = $appart->images->count();
+            @endphp
             <div class="widget-box-2">
                 <h6 class="title">Charger l'images de l'appartement</h6>
                 <div class="box-uploadfile text-center">
@@ -158,10 +167,23 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir l'image</a>
-                            <input type="file" class="ip-file" name="image" accept="image/*" required>
+                            <input type="file" class="ip-file" name="image" accept="image/*" @if (!file_exists($imagePath)) required @endif>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'images ici</p>
                     </label>
+                </div>
+                <div class="pt-3 mt-3 bg-white border border-secondary rounded-3 p-3">
+                    <h6>Image principale chargée</h6>
+                    @if (file_exists($imagePath))
+                        <div class="preview-container d-flex flex-wrap gap-3 mt-3">
+                            <div class="preview-item">
+                                <img src="{{ asset($appart->image) ?? '' }}" alt="">
+                                {{-- <button type="button" class="remove-btn"><i class="fas fa-times"></i></button> --}}
+                            </div>
+                        </div>
+                    @else
+                        <p>Aucune image principale enregistrée.</p>
+                    @endif
                 </div>
             </div>
             <div class="widget-box-2">
@@ -171,19 +193,17 @@
                         <label for="title">
                             Titre:<span>*</span>
                         </label>
-                        <input type="text" class="form-control style-1" value=""
-                            placeholder="Entrer le titre de la propriété" name="title" required>
+                        <input type="text" class="form-control style-1" placeholder="Entrer le titre de la propriété"
+                            name="title" value="{{ $appart->title ?? '' }}" required>
                     </fieldset>
                     <fieldset class="box box-fieldset">
                         <label for="desc">Description:</label>
                         <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété"
-                            cols="30" rows="10" id="desc"></textarea>
+                            cols="30" rows="10" id="desc">{{ $appart->description ?? '' }}</textarea>
                     </fieldset>
-
-
-
                 </div>
             </div>
+
             <div class="widget-box-2">
                 <h6 class="title">Tarifs</h6>
                 <div id="tarifs-container">
@@ -193,7 +213,7 @@
                                 <label for="sejour_en_0">
                                     Séjour en:<span>*</span>
                                 </label>
-                                <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" required>
+                                <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" @if ($countTarif == 0) required @endif>
                                     <option value="">Sélectionnez...</option>
                                     <option value="Jour">Jour</option>
                                     <option value="Heure">Heure</option>
@@ -204,14 +224,14 @@
                                     Nombre <span class="temps-label"></span>:<span>*</span>
                                 </label>
                                 <input type="number" name="temps[]" class="form-control style-1 temps-input"
-                                    placeholder="Exemple valeur: 1" required>
+                                    placeholder="Exemple valeur: 1" @if ($countTarif == 0) required @endif>
                             </fieldset>
                             <fieldset class="box-fieldset col-md-3">
                                 <label>
                                     Coût:<span>*</span>
                                 </label>
                                 <input type="number" name="prix[]" class="form-control style-1"
-                                    placeholder="Exemple valeur: 20000" required>
+                                    placeholder="Exemple valeur: 20000" @if ($countTarif == 0) required @endif>
                             </fieldset>
                             <fieldset class="box-fieldset col-md-1 pt-md-2 pt-lg-2 remove-container">
                                 {{-- Le bouton "Supprimer" sera inséré ici --}}
@@ -222,6 +242,35 @@
 
                 <div class="mt-3">
                     <button type="button" id="addTarifBtn" class="tf-btn primary">+ Ajouter un tarif</button>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Sejour en</th>
+                                <th>Temps</th>
+                                <th>Prix</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($appart->tarifications as $tarif)
+                                <tr class="tarifs-row">
+                                    <td>#{{ $tarif->code }}</td>
+                                    <td>{{ $tarif->sejour }}</td>
+                                    <td>{{ $tarif->nbr_of_sejour }}</td>
+                                    <td>{{ $tarif->price }}</td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="tarif_uuid" value="{{ $tarif->uuid }}">
+                                        <button type="button" class="btn btn-sm btn-danger removeTarif"><i
+                                                class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -234,9 +283,10 @@
                         </label>
 
                         <select class="form-select nice-select list style-1" id="appartType" name="type_uuid" required>
-                            <option value="" disabled selected>-- Choisir le type d'appartement --</option>
+                            <option value="" disabled>-- Choisir le type d'appartement --</option>
                             @foreach ($typeAppart as $item)
-                                <option value="{{ $item->uuid }}">{{ $item->libelle }}</option>
+                                <option value="{{ $item->uuid }}" @if ($appart->type_uuid == $item->uuid) selected @endif>
+                                    {{ $item->libelle }}</option>
                             @endforeach
                         </select>
                     </fieldset>
@@ -244,22 +294,22 @@
                         <label for="bedrooms">
                             Nombre de chambres:<span>*</span>
                         </label>
-                        <input type="number" name="nbr_room" class="form-control style-1" min="0"
-                            placeholder="Exemple valeur: 1" required>
+                        <input type="number" name="nbr_room" value="{{ $appart->nbr_room ?? '' }}"
+                            class="form-control style-1" min="0" placeholder="Exemple valeur: 1" required>
                     </fieldset>
                     <fieldset class="box-fieldset col-md-3">
                         <label for="bathrooms">
                             Nombre de salles de bain:<span>*</span>
                         </label>
-                        <input type="number" name="nbr_bathroom" class="form-control style-1" min="0"
-                            placeholder="Exemple valeur: 1" required>
+                        <input type="number" name="nbr_bathroom" value="{{ $appart->nbr_bathroom ?? '' }}"
+                            class="form-control style-1" min="0" placeholder="Exemple valeur: 1" required>
                     </fieldset>
                     <fieldset class="box-fieldset col-md-3">
                         <label for="neighborhood">
                             Nombre disponible:<span>*</span>
                         </label>
-                        <input type="number" name="nbr_available" min="0" class="form-control style-1"
-                            placeholder="Exemple valeur: 1">
+                        <input type="number" name="nbr_available" value="{{ $appart->nbr_available ?? '' }}"
+                            min="0" class="form-control style-1" placeholder="Exemple valeur: 1">
                     </fieldset>
                 </div>
             </div>
@@ -270,9 +320,7 @@
                     <div class="box-amenitie commodity-block">
                         <div class="row box">
                             <fieldset class="box-fieldset col-12">
-                                <label>
-                                    Ajouter une commodité:<span>*</span>
-                                </label>
+                                <label>Ajouter une commodité:<span>*</span></label>
                                 <div class="input-group">
                                     <input id="commoditiesInput" class="form-control style-1" type="text"
                                         placeholder="Entrez une commodité" list="commoditiesList">
@@ -326,14 +374,23 @@
                                         <option value="Lavabo double vasque">
                                         <option value="Machine à laver">
                                     </datalist>
+                                    <button id="addCommoditiesBtn" class="tf-btn primary" type="button">Ajouter</button>
+                                </div>
 
-                                    <button id="addCommodibtiesBtn" class="tf-btn primary"
-                                        type="button">Ajouter</button>
+                                <div id="selectedCommodities" class="mt-3 d-flex flex-wrap gap-2">
+                                    <!-- Commodités existantes ici -->
+                                    @if (!empty($appart->commodities))
+                                        @foreach (explode(',', $appart->commodities) as $item)
+                                            <div class="commodity-badge">
+                                                <span>{{ trim($item) }}</span>
+                                                <span class="remove-commodities" style="cursor:pointer;">X</span>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
-                                <div id="selectedCommodities" class="mt-3">
-                                    <!-- Les Commodities saisies apparaîtront ici -->
-                                </div>
-                                <input type="hidden" id="hiddenCommoditiesInput" name="commodities">
+
+                                <input type="hidden" id="hiddenCommoditiesInput" name="commodities"
+                                    value="{{ $appart->commodities ?? '' }}">
                             </fieldset>
                         </div>
                     </div>
@@ -348,7 +405,7 @@
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir au moins une image</a>
                             <input type="file" class="ip-file ip-files" name="images_appart[]" id="imagesInput"
-                                multiple accept="image/*" required>
+                                multiple accept="image/*" @if ($countAppartImages == 0) required @endif>
                         </div>
                         <p class="file-nam fw-5">
                             Fichiers sélectionnés (<span class="files-count text-danger" id="filesCount">0</span>)
@@ -357,14 +414,31 @@
                 </div>
 
                 <div id="previewContainer" class="preview-container d-flex flex-wrap gap-3 mt-3"></div>
-            </div>
 
+                <div class="pt-3 mt-3 bg-white border border-secondary rounded-3 p-3">
+                    <h6>Images chargées</h6>
+                    <div class="preview-container d-flex flex-wrap gap-3 mt-3">
+                        @forelse($appart->images as $image)
+                            <div class="preview-item img-item">
+                                <img src="{{ asset($image->doc_url) ?? '' }}" alt="">
+                                <input type="hidden" name="image_uuid" value="{{ $image->uuid }}">
+                                <button type="button" class="remove-btn removeImage"><i
+                                        class="fas fa-times"></i></button>
+                            </div>
+                        @empty
+                            {{-- afficher un message --}}
+                            <p>Aucune image enregistrée.</p>
+                        @endforelse
+
+                    </div>
+                </div>
+            </div>
             <div class="widget-box-2">
                 <h6 class="title">Videos de l'appartement</h6>
                 <fieldset class="box-fieldset">
                     <label for="video">URL de la vidéo :</label>
                     <input type="url" class="form-control style-1" id="video" name="video_url"
-                        placeholder="Youtube de preference">
+                        value="{{ $appart->video_url ?? '' }}" placeholder="Youtube de preference">
                 </fieldset>
             </div>
             <div class="d-flex justify-content-end">
@@ -376,13 +450,16 @@
     </div>
 
     <script>
-        document.getElementById('addAppartForm').addEventListener('submit', async function(e) {
+        document.getElementById('editAppartForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const property_uuid = document.getElementById('property_uuid').value;
+            const appart_uuid = document.getElementById('appart_uuid').value;
             const textareaId = 'desc';
 
-            // 🔄 Synchroniser le contenu TinyMCE avec le textarea
-            tinymce.triggerSave();
+            // Synchroniser le contenu TinyMCE avec le textarea
+            if (typeof tinymce !== 'undefined' && tinymce.get(textareaId)) {
+                tinymce.triggerSave();
+            }
 
             const content = document.getElementById(textareaId).value.trim();
 
@@ -394,7 +471,20 @@
                     showConfirmButton: false,
                     timer: 1500,
                     progressBar: true
+                });
+                return;
+            }
 
+            // Validation des tarifs
+            const tarifBlocks = document.querySelectorAll('.tarif-block');
+            if (tarifBlocks.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tarif requis',
+                    text: 'Au moins un tarif doit être défini.',
+                    showConfirmButton: false,
+                    progressBar: true,
+                    timer: 1500
                 });
                 return;
             }
@@ -406,7 +496,6 @@
             submitBtn.disabled = true;
 
             try {
-
                 const formData = new FormData(this);
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 if (csrfToken) {
@@ -415,8 +504,7 @@
 
                 console.log('Form data:', Object.fromEntries(formData));
 
-
-                const response = await fetch('/api/appart/add', {
+                const response = await fetch('/api/appart/update/' + appart_uuid + '/' + property_uuid, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -437,11 +525,11 @@
                     throw new Error(data.message || 'Erreur lors de l\'envoi');
                 }
 
-                // ✅ Message de succès
+                // Message de succès
                 Swal.fire({
                     icon: 'success',
                     title: 'Succès',
-                    text: 'Appartement ajoutée avec succès',
+                    text: 'Appartement modifié avec succès',
                     timer: 5000,
                     showConfirmButton: false,
                     position: 'top-end',
@@ -449,9 +537,6 @@
                     toast: true
                 });
 
-                // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
-                // modal.hide();
-                this.reset();
                 setTimeout(() => {
                     window.location.href = '/partner/property/show/' + property_uuid;
                 }, 3000);
@@ -469,6 +554,7 @@
             }
         });
     </script>
+
 
 
     <script>
@@ -603,6 +689,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
             const addTarifBtn = document.getElementById('addTarifBtn');
 
             const tarifsContainer = document.getElementById('tarifs-container');
@@ -663,148 +750,227 @@
                 tarifsContainer.appendChild(newTarifBlock);
             });
 
-            //     // Sélection des éléments
-            // const commoditiesContainer = document.querySelector('.commodities-container');
-            // const addCommoditiesBtn = document.getElementById('addCommoditiesBtn');
-            // const originalCommodityBlock = document.querySelector('.commodity-block');
 
-            // // Compteur pour créer des IDs uniques si nécessaire
-            // let commodityCounter = 1;
 
-            // // Fonction pour ajouter un nouveau bloc de commodité
-            // function addCommodityBlock() {
-            //     // Cloner le bloc original
-            //     const newBlock = originalCommodityBlock.cloneNode(true);
+            // supprimer une image de l'appartement
+            document.querySelectorAll('.removeImage').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const previewItem = this.closest('.preview-item'); // corrige ici le sélecteur
+                    const imageUuid = previewItem.querySelector('input[name="image_uuid"]').value;
 
-            //     // Réinitialiser la valeur du champ
-            //     const inputField = newBlock.querySelector('input[name="commodities[]"]');
-            //     inputField.value = '';
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Cette image sera définitivement supprimée.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Oui, supprimer !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
 
-            //     // Ajouter un bouton de suppression si ce n'est pas le premier bloc
-            //     if (commodityCounter > 0) {
-            //         const removeContainer = newBlock.querySelector('.remove-commodity-container');
-            //         removeContainer.innerHTML = `
-        //             <button type="button" class="btn btn-danger remove-commodity-btn">
-        //                 <i class="fas fa-times"></i>
-        //             </button>
-        //         `;
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Traitement en cours...',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
 
-            //         // Ajouter l'événement de suppression
-            //         const removeBtn = newBlock.querySelector('.remove-commodity-btn');
-            //         removeBtn.addEventListener('click', function() {
-            //             newBlock.remove();
-            //         });
-            //     }
+                            fetch(`/api/delete-appart-image/${imageUuid}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]')?.content,
+                                        'Accept': 'application/json',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Succès',
+                                            text: data.message,
+                                            timer: 1500,
+                                            showConfirmButton: false,
+                                            toast: true,
+                                            position: 'top-end',
+                                            timerProgressBar: true,
+                                        });
+                                        previewItem.remove();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Erreur',
+                                            text: data.message,
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Erreur',
+                                        text: 'Une erreur s’est produite lors de la suppression de l’image.',
+                                        showConfirmButton: true,
+                                    });
+                                });
+                        }
+                    });
+                });
+            });
 
-            //     // Ajouter le nouveau bloc au container
-            //     commoditiesContainer.appendChild(newBlock);
-            //     commodityCounter++;
-            // }
 
-            // // Événement pour le bouton d'ajout
-            // addCommoditiesBtn.addEventListener('click', addCommodityBlock);
+            // supprimer un tarif de l'appartement
+            document.querySelectorAll('.removeTarif').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const previewItem = this.closest('.tarifs-row'); // corrige ici le sélecteur
+                    const tarifUuid = previewItem.querySelector('input[name="tarif_uuid"]').value;
 
-            // // Gestion de la suppression pour le premier bloc (si déjà présent)
-            // const firstRemoveContainer = originalCommodityBlock.querySelector('.remove-commodity-container');
-            // if (firstRemoveContainer) {
-            //     firstRemoveContainer.innerHTML = `
-        //         <button type="button" class="btn btn-danger remove-commodity-btn">
-        //             <i class="fas fa-times"></i>
-        //         </button>
-        //     `;
+                    Swal.fire({
+                        title: 'Êtes-vous sûr ?',
+                        text: "Cet tarif sera définitivement supprimée.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Oui, supprimer !',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
 
-            //     const firstRemoveBtn = originalCommodityBlock.querySelector('.remove-commodity-btn');
-            //     firstRemoveBtn.addEventListener('click', function() {
-            //         // Ne pas supprimer s'il s'agit du seul bloc
-            //         const allBlocks = document.querySelectorAll('.commodity-block');
-            //         if (allBlocks.length > 1) {
-            //             originalCommodityBlock.remove();
-            //         } else {
-            //             Swal.fire({
-            //                 icon: 'warning',
-            //                 title: 'Action impossible',
-            //                 text: 'Vous devez avoir au moins une commodité.',
-            //                 timer: 1500,
-            //                 showConfirmButton: false
-            //             });
-            //         }
-            //     });
-            // }
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Traitement en cours...',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
 
+                            fetch(`/api/delete-appart-tarif/${tarifUuid}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]')?.content,
+                                        'Accept': 'application/json',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Succès',
+                                            text: data.message,
+                                            timer: 1500,
+                                            showConfirmButton: false,
+                                            toast: true,
+                                            position: 'top-end',
+                                            timerProgressBar: true,
+                                        });
+                                        previewItem.remove();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Erreur',
+                                            text: data.message,
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Erreur',
+                                        text: 'Une erreur s’est produite lors de la suppression de l’image.',
+                                        showConfirmButton: true,
+                                    });
+                                });
+                        }
+                    });
+                });
+            });
 
         });
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            // Références des éléments
             const commoditiesInput = document.getElementById("commoditiesInput");
-            const commoditiesList = document.getElementById("commoditiesList");
-            const addCommodibtiesBtn = document.getElementById("addCommodibtiesBtn");
-            const selectedCommoditiesContainer = document.getElementById("selectedCommodities");
-            const hiddenCommoditiesInput = document.getElementById("hiddenCommoditiesInput");
+            const addCommoditiesBtn = document.getElementById("addCommoditiesBtn");
+            const selectedContainer = document.getElementById("selectedCommodities");
+            const hiddenInput = document.getElementById("hiddenCommoditiesInput");
 
-            // Gestion de l'ajout d'une distraction
-            addCommodibtiesBtn.addEventListener("click", function() {
-                const commoditiesValue = commoditiesInput.value.trim();
-                if (commoditiesValue && !isCommoditiesAlreadyAdded(commoditiesValue)) {
-                    addCommodities(commoditiesValue);
-                    updateHiddenInput(); // Met à jour l'input caché
-                    commoditiesInput.value = ""; // Réinitialise le champ
+            // Réinitialiser l'affichage des commodités existantes
+            updateHiddenInput();
+
+            addCommoditiesBtn.addEventListener("click", function() {
+                const value = commoditiesInput.value.trim();
+                if (value && !isAlreadyAdded(value)) {
+                    addBadge(value);
+                    commoditiesInput.value = "";
+                    updateHiddenInput();
                 }else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Existe déja',
-                        text: "La commodité " + commoditiesValue +  " a déja été ajoutée!",
+                        text: "La commodité " + value +  " a déja été ajoutée!",
                         showConfirmButton: true,
                         showConfirmText: 'OK',
                     });
                 }
             });
 
-            // Vérifie si une commodities est déjà ajoutée
-            function isCommoditiesAlreadyAdded(value) {
-                return Array.from(selectedCommoditiesContainer.children).some(
-                    child => child.textContent.trim().startsWith(value)
+            function isAlreadyAdded(value) {
+                return Array.from(selectedContainer.children).some(
+                    child => child.querySelector("span").textContent === value
                 );
             }
-            // function isAlreadyAdded(value) {
-            //     return Array.from(selectedContainer.children).some(
-            //         child => child.querySelector("span").textContent === value
-            //     );
-            // }
 
-            // Ajoute une commodities à la liste sélectionnée
-            function addCommodities(value) {
+            function addBadge(value) {
                 const badge = document.createElement("div");
-                badge.classList.add("commodity-badge");
+                badge.className = "commodity-badge text-success font-weight-bold";
 
-                const text = document.createElement("span");
-                text.textContent = value;
+                const spanText = document.createElement("span");
+                spanText.textContent = value;
 
-                const removeBtn = document.createElement("span");
-                removeBtn.textContent = "x";
-                removeBtn.classList.add("remove-commodities");
-                removeBtn.title = "Supprimer";
-                removeBtn.addEventListener("click", function() {
+                const spanRemove = document.createElement("span");
+                spanRemove.className = "remove-commodities";
+                spanRemove.textContent = "X";
+                spanRemove.style.cursor = "pointer";
+                spanRemove.addEventListener("click", () => {
                     badge.remove();
                     updateHiddenInput();
                 });
 
-                badge.appendChild(text);
-                badge.appendChild(removeBtn);
-                selectedCommoditiesContainer.appendChild(badge);
+                badge.appendChild(spanText);
+                badge.appendChild(spanRemove);
+                selectedContainer.appendChild(badge);
             }
 
-            // Met à jour l'input caché avec les commodities sélectionnées
             function updateHiddenInput() {
-                const selectedCommodities = Array.from(selectedCommoditiesContainer.children).map(
-                    child => child.textContent.replace(" x", "").trim()
+                const values = Array.from(selectedContainer.children).map(
+                    child => child.querySelector("span").textContent.trim()
                 );
-                hiddenCommoditiesInput.value = selectedCommodities.join(
-                    ","); // Stocke les commodities sous forme de chaîne
+                hiddenInput.value = values.join(',');
             }
+            // Permet la suppression des badges existants au chargement
+            document.querySelectorAll(".remove-commodities").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    btn.parentElement.remove();
+                    updateHiddenInput();
+                });
+            });
         });
     </script>
 @endsection
