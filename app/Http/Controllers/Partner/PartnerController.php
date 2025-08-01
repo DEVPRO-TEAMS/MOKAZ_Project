@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Partner;
 
 use App\Models\User;
 use App\Models\Partner;
+use App\Models\Appartement;
+use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PartnershipRequest;
@@ -174,8 +176,15 @@ class PartnerController extends Controller
     {
         $partner = Partner::where('uuid', $uuid)->first();
 
-        $user = User::where('partner_uuid', $uuid)->first();
-        return view('partners.pages.show', compact('partner', 'user'));
+        $uuidPluck = $partner->properties()->pluck('uuid')->toArray();
+
+        $appart = Appartement::whereIn('property_uuid', $uuidPluck)->get();
+
+        $appartUuid = $appart->pluck('uuid')->toArray();
+
+        $reservations = Reservation::whereIn('appart_uuid', $appartUuid)->get();
+
+        return view('partners.pages.show', compact('partner', 'appart', 'reservations'));
     }
 
     /**
