@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\User;
 
+
+use Carbon\Carbon;
+use App\Models\receipt;
 use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -22,82 +28,401 @@ class ReservationController extends Controller
     
 
     // Créer une réservation
+    // public function store(Request $request)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $validated = $request->validate([
+    //             'nom' => 'required|string|max:255',
+    //             'prenoms' => 'required|string|max:255',
+    //             'email' => 'nullable|email|max:255',
+    //             'phone' => 'nullable|string|max:50',
+    //             'appart_uuid' => 'required|string',
+    //             'sejour' => 'nullable|string|max:255',
+    //             'start_time' => 'required|date',
+    //             'end_time' => 'required|date|after_or_equal:start_time',
+    //             'nbr_of_sejour' => 'nullable|integer|min:1',
+    //             'total_price' => 'nullable|numeric|min:0',
+    //             'unit_price' => 'nullable|numeric|min:0',
+    //             'statut_paiement' => 'nullable|in:pending,paid',
+    //             'status' => 'nullable|in:pending,confirmed,cancelled,reconducted',
+    //             'notes' => 'nullable|string',
+    //             'traited_by' => 'nullable|string|max:255',
+    //             'traited_at' => 'nullable|date',
+    //         ]);
+
+    //         $saving = Reservation::create([
+    //             'uuid' => Str::uuid(),
+    //             'code' => Refgenerate(Reservation::class, 'RES', 'code'),
+    //             'nom' => $validated['nom'],
+    //             'prenoms' => $validated['prenoms'],
+    //             'email' => $validated['email'] ?? null,
+    //             'phone' => $validated['phone'] ?? null,
+    //             'appart_uuid' => $validated['appart_uuid'],
+    //             'sejour' => $validated['sejour'] ?? null,
+    //             'start_time' => $validated['start_time'],
+    //             'end_time' => $validated['end_time'],
+    //             'nbr_of_sejour' => $validated['nbr_of_sejour'] ?? null,
+    //             'total_price' => $validated['total_price'] ?? null,
+    //             'unit_price' => $validated['unit_price'] ?? null,
+    //             'statut_paiement' => $validated['statut_paiement'] ?? 'pending',
+    //             'status' => $validated['status'] ?? 'pending',
+    //             'notes' => $validated['notes'] ?? null,
+    //             'traited_by' => Auth::user()->uuid ?? null,
+    //             'traited_at' => $validated['traited_at'] ?? null,
+    //             'etat' => 'actif',
+    //         ]);
+
+    //         if ($saving) {
+    //             $dataResponse = [
+    //                 'type' => 'success',
+    //                 'urlback' => 'back',
+    //                 'message' => 'Réservation enregistrée avec succès !',
+    //                 'data' => $saving,
+    //                 'code' => 200,
+    //             ];
+    //             DB::commit();
+    //         } else {
+    //             DB::rollBack();
+    //             $dataResponse = [
+    //                 'type' => 'error',
+    //                 'urlback' => '',
+    //                 'message' => "Erreur lors de l'enregistrement !",
+    //                 'data' => $saving,
+    //                 'code' => 500,
+    //             ];
+    //         }
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         $dataResponse = [
+    //             'type' => 'error',
+    //             'urlback' => '',
+    //             'message' => "Erreur système ! $th",
+    //             'code' => 500,
+    //         ];
+    //     }
+
+    //     return response()->json($dataResponse);
+    // }
+
+    // public function store(Request $request)
+    // {
+    //     // Validation des données
+    //     // $validator = Validator::make($request->all(), [
+    //     //     'nom' => 'required|string|max:255',
+    //     //     'prenoms' => 'required|string|max:255',
+    //     //     'email' => 'required|email|max:255',
+    //     //     'phone' => 'required|string|max:20',
+    //     //     'appart_uuid' => 'required|string|exists:appartements,uuid',
+    //     //     'start_time' => 'required|date',
+    //     //     'end_time' => 'nullable|date',
+    //     //     'unit_price' => 'required|numeric',
+    //     //     'total_price' => 'required|numeric',
+    //     //     'payment_amount' => 'required|numeric',
+    //     //     'payment_method' => 'required|string',
+    //     //     'notes' => 'nullable|string',
+    //     //     'is_hourly' => 'required|boolean',
+    //     //     'hours' => 'nullable|integer|required_if:is_hourly,true',
+    //     //     'days' => 'nullable|integer|required_if:is_hourly,false',
+    //     //     'custom_tarif' => 'nullable|boolean'
+    //     // ]);
+
+    //     // if ($validator->fails()) {
+    //     //     return response()->json([
+    //     //         'success' => false,
+    //     //         'message' => 'Validation error',
+    //     //         'errors' => $validator->errors()
+    //     //     ], 422);
+    //     // }
+
+    //     try {
+    //         // Création de la réservation
+    //         $reservation = Reservation::create([
+    //             'uuid' => Str::uuid(),
+    //             'code' => Refgenerate(Reservation::class, 'RES', 'code'),
+    //             // 'code' => 'RES-' . strtoupper(Str::random(6)),
+    //             'nom' => $request->nom,
+    //             'prenoms' => $request->prenoms,
+    //             'email' => $request->email,
+    //             'phone' => $request->phone,
+    //             'appart_uuid' => $request->appart_uuid,
+    //             'sejour' => $request->is_hourly ? 'Heure' : 'Jour',
+    //             'start_time' => $request->start_time,
+    //             'end_time' => $request->end_time,
+    //             'nbr_of_sejour' => $request->is_hourly ? $request->hours : $request->days,
+    //             'total_price' => $request->total_price,
+    //             'unit_price' => $request->unit_price,
+    //             'statut_paiement' => 'payé',
+    //             'status' => 'confirmé',
+    //             'notes' => $request->notes,
+    //             'payment_method' => $request->payment_method,
+    //             'custom_tarif' => $request->custom_tarif ?? false,
+    //             'payment_amount' => $request->payment_amount
+    //         ]);
+
+    //         // Générer le PDF
+    //         $pdfUrl = $this->generateReceiptPDF($reservation);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Réservation enregistrée avec succès',
+    //             'reservation' => $reservation,
+    //             'pdf_url' => $pdfUrl
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Erreur lors de l\'enregistrement',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function store(Request $request)
     {
+        // Validation des données
+        // $validator = Validator::make($request->all(), [
+        //     'nom' => 'required|string|max:255',
+        //     'prenoms' => 'required|string|max:255',
+        //     'email' => 'required|email|max:255',
+        //     'phone' => 'required|string|max:20',
+        //     'appart_uuid' => 'required|string|exists:appartements,uuid',
+        //     'start_time' => 'required|date',
+        //     'end_time' => 'nullable|date',
+        //     'unit_price' => 'required|numeric',
+        //     'total_price' => 'required|numeric',
+        //     'payment_amount' => 'required|numeric',
+        //     'payment_method' => 'required|string',
+        //     'notes' => 'nullable|string',
+        //     'is_hourly' => 'required|boolean',
+        //     'hours' => 'nullable|integer|required_if:is_hourly,true',
+        //     'days' => 'nullable|integer|required_if:is_hourly,false',
+        //     'custom_tarif' => 'nullable|boolean'
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Erreur de validation',
+        //         'errors' => $validator->errors()
+        //     ], 422);
+        // }
+
         DB::beginTransaction();
         try {
-            $validated = $request->validate([
-                'nom' => 'required|string|max:255',
-                'prenoms' => 'required|string|max:255',
-                'email' => 'nullable|email|max:255',
-                'phone' => 'nullable|string|max:50',
-                'appart_uuid' => 'required|string',
-                'sejour' => 'nullable|string|max:255',
-                'start_time' => 'required|date',
-                'end_time' => 'required|date|after_or_equal:start_time',
-                'nbr_of_sejour' => 'nullable|integer|min:1',
-                'total_price' => 'nullable|numeric|min:0',
-                'unit_price' => 'nullable|numeric|min:0',
-                'statut_paiement' => 'nullable|in:pending,paid',
-                'status' => 'nullable|in:pending,confirmed,cancelled,reconducted',
-                'notes' => 'nullable|string',
-                'traited_by' => 'nullable|string|max:255',
-                'traited_at' => 'nullable|date',
-            ]);
-
-            $saving = Reservation::create([
+            // Génération du code unique
+            $code = 'RES-' . strtoupper(Str::random(6));
+            $start_time = Carbon::parse($request->start_time)->format('Y-m-d H:i:s');
+            $end_time = $request->end_time
+                ? Carbon::parse($request->end_time)->format('Y-m-d H:i:s')
+                : null;
+            // Création de la réservation
+            $reservation = Reservation::create([
                 'uuid' => Str::uuid(),
-                'code' => Refgenerate(Reservation::class, 'RES', 'code'),
-                'nom' => $validated['nom'],
-                'prenoms' => $validated['prenoms'],
-                'email' => $validated['email'] ?? null,
-                'phone' => $validated['phone'] ?? null,
-                'appart_uuid' => $validated['appart_uuid'],
-                'sejour' => $validated['sejour'] ?? null,
-                'start_time' => $validated['start_time'],
-                'end_time' => $validated['end_time'],
-                'nbr_of_sejour' => $validated['nbr_of_sejour'] ?? null,
-                'total_price' => $validated['total_price'] ?? null,
-                'unit_price' => $validated['unit_price'] ?? null,
-                'statut_paiement' => $validated['statut_paiement'] ?? 'pending',
-                'status' => $validated['status'] ?? 'pending',
-                'notes' => $validated['notes'] ?? null,
-                'traited_by' => Auth::user()->uuid ?? null,
-                'traited_at' => $validated['traited_at'] ?? null,
-                'etat' => 'actif',
+                'code' => $code,
+                'nom' => $request->nom,
+                'prenoms' => $request->prenoms,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'appart_uuid' => $request->appart_uuid,
+                'sejour' => $request->is_hourly ? 'Heure' : 'Jour',
+                'start_time' => $start_time,
+                'end_time' => $end_time,
+                'nbr_of_sejour' => $request->is_hourly ? $request->hours : $request->days,
+                'total_price' => $request->totalPrice,
+                'unit_price' => $request->unitPrice,
+                'statut_paiement' => 'paid',
+                'status' => 'confirmed',
+                'notes' => $request->notes,
+                'payment_method' => $request->payment_method,
+                // 'custom_tarif' => $request->custom_tarif ?? false,
+                'payment_amount' => $request->paymentAmount
             ]);
 
-            if ($saving) {
-                $dataResponse = [
-                    'type' => 'success',
-                    'urlback' => 'back',
-                    'message' => 'Réservation enregistrée avec succès !',
-                    'data' => $saving,
-                    'code' => 200,
-                ];
-                DB::commit();
-            } else {
-                DB::rollBack();
-                $dataResponse = [
-                    'type' => 'error',
-                    'urlback' => '',
-                    'message' => "Erreur lors de l'enregistrement !",
-                    'data' => $saving,
-                    'code' => 500,
-                ];
-            }
-        } catch (\Throwable $th) {
+            // Génération du PDF après enregistrement
+            $pdfUrl = $this->generateReceiptPDF($reservation);
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Réservation enregistrée avec succès',
+                'reservation' => $reservation,
+                'pdf_url' => $pdfUrl
+            ]);
+
+        } catch (\Exception $e) {
             DB::rollBack();
-            $dataResponse = [
-                'type' => 'error',
-                'urlback' => '',
-                'message' => "Erreur système ! $th",
-                'code' => 500,
-            ];
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'enregistrement',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // private function generateReceiptPDF($reservation)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $data = [
+    //         'reservation' => $reservation,
+    //         'date' => now()->format('d/m/Y H:i')
+    //         ];
+
+    //         $pdf = Pdf::loadView('reservations.receipt', $data);
+            
+    //         // Sauvegarder le PDF
+    //         $externalUploadDir = base_path(env('STORAGE_FILES'));
+            
+    //         $directory = 'receipts';
+    //         if (!is_dir($externalUploadDir)) {
+    //             mkdir($externalUploadDir, 0777, true);
+    //         }
+
+    //         $receiptsFileName = 'Reçu_' . $reservation->code . '_' . $reservation->uuid . '.pdf';
+            
+    //         $pdf->save($externalUploadDir . $directory . '/', $receiptsFileName);
+    //         $pdfPath = "storage/files/{$directory}/{$receiptsFileName}";
+
+    //         // enregistrer le PDF dans la table receipts de base de données
+    //         $receipt = receipt::create([
+    //             'uuid' => Str::uuid(),
+    //             'code' => Refgenerate(receipt::class, 'REC', 'code'),
+    //             'reservation_uuid' => $reservation->uuid,
+    //             'filename' => $receiptsFileName,
+    //             'filepath' => $pdfPath
+    //         ]);
+    //         DB::commit();
+            
+    //         return url($pdfPath);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Une erreur s’est produite lors de la generation du PDF',
+    //             'error' => $e->getMessage()
+    //         ]);
+    //     }
+        
+    // }
+
+    private function generateReceiptPDF($reservation)
+    {
+        $directory = 'receipts';
+        $externalUploadDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
+        
+        // Créer le dossier s'il n'existe pas
+        if (!is_dir($externalUploadDir . $directory)) {
+            mkdir($externalUploadDir . $directory, 0755, true);
         }
 
-        return response()->json($dataResponse);
+        $data = [
+            'reservation' => $reservation,
+            'date' => now()->format('d/m/Y H:i')
+        ];
+
+        $pdf = PDF::loadView('reservations.receipt', $data);
+        
+        $filename = 'Recu_' . $reservation->code . '_' . $reservation->uuid . '.pdf';
+        $filePath = $externalUploadDir . $directory . '/' . $filename;
+        
+        $pdf->save($filePath);
+        
+        // Enregistrer dans la table receipts
+        Receipt::create([
+            'uuid' => Str::uuid(),
+            'code' => 'REC-' . strtoupper(Str::random(6)),
+            'reservation_uuid' => $reservation->uuid,
+            'filename' => $filename,
+            'filepath' => "storage/files/{$directory}/{$filename}"
+        ]);
+        
+        return "storage/files/{$directory}/{$filename}";
     }
+
+    // public function downloadReceipt($uuid)
+    // {
+    //     $reservation = Reservation::with('recu')->where('uuid', $uuid)->firstOrFail();
+
+    //     // Si le reçu n'existe pas, on tente de le générer
+    //     if (!$reservation->recu) {
+    //         $this->generateReceiptPDF($reservation);
+    //         $reservation->load('recu');
+    //     }
+
+    //     // Récupère le chemin de stockage depuis .env ou config
+    //     $externalStorageDir = base_path(env('STORAGE_FILES')); // Exemple : '/mnt/data/'
+    //     $filePath = $externalStorageDir . $reservation->recu->filepath;
+
+    //     // Vérifie si le fichier existe
+    //     if (!file_exists($filePath)) {
+    //         // Regénère le PDF et vérifie à nouveau
+    //         $this->generateReceiptPDF($reservation);
+    //         $reservation->load('recu');
+    //         $filePath = $externalStorageDir . $reservation->recu->filepath;
+
+    //         if (!file_exists($filePath)) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Le fichier PDF est introuvable ou n’a pas pu être généré.'
+    //             ], 500);
+    //         }
+    //     }
+
+    //     // Nom du fichier à télécharger
+    //     $fileName = 'recu_reservation_' . $reservation->code . '.pdf';
+
+    //     return response()->download($filePath, $fileName);
+    // }
+    public function downloadReceipt($uuid)
+    {
+        $reservation = Reservation::with('receipt')->where('uuid', $uuid)->firstOrFail();
+        $directory = 'receipts/';
+        if (!$reservation->receipt) {
+            $this->generateReceiptPDF($reservation);
+            $reservation->load('receipt');
+        }
+
+        $externalStorageDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
+        $filePath = $externalStorageDir . $directory;
+        // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
+
+        if (!file_exists($filePath)) {
+            $this->generateReceiptPDF($reservation);
+            $reservation->load('receipt');
+            $filePath = $externalStorageDir . $directory;
+            // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
+        }
+
+        if (!file_exists($filePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fichier PDF introuvable'
+            ], 500);
+        }
+        Log::info($filePath. $reservation->receipt->filename);
+        // , $reservation->receipt->filename
+        // $filename = 'recu_reservation_' . $reservation->code . '.pdf';
+        return response()->download($filePath, $reservation->receipt->filename);
+    }
+
+
+    // public function downloadReceipt($uuid)
+    // {
+    //     $reservation = Reservation::where('uuid', $uuid)->firstOrFail();
+    //     $pdfPath = $reservation->recu->filepath;
+
+    //     if (!file_exists($pdfPath)) {
+    //         $this->generateReceiptPDF($reservation);
+    //     }
+
+    //     return response()->download($pdfPath, 'recu_reservation_' . $reservation->code . '.pdf');
+    // }
+
+    
+
+
 
     // Afficher une réservation
     public function show($id)

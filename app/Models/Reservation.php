@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\receipt;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reservation extends Model
 {
@@ -30,6 +31,11 @@ class Reservation extends Model
         'traited_at',
         'etat',
     ];
+
+    public function receipt()
+    {
+        return $this->hasOne(receipt::class, 'reservation_uuid', 'uuid');
+    }
 
 
     

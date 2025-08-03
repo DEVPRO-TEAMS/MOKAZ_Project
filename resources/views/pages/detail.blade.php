@@ -55,10 +55,10 @@
     <section class="flat-section pt-0 flat-property-detail">
         @php
             // Récupérer la tarification à l'heure la moins chère
-$tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+            $tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-// Récupérer la tarification à la journée la moins chère
-$tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+            // Récupérer la tarification à la journée la moins chère
+            $tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
         @endphp
         <div class="container border rounded shadow p-4">
             <div class="header-property-detail">
@@ -69,24 +69,27 @@ $tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->f
                     </div>
                     <div class="box-price d-flex align-items-center">
                         <span class="body-1 text-variant-1">À partir de &nbsp;&nbsp; </span>
-                        <h4>
+                        <h5>
                             @if ($tarifHeure)
                                 {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
-                            @elseif ($tarifJour)
-                                {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
-                            @else
-                                Prix non disponible
                             @endif
-                        </h4>
+                        </h5>
                         <span class="body-1 text-variant-1">
                             @if ($tarifHeure)
-                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
-                            @elseif ($tarifJour)
-                                /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
-                            @else
-                                Prix non disponible
+                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                            @endif
+                        </span> &nbsp;&nbsp;-&nbsp;&nbsp;
+                        <h5>
+                            @if ($tarifJour)
+                                {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
+                            @endif
+                        </h5>
+                        <span class="body-1 text-variant-1">
+                            @if ($tarifJour)
+                                /{{ $tarifJour->nbr_of_sejour ?? '' }}jr
                             @endif
                         </span>
+
                     </div>
                 </div>
                 <div class="content-bottom">

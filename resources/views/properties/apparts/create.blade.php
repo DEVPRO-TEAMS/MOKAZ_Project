@@ -194,7 +194,7 @@
                                     Séjour en:<span>*</span>
                                 </label>
                                 <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" required>
-                                    <option value="">Sélectionnez...</option>
+                                    <option value="" disabled>Sélectionnez...</option>
                                     <option value="Jour">Jour</option>
                                     <option value="Heure">Heure</option>
                                 </select>
@@ -601,7 +601,7 @@
 
     </div>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const addTarifBtn = document.getElementById('addTarifBtn');
 
@@ -733,7 +733,93 @@
 
 
         });
-    </script>
+    </script> --}}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addTarifBtn = document.getElementById('addTarifBtn');
+        const tarifsContainer = document.getElementById('tarifs-container');
+        const tarifBlock = document.querySelector('.tarif-block');
+
+        function isJourAlreadySelected() {
+            return Array.from(document.querySelectorAll('.sejour-en')).some(select => select.value === 'Jour');
+        }
+
+        function updateJourOptionsAvailability() {
+            const jourExists = isJourAlreadySelected();
+            document.querySelectorAll('.sejour-en').forEach(select => {
+                const jourOption = select.querySelector('option[value="Jour"]');
+                if (jourOption) {
+                    jourOption.disabled = jourExists && select.value !== 'Jour';
+                }
+            });
+        }
+
+        function handleSelectChange(select, tempsInput, tempsLabelSpan) {
+            select.addEventListener('change', function () {
+                tempsLabelSpan.textContent = select.value;
+                if (select.value === 'Jour') {
+                    tempsInput.value = 1;
+                    tempsInput.readOnly = true;
+                } else {
+                    tempsInput.value = '';
+                    tempsInput.readOnly = false;
+                }
+
+                // Mettre à jour tous les selects après changement
+                updateJourOptionsAvailability();
+            });
+        }
+
+        // Initialisation du bloc existant
+        const initialSelect = tarifBlock.querySelector('.sejour-en');
+        const initialTempsInput = tarifBlock.querySelector('.temps-input');
+        const tempsLabelSpan = tarifBlock.querySelector('.temps-label');
+        handleSelectChange(initialSelect, initialTempsInput, tempsLabelSpan);
+        updateJourOptionsAvailability();
+
+        // Ajouter un nouveau bloc tarif
+        addTarifBtn.addEventListener('click', function () {
+            const newTarifBlock = tarifBlock.cloneNode(true);
+
+            // Réinitialiser les champs
+            const select = newTarifBlock.querySelector('.sejour-en');
+            const tempsInput = newTarifBlock.querySelector('.temps-input');
+            const prixInput = newTarifBlock.querySelector('[name="prix[]"]');
+            const tempsLabel = newTarifBlock.querySelector('.temps-label');
+
+            select.value = '';
+            tempsInput.value = '';
+            tempsInput.readOnly = false;
+            prixInput.value = '';
+            tempsLabel.textContent = '';
+
+            // Supprimer le bouton existant (au cas où)
+            const removeContainer = newTarifBlock.querySelector('.remove-container');
+            removeContainer.innerHTML = '';
+
+            // Ajouter bouton de suppression
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'Supprimer';
+            removeBtn.type = 'button';
+            removeBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4');
+            removeBtn.addEventListener('click', function () {
+                newTarifBlock.remove();
+                updateJourOptionsAvailability(); // Réactiver "Jour" si besoin
+            });
+            removeContainer.appendChild(removeBtn);
+
+            // Appliquer le comportement
+            handleSelectChange(select, tempsInput, tempsLabel);
+
+            // Ajouter bloc
+            tarifsContainer.appendChild(newTarifBlock);
+
+            updateJourOptionsAvailability();
+        });
+    });
+</script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

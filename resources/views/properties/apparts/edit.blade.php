@@ -159,6 +159,8 @@
 
                 $countTarif = $appart->tarifications->count();
                 $countAppartImages = $appart->images->count();
+
+                $tarifJour = $appart->tarifications->where('sejour', 'Jour')->first();
             @endphp
             <div class="widget-box-2">
                 <h6 class="title">Charger l'images de l'appartement</h6>
@@ -214,9 +216,9 @@
                                     Séjour en:<span>*</span>
                                 </label>
                                 <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" @if ($countTarif == 0) required @endif>
-                                    <option value="">Sélectionnez...</option>
-                                    <option value="Jour">Jour</option>
-                                    <option value="Heure">Heure</option>
+                                    <option value="" disabled>Sélectionnez...</option>
+                                    <option value="Jour" @if (!empty($tarifJour)) disabled @endif>Jour</option>
+                                    <option value="Heure" @if (!empty($tarifJour)) selected @endif>Heure</option>
                                 </select>
                             </fieldset>
                             <fieldset class="box-fieldset col-md-4">

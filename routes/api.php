@@ -28,6 +28,9 @@ Route::post('/variable/store', [SettingController::class, 'storeVariable'])->nam
 
 // reservations 
 
+Route::post('/reservation/store', [ReservationController::class, 'store']);
+Route::get('/reservation/download-receipt/{uuid}', [ReservationController::class, 'downloadReceipt'])
+    ->name('reservation.download-receipt');
 
 
 
