@@ -194,7 +194,7 @@
                                     Séjour en:<span>*</span>
                                 </label>
                                 <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" required>
-                                    <option value="" disabled>Sélectionnez...</option>
+                                    <option value="">Sélectionnez...</option>
                                     <option value="Jour">Jour</option>
                                     <option value="Heure">Heure</option>
                                 </select>

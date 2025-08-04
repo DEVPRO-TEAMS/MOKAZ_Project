@@ -73,7 +73,8 @@ class AppartController extends Controller
                     'image' => $mainFileUrl,
                     'description' => $request->description,
                     'created_by' => $request->user_uuid,
-                    'updated_by' => $request->user_uuid
+                    'updated_by' => $request->user_uuid,
+                    'etat' => 'actif'
                 ]
             );
 

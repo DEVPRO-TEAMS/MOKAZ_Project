@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Models\Variable;
 use App\Models\AppartDoc;
 use App\Models\Commodity;
+use App\Models\Reservation;
 use App\Models\Tarification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,6 +36,11 @@ class Appartement extends Model
     public function property()
     {
         return $this->belongsTo(Property::class, 'property_uuid', 'uuid');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'appart_uuid', 'uuid');
     }
     public function images()
     {

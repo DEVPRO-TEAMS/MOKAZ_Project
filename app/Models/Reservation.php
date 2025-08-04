@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\receipt;
+use App\Models\Appartement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,6 +25,9 @@ class Reservation extends Model
         'nbr_of_sejour',
         'total_price',
         'unit_price',
+        'payment_amount',
+        'still_to_pay',
+        'payment_method',
         'statut_paiement',
         'status',
         'notes',
@@ -35,6 +39,11 @@ class Reservation extends Model
     public function receipt()
     {
         return $this->hasOne(receipt::class, 'reservation_uuid', 'uuid');
+    }
+
+    public function appartement()
+    {
+        return $this->belongsTo(Appartement::class, 'appart_uuid', 'uuid');
     }
 
 

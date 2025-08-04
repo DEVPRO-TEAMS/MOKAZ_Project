@@ -77,9 +77,12 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
 
         // validation de demande de partenariat 
-
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
         Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
+
+        // approve et refuser une propriete 
+        Route::post('/approveProperty/{uuid}', [AdminController::class, 'approveProperty'])->name('approveProperty');
+        Route::post('/rejectProperty/{uuid}', [AdminController::class, 'rejectProperty'])->name('rejectProperty');
 
         Route::get('/partner/list', [PartnerController::class, 'index'])->name('partner.index');
         Route::post('/partner/add', [PartnerController::class, 'storePartner'])->name('storePartner');

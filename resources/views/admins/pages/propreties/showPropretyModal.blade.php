@@ -5,8 +5,8 @@
             <div class="modal-header bg-primary bg-opacity-10 border-0">
                 <div class="d-flex align-items-center">
                     <div class="property-image me-3">
-                        @if($property->image_property)
-                            <img src="{{ asset('media/properties/'.$property->image_property)}}" 
+                        @if($property->image)
+                            <img src="{{ asset($property->image)}}" 
                                  alt="{{ $property->title }}" 
                                  class="rounded-2" 
                                  style="width: 40px; height: 40px; object-fit: cover;">
@@ -21,7 +21,7 @@
                         <h5 class="modal-title mb-0" id="showPropertyModalLabel{{ $property->id }}">
                             {{ $property->title ?? 'Propriété' }}
                         </h5>
-                        <small class="text-muted">Code: #{{ $property->property_code ?? '' }}</small>
+                        <small class="text-muted">Code: #{{ $property->code ?? '' }}</small>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
@@ -32,8 +32,8 @@
                     <!-- Image principale -->
                     <div class="col-md-5 mb-4">
                         <div class="property-image-container">
-                            @if($property->image_property)
-                                <img src="{{ asset('media/properties/'.$property->image_property)}}" 
+                            @if($property->image)
+                                <img src="{{ asset($property->image)}}" 
                                      alt="{{ $property->title }}" 
                                      class="img-fluid rounded-3 shadow-sm w-100" 
                                      style="height: 200px; object-fit: cover;">
@@ -50,22 +50,17 @@
                     <div class="col-md-7">
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="info-item">
-                                    <label class="form-label fw-semibold text-muted mb-1">
-                                        <i class="fas fa-tag me-2"></i>Titre
-                                    </label>
-                                    <p class="mb-0">{{ $property->title ?? 'Non renseigné' }}</p>
+                                <div class="info-item"> 
+                                    <p class="mb-0"> Titre : {{ $property->title ?? 'Non renseigné' }}</p>
                                 </div>
                             </div>
                             
                             <div class="col-6">
                                 <div class="info-item">
-                                    <label class="form-label fw-semibold text-muted mb-1">
-                                        <i class="fas fa-handshake me-2"></i>Partenaire
-                                    </label>
                                     <p class="mb-0">
+                                        <i class="fas fa-handshake me-2"></i>Partenaire :
                                         <span class="badge bg-info bg-opacity-10 text-info">
-                                            {{ $property->partner_code ?? 'Non assigné' }}
+                                            {{ $property->partner_uuid->code ?? 'Non assigné' }}
                                         </span>
                                     </p>
                                 </div>
@@ -108,42 +103,36 @@
                     </div>
                     <div class="col-md-6">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Adresse</label>
-                            <p class="mb-0">{{ $property->address ?? 'Non renseigné' }}</p>
+                            <p class="mb-0">Adresse : {{ $property->address ?? 'Non renseigné' }}</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Ville</label>
-                            <p class="mb-0">{{ $property->city ?? 'Non renseigné' }}</p>
+                            <p class="mb-0">Ville : {{ $property->ville->label ?? 'Non renseigné' }}</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Code postal</label>
-                            <p class="mb-0">{{ $property->zipCode ?? 'Non renseigné' }}</p>
+                            <p class="mb-0">Pays : {{ $property->pays->label ?? 'Non renseigné' }}</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <style>
+                        #map-location-property {
+                            height: 100%;
+                            border-radius: 10px;
+                        }
+                    </style>
+                    <div class="col-md-12">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Pays</label>
-                            <p class="mb-0">{{ $property->country ?? 'Non renseigné' }}</p>
+                            <div class="info-label">
+                                <i class="fas fa-calendar-alt text-muted"></i>
+                                Emplacement GPS :
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Coordonnées GPS</label>
-                            <p class="mb-0">
-                                @if($property->latitude && $property->longitude)
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary">
-                                        <i class="fas fa-map-pin me-1"></i>
-                                        {{ $property->latitude }}, {{ $property->longitude }}
-                                    </span>
-                                @else
-                                    Non renseigné
-                                @endif
-                            </p>
+                        <div style="height: 300px">
+                            <div id="map-location-property"></div>
                         </div>
+                            
                     </div>
                 </div>
                 
@@ -168,9 +157,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Créé le</label>
                             <p class="mb-0">
-                                {{ $property->created_at->format('d/m/Y à H:i') ?? 'Non renseigné' }}
+                                Créé le {{ $property->created_at->format('d/m/Y à H:i') ?? 'Non renseigné' }}
                                 <br>
                                 <small class="text-muted">{{ $property->created_at->diffForHumans() ?? '' }}</small>
                             </p>
@@ -178,15 +166,15 @@
                     </div>
                     <div class="col-md-4">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Créé par</label>
-                            <p class="mb-0">{{ $property->created_by ?? 'Non renseigné' }}</p>
+                            <label class="form-label fw-semibold text-muted mb-1"></label>
+                            <p class="mb-0">Créé par {{ $property->created_by->name ?? 'Non renseigné' }}</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="info-item mb-3">
-                            <label class="form-label fw-semibold text-muted mb-1">Modifié le</label>
+                            <label class="form-label fw-semibold text-muted mb-1"></label>
                             <p class="mb-0">
-                                {{ $property->updated_at->format('d/m/Y à H:i') ?? 'Non renseigné' }}
+                                Modifié le {{ $property->updated_at->format('d/m/Y à H:i') ?? 'Non renseigné' }}
                                 <br>
                                 <small class="text-muted">{{ $property->updated_at->diffForHumans() ?? '' }}</small>
                             </p>
@@ -199,18 +187,41 @@
                 <div class="d-flex justify-content-between w-100">
                     <div>
                         @if($property->etat == 'pending')
-                            <button type="button" class="btn btn-success me-2" onclick="approveProperty({{ $property->id }})">
+                            {{-- <button type="button" class="btn btn-success me-2" onclick="approveProperty({{ $property->id }})">
                                 <i class="fas fa-check me-1"></i> Approuver
                             </button>
                             <button type="button" class="btn btn-danger" onclick="rejectProperty({{ $property->id }})">
-                                <i class="fas fa-times me-1"></i> Rejeter
+                                <i class="fas fa-times me-1"></i> 
+                            </button> --}}
+
+                            <button class="btn btn-success me-2 text-white">
+                                <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.approveProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point d'approuver la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Approuver</a>
+                            </button>
+                        
+                            <button class="btn btn-danger text-white">
+                                <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.rejectProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point de rejeter la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
+                                <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
                             </button>
                         @endif
+                        
                     </div>
                     <div>
-                        <button type="button" class="btn btn-secondary me-2" onclick="editProperty({{ $property->id }})">
+                        {{-- <button type="button" class="btn btn-secondary me-2" onclick="editProperty({{ $property->id }})">
                             <i class="fas fa-edit me-1"></i> Modifier
-                        </button>
+                        </button> --}}
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times me-1"></i> Fermer
                         </button>
@@ -220,3 +231,26 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupération des coordonnées depuis les variables Blade (Laravel)
+        const latitude = @json($property->latitude);
+        const longitude = @json($property->longitude);
+        
+
+        // Initialisation de la carte
+        const map = L.map('map-location-property').setView([latitude, longitude], 16);
+
+        // Chargement des tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map);
+
+        // Ajout d’un marqueur à l’emplacement
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup("Emplacement de la propriété")
+            .openPopup();
+    });
+</script>

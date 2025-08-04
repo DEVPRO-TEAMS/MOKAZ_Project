@@ -202,12 +202,12 @@
                                         <span>Type de appartement</span>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('setting.indexCommodity') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Commodités</span>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </li>

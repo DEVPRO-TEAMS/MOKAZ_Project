@@ -343,209 +343,135 @@
     <!-- End Location -->
     <!-- Property  -->
     <!-- Property  -->
-    <section class="flat-section flat-property">
-        <div class="container">
-            <div class="box-title style-1 wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                <div class="box-left">
-                    <div class="text-subtitle text-primary">Recommandations</div>
-                    <h4 class="mt-4">Meilleure valeur immobilière</h4>
-                </div>
-                <a href="#" class="tf-btn primary size-1">Voir Plus</a>
-            </div>
-            <div class="wrap-property">
-                <div class="box-left  wow fadeInLeftSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                    <div class="homeya-box lg">
-                        <div class="archive-top">
-                            <a href="#" class="images-group">
-                                <div class="images-style">
-                                    <img src="https://i.pinimg.com/736x/5a/28/de/5a28de8ace9993c432da0d197ba8b4a7.jpg" alt="img">
-                                </div>
-                                <div class="top">
-                                    <ul class="d-flex gap-8">
-                                        <li class="flag-tag success style-3">Location</li>
-                                        {{-- <li class="flag-tag style-1 style-3">For Sale</li> --}}
-                                    </ul>
-                                    <ul class="d-flex gap-4">
-                                        <li class="box-icon w-40">
-                                            <span class="icon icon-arrLeftRight"></span>
-                                        </li>
-                                        <li class="box-icon w-40">
-                                            <span class="icon icon-heart"></span>
-                                        </li>
-                                        <li class="box-icon w-40">
-                                            <span class="icon icon-eye"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="bottom">
-                                    <span class="flag-tag style-2">VILLA</span>
-                                </div>
-                            </a>
-                            <div class="content">
-                                <h5 class="text-capitalize"><a href="#" class="link"> Lorem ipsum dolor sit amet</a></h5>
-                                <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>Lorem ipsum dolor sit amet consectetur</p>
-                                </div>
-                                <p class="note">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa molestiae dicta aperiam...</p>
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>4</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="archive-bottom d-flex justify-content-between align-items-center">
-                            <div class="d-flex gap-8 align-items-center">
-                                <div class="avatar avt-40 round">
-                                    <img src="{{ asset('assets/images/avatar/avt-11.jpg')}}" alt="avt">
-                                </div>
-                                <span class="body-2">Floyd Miles</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <h6>25 000 FCFA</h6>
-                                <span class="text-variant-1">/Jour</span>
-                            </div>
-                        </div>
+    @if ($bestApparts->count() > 0)
+        <section class="flat-section flat-property">
+            <div class="container">
+                <div class="box-title style-1 wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+                    <div class="box-left">
+                        <div class="text-subtitle text-primary">Recommandations</div>
+                        <h4 class="mt-4">Meilleure valeur immobilière</h4>
                     </div>
+                    <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir Plus</a>
                 </div>
+                <div class="wrap-property">
+                    <div class="box-left  wow fadeInLeftSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+                        @foreach ($bestApparts as $item)
+                            @php
+                                $firstAppart = $bestApparts->first();
+                                $tarifHeure = $firstAppart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                                $tarifJour = $firstAppart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                            @endphp
 
-                <div class="box-right wow fadeInRightSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                    <div class="homeya-box list-style-1">
-                        <a href="#" class="images-group">
-                            <div class="images-style">
-                                <img src="https://i.pinimg.com/736x/36/68/f1/3668f15d041645b979737d94116a1326.jpg" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex gap-4 flex-wrap flex-column">
-                                    <li class="flag-tag success">Location</li>
-                                    {{-- <li class="flag-tag style-1">For Sale</li> --}}
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bottom">
-                                <span class="flag-tag style-2">Villa</span>
-                            </div>
-                        </a>
-                        <div class="content">
-                            <div class="archive-top">
-                                <div class="h7 text-capitalize fw-7"><a href="#"
-                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
-                                <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>Lorem ipsum dolor sit amet consectetur</p>
-                                </div>
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>4</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-5.jpg')}}" alt="avt">
+                            <div class="homeya-box lg">
+                                <div class="archive-top">
+                                    {{-- Exemple d’image --}}
+                                    <a href="#" class="images-group">
+                                        <div class="images-style">
+                                            <img src="{{ $firstAppart->image ?? '' }}" alt="img">
+                                        </div>
+                                        <div class="top">
+                                            <ul class="d-flex gap-8">
+                                                <li class="flag-tag success style-3">En vedette</li>
+                                            </ul>
+                                            <ul class="d-flex gap-4">
+                                                {{-- <li class="box-icon w-40"><span class="icon icon-arrLeftRight"></span></li> --}}
+                                                <li class="box-icon w-40"><span class="icon icon-heart"></span></li>
+                                                <li class="box-icon w-40"><span class="icon icon-eye"></span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="bottom"><span class="flag-tag style-2">{{ $firstAppart->type->libelle }}</span></div>
+                                    </a>
+                                    <div class="content">
+                                        <h5 class="text-capitalize"><a href="#" class="link">{{ $firstAppart->title }}</a></h5>
+                                        <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $firstAppart->property->adresse ?? 'Adresse non définie' }}</p></div>
+                                        <p class="note">{!! Str::limit($firstAppart->description, 100) !!}</p>
+                                        <ul class="meta-list">
+                                            <li class="item"><i class="icon icon-bed"></i><span>{{ $firstAppart->nbr_room }}</span></li>
+                                            <li class="item"><i class="icon icon-bathtub"></i><span>{{ $firstAppart->nbr_bathroom }}</span></li>
+                                        </ul>
                                     </div>
-                                    <span>Ralph Edwards</span>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">5050 FCFA</div>
+                                <div class="archive-bottom d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <h6>
+                                            @if ($tarifHeure)
+                                                À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
+                                                
+                                            @elseif ($tarifJour)
+                                                À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
+                                            @else
+                                                Prix non disponible
+                                            @endif
+                                        </h6>
+                                        <span class="text-variant-1">
+                                            @if ($tarifHeure)
+                                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
+                                            @elseif ($tarifJour)
+                                                /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
+                                            @else
+                                               
+                                            @endif
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        @endforeach
                     </div>
-                    <div class="homeya-box list-style-1">
-                        <a href="#" class="images-group">
-                            <div class="images-style">
-                                <img src="https://i.pinimg.com/736x/a7/c6/fe/a7c6fe4e1868a144d562024de841cb6d.jpg" alt="img">
-                            </div>
-                            <div class="top">
-                                <ul class="d-flex">
-                                    <li class="flag-tag style-1">For Sale</li>
-                                </ul>
-                                <ul class="d-flex gap-4">
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-arrLeftRight"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-heart"></span>
-                                    </li>
-                                    <li class="box-icon w-28">
-                                        <span class="icon icon-eye"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bottom">
-                                <span class="flag-tag style-2">Villa</span>
-                            </div>
-                        </a>
-                        <div class="content">
-                            <div class="archive-top">
-                                <div class="h7 text-capitalize fw-7"><a href="#"
-                                        class="link">Lorem ipsum dolor sit amet consectetur</a></div>
-                                <div class="desc"><i class="icon icon-mapPin"></i>
-                                    <p>Lorem ipsum dolor sit amet consectetur</p>
-                                </div>
-                                <ul class="meta-list">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span>4</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span>2</span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-ruler"></i>
-                                        <span>600 SqFT</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-7.jpg')}}" alt="avt">
-                                    </div>
-                                    <span>Annette Black</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="h7 fw-7">25 000 FCFA</div>
-                                </div>
-                            </div>
-                        </div>
 
+                    <div class="box-right wow fadeInRightSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+                        @foreach ($bestApparts->slice(1) as $item)
+                            @php
+                                $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                                $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                            @endphp
+
+                            <div class="homeya-box list-style-1">
+                                <a href="#" class="images-group">
+                                    <div class="images-style">
+                                        <img src="{{ $item->image ?? '' }}" alt="img">
+                                    </div>
+                                    <div class="top">
+                                        <ul class="d-flex gap-4 flex-wrap flex-column">
+                                            <li class="flag-tag success">En vedette</li>
+                                        </ul>
+                                        <ul class="d-flex gap-4">
+                                            {{-- <li class="box-icon w-28"><span class="icon icon-arrLeftRight"></span></li> --}}
+                                            <li class="box-icon w-28"><span class="icon icon-heart"></span></li>
+                                            <li class="box-icon w-28"><span class="icon icon-eye"></span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="bottom"><span class="flag-tag style-2">{{ $item->type->libelle }}</span></div>
+                                </a>
+                                <div class="content">
+                                    <div class="archive-top">
+                                        <div class="h7 text-capitalize fw-7"><a href="#" class="link">{{ $item->title }}</a></div>
+                                        <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $item->property->adresse ?? '' }}</p></div>
+                                        <ul class="meta-list">
+                                            <li class="item"><i class="icon icon-bed"></i><span>{{ $item->nbr_room }}</span></li>
+                                            <li class="item"><i class="icon icon-bathtub"></i><span>{{ $item->nbr_bathroom }}</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div class="h7 fw-7">
+                                                @if ($tarifHeure)
+                                                    À partir de  {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA / {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hr' : 'hrs' }}
+                                                @elseif ($tarifJour)
+                                                   À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA / {{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                                @else
+                                                    Prix non disponible
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     <!-- End Property  -->
     <!-- Testimonial -->
     <section class="flat-section flat-testimonial-v4 wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">

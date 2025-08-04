@@ -22,7 +22,7 @@
                         <span class="icon icon-img-2"></span>
                         <div class="btn-upload">
                             <a href="#" class="tf-btn primary">Choisir une image</a>
-                            <input type="file" class="ip-file" name="image" required>
+                            <input type="file" class="ip-file" name="image" accept="image/*" required>
                         </div>
                         <p class="file-name fw-5">Ou glisser déposez l'image ici</p>
                     </label>

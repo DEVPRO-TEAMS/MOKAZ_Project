@@ -156,18 +156,17 @@
                                 <tbody>
                                     @forelse ($properties as $property)
                                     <tr class="position-relative">
-                                        <td class="fw-semibold">#{{ $property->property_code ?? '' }}</td>
+                                        <td class="fw-semibold">#{{ $property->code ?? '' }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="property-image me-3">
-                                                    @if($property->image_property)
-                                                        <img src="{{ asset('media/properties/'.$property->image_property)}}" 
-                                                             alt="{{ $property->title }}" 
-                                                             class="rounded-2" 
-                                                             style="width: 50px; height: 50px; object-fit: cover;">
+                                                    @if ($property->image)
+                                                        <img src="{{ asset($property->image) }}"
+                                                            alt="{{ $property->title }}" class="rounded-2"
+                                                            style="width: 50px; height: 50px; object-fit: cover;">
                                                     @else
-                                                        <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2" 
-                                                             style="width: 50px; height: 50px;">
+                                                        <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
+                                                            style="width: 50px; height: 50px;">
                                                             <i class="fas fa-home"></i>
                                                         </div>
                                                     @endif
@@ -180,7 +179,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex flex-column">
-                                                <span class="fw-semibold">{{ $property->city->label ?? '' }}, {{ $property->country->label ?? '' }}</span>
+                                                <span class="fw-semibold">{{ $property->ville->label ?? '' }}, {{ $property->pays->label ?? '' }}</span>
                                                 <small class="text-muted">{{ $property->address ?? '' }}</small>
                                                 @if($property->zipCode)
                                                     <small class="text-muted">{{ $property->zipCode }}</small>
@@ -190,7 +189,7 @@
                                         <td>
                                             <span class="badge bg-info bg-opacity-10 text-info">
                                                 <i class="fas fa-handshake me-1"></i>
-                                                {{ $property->partner_code ?? 'Non assigné' }}
+                                                {{ $property->partner_uuid->code ?? 'Non assigné' }}
                                             </span>
                                         </td>
                                         <td>
@@ -223,23 +222,33 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 
-                                                <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                                {{-- <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
                                                         onclick="editProperty({{ $property->id }})"
                                                         title="Modifier">
                                                     <i class="fas fa-edit"></i>
-                                                </button>
+                                                </button> --}}
                                                 
                                                 @if($property->etat == 'pending')
-                                                    <button class="btn btn-sm btn-icon btn-outline-success rounded-circle"
-                                                            onclick="approveProperty({{ $property->id }})"
-                                                            title="Approuver">
-                                                        <i class="fas fa-check"></i>
+                                                    <button class="btn btn-sm btn-icon btn-outline-success rounded-circle">
+                                                        <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
+                                                        data-type="confirmation_redirect" data-placement="top"
+                                                        data-token="{{ csrf_token() }}"
+                                                        data-url="{{route('admin.approveProperty',$property->uuid)}}"
+                                                        data-title="Vous êtes sur le point d'approuver la propriété {{$property->code}} "
+                                                        data-id="{{$property->uuid}}" data-param="0"
+                                                        data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
+                                                        <i class="fas fa-check" style="cursor: pointer"></i></a>
                                                     </button>
                                                     
-                                                    <button class="btn btn-sm btn-icon btn-outline-danger rounded-circle"
-                                                            onclick="rejectProperty({{ $property->id }})"
-                                                            title="Rejeter">
-                                                        <i class="fas fa-times"></i>
+                                                    <button class="btn btn-sm btn-icon btn-outline-success rounded-circle">
+                                                        <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
+                                                        data-type="confirmation_redirect" data-placement="top"
+                                                        data-token="{{ csrf_token() }}"
+                                                        data-url="{{route('admin.rejectProperty',$property->uuid)}}"
+                                                        data-title="Vous êtes sur le point de rejeter la propriété {{$property->code}} "
+                                                        data-id="{{$property->uuid}}" data-param="0"
+                                                        data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
+                                                        <i class="fas fa-times" style="cursor: pointer"></i></a>
                                                     </button>
                                                 @endif
                                             </div>

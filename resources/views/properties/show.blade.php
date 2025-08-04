@@ -363,17 +363,17 @@
                     <div class="partner-info-card">
 
                         <div class="row g-0">
-                            <div class="property-image-container col-12 mb-3" style="height: 350px;">
-                                @if ($property->image) 
-                                    <img src="{{ asset($property->image) }}"
+                            <div class="property-image-container col-12 mb-3" style="height: 380px; background: url('{{ asset($property->image) }}') no-repeat center center; background-size: cover; border-radius: 10px;">
+                                {{-- @if ($property->image)
+                                        <img src="{{ asset($property->image) }}"
                                         alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
-                                        style="height: 100%; object-fit: cover;">
+                                        style="height: 100%;  object-fit: cover;">
                                 @else
                                     <div class="bg-light rounded-3 d-flex align-items-center justify-content-center"
                                         style="height: 200px;">
                                         <i class="fas fa-home fa-3x text-muted"></i>
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="info-item">

@@ -29,7 +29,7 @@
         @endphp
         <!-- Image principale -->
         <div class="position-relative">
-          <img src="{{ asset($apartement->image) ?? '' }}" class="img-fluid rounded" alt="{{ $apartement->title ?? '' }}">
+          <img src="{{ asset($apartement->image) ?? '' }}" class="img-fluid rounded" style="width: 100%; height: 360px; object-fit: cover" alt="{{ $apartement->title ?? '' }}">
           @if ($apartement->nbr_available > 0)
             <span class="badge bg-success position-absolute top-0 start-0 m-3">
               <i class="bi bi-check-circle"></i> Disponible

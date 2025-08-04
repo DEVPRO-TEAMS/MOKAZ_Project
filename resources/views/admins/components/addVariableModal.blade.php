@@ -12,33 +12,81 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row g-3">
+
                         <div class="col-sm-12 col-md-12">
                             <label for="add_libelle" class="form-label">Libellé <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="add_libelle" name="libelle" required>
+                            @if ($isPropertyPage)
+                                <input list="types_propriete" class="form-control" name="libelle" placeholder="Sélectionnez ou saisissez le libelle" required>
+                                <datalist id="types_propriete">
+                                    <option value="Résidence privée">
+                                    <option value="Immeuble">
+                                    <option value="Villa">
+                                    <option value="Studio indépendant">
+                                    <option value="Auberge">
+                                    <option value="Hôtel">
+                                    <option value="Guest house / Maison d’hôte">
+                                    <option value="Chalet">
+                                    <option value="Bungalow">
+                                    <option value="Maison mobile / Conteneur">
+                                    <option value="Résidence hôtelière">
+                                </datalist>
+                            @elseif ($isAppartPage)
+                                <input list="types_appartement" name="libelle" class="form-control" required id="add_libelle" placeholder="Sélectionnez ou saisissez le libelle">
+                                <datalist id="types_appartement">
+                                    <option value="Studio">
+                                    <option value="Appartement F1">
+                                    <option value="Appartement F2">
+                                    <option value="Appartement F3">
+                                    <option value="Appartement F4">
+                                    <option value="Duplex">
+                                    <option value="Loft">
+                                    <option value="Penthouse">
+                                    <option value="Mini studio">
+                                    <option value="Suite">
+                                    <option value="Colocation">
+                                    <option value="Dortoir">
+                                </datalist>
+                            @endif
+                            {{-- <input type="text"  id="add_libelle" name="libelle" required> --}}
                             <div class="invalid-feedback"></div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-12">
                             <label for="add_type" class="form-label">Type <span class="text-danger">*</span></label>
-                            <select class="form-select" id="add_type" name="type" required>
+                            <select class="form-select nice-select" id="add_type" name="type" required>
                                 <option value="" disabled>Sélectionner un type</option>
-                                <option value="commodity">Commodité</option>
-                                <option value="type_of_property">Type de bien</option>
+                                <option value="type_of_property" @if ($isPropertyPage) selected @endif>Type de bien</option>
                                 <option value="type_of_appart">Type d'appart</option>
                                 <option value="autre">Autre</option>
                             </select>
                             <div class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="add_category" class="form-label">Catégorie <span class="text-danger">*</span></label>
-                            <select class="form-select" id="add_category" name="category" required>
-                                <option value="" disabled>Sélectionner une catégorie</option>
-                                <option value="config">Configuration</option>
-                                <option value="system">Système</option>
-                                <option value="user">Utilisateur</option>
-                                <option value="business">Business</option>
+                        </div> --}}
+
+                        <div class="col-md-12">
+                            <label for="add_type" class="form-label">Type <span class="text-danger">*</span></label>
+                            <select class="form-select nice-select" id="add_type" name="type" required>
+                                <option value="" disabled {{ old('type') === null ? 'selected' : '' }}>Sélectionner un type</option>
+
+                                <option value="type_of_property" 
+                                    {{ $isPropertyPage ? 'selected' : (old('type') === 'type_of_property' ? 'selected' : '') }} 
+                                    {{ $isAppartPage ? 'disabled' : '' }}>
+                                    Type de bien
+                                </option>
+
+                                <option value="type_of_appart"
+                                    {{ $isAppartPage ? 'selected' : (old('type') === 'type_of_appart' ? 'selected' : '') }} 
+                                    {{ $isPropertyPage ? 'disabled' : '' }}>
+                                    Type d'appart
+                                </option>
+
+                                <option value="autre" 
+                                    {{ old('type') === 'autre' ? 'selected' : '' }} 
+                                    {{ ($isAppartPage || $isPropertyPage) ? 'disabled' : '' }}>
+                                    Autre
+                                </option>
                             </select>
                             <div class="invalid-feedback"></div>
                         </div>
+
                         <div class="col-12">
                             <label for="add_description" class="form-label">Description</label>
                             <textarea class="form-control" id="add_description" name="description" rows="3" maxlength="500"></textarea>
@@ -58,3 +106,4 @@
         </div>
     </div>
 </div>
+

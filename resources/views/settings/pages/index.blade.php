@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $isAppartPage = request()->is('setting/index/appart');
+        $isPropertyPage = request()->is('setting/index/property');
+    @endphp
 
     <div class="main-content-inn">
 
@@ -40,7 +44,6 @@
                                 <th>Libellé</th>
                                 <th>Description</th>
                                 <th>Type</th>
-                                <th>Catégorie</th>
                                 <th>État</th>
                                 <th width="100">Actions</th>
                             </tr>
@@ -64,7 +67,6 @@
                                         @endif
 
                                    </td>
-                                   <td>{{ $item->category ?? '' }}</td>
                                    <td>
                                     @if ($item->etat == 'actif')
                                         <span class="badge bg-success  text-light">
@@ -116,4 +118,44 @@
     </div>
 
     @include('admins.components.addVariableModal')
+
+    {{-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentUrl = window.location.href;
+        const selectElement = document.getElementById("add_type");
+
+        if (currentUrl.includes("setting/index/appart")) {
+            // Sélectionner l'option avec value="type_of_appart"
+            selectElement.value = "type_of_appart";
+
+            // Désactiver les autres options
+            Array.from(selectElement.options).forEach(option => {
+                if (option.value !== "type_of_appart" && option.value !== "") {
+                    option.disabled = true;
+                }
+            });
+
+        }else if (currentUrl.includes("setting/index/property")) {
+            // Sélectionner l'option avec value="type_of_property"
+            selectElement.value = "type_of_property";
+            
+            // Désactiver les autres options
+            Array.from(selectElement.options).forEach(option => {
+                if (option.value !== "type_of_property" && option.value !== "") {
+                    option.disabled = true;
+                }
+            });
+            
+        }
+    });
+    // Empêche l'utilisateur de modifier la sélection
+    // selectElement.classList.add("readonly");
+    // selectElement.setAttribute("readonly", true);
+    // selectElement.setAttribute("readonly", true);
+
+    // Empêche l'utilisateur de modifier la sélection
+    // selectElement.classList.add("readonly");
+    // selectElement.setAttribute("readonly", true);
+    // selectElement.setAttribute("readonly", true);
+</script> --}}
 @endsection

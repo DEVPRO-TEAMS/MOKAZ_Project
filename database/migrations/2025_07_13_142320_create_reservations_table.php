@@ -28,10 +28,13 @@ return new class extends Migration
 
             $table->decimal('total_price', 8, 2)->nullable();
             $table->decimal('unit_price', 8, 2)->nullable();
+            $table->decimal('payment_amount', 8, 2)->nullable();
+            $table->decimal('still_to_pay', 8, 2)->nullable();
 
             $table->enum('statut_paiement',['pending', 'paid'])->default('pending');
             $table->enum('status', ['pending', 'confirmed', 'cancelled','reconducted'])->default('pending');
             $table->longText('notes')->nullable();
+            $table->string('payment_method')->nullable();
 
             $table->string('traited_by')->nullable();
             $table->dateTime('traited_at')->nullable();

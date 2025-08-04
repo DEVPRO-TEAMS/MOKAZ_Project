@@ -1509,11 +1509,18 @@ function generateReceipt() {
     document.getElementById('final-receipt').innerHTML = receiptHTML;
 }
 
+// function downloadReceipt() {
+//     if (reservationData.reservation?.uuid) {
+//         window.open(reservationData.pdfUrl, '_blank');
+//     }
+// }
+
 function downloadReceipt() {
     if (reservationData.reservation?.uuid) {
-        window.open(`/api/reservation/download/${reservationData.reservation.uuid}`, '_blank');
+        window.location.href = '/api/reservation/download-receipt/' + reservationData.reservation.uuid;
     }
 }
+// window.open(`/api/reservation/download/${reservationData.reservation.uuid}`, '_blank');
 
 function resetModal() {
     currentStep = 1;

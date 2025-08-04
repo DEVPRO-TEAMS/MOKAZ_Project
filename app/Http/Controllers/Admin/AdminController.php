@@ -12,7 +12,9 @@ use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Mail\NotificationPartenaire;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -225,6 +227,25 @@ class AdminController extends Controller
                 'etat' => 'actif',
             ]);
 
+            if($partner){
+                $nom = $demande->first_name . ' ' . $demande->last_name;
+
+                $emailSubject = "Bienvenue ";
+                $message = 'Nous vous recommandons de modifier ce mot de passe après votre première connexion.';
+
+                $emailData = [
+                    'nom' => $nom,
+                    'email' => $demande->email,
+                    'password' => '12345678',
+                    'message' => $message,
+                    'url' => env('APP_URL') . '/login',
+                    'buttonText' => 'Finaliser la création du compte',
+                ];
+
+                Mail::to($demande->email)->send(new NotificationPartenaire($emailData, $emailSubject));
+            }
+
+
             DB::commit();
             
             return response()->json([
@@ -276,6 +297,123 @@ class AdminController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "Une erreur s'est produite lors du rejet de la demande",
+                'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+
+    public function approveProperty($uuid)
+    {
+        DB::beginTransaction();
+        try {
+            
+            $property = Property::where('uuid', $uuid)->first();
+            
+            // Vérification si la demande existe
+            if (!$property) {
+                Log::info('Propriete non trouvee donca 404 error');
+                return response()->json([
+                    'type' => 'error',
+                    'status' => false,
+                    'urlback' => '',
+                    'message' => 'Propriété non trouvée'
+                ], 404);
+            }
+
+            // Vérification si la demande n'est pas déjà approuvée
+            if ($property->etat === 'actif') {
+                Log::info('Propriete deja approuvee donc actif');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'status' => false,
+                    'message' => 'Cette propriété a déjà été approuvée'
+                ], 400);
+            }
+
+            // Mise à jour de l'état
+            foreach($property->apartements->where('etat', '==', 'inactif') as $appart){
+                $appart->etat = 'actif';
+                $appart->save();
+            }
+            $property->etat = 'actif';
+            $property->save();
+
+            DB::commit();
+            
+            return response()->json([
+                'type' => 'success',
+                'status' => true,
+                'urlback' => 'back',
+                'message' => 'Propriété approuvée avec succès',
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'status' => false,
+                'message' => "Une erreur s'est produite lors de l'approbation de la propriété",
+                'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+    public function rejectProperty($uuid)
+    {
+        DB::beginTransaction();
+        try {
+            
+            $property = Property::where('uuid', $uuid)->first();
+            
+            // Vérification si la demande existe
+            if (!$property) {
+                Log::info('Propriete non trouvee donca 404 error');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'status' => false,
+                    'message' => 'Propriété non trouvée'
+                ], 404);
+            }
+
+            // Vérification si la demande n'est pas déjà approuvée
+            if ($property->etat === 'inactif') {
+                Log::info('Propriete deja approuvee donc inactif');
+                return response()->json([
+                    'type' => 'error',
+                    'status' => false,
+                    'urlback' => '',
+                    'message' => 'Cette propriété a déjà été rejetée'
+                ], 400);
+            }
+
+            // Mise à jour de l'état
+            foreach($property->apartements->where('etat', '==', 'actif') as $appart){
+                $appart->etat = 'inactif';
+                $appart->save();
+            }
+            $property->etat = 'inactif';
+            $property->save();
+
+            DB::commit();
+            
+            return response()->json([
+                'type' => 'success',
+                'status' => true,
+                'urlback' => 'back',
+                'message' => 'Propriété rejetée avec succès',
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'status' => false,
+                'urlback' => '',
+                'message' => "Une erreur s'est produite lors du rejet de la propriété",
                 'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
             ], 500);
         }

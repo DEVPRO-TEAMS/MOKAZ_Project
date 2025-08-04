@@ -181,33 +181,6 @@ class ReservationController extends Controller
 
     public function store(Request $request)
     {
-        // Validation des données
-        // $validator = Validator::make($request->all(), [
-        //     'nom' => 'required|string|max:255',
-        //     'prenoms' => 'required|string|max:255',
-        //     'email' => 'required|email|max:255',
-        //     'phone' => 'required|string|max:20',
-        //     'appart_uuid' => 'required|string|exists:appartements,uuid',
-        //     'start_time' => 'required|date',
-        //     'end_time' => 'nullable|date',
-        //     'unit_price' => 'required|numeric',
-        //     'total_price' => 'required|numeric',
-        //     'payment_amount' => 'required|numeric',
-        //     'payment_method' => 'required|string',
-        //     'notes' => 'nullable|string',
-        //     'is_hourly' => 'required|boolean',
-        //     'hours' => 'nullable|integer|required_if:is_hourly,true',
-        //     'days' => 'nullable|integer|required_if:is_hourly,false',
-        //     'custom_tarif' => 'nullable|boolean'
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Erreur de validation',
-        //         'errors' => $validator->errors()
-        //     ], 422);
-        // }
 
         DB::beginTransaction();
         try {
@@ -217,6 +190,8 @@ class ReservationController extends Controller
             $end_time = $request->end_time
                 ? Carbon::parse($request->end_time)->format('Y-m-d H:i:s')
                 : null;
+
+            $still_to_pay = (float) ($request->totalPrice - $request->payment_amount);
             // Création de la réservation
             $reservation = Reservation::create([
                 'uuid' => Str::uuid(),
@@ -226,16 +201,17 @@ class ReservationController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'appart_uuid' => $request->appart_uuid,
-                'sejour' => $request->is_hourly ? 'Heure' : 'Jour',
+                'sejour' => $request->isHourly ? 'Heure' : 'Jour',
                 'start_time' => $start_time,
                 'end_time' => $end_time,
-                'nbr_of_sejour' => $request->is_hourly ? $request->hours : $request->days,
+                'nbr_of_sejour' => $request->isHourly ? $request->hours : $request->days,
                 'total_price' => $request->totalPrice,
                 'unit_price' => $request->unitPrice,
+                'still_to_pay' => $still_to_pay,
                 'statut_paiement' => 'paid',
                 'status' => 'confirmed',
                 'notes' => $request->notes,
-                'payment_method' => $request->payment_method,
+                'payment_method' => $request->paymentMethod,
                 // 'custom_tarif' => $request->custom_tarif ?? false,
                 'payment_amount' => $request->paymentAmount
             ]);
@@ -343,69 +319,60 @@ class ReservationController extends Controller
 
     // public function downloadReceipt($uuid)
     // {
-    //     $reservation = Reservation::with('recu')->where('uuid', $uuid)->firstOrFail();
-
-    //     // Si le reçu n'existe pas, on tente de le générer
-    //     if (!$reservation->recu) {
+    //     $reservation = Reservation::with('receipt')->where('uuid', $uuid)->firstOrFail();
+    //     $directory = 'receipts/';
+    //     if (!$reservation->receipt) {
     //         $this->generateReceiptPDF($reservation);
-    //         $reservation->load('recu');
+    //         $reservation->load('receipt');
     //     }
 
-    //     // Récupère le chemin de stockage depuis .env ou config
-    //     $externalStorageDir = base_path(env('STORAGE_FILES')); // Exemple : '/mnt/data/'
-    //     $filePath = $externalStorageDir . $reservation->recu->filepath;
-
-    //     // Vérifie si le fichier existe
+    //     $externalStorageDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
+    //     $filePath = $externalStorageDir . $directory;
+        
     //     if (!file_exists($filePath)) {
-    //         // Regénère le PDF et vérifie à nouveau
     //         $this->generateReceiptPDF($reservation);
-    //         $reservation->load('recu');
-    //         $filePath = $externalStorageDir . $reservation->recu->filepath;
-
-    //         if (!file_exists($filePath)) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Le fichier PDF est introuvable ou n’a pas pu être généré.'
-    //             ], 500);
-    //         }
+    //         $reservation->load('receipt');
+    //         $filePath = $externalStorageDir . $directory;
     //     }
-
-    //     // Nom du fichier à télécharger
-    //     $fileName = 'recu_reservation_' . $reservation->code . '.pdf';
-
-    //     return response()->download($filePath, $fileName);
+        
+    //     if (!file_exists($filePath)) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Fichier PDF introuvable'
+    //         ], 500);
+    //     }
+    //     return response()->download(url($reservation->receipt->filepath));
     // }
+
     public function downloadReceipt($uuid)
     {
         $reservation = Reservation::with('receipt')->where('uuid', $uuid)->firstOrFail();
         $directory = 'receipts/';
+
         if (!$reservation->receipt) {
             $this->generateReceiptPDF($reservation);
             $reservation->load('receipt');
         }
 
         $externalStorageDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
-        $filePath = $externalStorageDir . $directory;
-        // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
+        $fileFullPath = $externalStorageDir . $directory . $reservation->receipt->filename;
 
-        if (!file_exists($filePath)) {
-            $this->generateReceiptPDF($reservation);
-            $reservation->load('receipt');
-            $filePath = $externalStorageDir . $directory;
-            // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
-        }
-
-        if (!file_exists($filePath)) {
+        if (!file_exists($fileFullPath)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Fichier PDF introuvable'
-            ], 500);
+            ], 404);
         }
-        Log::info($filePath. $reservation->receipt->filename);
-        // , $reservation->receipt->filename
-        // $filename = 'recu_reservation_' . $reservation->code . '.pdf';
-        return response()->download($filePath, $reservation->receipt->filename);
+
+        return response()->download($fileFullPath, $reservation->receipt->filename, [
+            'Content-Type' => 'application/pdf'
+        ]);
     }
+    // , $reservation->receipt->filename
+    // $filename = 'recu_reservation_' . $reservation->code . '.pdf';
+    // return response()->download($filePath, $reservation->receipt->filename);
+    // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
+    // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
 
 
     // public function downloadReceipt($uuid)

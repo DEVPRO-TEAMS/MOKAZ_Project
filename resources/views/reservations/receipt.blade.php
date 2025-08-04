@@ -151,7 +151,7 @@
                 <td>{{ $reservation->nbr_of_sejour }}</td>
             </tr>
             <tr class="total-row">
-                <td><strong>Total</strong></td>
+                <td><strong>Total à payer</strong></td>
                 <td><strong>{{ number_format($reservation->total_price, 0, ',', ' ') }}</strong></td>
             </tr>
             <tr>
@@ -159,12 +159,19 @@
                 <td>{{ number_format($reservation->payment_amount, 0, ',', ' ') }}</td>
             </tr>
             <tr>
+                <td>Reste à payé</td>
+                @php
+                    $reste = (float) $reservation->total_price - (float) $reservation->payment_amount;
+                @endphp
+                <td> {{ number_format($reste, 0, ',', ' ') }} </td>
+            </tr>
+            <tr>
                 <td>Méthode de paiement</td>
                 <td>{{ $reservation->payment_method }}</td>
             </tr>
             <tr>
                 <td>Statut</td>
-                <td><span style="color: green;">{{ ucfirst($reservation->statut_paiement) }}</span></td>
+                <td><span style="color: green;">{{ ucfirst($reservation->statut_paiement) == 'paid' ? 'Payé' : 'En attente de paiement' }}</span></td>
             </tr>
         </table>
     </div>
