@@ -7,7 +7,7 @@
     </div>
 
     <!-- Contenu centré -->
-    <div class="row h-100 align-items-center justify-content-center text-center position-relative" style="z-index: 2; animation: fadeIn 1.5s ease;">
+    <div class="row pt-5  h-100 align-items-center justify-content-center text-center position-relative" style="z-index: 2; animation: fadeIn 1.5s ease;">
         <div class="col-11 col-md-8">
             <h2 class="text-white display-4 fw-bold mb-3">Liste des appartements</h2>
             <p class="text-white lead mb-4">Trouvez l’appartement idéal selon vos préférences et votre budget.</p>
