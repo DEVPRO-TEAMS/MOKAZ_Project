@@ -35,11 +35,11 @@
             data-centered="true" data-loop="true">
             <div class="swiper-wrapper">
                 @foreach ($appart->images as $image)
-                    <div class="swiper-slide" style="height: 70vh">
+                    <div class="swiper-slide" style="height: 70vh; width: 100%;">
                         <a href="{{ asset($image->doc_url) }}" target="_blank" data-fancybox="gallery"
                             class="box-imgage-detail d-block">
                             <center>
-                                <img src="{{ asset($image->doc_url) }}" class="img-fluid" style="" alt="img-appart">
+                                <img src="{{ asset($image->doc_url) }}" class="img-fluid" style="max-height: 70vh; max-width: 100%; object-fit: cover;" alt="img-appart">
                             </center>
                         </a>
                     </div>
@@ -383,7 +383,7 @@
                     <div class="single-property-element single-wrapper-review">
                         <div class="box-title-review d-flex justify-content-between align-items-center flex-wrap gap-20">
                             <div class="h7 fw-7">Avis des clients</div>
-                            <a href="#" class="tf-btn">Voir tous les avis</a>
+                            {{-- <a href="#" class="tf-btn">Voir tous les avis</a> --}}
                         </div>
                         <div class="wrap-review">
                             <ul class="box-review">
@@ -392,7 +392,7 @@
                                         <img src="{{ asset('assets/images/avatar/avt-2.jpg') }}" alt="avatar">
                                     </div>
                                     <div class="content">
-                                        <div class="name h7 fw-7 text-black">Lorem, ipsum.
+                                        <div class="name h7 fw-7 text-black">John Doe
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -400,8 +400,7 @@
                                                     fill="#198754" />
                                             </svg>
                                         </div>
-                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">August 13,
-                                            2023</span>
+                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">04 Août 2025</span>
                                         <ul class="mt-8 list-star">
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
@@ -409,11 +408,12 @@
                                             <li class="icon-star"></li>
                                             <li class="icon-star"></li>
                                         </ul>
-                                        <p class="mt-12 body-2 text-black">Lorem ipsum dolor, sit amet consectetur
-                                            adipisicing elit. Exercitationem laborum quaerat illo nisi id quibusdam,
-                                            laudantium unde consequuntur. Deserunt repellendus eius numquam atque,
-                                            recusandae corporis quos voluptate optio dolore. Modi?</p>
-                                        <ul class="box-img-review">
+                                        <p class="mt-12 body-2 text-black">J'ai vraiment apprécié le professionnalisme et les connaissances approfondies de l'équipe
+                                        de courtage. Ils
+                                        m'ont non seulement aidé à trouver la maison idéale, mais ils m'ont également assisté pour
+                                        les aspects juridiques et financiers,
+                                        , ce qui m'a permis de me sentir confiant et sûr de ma décision.</p>
+                                        {{-- <ul class="box-img-review">
                                             <li>
                                                 <a href="#" class="img-review">
                                                     <img src="{{ asset('assets/images/blog/review1.jpg') }}"
@@ -446,7 +446,7 @@
                                                     <span class="fw-7">+12</span>
                                                 </a>
                                             </li>
-                                        </ul>
+                                        </ul> --}}
                                     </div>
                                 </li>
                             </ul>
@@ -455,9 +455,8 @@
                             <div class="h7">Laisser un commentaire</div>
                             <div id="comments" class="comments">
                                 <div class="respond-comment">
-                                    <form method="post" id="contactform" class="comment-form form-submit"
-                                        action="./contact/contact-process.php" accept-charset="utf-8"
-                                        novalidate="novalidate">
+                                    <form class="comment-form form-submit"
+                                        >
 
                                         <div class="form-wg group-ip">
                                             <fieldset>

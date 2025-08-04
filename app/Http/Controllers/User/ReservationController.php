@@ -286,7 +286,7 @@ class ReservationController extends Controller
     private function generateReceiptPDF($reservation)
     {
         $directory = 'receipts';
-        $externalUploadDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
+        $externalUploadDir = base_path(env('STORAGE_FILES', '../uploads/'));
         
         // Créer le dossier s'il n'existe pas
         if (!is_dir($externalUploadDir . $directory)) {
@@ -354,7 +354,7 @@ class ReservationController extends Controller
             $reservation->load('receipt');
         }
 
-        $externalStorageDir = base_path(env('STORAGE_FILES', '../public_html/uploads/'));
+        $externalStorageDir = base_path(env('STORAGE_FILES', '../uploads/'));
         $fileFullPath = $externalStorageDir . $directory . $reservation->receipt->filename;
 
         if (!file_exists($fileFullPath)) {
