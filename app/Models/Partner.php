@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\Property;
+use App\Models\Appartement;
+use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -39,4 +41,5 @@ class Partner extends Model
     {
         return $this->hasMany(Property::class, 'partner_uuid', 'uuid');
     }
+
 }

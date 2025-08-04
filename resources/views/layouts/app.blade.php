@@ -50,7 +50,8 @@
     </head>
 
     <body class="body bg-surface counter-scroll">
-
+        {{-- @dd($partner); --}}
+        {{-- @dd(Auth::user()->partner_uuid); --}}
         <div class="preload preload-container">
             <div class="boxes ">
                 <div class="box">

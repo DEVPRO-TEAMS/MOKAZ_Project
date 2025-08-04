@@ -19,6 +19,8 @@ class Reservation extends Model
         'email',
         'phone',
         'appart_uuid',
+        'property_uuid',
+        'partner_uuid',
         'sejour',
         'start_time',
         'end_time',

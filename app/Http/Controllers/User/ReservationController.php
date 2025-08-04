@@ -201,6 +201,8 @@ class ReservationController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'appart_uuid' => $request->appart_uuid,
+                'property_uuid' => $request->property_uuid,
+                'partner_uuid' => $request->partner_uuid,
                 'sejour' => $request->isHourly ? 'Heure' : 'Jour',
                 'start_time' => $start_time,
                 'end_time' => $end_time,

@@ -1356,6 +1356,8 @@ function validateCurrentStep() {
             phone: document.getElementById('phone').value.trim(),
             notes: document.getElementById('notes').value.trim(),
             appart_uuid: @json($appart->uuid)
+            property_uuid: @json($appart->property->uuid)
+            partner_uuid: @json($appart->property->partner->uuid)
         };
     }
 

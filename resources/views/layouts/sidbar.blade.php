@@ -6,7 +6,7 @@
         @endphp
         <div class="header-lower">
             <div class="row">                      
-                <div class="col-lg-12">         
+                <div class="col-lg-12">             
                     <div class="inner-container d-flex justify-content-between align-items-center">
                         <!-- Logo Box -->
                         <div class="logo-box d-flex">
@@ -116,7 +116,7 @@
                         href="{{ route('partner.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_id', Auth::user()->id)->count() }}</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_uuid', Auth::user()->partner_uuid)->count() ?? 0 }}</span>
                         </a>
                     </li>
                     @else
@@ -125,7 +125,7 @@
                         href="{{ route('admin.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">5</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->count() }}</span>
                         </a>
                     </li>
                     @endif
@@ -271,41 +271,41 @@
 
     <!-- CSS minimal nécessaire -->
     <style>
-    .sidebar-menu-dashboard {
-        min-height: 100vh;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
+        .sidebar-menu-dashboard {
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
 
-    .nav-link {
-        transition: all 0.3s ease;
-    }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
 
-    .nav-link:hover {
-        background-color: rgba(220, 53, 69, 0.1) !important;
-        color: var(--bs-danger) !important;
-    }
+        .nav-link:hover {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+            color: var(--bs-danger) !important;
+        }
 
-    .nav-link.active {
-        background-color: rgba(220, 53, 69, 0.1) !important;
-        color: var(--bs-danger) !important;
-    }
+        .nav-link.active {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+            color: var(--bs-danger) !important;
+        }
 
-    .avatar-sm {
-        width: 35px;
-        height: 35px;
-    }
+        .avatar-sm {
+            width: 35px;
+            height: 35px;
+        }
 
-    /* Animation pour les flèches des menus déroulants */
-    .nav-link[aria-expanded="true"] .bi-chevron-down {
-        transform: rotate(180deg);
-    }
+        /* Animation pour les flèches des menus déroulants */
+        .nav-link[aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+        }
 
-    .transition-all {
-        transition: all 0.3s ease;
-    }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
 
-    /* Effet de survol pour les sous-menus */
-    .collapse .nav-link:hover {
-        background-color: rgba(0, 0, 0, 0.05) !important;
-    }
+        /* Effet de survol pour les sous-menus */
+        .collapse .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+        }
     </style>
