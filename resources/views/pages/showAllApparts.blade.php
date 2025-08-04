@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+    {{-- <section class="container-fluid position-relative p-0 m-0" style="background: url({{asset()}}) no-repeat center center / cover; height: 300px;"> --}}
     <section class="container-fluid position-relative p-0 m-0" style="background: url('https://i.pinimg.com/736x/99/0f/c7/990fc7a568ad1fde0dcd8ea5a087eac8.jpg') no-repeat center center / cover; height: 300px;">
     <!-- Overlay en dégradé -->
     <div class="position-absolute top-0 start-0 w-100 h-100" 
@@ -7,7 +8,7 @@
     </div>
 
     <!-- Contenu centré -->
-    <div class="row h-100 align-items-center justify-content-center text-center position-relative" style="z-index: 2; animation: fadeIn 1.5s ease;">
+    <div class="row h-100 pt-5 align-items-center justify-content-center text-center position-relative" style="z-index: 2; animation: fadeIn 1.5s ease;">
         <div class="col-11 col-md-8">
             <h2 class="text-white display-4 fw-bold mb-3">Liste des appartements</h2>
             <p class="text-white lead mb-4">Trouvez l’appartement idéal selon vos préférences et votre budget.</p>
