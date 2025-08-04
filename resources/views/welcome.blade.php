@@ -392,6 +392,10 @@
                                     </div>
                                 </div>
                                 <div class="archive-bottom d-flex justify-content-between align-items-center">
+                                    <div class="avatar avt-40 round">
+                                        <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
+                                            alt="avt">
+                                    </div>
                                     <div class="d-flex align-items-center">
                                         <h6>
                                             @if ($tarifHeure)
@@ -453,6 +457,10 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center">
+                                            <div class="avatar avt-40 round">
+                                                <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
+                                                    alt="avt">
+                                            </div>
                                             <div class="h7 fw-7">
                                                 @if ($tarifHeure)
                                                     À partir de  {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA / {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hr' : 'hrs' }}

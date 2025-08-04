@@ -191,7 +191,7 @@ class ReservationController extends Controller
                 ? Carbon::parse($request->end_time)->format('Y-m-d H:i:s')
                 : null;
 
-            $still_to_pay = (float) ($request->totalPrice - $request->payment_amount);
+            $still_to_pay = (float) $request->totalPrice - (float) $request->payment_amount;
             // Création de la réservation
             $reservation = Reservation::create([
                 'uuid' => Str::uuid(),
