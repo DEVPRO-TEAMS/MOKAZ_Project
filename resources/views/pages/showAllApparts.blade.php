@@ -118,7 +118,8 @@
                                     <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
                                         alt="avt">
                                 </div>
-                                <span>{{ $item->property->partner->raison_social ?? 'Anonyme' }}</span>
+                                <span>Anonyme</span>
+                                {{-- <span>{{ $item->property->partner->raison_social ?? 'Anonyme' }}</span> --}}
                             </div>
                             {{-- <div class="d-flex align-items-center">
                                 <h6>7250,00 Fcfa</h6>

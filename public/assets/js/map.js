@@ -3,180 +3,340 @@
 (function ($) {
     "use strict";
 
+    // function mainMap() {
+    
+    //     // Initialiser la carte Leaflet
+    //     var coteDIvoireBounds = [
+    //         [4.333, -8.599], // Sud-Ouest
+    //         [10.726, -2.504] // Nord-Est
+    //     ];
+    //    var map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
+    //     // Ajouter le fond de carte
+    //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    //     }).addTo(map);
+        
+    //     // Ajouter le contrôle de recherche
+    //     L.Control.geocoder().addTo(map);
+
+    //     function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType, minTarif, tarifType, nbrSejour) {
+    //         const plural = nbrSejour > 1 ? 's' : '';
+    //         const priceLabel = minTarif !== null && tarifType
+    //             ? `À partir de ${minTarif} FCFA/${nbrSejour}${tarifType.toLowerCase()}${plural}`
+    //             : 'Tarif non disponible';
+
+    //         return `
+    //             <div class="map-listing-ite">
+    //                 <div class="inner-box">
+    //                     <div class="infoBox-close"><i class="icon icon-close"></i></div>
+                        
+    //                     <!-- Image -->
+    //                     <div class="image-box">
+    //                         <img src="${mapImg}" alt="${mapTitle}">
+    //                     </div>
+                        
+    //                     <!-- Contenu -->
+    //                     <div class="content">
+                            
+    //                         <!-- Localisation -->
+    //                         <p class="location">
+    //                             <span class="icon icon-mapPin"></span>
+    //                             ${mapLocation}
+    //                         </p>
+                            
+    //                         <!-- Titre -->
+    //                         <div class="title">
+    //                             <a href="${mapURL}">${mapTitle}</a>
+    //                         </div>
+                            
+    //                         <!-- Étoiles de notation -->
+    //                         <div class="rating">
+    //                             <span class="star">&#9733;</span>
+    //                             <span class="star">&#9733;</span>
+    //                             <span class="star">&#9733;</span>
+    //                             <span class="star">&#9733;</span>
+    //                             <span class="star half">&#9733;</span>
+    //                             <span class="rating-score">(4.5/5)</span>
+    //                         </div>
+                            
+    //                         <!-- Info supplémentaire -->
+    //                         <div class="extra-info">
+    //                             <span class="category">🏨 ${mapType}</span> • 
+    //                             <span class="price">${priceLabel}</span>
+    //                         </div>
+                            
+    //                         <!-- Bouton -->
+    //                         <div class="actions">
+    //                             <a href="${mapURL}" class="btn-view">Voir plus</a>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         `;
+    //     }
+
+    //     // var APP_URL = '{{ asset('/') }}';
+    //     window.MAP_ICON_PATH = "{{ asset('assets/images/location/map-icon1.png') }}";
+    //     // Récupération des propriétés via AJAX
+    //     $.ajax({
+    //         url: '/api/get-all-properties',
+    //         type: 'GET',
+    //         success: function(properties) {
+    //             console.log(properties);
+    //             properties.forEach(function(property) {
+    //                 var popupContent = locationData(
+    //                     property.image,
+    //                     '/appart-by-property/' + property.uuid,
+    //                     property.title,
+    //                     "Distance à calculer",  
+    //                     property.type.libelle,
+    //                     property.min_tarif,
+    //                     property.tarif_type,  // par "Heure" ou "Jour" 
+    //                     property.nbr_sejour
+    //                     );
+                        
+    //                     // Création du marqueur avec icône personnalisée
+    //                 var customIcon = L.divIcon({
+    //                     className: 'map-marker-container',
+    //                     html: `
+    //                         <div class="marker-container">
+    //                             <div class="marker-card">
+    //                                 <div class="front face">
+    //                                     <div>
+                                            
+    //                                     </div>
+    //                                 </div>
+    //                                 <div class="back face">
+    //                                     <div>
+                                            
+    //                                     </div>
+    //                                 </div>
+    //                                 <div class="marker-arrow"></div>
+    //                             </div>
+    //                         </div>`,
+    //                     iconSize: [40, 40],
+    //                     iconAnchor: [20, 40]
+    //                 });
+                    
+    //                 // Ajout du marqueur à la carte
+    //                 L.marker([property.latitude, property.longitude], {icon: customIcon})
+    //                     .addTo(map)
+    //                     .bindPopup(popupContent);
+    //             });
+    //         },
+    //         error: function() {
+    //             console.error('Erreur lors du chargement des propriétés');
+    //         }
+    //     });
+
+    //     // Géolocalisation sécurisée (HTTPS seulement)
+    //     if (window.location.protocol === 'https:') {
+    //         if (navigator.geolocation) {
+    //             navigator.geolocation.getCurrentPosition(
+    //                 function(position) {
+    //                     var userLatLng = [position.coords.latitude, position.coords.longitude];
+                        
+    //                     // Marqueur pour la position utilisateur
+    //                     var userIcon = L.divIcon({
+    //                         className: 'user-location-marker',
+    //                         html: '<div class="user-marker"></div>',
+    //                         iconSize: [20, 20]
+    //                     });
+                        
+    //                     L.marker(userLatLng, {icon: userIcon})
+    //                         .addTo(map)
+    //                         .bindPopup('Votre position')
+    //                         .openPopup();
+                            
+    //                     // Recentrer la carte sur la position
+    //                     map.setView(userLatLng, 16);
+    //                 },
+    //                 function(error) {
+    //                     console.log('Erreur de géolocalisation:', error.message);
+    //                 },
+    //                 {
+    //                     enableHighAccuracy: true,
+    //                     timeout: 5000,
+    //                     maximumAge: 0
+    //                 }
+    //             );
+    //         } else {
+    //             console.log('Géolocalisation non supportée par le navigateur');
+    //         }
+    //     } else {
+    //         console.log('La géolocalisation nécessite une connexion HTTPS');
+    //     }
+    // }
+
     function mainMap() {
-        
+    const coteDIvoireBounds = [
+        [4.333, -8.599], // Sud-Ouest
+        [10.726, -2.504] // Nord-Est
+    ];
 
-        // var coteDIvoireBounds = [
-        //     [4.333, -8.599], // Sud-Ouest
-        //     [10.726, -2.504] // Nord-Est
-        // ];
-        // // Initialiser la carte centrée sur à Abidjan
-        // var map = L.map('map').setView([7.539989, -5.547080], 7).setMaxBounds
-        // Initialiser la carte Leaflet
-        var coteDIvoireBounds = [
-            [4.333, -8.599], // Sud-Ouest
-            [10.726, -2.504] // Nord-Est
-        ];
-        // var map = L.map('map').setView([40.709295, -74.003099], 16);
-       var map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
-        // Initialiser la carte centrée sur à Abidjan
-        // var map = L.map('map').setView([7.539989, -5.547080], 7).setMaxBounds(coteDIvoireBounds);
-        // Ajouter le fond de carte
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        
-        // Ajouter le contrôle de recherche
-        L.Control.geocoder().addTo(map);
+    const map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
 
-        function locationData(mapImg, mapURL, mapTitle, mapLocation, mapType, minTarif, tarifType, nbrSejour) {
-            const plural = nbrSejour > 1 ? 's' : '';
-            const priceLabel = minTarif !== null && tarifType
-                ? `À partir de ${minTarif} FCFA/${nbrSejour}${tarifType.toLowerCase()}${plural}`
-                : 'Tarif non disponible';
+    // Fond de carte
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-            return `
-                <div class="map-listing-ite">
-                    <div class="inner-box">
-                        <div class="infoBox-close"><i class="icon icon-close"></i></div>
-                        
-                        <!-- Image -->
-                        <div class="image-box">
-                            <img src="${mapImg}" alt="${mapTitle}">
+    // Géocodeur
+    L.Control.geocoder().addTo(map);
+
+    // Position utilisateur globale
+    let userLatLng = null;
+
+    // Fonction de contenu de popup
+    function locationData(mapImg, mapURL, mapTitle, mapDistance, mapType, minTarif, tarifType, nbrSejour) {
+        const plural = nbrSejour > 1 ? 's' : '';
+        const priceLabel = minTarif !== null && tarifType
+            ? `À partir de ${minTarif} FCFA/${nbrSejour}${tarifType.toLowerCase()}${plural}`
+            : 'Tarif non disponible';
+
+        return `
+            <div class="map-listing-ite">
+                <div class="inner-box">
+                    <div class="infoBox-close"><i class="icon icon-close"></i></div>
+                    
+                    <!-- Image -->
+                    <div class="image-box">
+                        <img src="${mapImg}" alt="${mapTitle}">
+                    </div>
+                    
+                    <!-- Contenu -->
+                    <div class="content">
+                        <p class="location"><span class="icon icon-mapPin"></span> ${mapDistance}</p>
+                        <div class="title">
+                            <a href="${mapURL}">${mapTitle}</a>
                         </div>
-                        
-                        <!-- Contenu -->
-                        <div class="content">
-                            
-                            <!-- Localisation -->
-                            <p class="location">
-                                <span class="icon icon-mapPin"></span>
-                                ${mapLocation}
-                            </p>
-                            
-                            <!-- Titre -->
-                            <div class="title">
-                                <a href="${mapURL}">${mapTitle}</a>
-                            </div>
-                            
-                            <!-- Étoiles de notation -->
-                            <div class="rating">
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star half">&#9733;</span>
-                                <span class="rating-score">(4.5/5)</span>
-                            </div>
-                            
-                            <!-- Info supplémentaire -->
-                            <div class="extra-info">
-                                <span class="category">🏨 ${mapType}</span> • 
-                                <span class="price">${priceLabel}</span>
-                            </div>
-                            
-                            <!-- Bouton -->
-                            <div class="actions">
-                                <a href="${mapURL}" class="btn-view">Voir plus</a>
-                            </div>
+                        <div class="rating">
+                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
+                            <span class="star half">&#9733;</span>
+                            <span class="rating-score">(4.5/5)</span>
+                        </div>
+                        <div class="extra-info">
+                            <span class="category">🏨 ${mapType}</span> • 
+                            <span class="price">${priceLabel}</span>
+                        </div>
+                        <div class="actions">
+                            <a href="${mapURL}" class="btn-view">Voir plus</a>
                         </div>
                     </div>
                 </div>
-            `;
-        }
+            </div>
+        `;
+    }
 
-        // var APP_URL = '{{ asset('/') }}';
-        window.MAP_ICON_PATH = "{{ asset('assets/images/location/map-icon1.png') }}";
-        // Récupération des propriétés via AJAX
+    // Fonction pour calculer la distance entre deux points (Leaflet)
+    function formatDistance(from, to) {
+        const distance = from.distanceTo(to);
+        return distance >= 1000
+            ? (distance / 1000).toFixed(1) + ' km'
+            : Math.round(distance) + ' m';
+    }
+
+    // Fonction de chargement des propriétés
+    function loadProperties() {
         $.ajax({
             url: '/api/get-all-properties',
             type: 'GET',
-            success: function(properties) {
-                console.log(properties);
-                properties.forEach(function(property) {
-                    var popupContent = locationData(
+            success: function (properties) {
+                properties.forEach(function (property) {
+                    let distanceText = 'Distance inconnue';
+                    const propertyLatLng = L.latLng(property.latitude, property.longitude);
+
+                    if (userLatLng) {
+                        distanceText = formatDistance(userLatLng, propertyLatLng);
+                    }
+
+                    const popupContent = locationData(
                         property.image,
                         '/appart-by-property/' + property.uuid,
                         property.title,
-                        "Distance à calculer",  
+                        distanceText,
                         property.type.libelle,
                         property.min_tarif,
-                        property.tarif_type,  // par "Heure" ou "Jour" 
+                        property.tarif_type,
                         property.nbr_sejour
-                        );
-                        
-                        // Création du marqueur avec icône personnalisée
-                    var customIcon = L.divIcon({
+                    );
+
+                    const customIcon = L.divIcon({
                         className: 'map-marker-container',
                         html: `
                             <div class="marker-container">
                                 <div class="marker-card">
-                                    <div class="front face">
-                                        <div>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="back face">
-                                        <div>
-                                            
-                                        </div>
-                                    </div>
+                                    <div class="front face"><div></div></div>
+                                    <div class="back face"><div></div></div>
                                     <div class="marker-arrow"></div>
                                 </div>
                             </div>`,
                         iconSize: [40, 40],
                         iconAnchor: [20, 40]
                     });
-                    
-                    // Ajout du marqueur à la carte
-                    L.marker([property.latitude, property.longitude], {icon: customIcon})
+
+                    L.marker(propertyLatLng, { icon: customIcon })
                         .addTo(map)
                         .bindPopup(popupContent);
                 });
             },
-            error: function() {
+            error: function () {
                 console.error('Erreur lors du chargement des propriétés');
             }
         });
-
-        // Géolocalisation sécurisée (HTTPS seulement)
-        if (window.location.protocol === 'https:') {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        var userLatLng = [position.coords.latitude, position.coords.longitude];
-                        
-                        // Marqueur pour la position utilisateur
-                        var userIcon = L.divIcon({
-                            className: 'user-location-marker',
-                            html: '<div class="user-marker"></div>',
-                            iconSize: [20, 20]
-                        });
-                        
-                        L.marker(userLatLng, {icon: userIcon})
-                            .addTo(map)
-                            .bindPopup('Votre position')
-                            .openPopup();
-                            
-                        // Recentrer la carte sur la position
-                        map.setView(userLatLng, 16);
-                    },
-                    function(error) {
-                        console.log('Erreur de géolocalisation:', error.message);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                console.log('Géolocalisation non supportée par le navigateur');
-            }
-        } else {
-            console.log('La géolocalisation nécessite une connexion HTTPS');
-        }
     }
+
+    // Géolocalisation utilisateur
+    if (window.location.protocol === 'https:') {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    userLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
+
+                    // Icône personnalisée utilisateur
+                    const userIcon = L.divIcon({
+                        className: 'user-location-marker',
+                        html: `<div class="user-marker" style="
+                            width: 25px;
+                            height: 25px;
+                            background: radial-gradient(circle, #007bff 30%, #0056b3 70%);
+                            border-radius: 50%;
+                            border: 2px solid white;
+                            box-shadow: 0 0 8px rgba(0, 123, 255, 0.8);
+                        "></div>`,
+                        iconSize: [25, 25],
+                        iconAnchor: [12, 12]
+                    });
+
+                    L.marker(userLatLng, { icon: userIcon })
+                        .addTo(map)
+                        .bindPopup('📍 Vous êtes ici')
+                        .openPopup();
+
+                    map.setView(userLatLng, 14);
+
+                    loadProperties();
+                },
+                function (error) {
+                    console.warn('Erreur géolocalisation :', error.message);
+                    loadProperties();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            console.warn('Géolocalisation non supportée');
+            loadProperties();
+        }
+    } else {
+        console.log('La géolocalisation nécessite HTTPS');
+        loadProperties();
+    }
+}
     
     var map = document.getElementById("map");
     if (typeof map != "undefined" && map != null) {
