@@ -122,11 +122,11 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Arrivée:</div>
-                <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y') }}</div>
+                <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y à H:i') }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Départ:</div>
-                <div>{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</div>
+                <div>{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y à H:i') }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Nuits:</div>

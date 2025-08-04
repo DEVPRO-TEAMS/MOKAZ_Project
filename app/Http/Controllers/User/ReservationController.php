@@ -5,14 +5,15 @@ namespace App\Http\Controllers\User;
 
 use Carbon\Carbon;
 use App\Models\receipt;
+use App\Models\Appartement;
 use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -21,8 +22,7 @@ class ReservationController extends Controller
     // Liste des réservations
     public function index()
     {
-        $reservations = Reservation::where('etat', 'actif')->get();
-
+        $reservations = Reservation::where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->get();
         return view('reservations.index', compact('reservations'));
     }
     
@@ -218,6 +218,13 @@ class ReservationController extends Controller
                 'payment_amount' => $request->paymentAmount
             ]);
 
+            if($reservation){
+                // faire une decrementation du stock de l'appartement
+                $appartement = Appartement::where('uuid', $request->appart_uuid)->first();
+                $appartement->nbr_available = (int) $appartement->nbr_available - (int) $reservation->nbr_of_sejour;
+                $appartement->save();
+            }
+
             // Génération du PDF après enregistrement
             $pdfUrl = $this->generateReceiptPDF($reservation);
             
@@ -402,6 +409,15 @@ class ReservationController extends Controller
         }
 
         return response()->json(['success' => true, 'data' => $reservation]);
+    }
+    public function showPartner($uuid)
+    {
+        $reservation = Reservation::where('uuid', $uuid)->first();
+        if (!$reservation) {
+            return response()->json(['success' => false, 'message' => 'Réservation non trouvée'], 404);
+        }
+
+        return view('reservations.show', compact('reservation'));
     }
 
     // Mettre à jour une réservation

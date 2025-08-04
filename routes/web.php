@@ -122,7 +122,10 @@ Route::prefix('partner')->name('partner.')->group(function(){
         Route::get('/property/create', [PropertyController::class, 'create'])->name('properties.create');
         Route::get('/property/edit/{uuid}', [PropertyController::class, 'edit'])->name('properties.edit');
         Route::get('/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
+
+        // Route reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
+        Route::get('/reservation/shwo/{uuid}', [ReservationController::class, 'showPartner'])->name('reservation.show');
 
         // Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');
         // Route apparts

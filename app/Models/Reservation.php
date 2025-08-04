@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\receipt;
+use App\Models\Property;
 use App\Models\Appartement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,6 +48,20 @@ class Reservation extends Model
     {
         return $this->belongsTo(Appartement::class, 'appart_uuid', 'uuid');
     }
+    public function property()
+    {
+        return $this->belongsTo(Property::class, 'property_uuid', 'uuid');
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');
+    }
+
+    protected $casts = [
+    'start_time' => 'datetime',
+    'end_time' => 'datetime',
+];
 
 
     

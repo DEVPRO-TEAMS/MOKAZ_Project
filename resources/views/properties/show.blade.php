@@ -524,7 +524,8 @@
                                                     <td class="fw-semibold">#{{ $apartement->code ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->title ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->type->libelle ?? '' }}</td>
-                                                    <td class="fw-semibold">{{ $apartement->created_at->format('d/M/Y') ?? '' }}</td>
+                                                    <td class="fw-semibold">{{ \Carbon\Carbon::parse($apartement->created_at)->translatedFormat('d F Y') ?? '' }}</td>
+                                                    {{-- <td class="fw-semibold">{{ $apartement->created_at->format('d/M/Y') ?? '' }}</td> --}}
                                                     <td class="fw-semibold">
                                                         @if($apartement->nbr_available > 0)
                                                             <span class="badge bg-success bg-opacity-10 text-success">
