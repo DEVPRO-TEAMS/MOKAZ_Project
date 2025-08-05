@@ -56,6 +56,11 @@ class PartnerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function partners()
+    {
+        $partners = Partner::all();
+        return view('partners.pages.index', compact('partners'));
+    }
     public function create()
     {
         //

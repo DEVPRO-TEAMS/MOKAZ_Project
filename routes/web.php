@@ -84,7 +84,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/approveProperty/{uuid}', [AdminController::class, 'approveProperty'])->name('approveProperty');
         Route::post('/rejectProperty/{uuid}', [AdminController::class, 'rejectProperty'])->name('rejectProperty');
 
-        Route::get('/partner/list', [PartnerController::class, 'index'])->name('partner.index');
+        Route::get('/partner/list', [PartnerController::class, 'partners'])->name('partner.index');
         Route::post('/partner/add', [PartnerController::class, 'storePartner'])->name('storePartner');
         Route::post('/partner/update/{uuid}', [PartnerController::class, 'updatePartner'])->name('updatePartner');
         Route::post('/partner/destroy/{uuid}', [PartnerController::class, 'destroyPartner'])->name('destroyPartner');
