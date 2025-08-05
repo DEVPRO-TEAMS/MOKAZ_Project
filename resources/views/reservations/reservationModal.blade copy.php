@@ -496,7 +496,7 @@
         const startTime = document.getElementById('time_start');
         const blocJour = document.getElementById('bloc-jour');
         const nbrOfSejour = document.getElementById('nbr_of_sejour');
-        const sejourAutreNumber = document.getElementById('sejourAutreNumber');
+        const sejourAutreNumber = document.getElementById('custom-hours-block');
         const blocHeure = document.getElementById('bloc-heure');
 
 
@@ -540,7 +540,7 @@
         }
         tarifRadios.forEach(radio => {
             radio.addEventListener('change', function () {
-                if (this.value === 'autreTarif') {
+                if (this.value === 'custom') {
                     sejourAutreNumber.classList.remove('d-none');
                     
                     startDate.setAttribute('readonly', true);

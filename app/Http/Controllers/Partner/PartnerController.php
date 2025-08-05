@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Models\User;
 use App\Models\Partner;
+use App\Models\Property;
 use App\Models\Appartement;
 use App\Models\Reservation;
 use Illuminate\Support\Str;
@@ -23,9 +24,32 @@ class PartnerController extends Controller
      */
     public function index()
     {
+         $partner = auth()->user()->partner;
 
-        $partners = Partner::where('etat', 'actif')->get();
-        return view('partners.pages.index', compact('partners'));
+        $partnerUsers = User::where('partner_uuid', $partner->uuid)->get();
+
+        // Récupération des propriétés actives du partenaire
+        $partnerProperties = Property::where('partner_uuid', $partner->uuid)
+            ->where('etat', 'actif')
+            ->get();
+
+        // Récupération des UUID des propriétés
+        $propertyUuids = $partnerProperties->pluck('uuid');
+
+        // Récupération des appartements actifs associés à ces propriétés
+        $partnerPropertyApartments = Appartement::whereIn('property_uuid', $propertyUuids)
+        ->where('etat', 'actif')
+        ->get();
+
+        // Récupération des reservations actives associées aux appartements
+        $reservations = Reservation::whereIn('appart_uuid', $partnerPropertyApartments->pluck('uuid'))
+            ->where('status', 'confirmed')
+            ->get();
+        return view('partners.dashboard', compact(
+            'partnerUsers', 
+            'partnerProperties',
+            'partnerPropertyApartments',
+            'reservations'));
     }
     
 

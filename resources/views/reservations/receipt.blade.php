@@ -171,7 +171,7 @@
             </tr>
             <tr>
                 <td>Statut</td>
-                <td><span style="color: green;">{{ ucfirst($reservation->statut_paiement) == 'paid' ? 'Payé' : 'En attente de paiement' }}</span></td>
+                <td><span style="color: green;">{{ $reservation->statut_paiement == 'paid' ? 'Payé' : 'En attente de paiement' }}</span></td>
             </tr>
         </table>
     </div>

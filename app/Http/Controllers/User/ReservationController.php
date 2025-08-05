@@ -10,10 +10,12 @@ use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\reservatierNotifier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -191,7 +193,7 @@ class ReservationController extends Controller
                 ? Carbon::parse($request->end_time)->format('Y-m-d H:i:s')
                 : null;
 
-            $still_to_pay = (float) $request->totalPrice - (float) $request->payment_amount;
+            $still_to_pay = (float) $request->totalPrice - (float) $request->paymentAmount;
             // Création de la réservation
             $reservation = Reservation::create([
                 'uuid' => Str::uuid(),
@@ -211,9 +213,9 @@ class ReservationController extends Controller
                 'unit_price' => $request->unitPrice,
                 'still_to_pay' => $still_to_pay,
                 'statut_paiement' => 'paid',
-                'status' => 'confirmed',
+                'status' => 'pending',
                 'notes' => $request->notes,
-                'payment_method' => $request->paymentMethod,
+                'payment_method' => $request->payment_method,
                 // 'custom_tarif' => $request->custom_tarif ?? false,
                 'payment_amount' => $request->paymentAmount
             ]);
@@ -377,24 +379,122 @@ class ReservationController extends Controller
             'Content-Type' => 'application/pdf'
         ]);
     }
-    // , $reservation->receipt->filename
-    // $filename = 'recu_reservation_' . $reservation->code . '.pdf';
-    // return response()->download($filePath, $reservation->receipt->filename);
-    // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
-    // $filePath = $externalStorageDir . str_replace('storage/files/', '', $reservation->receipt->filepath);
 
 
-    // public function downloadReceipt($uuid)
-    // {
-    //     $reservation = Reservation::where('uuid', $uuid)->firstOrFail();
-    //     $pdfPath = $reservation->recu->filepath;
+    // public function confirmReservation($uuid){
 
-    //     if (!file_exists($pdfPath)) {
-    //         $this->generateReceiptPDF($reservation);
+    //     DB::beginTransaction();
+    //     try {
+            
+    //         $reservation = Reservation::where('uuid', $uuid)->first();
+    //         $reservation->status = 'confirmed'; 
+    //         if (!$reservation) {
+    //             return response()->json([
+    //                 'type' => 'error',
+    //                 'success' => false,
+    //                 'code' => 404,
+    //                 'message' => 'Reservation introuvable',
+    //                 'urlback' => '',
+    //             ]);
+    //         };
+    //         DB::commit();
+    //         $emailSubject = "✅ Réservation Confirmée";
+    //         $message = ``;
+
+    //         $emailData = [
+    //             'message' => $message,
+    //             'url' => url($reservation->receipt->filepath),
+    //             'buttonText' => 'Télécharger le reçu',
+    //         ];
+
+    //         Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+            
+    //         return response()->json([
+    //             'type' => 'success',
+    //             'success' => true,
+    //             'code' => 200,
+    //             'urlback' => 'back',
+    //             'message' => 'La reservation a bien ete confirmer',
+    //         ]);
+        
+    //     }catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'success' => false,
+    //             'code' => 500,
+    //             'urlback' => '',
+    //             'message' => 'Une erreur est survenue lors de la confirmation de la reservation',
+    //         ]);
     //     }
 
-    //     return response()->download($pdfPath, 'recu_reservation_' . $reservation->code . '.pdf');
     // }
+
+
+    public function confirmReservation($uuid)
+    {
+        DB::beginTransaction();
+        try {
+            $reservation = Reservation::where('uuid', $uuid)->first();
+            
+            if (!$reservation) {
+                return response()->json([
+                    'type' => 'error',
+                    'success' => false,
+                    'code' => 404,
+                    'message' => 'Reservation introuvable',
+                    'urlback' => '',
+                ]);
+            }
+
+            $reservation->status = 'confirmed';
+            $reservation->traited_by = Auth::user()->uuid;
+            $reservation->traited_at = now();
+
+            $reservation->save();
+            // Log::info('Reservation confirmed: ' . $reservation->code);
+            // Use a proper Blade view for the email content
+            $emailSubject = "✅ Réservation Confirmée";
+            $emailContent = view('mail.confirm_reservation', [
+                'reservation' => $reservation
+                ])->render();
+                
+                $emailData = [
+                    'message' => $emailContent,
+                    'status' => $reservation->status,
+                    'code' => $reservation->code,
+                    'url' => url($reservation->receipt->filepath ?? '#'),
+                    'buttonText' => 'Télécharger le reçu',
+                ];
+                
+                Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+                
+            
+            DB::commit();
+            
+            return response()->json([
+                'type' => 'success',
+                'success' => true,
+                'code' => 200,
+                'urlback' => 'back',
+                'message' => 'La reservation a bien ete confirmer',
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Reservation confirmation failed: ' . $e->getMessage());
+            
+            return response()->json([
+                'type' => 'error',
+                'success' => false,
+                'code' => 500,
+                'urlback' => '',
+                'message' => 'Une erreur est survenue lors de la confirmation de la reservation',
+            ]);
+        }
+    }
+
+
 
     
 

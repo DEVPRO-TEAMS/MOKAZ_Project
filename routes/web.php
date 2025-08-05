@@ -116,6 +116,7 @@ Route::prefix('partner')->name('partner.')->group(function(){
     });
     Route::middleware(['auth', 'partner'])->group(function () {
         Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
+        // Route::get('/dashboard', [PartnerController::class, 'index'])->name('index');
 
         // Route property
         Route::get('/my-properties', [PropertyController::class, 'index'])->name('properties.index');
@@ -125,7 +126,8 @@ Route::prefix('partner')->name('partner.')->group(function(){
 
         // Route reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
-        Route::get('/reservation/shwo/{uuid}', [ReservationController::class, 'showPartner'])->name('reservation.show');
+        Route::get('/reservation/show/{uuid}', [ReservationController::class, 'showPartner'])->name('reservation.show');
+        Route::post('/reservation/confirm/{uuid}', [ReservationController::class, 'confirmReservation'])->name('reservation.confirm');
 
         // Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');
         // Route apparts

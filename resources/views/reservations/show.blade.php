@@ -35,10 +35,16 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Réservation {{ $reservation->code }}</h4>
                     <div>
+                        <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST" class="submitForm">
+                            @csrf
+                            @if($reservation->status !== 'confirmed')
+                                
+                                <button class="btn btn-success" type="submit">
+                                    <i class="icon icon-mail"></i> Envoyer confirmation
+                                </button>
+                            @endif
+                        </form>
                         
-                        <button class="btn btn-success" onclick="sendConfirmation()">
-                            <i class="icon icon-mail"></i> Envoyer confirmation
-                        </button>
                     </div>
                 </div>
             </div>
@@ -77,7 +83,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="fw-bold">Date de création :</label>
+                                    <label class="fw-bold">Date de reservation :</label>
                                     <p class="mb-2">{{ $reservation->created_at->format('d/m/Y à H:i') }}</p>
                                 </div>
                             </div>
@@ -128,6 +134,9 @@
                                             @case('cancelled')
                                                 <span class="badge bg-danger">Annulé</span>
                                                 @break
+                                            @case('reconducted')
+                                                <span class="badge bg-info">Reconduite</span>
+                                                @break
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->status }}</span>
                                         @endswitch
@@ -139,7 +148,9 @@
                 </div>
             </div>
         </div>
-
+        @php
+            \Carbon\Carbon::setLocale('fr');
+        @endphp
         <div class="row">
             <!-- Dates et horaires -->
             <div class="col-md-6">
@@ -154,8 +165,8 @@
                                     <label class="fw-bold">Date et heure d'arrivée :</label>
                                     <p class="mb-3 text-success">
                                         <i class="icon icon-calendar me-1"></i>
-
-                                        {{ $reservation->start_time->format('l d F Y à H:i') ??  'Non renseigné' }}
+                                        {{ \Carbon\Carbon::parse($reservation->start_time)->translatedFormat('l d F Y à H:i') ?? 'Non renseigné' }}
+                                        {{-- {{ $reservation->start_time->format('l d F Y à H:i') ??  'Non renseigné' }} --}}
                                     </p>
                                 </div>
                             </div>
@@ -164,8 +175,8 @@
                                     <label class="fw-bold">Date et heure de départ :</label>
                                     <p class="mb-3 text-danger">
                                         <i class="icon icon-calendar me-1"></i>
-
-                                        {{ $reservation->end_time->format('l d F Y à H:i') ??  'Non renseigné' }}
+                                        {{ \Carbon\Carbon::parse($reservation->end_time)->translatedFormat('l d F Y à H:i') ?? 'Non renseigné' }}
+                                        {{-- {{ $reservation->end_time->format('l d F Y à H:i') ??  'Non renseigné' }} --}}
                                     </p>
                                 </div>
                             </div>
@@ -173,16 +184,16 @@
                                 <div class="form-group">
                                     <label class="fw-bold">Durée totale :</label>
                                     <p class="mb-2">
-                                        {{-- @php
-                                            $start_time = $reservation->start_time->format('Y-m-d H:i');
-                                            $end_time = $reservation->end_time->format('Y-m-d H:i');
+                                        @php
+                                            $start_time = \Carbon\Carbon::parse($reservation->start_time->format('Y-m-d H:i'));
+                                            $end_time =  \Carbon\Carbon::parse($reservation->end_time->format('Y-m-d H:i'));
                                             $duration = $start_time->diff($end_time);
                                             if ($reservation->sejour === 'Heure') {
                                                 echo $duration->h . 'h ' . $duration->i . 'min';
                                             } else {
                                                 echo $duration->days . ' jour(s)';
                                             }
-                                        @endphp --}}
+                                        @endphp
                                     </p>
                                 </div>
                             </div>
@@ -215,7 +226,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label class="fw-bold">Partenaire :</label>
-                                        <p class="mb-2">{{ $reservation->partner->raison_sociale ?? 'N/A' }}</p>
+                                        <p class="mb-2">{{ $reservation->partner->raison_social ?? 'N/A' }}</p>
                                     </div>
                                 </div>
                             @endif
@@ -274,11 +285,11 @@
                                             @case('paid')
                                                 <span class="badge bg-success">Payé</span>
                                                 @break
-                                            @case('partial')
-                                                <span class="badge bg-warning">Partiel</span>
+                                            @case('pending')
+                                                <span class="badge bg-danger">Non payé</span>
                                                 @break
                                             @case('unpaid')
-                                                <span class="badge bg-danger">Non payé</span>
+                                                <span class="badge bg-warning">Non payé</span>
                                                 @break
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->statut_paiement }}</span>
@@ -309,14 +320,14 @@
                             <p class="text-muted">Aucune note particulière</p>
                         @endif
 
-                        <div class="form-group mt-3">
+                        {{-- <div class="form-group mt-3">
                             <label class="fw-bold">Ajouter une note interne :</label>
                             <form action="" method="POST">
                                 @csrf
                                 <textarea name="internal_note" class="form-control mb-2" rows="3" placeholder="Note interne (visible uniquement par l'équipe)"></textarea>
                                 <button type="submit" class="btn btn-sm btn-primary">Ajouter note</button>
                             </form>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -365,7 +376,7 @@
         </div>
 
         <!-- Actions en bas -->
-        <div class="row mt-4">
+        <div class="row my-4">
             <div class="col-md-12">
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('partner.reservation.index') }}" class="btn btn-secondary">

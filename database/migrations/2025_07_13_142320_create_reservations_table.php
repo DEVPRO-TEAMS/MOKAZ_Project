@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('appart_uuid')->nullable();
             $table->string('sejour')->nullable();
-            $table->date('start_time')->nullable();
-            $table->date('end_time')->nullable();
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
 
             $table->integer('nbr_of_sejour')->nullable();
 

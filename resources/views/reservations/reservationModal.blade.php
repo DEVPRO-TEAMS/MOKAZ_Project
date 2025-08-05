@@ -6,7 +6,8 @@
                 <h5 class="modal-title text-light" id="reservationModalLabel">
                     <i class="fas fa-calendar-check me-2"></i>Processus de Réservation
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Stepper -->
@@ -32,7 +33,7 @@
                     $tarifHeureCount = $tarifHeure->count();
                     $tarifJourCount = $tarifJour->count();
                     $tarifByDay = $tarifJour->first();
-                    
+
                     // Déterminer la sélection par défaut
                     $checkedType = null;
                     if ($tarifHeureCount > 0 && $tarifJourCount > 0) {
@@ -48,12 +49,14 @@
                 <div class="step-content active" id="step1">
                     <div class="row g-3">
                         <!-- Choix du type de séjour -->
-                        @if($tarifHeureCount > 0 || $tarifJourCount > 0)
+                        @if ($tarifHeureCount > 0 || $tarifJourCount > 0)
                             <div class="col-12">
-                                <label class="form-label d-block"><i class="fas fa-clock me-2"></i>Type de séjour *</label>
+                                <label class="form-label d-block"><i class="fas fa-clock me-2"></i>Type de séjour
+                                    *</label>
                                 <div class="d-flex gap-3 flex-wrap">
-                                    @if($tarifJourCount > 0)
-                                        <div class="card p-3 flex-fill text-center type-sejour-card" style="cursor: pointer;">
+                                    @if ($tarifJourCount > 0)
+                                        <div class="card p-3 flex-fill text-center type-sejour-card"
+                                            style="cursor: pointer;">
                                             <input type="radio" name="sejour" id="sejour_jour" class="btn-check"
                                                 value="jour" autocomplete="off"
                                                 {{ $checkedType === 'jour' ? 'checked' : '' }}>
@@ -63,8 +66,9 @@
                                         </div>
                                     @endif
 
-                                    @if($tarifHeureCount > 0)
-                                        <div class="card p-3 flex-fill text-center type-sejour-card" style="cursor: pointer;">
+                                    @if ($tarifHeureCount > 0)
+                                        <div class="card p-3 flex-fill text-center type-sejour-card"
+                                            style="cursor: pointer;">
                                             <input type="radio" name="sejour" id="sejour_heure" class="btn-check"
                                                 value="heure" autocomplete="off"
                                                 {{ $checkedType === 'heure' ? 'checked' : '' }}>
@@ -78,38 +82,58 @@
                         @endif
 
                         <!-- Bloc: Dates si "jour" est sélectionné -->
-                        <div id="bloc-jour" class="row g-3 {{ $checkedType === 'jour' ? '' : 'd-none'}}">
-                            <div class="col-md-6">
-                                <label for="start_date_jour" class="form-label">
-                                    <i class="fas fa-calendar-alt me-2"></i>Date d'arrivée *
-                                </label>
-                                <input type="date" class="form-control form-control-lg" name="start_date_jour" id="start_date_jour">
+                        <div id="bloc-jour" class="row g-3 {{ $checkedType === 'jour' ? '' : 'd-none' }}">
+                            <div class="row col-md-6">
+                                <div class="col-md-6">
+                                    <label for="start_date_jour" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Date d'arrivée *
+                                    </label>
+                                    <input type="date" class="form-control form-control-lg" name="start_date_jour"
+                                        id="start_date_jour">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="start_hour_jour" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Heure d'arrivée *
+                                    </label>
+                                    <input type="time" class="form-control form-control-lg" name="start_hour_jour"
+                                        id="start_hour_jour">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="end_date_jour" class="form-label">
-                                    <i class="fas fa-calendar-alt me-2"></i>Date de départ *
-                                </label>
-                                <input type="date" class="form-control form-control-lg" name="end_date_jour" id="end_date_jour">
+                            <div class="row col-md-6">
+                                <div class="col-md-12">
+                                    <label for="end_date_jour" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Date de départ *
+                                    </label>
+                                    <input type="date" class="form-control form-control-lg" name="end_date_jour"
+                                        id="end_date_jour">
+                                </div>
+
+                                {{-- end_hour_jour est à Calculer a partir de start_date_jour et start_hour_jour et end_date_jour. remplir le input apres le calcul --}}
+                                <input type="time" class="form-control form-control-lg" name="end_hour_jour"
+                                    id="end_hour_jour" hidden>
                             </div>
                         </div>
-                        
+
                         <!-- Bloc: Options si "heure" est sélectionné -->
-                        <div id="bloc-heure" class="row g-3 {{ $checkedType === 'heure' ? '' : 'd-none'}}">
+                        <div id="bloc-heure" class="row g-3 {{ $checkedType === 'heure' ? '' : 'd-none' }}">
                             <div class="col-md-6 d-flex flex-column justify-content-center align-items-start">
-                                @foreach($appart->tarifications->where('etat','!=', 'inactif')->where('sejour', 'Heure') as $tarif)
+                                @foreach ($appart->tarifications->where('etat', '!=', 'inactif')->where('sejour', 'Heure') as $tarif)
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio" value="{{ $tarif->price }}" 
-                                               name="tarif_by_sejour" id="tarifBySejour{{ $tarif->uuid }}" 
-                                               data-hours="{{ $tarif->nbr_of_sejour }}" required
-                                               {{ $loop->first ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="radio" value="{{ $tarif->price }}"
+                                            name="tarif_by_sejour" id="tarifBySejour{{ $tarif->uuid }}"
+                                            data-hours="{{ $tarif->nbr_of_sejour }}" required
+                                            {{ $loop->first ? 'checked' : '' }}>
                                         <label class="form-check-label" for="tarifBySejour{{ $tarif->uuid }}">
-                                            <strong>{{ number_format($tarif->price, 0, ',', ' ') }} FCFA / {{ $tarif->nbr_of_sejour }} heure{{ $tarif->nbr_of_sejour > 1 ? 's' : '' }}</strong>
+                                            <strong>{{ number_format($tarif->price, 0, ',', ' ') }} FCFA /
+                                                {{ $tarif->nbr_of_sejour }}
+                                                heure{{ $tarif->nbr_of_sejour > 1 ? 's' : '' }}</strong>
                                         </label>
                                     </div>
                                 @endforeach
-                                
+
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="radio" value="custom" name="tarif_by_sejour" id="tarifCustom">
+                                    <input class="form-check-input" type="radio" value="custom"
+                                        name="tarif_by_sejour" id="tarifCustom">
                                     <label class="form-check-label" for="tarifCustom">
                                         <strong>Autre durée</strong>
                                     </label>
@@ -122,19 +146,27 @@
                                 <input type="number" min="1" class="form-control form-control-lg"
                                     name="custom_hours" id="custom_hours" placeholder="Ex: 3">
                             </div>
-                            
-                            <div class="col-12 row">
+
+                            <div class="col-12 row w-100">
                                 <div class="col-md-6">
                                     <label for="start_date_heure" class="form-label">
                                         <i class="fas fa-calendar-alt me-2"></i>Date d'arrivée *
                                     </label>
-                                    <input type="date" class="form-control form-control-lg" name="start_date_heure" id="start_date_heure">
+                                    <input type="date" class="form-control form-control-lg"
+                                        name="start_date_heure" id="start_date_heure">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="start_time_heure" class="form-label">
                                         <i class="fas fa-clock me-2"></i>Heure d'arrivée *
                                     </label>
-                                    <input type="time" class="form-control form-control-lg" name="start_time_heure" id="start_time_heure">
+                                    <input type="time" class="form-control form-control-lg"
+                                        name="start_time_heure" id="start_time_heure">
+
+                                    {{-- end_date_heure et end_time_heure sont à Calculer a partir de start_date_heure et start_time_heure et custom_hours. remplir les inputs apres le calcul --}}
+                                    <input type="date" class="form-control form-control-lg" name="end_date_heure"
+                                        id="end_date_heure" hidden>
+                                    <input type="time" class="form-control form-control-lg" name="end_time_heure"
+                                        id="end_time_heure" hidden>
                                 </div>
                             </div>
                         </div>
@@ -142,19 +174,26 @@
                         <!-- Informations personnelles -->
                         <div class="col-md-6">
                             <label for="nom" class="form-label"><i class="fas fa-user me-2"></i>Nom *</label>
-                            <input type="text" class="form-control form-control-lg" name="nom" id="nom" placeholder="Dupont" required>
+                            <input type="text" class="form-control form-control-lg" name="nom" id="nom"
+                                placeholder="Dupont" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="prenoms" class="form-label"><i class="fas fa-user me-2"></i>Prénoms *</label>
-                            <input type="text" class="form-control form-control-lg" name="prenoms" id="prenoms" placeholder="Jean" required>
+                            <label for="prenoms" class="form-label"><i class="fas fa-user me-2"></i>Prénoms
+                                *</label>
+                            <input type="text" class="form-control form-control-lg" name="prenoms" id="prenoms"
+                                placeholder="Jean" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label"><i class="fas fa-envelope me-2"></i>Email *</label>
-                            <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="jean.dupont@example.com" required>
+                            <label for="email" class="form-label"><i class="fas fa-envelope me-2"></i>Email
+                                *</label>
+                            <input type="email" class="form-control form-control-lg" name="email" id="email"
+                                placeholder="jean.dupont@example.com" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="phone" class="form-label"><i class="fas fa-phone me-2"></i>Téléphone *</label>
-                            <input type="tel" class="form-control form-control-lg" name="phone" id="phone" placeholder="0123456789" required>
+                            <label for="phone" class="form-label"><i class="fas fa-phone me-2"></i>Téléphone
+                                *</label>
+                            <input type="tel" class="form-control form-control-lg" name="phone" id="phone"
+                                placeholder="0123456789" required>
                         </div>
 
                         <!-- Notes -->
@@ -162,7 +201,8 @@
                             <label for="notes" class="form-label">
                                 <i class="fas fa-comment me-2"></i>Commentaires
                             </label>
-                            <textarea class="form-control form-control-lg" name="notes" id="notes" rows="3" placeholder="Demandes spéciales, préférences..."></textarea>
+                            <textarea class="form-control form-control-lg" name="notes" id="notes" rows="3"
+                                placeholder="Demandes spéciales, préférences..."></textarea>
                         </div>
                     </div>
 
@@ -202,30 +242,35 @@
                         <div class="col-lg-6">
                             <div class="card border-primary">
                                 <div class="card-header bg-danger text-light">
-                                    <h5 class="mb-0 text-white"><i class="fas fa-credit-card me-2"></i>Mode de paiement</h5>
+                                    <h5 class="mb-0 text-white"><i class="fas fa-credit-card me-2"></i>Mode de
+                                        paiement</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-6">
-                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3" data-method="visa">
+                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3"
+                                                data-method="visa">
                                                 <i class="fab fa-cc-visa fa-2x mb-2"></i>
                                                 <div>Visa</div>
                                             </button>
                                         </div>
                                         <div class="col-6">
-                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3" data-method="mastercard">
+                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3"
+                                                data-method="mastercard">
                                                 <i class="fab fa-cc-mastercard fa-2x mb-2"></i>
                                                 <div>Mastercard</div>
                                             </button>
                                         </div>
                                         <div class="col-6">
-                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3" data-method="orange">
+                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3"
+                                                data-method="orange">
                                                 <i class="fas fa-mobile-alt fa-2x mb-2"></i>
                                                 <div>Orange Money</div>
                                             </button>
                                         </div>
                                         <div class="col-6">
-                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3" data-method="mtn">
+                                            <button class="payment-method btn btn-outline-danger w-100 h-100 py-3"
+                                                data-method="mtn">
                                                 <i class="fas fa-mobile-alt fa-2x mb-2"></i>
                                                 <div>MTN Money</div>
                                             </button>
@@ -234,22 +279,27 @@
 
                                     <div id="payment-form" class="mt-4 d-none">
                                         <div class="mb-3">
-                                            <label for="card-number" class="form-label">Numéro de carte / Téléphone *</label>
-                                            <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456" required>
+                                            <label for="card-number" class="form-label">Numéro de carte / Téléphone
+                                                *</label>
+                                            <input type="text" class="form-control" id="card-number"
+                                                placeholder="1234 5678 9012 3456" required>
                                         </div>
                                         <div class="row g-2">
                                             <div class="col-md-6">
                                                 <label for="expiry-date" class="form-label">Date d'expiration</label>
-                                                <input type="text" class="form-control" id="expiry-date" placeholder="MM/AA">
+                                                <input type="text" class="form-control" id="expiry-date"
+                                                    placeholder="MM/AA">
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="cvv-code" class="form-label">CVV</label>
-                                                <input type="text" class="form-control" id="cvv-code" placeholder="123" maxlength="3">
+                                                <input type="text" class="form-control" id="cvv-code"
+                                                    placeholder="123" maxlength="3">
                                             </div>
                                         </div>
                                         <div class="mb-3 mt-2">
                                             <label for="card-name" class="form-label">Nom sur la carte *</label>
-                                            <input type="text" class="form-control" id="card-name" placeholder="JEAN DUPONT" required>
+                                            <input type="text" class="form-control" id="card-name"
+                                                placeholder="JEAN DUPONT" required>
                                         </div>
                                     </div>
                                 </div>
@@ -274,7 +324,8 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-3">
-                                <p class="text-muted mb-1">Numéro de réservation: <strong id="reservation-number"></strong></p>
+                                <p class="text-muted mb-1">Numéro de réservation: <strong
+                                        id="reservation-number"></strong></p>
                                 <p class="text-muted">Date: <strong id="payment-date"></strong></p>
                             </div>
                             <div id="final-receipt">
@@ -321,16 +372,19 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="prev-btn" onclick="previousStep()" style="display: none;">
+                <button type="button" class="btn btn-secondary" id="prev-btn" onclick="previousStep()"
+                    style="display: none;">
                     <i class="fas fa-arrow-left me-2"></i>Précédent
                 </button>
                 <button type="button" class="btn btn-primary" id="next-btn" onclick="nextStep()">
                     Suivant <i class="fas fa-arrow-right ms-2"></i>
                 </button>
-                <button type="button" class="btn btn-success" id="pay-btn" onclick="processPayment()" style="display: none;">
+                <button type="button" class="btn btn-success" id="pay-btn" onclick="processPayment()"
+                    style="display: none;">
                     <i class="fas fa-credit-card me-2"></i>Payer maintenant
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-btn" style="display: none;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-btn"
+                    style="display: none;">
                     Fermer
                 </button>
             </div>
@@ -419,7 +473,75 @@
 </style>
 
 
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const radios = document.querySelectorAll('input[name="sejour"]');
+        const tarifRadios = document.querySelectorAll('input[name="tarif_by_sejour"]');
+        const startDate = document.getElementById('start_date');
+        const startTime = document.getElementById('time_start');
+        const blocJour = document.getElementById('bloc-jour');
+        const nbrOfSejour = document.getElementById('nbr_of_sejour');
+        const sejourAutreNumber = document.getElementById('custom-hours-block');
+        const blocHeure = document.getElementById('bloc-heure');
+
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === 'jour') {
+                    blocJour.classList.remove('d-none');
+                    blocHeure.classList.add('d-none');
+                    // décoché tarifRadios
+                    tarifRadios.forEach(radio => {
+                        radio.checked = false;
+                    })
+                    startDate.value = '';
+                    startTime.value = '';
+                    nbrOfSejour.value = '';
+                    // ajouter un readonly sur startTime et startDate
+                    startDate.setAttribute('readonly', true);
+                    startTime.setAttribute('readonly', true);
+                    sejourAutreNumber.classList.add('d-none');
+                } else if (this.value === 'heure') {
+                    blocJour.classList.add('d-none');
+                    blocHeure.classList.remove('d-none');
+                }
+            });
+        });
+        if (nbrOfSejour && startDate && startTime) {
+            nbrOfSejour.addEventListener('input', function () {
+                if (parseInt(this.value) > 1) {
+                    startDate.removeAttribute('readonly');
+                    startTime.removeAttribute('readonly');
+                } else {
+                    startDate.value = '';
+                    startTime.value = '';
+                    this.value = '';
+                    startDate.setAttribute('readonly', true);
+                    startTime.setAttribute('readonly', true);
+                }
+            });
+        } else {
+            console.warn('Un des éléments (#nbrOfSejour, #startDate, #startTime) est introuvable dans le DOM.');
+        }
+        tarifRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === 'custom') {
+                    sejourAutreNumber.classList.remove('d-none');
+                    
+                    startDate.setAttribute('readonly', true);
+                    startTime.setAttribute('readonly', true);
+                } else {
+                    sejourAutreNumber.classList.add('d-none');
+                    startDate.removeAttribute('readonly');
+                    startTime.removeAttribute('readonly');
+                }
+            });
+        });
+    });
+</script> --}}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 {{-- <script>
     // Variables globales
     const DAILY_RATE = @json($tarifByDay->price ?? 0);
@@ -441,197 +563,107 @@
         document.getElementById('start_date_jour').min = today;
         document.getElementById('end_date_jour').min = today;
         document.getElementById('start_date_heure').min = today;
-        
-        // Définir l'heure par défaut à maintenant + 1 heure
+
         const now = new Date();
         const defaultHour = now.getHours() + 1;
         document.getElementById('start_time_heure').value = `${defaultHour.toString().padStart(2, '0')}:00`;
     }
 
     function setupEventListeners() {
-        // Changement de type de séjour
         document.querySelectorAll('input[name="sejour"]').forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.value === 'jour') {
-                    document.getElementById('bloc-jour').classList.remove('d-none');
-                    document.getElementById('bloc-heure').classList.add('d-none');
-                    
-                    // Réinitialiser les sélections horaires
-                    document.querySelectorAll('input[name="tarif_by_sejour"]').forEach(r => r.checked = false);
-                    document.getElementById('custom_hours').value = '';
-                    document.getElementById('custom-hours-block').classList.add('d-none');
-                    
-                    // Réinitialiser les dates/heures
-                    document.getElementById('start_date_heure').value = '';
-                    document.getElementById('start_time_heure').value = '';
-                } else {
-                    document.getElementById('bloc-jour').classList.add('d-none');
-                    document.getElementById('bloc-heure').classList.remove('d-none');
-                    
-                    // Réinitialiser les dates journalières
-                    document.getElementById('start_date_jour').value = '';
-                    document.getElementById('end_date_jour').value = '';
-                }
+                const isHourly = this.value === 'heure';
+                document.getElementById('bloc-jour').classList.toggle('d-none', isHourly);
+                document.getElementById('bloc-heure').classList.toggle('d-none', !isHourly);
                 updatePricePreview();
             });
         });
 
-        // Changement de tarif horaire
         document.querySelectorAll('input[name="tarif_by_sejour"]').forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.value === 'custom') {
-                    document.getElementById('custom-hours-block').classList.remove('d-none');
-                    document.getElementById('custom_hours').value = '';
-                    document.getElementById('start_date_heure').removeAttribute('readonly');
-                    document.getElementById('start_time_heure').removeAttribute('readonly');
-                } else {
-                    document.getElementById('custom-hours-block').classList.add('d-none');
-                    document.getElementById('start_date_heure').removeAttribute('readonly');
-                    document.getElementById('start_time_heure').removeAttribute('readonly');
-                }
+                const isCustom = this.value === 'custom';
+                document.getElementById('custom-hours-block').classList.toggle('d-none', !isCustom);
                 updatePricePreview();
             });
         });
 
-        // Validation du nombre d'heures personnalisé
-        document.getElementById('custom_hours').addEventListener('input', function() {
-            if (parseInt(this.value) > 0) {
-                document.getElementById('start_date_heure').removeAttribute('readonly');
-                document.getElementById('start_time_heure').removeAttribute('readonly');
-            } else {
-                document.getElementById('start_date_heure').value = '';
-                document.getElementById('start_time_heure').value = '';
-                document.getElementById('start_date_heure').setAttribute('readonly', true);
-                document.getElementById('start_time_heure').setAttribute('readonly', true);
-            }
-            updatePricePreview();
-        });
-
-        // Écouteurs pour les champs de date/heure
-        document.getElementById('start_date_jour').addEventListener('change', function() {
-            const endDateInput = document.getElementById('end_date_jour');
-            if (this.value) {
-                endDateInput.min = this.value;
-                updatePricePreview();
-            }
-        });
-
-        document.getElementById('end_date_jour').addEventListener('change', function() {
-            if (this.value) {
-                updatePricePreview();
-            }
-        });
-        
+        document.getElementById('custom_hours').addEventListener('input', updatePricePreview);
+        document.getElementById('start_date_jour').addEventListener('change', updatePricePreview);
+        document.getElementById('end_date_jour').addEventListener('change', updatePricePreview);
         document.getElementById('start_date_heure').addEventListener('change', updatePricePreview);
         document.getElementById('start_time_heure').addEventListener('change', updatePricePreview);
 
-        // Écouteurs pour les modes de paiement
         document.querySelectorAll('.payment-method').forEach(method => {
             method.addEventListener('click', function() {
                 selectPaymentMethod(this);
             });
         });
 
-        // Reset modal au close
-        document.getElementById('reservationModal').addEventListener('hidden.bs.modal', function() {
-            resetModal();
-        });
+        document.getElementById('reservationModal').addEventListener('hidden.bs.modal', resetModal);
     }
 
     function updatePricePreview() {
         const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
-        
-        if (isHourly) {
-            updateHourlyPrice();
-        } else {
-            updateDailyPrice();
-        }
+        isHourly ? updateHourlyPrice() : updateDailyPrice();
     }
 
     function updateHourlyPrice() {
-        let hours, unitPrice, total;
-        const customTarifSelected = document.getElementById('tarifCustom').checked;
-        
-        if (customTarifSelected) {
+        const custom = document.getElementById('tarifCustom').checked;
+        let hours = 0,
+            unitPrice = 0;
+
+        if (custom) {
             hours = parseInt(document.getElementById('custom_hours').value) || 0;
             unitPrice = HOURLY_RATE;
-            total = hours * unitPrice;
-            
-            document.getElementById('price-label').textContent = 'Prix horaire:';
-            document.getElementById('duration-label').textContent = 'Nombre d\'heures:';
         } else {
-            const selectedTarif = document.querySelector('input[name="tarif_by_sejour"]:checked');
-            if (selectedTarif) {
-                hours = parseInt(selectedTarif.dataset.hours) || 0;
-                unitPrice = parseFloat(selectedTarif.value) || 0;
-                total = unitPrice;
-                
-                document.getElementById('price-label').textContent = 'Forfait:';
-                document.getElementById('duration-label').textContent = 'Durée:';
-            } else {
-                // Aucun tarif sélectionné
-                document.getElementById('unit-price').textContent = '0 XOF';
-                document.getElementById('duration-value').textContent = '0 heure';
-                document.getElementById('total-amount').textContent = '0 XOF';
-                return;
+            const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
+            if (selected && selected.value !== 'custom') {
+                hours = parseInt(selected.dataset.hours);
+                unitPrice = parseFloat(selected.value);
             }
         }
-        
-        // Mise à jour de l'affichage
+
+        const total = hours * unitPrice;
         document.getElementById('unit-price').textContent = unitPrice.toLocaleString('fr-FR') + ' XOF';
         document.getElementById('duration-value').textContent = hours + (hours > 1 ? ' heures' : ' heure');
         document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
-        
-        // Stocker les données pour l'étape suivante
+
         reservationData = {
             ...reservationData,
             isHourly: true,
-            hours: hours,
-            unitPrice: unitPrice,
+            hours,
+            unitPrice,
             totalPrice: total,
-            paymentAmount: total * 0.1, // 10% d'acompte
+            paymentAmount: total * 0.1,
             startDate: document.getElementById('start_date_heure').value,
             startTime: document.getElementById('start_time_heure').value,
-            customTarif: customTarifSelected
+            customTarif: custom
         };
     }
 
     function updateDailyPrice() {
-        const startDate = document.getElementById('start_date_jour').value;
-        const endDate = document.getElementById('end_date_jour').value;
-        
-        if (!startDate || !endDate) {
-            document.getElementById('unit-price').textContent = '0 XOF';
-            document.getElementById('duration-value').textContent = '0 jour';
-            document.getElementById('total-amount').textContent = '0 XOF';
-            return;
-        }
-        
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-        
-        if (days > 0) {
-            const total = days * DAILY_RATE;
-            
-            document.getElementById('price-label').textContent = 'Prix journalier:';
-            document.getElementById('unit-price').textContent = DAILY_RATE.toLocaleString('fr-FR') + ' XOF';
-            document.getElementById('duration-label').textContent = 'Nombre de jours:';
-            document.getElementById('duration-value').textContent = days + (days > 1 ? ' jours' : ' jour');
-            document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
-            
-            // Stocker les données pour l'étape suivante
-            reservationData = {
-                ...reservationData,
-                isHourly: false,
-                days: days,
-                unitPrice: DAILY_RATE,
-                totalPrice: total,
-                paymentAmount: total * 0.1, // 10% d'acompte
-                startDate: startDate,
-                endDate: endDate
-            };
-        }
+        const start = document.getElementById('start_date_jour').value;
+        const end = document.getElementById('end_date_jour').value;
+
+        if (!start || !end) return;
+
+        const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
+        const total = days * DAILY_RATE;
+
+        document.getElementById('unit-price').textContent = DAILY_RATE.toLocaleString('fr-FR') + ' XOF';
+        document.getElementById('duration-value').textContent = days + (days > 1 ? ' jours' : ' jour');
+        document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
+
+        reservationData = {
+            ...reservationData,
+            isHourly: false,
+            days,
+            unitPrice: DAILY_RATE,
+            totalPrice: total,
+            paymentAmount: total * 0.1,
+            startDate: start,
+            endDate: end
+        };
     }
 
     function selectPaymentMethod(method) {
@@ -642,17 +674,14 @@
     }
 
     function nextStep() {
-        if (validateCurrentStep()) {
-            if (currentStep < 3) {
-                currentStep++;
-                updateStepDisplay();
+        if (!validateCurrentStep()) return;
 
-                if (currentStep === 2) {
-                    generateInvoice();
-                } else if (currentStep === 3) {
-                    generateReceipt();
-                }
-            }
+        if (currentStep < 3) {
+            currentStep++;
+            updateStepDisplay();
+
+            if (currentStep === 2) generateInvoice();
+            if (currentStep === 3) generateReceipt();
         }
     }
 
@@ -664,85 +693,50 @@
     }
 
     function validateCurrentStep() {
-        // Validation des politiques
-        const policiesChecked = document.querySelectorAll(
-            '#policy-privacy:checked, #policy-refund:checked, #policy-terms:checked').length === 3;
+        const policies = ['policy-privacy', 'policy-refund', 'policy-terms'];
+        const allChecked = policies.every(id => document.getElementById(id).checked);
 
-        if (!policiesChecked) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Politiques requises',
-                text: 'Vous devez accepter toutes les politiques pour continuer'
-            });
+        if (!allChecked) {
+            Swal.fire('⚠️', 'Veuillez accepter toutes les politiques', 'warning');
             return false;
         }
 
         if (currentStep === 1) {
-            // Validation des champs obligatoires
-            const requiredFields = ['nom', 'prenoms', 'email', 'phone'];
-            const emptyFields = requiredFields.filter(field => !document.getElementById(field).value.trim());
-
-            if (emptyFields.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Champs requis',
-                    text: 'Veuillez remplir tous les champs obligatoires'
-                });
-                return false;
+            const fields = ['nom', 'prenoms', 'email', 'phone'];
+            for (const field of fields) {
+                if (!document.getElementById(field).value.trim()) {
+                    Swal.fire('❌', 'Tous les champs obligatoires doivent être remplis', 'error');
+                    return false;
+                }
             }
 
-            // Validation spécifique selon le type de séjour
             const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
-            
             if (isHourly) {
-                // Validation pour réservation horaire
-                const customTarifSelected = document.getElementById('tarifCustom').checked;
-                const hours = customTarifSelected ? 
-                    parseInt(document.getElementById('custom_hours').value) : 
+                const custom = document.getElementById('tarifCustom').checked;
+                const hours = custom ?
+                    parseInt(document.getElementById('custom_hours').value) :
                     parseInt(document.querySelector('input[name="tarif_by_sejour"]:checked')?.dataset.hours);
-                
-                if (!hours || hours < MINIMUM_HOURS) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Durée invalide',
-                        text: `Veuillez sélectionner une durée d'au moins ${MINIMUM_HOURS} heure${MINIMUM_HOURS > 1 ? 's' : ''}`
-                    });
+
+                if (!hours || hours < 1) {
+                    Swal.fire('❌', 'Veuillez sélectionner une durée valide', 'error');
                     return false;
                 }
 
-                if (!document.getElementById('start_date_heure').value || !document.getElementById('start_time_heure').value) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Date/heure requise',
-                        text: 'Veuillez sélectionner une date et une heure de début'
-                    });
+                if (!document.getElementById('start_date_heure').value || !document.getElementById('start_time_heure')
+                    .value) {
+                    Swal.fire('❌', 'Veuillez sélectionner une date et une heure', 'error');
                     return false;
                 }
             } else {
-                // Validation pour réservation journalière
-                if (!document.getElementById('start_date_jour').value || !document.getElementById('end_date_jour').value) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Dates requises',
-                        text: 'Veuillez sélectionner une date d\'arrivée et de départ'
-                    });
-                    return false;
-                }
+                const start = document.getElementById('start_date_jour').value;
+                const end = document.getElementById('end_date_jour').value;
 
-                const startDate = new Date(document.getElementById('start_date_jour').value);
-                const endDate = new Date(document.getElementById('end_date_jour').value);
-                
-                if (endDate <= startDate) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Dates invalides',
-                        text: 'La date de départ doit être postérieure à la date d\'arrivée'
-                    });
+                if (!start || !end || new Date(end) <= new Date(start)) {
+                    Swal.fire('❌', 'Les dates doivent être valides', 'error');
                     return false;
                 }
             }
 
-            // Stocker les données personnelles
             reservationData = {
                 ...reservationData,
                 nom: document.getElementById('nom').value.trim(),
@@ -750,20 +744,15 @@
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 notes: document.getElementById('notes').value.trim(),
-                appart_uuid: @json($appart->uuid)
+                appart_uuid: @json($appart->uuid),
+                property_uuid: @json($appart->property->uuid),
+                partner_uuid: @json($appart->property->partner->uuid),
             };
-
-            return true;
         }
 
         if (currentStep === 2) {
-            // Validation du paiement
             if (!selectedPaymentMethod) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Mode de paiement requis',
-                    text: 'Veuillez sélectionner un mode de paiement'
-                });
+                Swal.fire('❌', 'Veuillez sélectionner un mode de paiement', 'error');
                 return false;
             }
 
@@ -771,11 +760,7 @@
             const cardName = document.getElementById('card-name').value.trim();
 
             if (!cardNumber || !cardName) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Informations de paiement',
-                    text: 'Veuillez remplir les informations de paiement'
-                });
+                Swal.fire('❌', 'Veuillez remplir les informations de paiement', 'error');
                 return false;
             }
 
@@ -784,630 +769,34 @@
             reservationData.cardName = cardName;
             reservationData.expiry = document.getElementById('expiry-date').value.trim();
             reservationData.cvv = document.getElementById('cvv-code').value.trim();
-
-            return true;
         }
 
         return true;
     }
 
     function updateStepDisplay() {
-        // Mettre à jour le stepper
         document.querySelectorAll('.stepper-item').forEach((item, index) => {
-            const stepCounter = item.querySelector('.step-counter');
-            if (index < currentStep - 1) {
-                item.classList.add('completed');
-                item.classList.remove('active');
-                stepCounter.classList.remove('bg-secondary');
-                stepCounter.classList.add('bg-success');
-            } else if (index === currentStep - 1) {
-                item.classList.add('active');
-                item.classList.remove('completed');
-                stepCounter.classList.remove('bg-secondary');
-                stepCounter.classList.add('bg-primary');
-            } else {
-                item.classList.remove('active', 'completed');
-                stepCounter.classList.remove('bg-primary', 'bg-success');
-                stepCounter.classList.add('bg-secondary');
-            }
+            const counter = item.querySelector('.step-counter');
+            item.classList.toggle('active', index === currentStep - 1);
+            item.classList.toggle('completed', index < currentStep - 1);
+            counter.classList.toggle('bg-secondary', index >= currentStep);
+            counter.classList.toggle('bg-success', index < currentStep - 1);
+            counter.classList.toggle('bg-primary', index === currentStep - 1);
         });
 
-        // Afficher/masquer le contenu des étapes
         document.querySelectorAll('.step-content').forEach((content, index) => {
             content.classList.toggle('active', index === currentStep - 1);
         });
 
-        // Gérer les boutons de navigation
         document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
         document.getElementById('next-btn').style.display = currentStep < 3 ? 'block' : 'none';
         document.getElementById('pay-btn').style.display = currentStep === 2 ? 'block' : 'none';
         document.getElementById('close-btn').style.display = currentStep === 3 ? 'block' : 'none';
-
-        // Faire défiler vers le haut de l'étape
-        document.getElementById(`step${currentStep}`).scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
     }
 
     function generateInvoice() {
         const isHourly = reservationData.isHourly;
         const invoiceHTML = `
-            <div class="d-flex justify-content-between mb-2">
-                <span>Client:</span>
-                <span>${reservationData.prenoms} ${reservationData.nom}</span>
-            </div>
-            ${isHourly ? `
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Date et heure:</span>
-                    <span>${formatDate(reservationData.startDate)} à ${reservationData.startTime}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Durée:</span>
-                    <span>${reservationData.hours} heure${reservationData.hours > 1 ? 's' : ''}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Type tarif:</span>
-                    <span>${reservationData.customTarif ? 'Personnalisé' : 'Forfait'}</span>
-                </div>
-            ` : `
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Période:</span>
-                    <span>${formatDate(reservationData.startDate)} - ${formatDate(reservationData.endDate)}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Nombre de nuits:</span>
-                    <span>${reservationData.days}</span>
-                </div>
-            `}
-            <div class="d-flex justify-content-between mb-2">
-                <span>${isHourly ? 'Prix horaire' : 'Prix journalier'}:</span>
-                <span>${reservationData.unitPrice.toLocaleString('fr-FR')} XOF</span>
-            </div>
-            <div class="d-flex justify-content-between border-top pt-2 mb-2">
-                <span>Sous-total:</span>
-                <span>${reservationData.totalPrice.toLocaleString('fr-FR')} XOF</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Acompte (10%):</span>
-                <span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span>
-            </div>
-            <div class="d-flex justify-content-between border-top pt-2 fw-bold">
-                <span>Total à payer:</span>
-                <span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span>
-            </div>
-        `;
-        document.getElementById('invoice-details').innerHTML = invoiceHTML;
-    }
-
-    async function processPayment() {
-        // Afficher le loader
-        Swal.fire({
-            title: 'Traitement du paiement',
-            html: 'Veuillez patienter...',
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            allowOutsideClick: false
-        });
-
-        try {
-            // 1. Enregistrer la réservation
-            const reservationResponse = await saveReservation();
-
-            if (!reservationResponse.success) {
-                throw new Error(reservationResponse.message || "Échec de la réservation");
-            }
-
-            // 2. Simuler le paiement
-            await simulatePayment();
-
-            // 3. Passer à l'étape suivante
-            Swal.close();
-            nextStep();
-
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: error.message || 'Une erreur est survenue lors du traitement'
-            });
-        }
-    }
-
-    async function saveReservation() {
-        // Préparer les données pour l'API
-        const isHourly = reservationData.isHourly;
-        
-        const reservationPayload = {
-            nom: reservationData.nom,
-            prenoms: reservationData.prenoms,
-            email: reservationData.email,
-            phone: reservationData.phone,
-            appart_uuid: reservationData.appart_uuid,
-            start_time: isHourly ? 
-                `${reservationData.startDate} ${reservationData.startTime}` : 
-                reservationData.startDate,
-            end_time: isHourly ? 
-                calculateEndTime(reservationData.startDate, reservationData.startTime, reservationData.hours) : 
-                reservationData.endDate,
-            unit_price: reservationData.unitPrice,
-            total_price: reservationData.totalPrice,
-            payment_method: reservationData.paymentMethod,
-            notes: reservationData.notes,
-            is_hourly: isHourly,
-            hours: isHourly ? reservationData.hours : null,
-            days: !isHourly ? reservationData.days : null,
-            custom_tarif: isHourly ? reservationData.customTarif : null
-        };
-
-        try {
-            const response = await fetch('/api/reservation/store', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(reservationPayload)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Erreur lors de l'enregistrement");
-            }
-
-            return data;
-
-        } catch (error) {
-            console.error('Erreur API:', error);
-            throw error;
-        }
-    }
-
-    function calculateEndTime(startDate, startTime, hours) {
-        const [year, month, day] = startDate.split('-');
-        const [hoursStart, minutes] = startTime.split(':');
-        
-        const startDateTime = new Date(year, month - 1, day, hoursStart, minutes);
-        const endDateTime = new Date(startDateTime.getTime() + (hours * 60 * 60 * 1000));
-        
-        return endDateTime.toISOString();
-    }
-
-    function simulatePayment() {
-        return new Promise((resolve) => {
-            // Simuler un délai de traitement de paiement
-            setTimeout(() => {
-                resolve({
-                    success: true,
-                    transactionId: 'TRX-' + Math.floor(100000 + Math.random() * 900000)
-                });
-            }, 1500);
-        });
-    }
-
-    function generateReceipt() {
-        // Générer un numéro de réservation aléatoire
-        const reservationNumber = 'RES-' + Math.floor(100000 + Math.random() * 900000);
-        reservationData.reservationNumber = reservationNumber;
-        reservationData.paymentDate = new Date().toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        document.getElementById('reservation-number').textContent = reservationNumber;
-        document.getElementById('payment-date').textContent = reservationData.paymentDate;
-
-        const isHourly = reservationData.isHourly;
-        const receiptHTML = `
-            <div class="d-flex justify-content-between mb-2">
-                <span>Référence:</span>
-                <span>${reservationNumber}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Date paiement:</span>
-                <span>${reservationData.paymentDate}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Moyen de paiement:</span>
-                <span>${getPaymentMethodName(reservationData.paymentMethod)}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Montant payé:</span>
-                <span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span>
-            </div>
-            <div class="d-flex justify-content-between border-top pt-2 mb-2">
-                <span>Statut:</span>
-                <span class="badge bg-success">Payé</span>
-            </div>
-            <div class="mt-4 p-3 bg-light rounded">
-                <h6 class="mb-2">Détails de la réservation</h6>
-                <p class="mb-1">${reservationData.prenoms} ${reservationData.nom}</p>
-                <p class="mb-1">${reservationData.email}</p>
-                <p class="mb-1">${reservationData.phone}</p>
-                <p class="mb-0 mt-2">
-                    ${isHourly ? 
-                        `Type: Réservation horaire<br>
-                         Date: ${formatDate(reservationData.startDate)}<br>
-                         Heure: ${reservationData.startTime}<br>
-                         Durée: ${reservationData.hours} heure${reservationData.hours > 1 ? 's' : ''}<br>
-                         Tarif: ${reservationData.customTarif ? 'Personnalisé' : 'Forfait'}` : 
-                        `Type: Réservation journalière<br>
-                         Période: ${formatDate(reservationData.startDate)} - ${formatDate(reservationData.endDate)}<br>
-                         Nuits: ${reservationData.days}`}
-                </p>
-            </div>
-        `;
-        document.getElementById('final-receipt').innerHTML = receiptHTML;
-    }
-
-    function downloadReceipt() {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // En-tête
-            doc.setFontSize(16);
-            doc.text("Reçu de Réservation", 105, 15, { align: 'center' });
-            
-            // Informations de base
-            doc.setFontSize(12);
-            let yPosition = 40;
-            
-            doc.text(`Nom: ${reservationData.prenoms} ${reservationData.nom}`, 20, yPosition);
-            yPosition += 10;
-            doc.text(`Référence: ${reservationData.reservationNumber}`, 20, yPosition);
-            yPosition += 10;
-            doc.text(`Date: ${reservationData.paymentDate}`, 20, yPosition);
-            yPosition += 10;
-            doc.text(`Méthode de paiement: ${getPaymentMethodName(reservationData.paymentMethod)}`, 20, yPosition);
-            yPosition += 10;
-            doc.text(`Montant payé: ${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF`, 20, yPosition);
-            yPosition += 15;
-
-            // Détails spécifiques
-            if (reservationData.isHourly) {
-                doc.text(`Type: Réservation horaire`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Date: ${formatDate(reservationData.startDate)}`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Heure: ${reservationData.startTime}`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Durée: ${reservationData.hours} heure${reservationData.hours > 1 ? 's' : ''}`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Tarif: ${reservationData.customTarif ? 'Personnalisé' : 'Forfait'}`, 20, yPosition);
-            } else {
-                doc.text(`Type: Réservation journalière`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Arrivée: ${formatDate(reservationData.startDate)}`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Départ: ${formatDate(reservationData.endDate)}`, 20, yPosition);
-                yPosition += 10;
-                doc.text(`Nuits: ${reservationData.days}`, 20, yPosition);
-            }
-
-            // Pied de page
-            yPosition += 20;
-            doc.setFontSize(10);
-            doc.text("Merci pour votre réservation !", 105, yPosition, { align: 'center' });
-
-            // Enregistrer le PDF
-            doc.save(`recu_reservation_${reservationData.reservationNumber}.pdf`);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Reçu téléchargé',
-                text: 'Votre reçu a été généré avec succès',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        } catch (error) {
-            console.error("Erreur génération PDF:", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'Impossible de générer le PDF. Veuillez prendre une capture d\'écran de cette page.'
-            });
-        }
-    }
-
-    function resetModal() {
-        // Réinitialiser le formulaire
-        document.querySelector('form').reset();
-        document.getElementById('payment-form').classList.add('d-none');
-
-        // Réinitialiser les étapes
-        currentStep = 1;
-        updateStepDisplay();
-
-        // Réinitialiser les données
-        reservationData = {};
-        selectedPaymentMethod = null;
-
-        // Désélectionner les méthodes de paiement
-        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
-
-        // Réinitialiser les dates
-        initializeDates();
-    }
-
-    // Fonctions utilitaires
-    function formatDate(dateString) {
-        if (!dateString) return '';
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('fr-FR', options);
-    }
-
-    function getPaymentMethodName(method) {
-        const methods = {
-            'visa': 'Visa',
-            'mastercard': 'Mastercard',
-            'orange': 'Orange Money',
-            'mtn': 'MTN Money'
-        };
-        return methods[method] || method;
-    }
-</script> --}}
-
-<script>
-    // Variables globales
-const DAILY_RATE = @json($tarifByDay->price ?? 0);
-const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
-const MINIMUM_HOURS = 1;
-let currentStep = 1;
-let reservationData = {};
-let selectedPaymentMethod = null;
-
-// Initialisation
-document.addEventListener('DOMContentLoaded', function () {
-    initializeDates();
-    setupEventListeners();
-    updatePricePreview();
-});
-
-function initializeDates() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('start_date_jour').min = today;
-    document.getElementById('end_date_jour').min = today;
-    document.getElementById('start_date_heure').min = today;
-
-    const now = new Date();
-    const defaultHour = now.getHours() + 1;
-    document.getElementById('start_time_heure').value = `${defaultHour.toString().padStart(2, '0')}:00`;
-}
-
-function setupEventListeners() {
-    document.querySelectorAll('input[name="sejour"]').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const isHourly = this.value === 'heure';
-            document.getElementById('bloc-jour').classList.toggle('d-none', isHourly);
-            document.getElementById('bloc-heure').classList.toggle('d-none', !isHourly);
-            updatePricePreview();
-        });
-    });
-
-    document.querySelectorAll('input[name="tarif_by_sejour"]').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const isCustom = this.value === 'custom';
-            document.getElementById('custom-hours-block').classList.toggle('d-none', !isCustom);
-            updatePricePreview();
-        });
-    });
-
-    document.getElementById('custom_hours').addEventListener('input', updatePricePreview);
-    document.getElementById('start_date_jour').addEventListener('change', updatePricePreview);
-    document.getElementById('end_date_jour').addEventListener('change', updatePricePreview);
-    document.getElementById('start_date_heure').addEventListener('change', updatePricePreview);
-    document.getElementById('start_time_heure').addEventListener('change', updatePricePreview);
-
-    document.querySelectorAll('.payment-method').forEach(method => {
-        method.addEventListener('click', function () {
-            selectPaymentMethod(this);
-        });
-    });
-
-    document.getElementById('reservationModal').addEventListener('hidden.bs.modal', resetModal);
-}
-
-function updatePricePreview() {
-    const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
-    isHourly ? updateHourlyPrice() : updateDailyPrice();
-}
-
-function updateHourlyPrice() {
-    const custom = document.getElementById('tarifCustom').checked;
-    let hours = 0, unitPrice = 0;
-
-    if (custom) {
-        hours = parseInt(document.getElementById('custom_hours').value) || 0;
-        unitPrice = HOURLY_RATE;
-    } else {
-        const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
-        if (selected && selected.value !== 'custom') {
-            hours = parseInt(selected.dataset.hours);
-            unitPrice = parseFloat(selected.value);
-        }
-    }
-
-    const total = hours * unitPrice;
-    document.getElementById('unit-price').textContent = unitPrice.toLocaleString('fr-FR') + ' XOF';
-    document.getElementById('duration-value').textContent = hours + (hours > 1 ? ' heures' : ' heure');
-    document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
-
-    reservationData = {
-        ...reservationData,
-        isHourly: true,
-        hours,
-        unitPrice,
-        totalPrice: total,
-        paymentAmount: total * 0.1,
-        startDate: document.getElementById('start_date_heure').value,
-        startTime: document.getElementById('start_time_heure').value,
-        customTarif: custom
-    };
-}
-
-function updateDailyPrice() {
-    const start = document.getElementById('start_date_jour').value;
-    const end = document.getElementById('end_date_jour').value;
-
-    if (!start || !end) return;
-
-    const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
-    const total = days * DAILY_RATE;
-
-    document.getElementById('unit-price').textContent = DAILY_RATE.toLocaleString('fr-FR') + ' XOF';
-    document.getElementById('duration-value').textContent = days + (days > 1 ? ' jours' : ' jour');
-    document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
-
-    reservationData = {
-        ...reservationData,
-        isHourly: false,
-        days,
-        unitPrice: DAILY_RATE,
-        totalPrice: total,
-        paymentAmount: total * 0.1,
-        startDate: start,
-        endDate: end
-    };
-}
-
-function selectPaymentMethod(method) {
-    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
-    method.classList.add('active');
-    selectedPaymentMethod = method;
-    document.getElementById('payment-form').classList.remove('d-none');
-}
-
-function nextStep() {
-    if (!validateCurrentStep()) return;
-
-    if (currentStep < 3) {
-        currentStep++;
-        updateStepDisplay();
-
-        if (currentStep === 2) generateInvoice();
-        if (currentStep === 3) generateReceipt();
-    }
-}
-
-function previousStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        updateStepDisplay();
-    }
-}
-
-function validateCurrentStep() {
-    const policies = ['policy-privacy', 'policy-refund', 'policy-terms'];
-    const allChecked = policies.every(id => document.getElementById(id).checked);
-
-    if (!allChecked) {
-        Swal.fire('⚠️', 'Veuillez accepter toutes les politiques', 'warning');
-        return false;
-    }
-
-    if (currentStep === 1) {
-        const fields = ['nom', 'prenoms', 'email', 'phone'];
-        for (const field of fields) {
-            if (!document.getElementById(field).value.trim()) {
-                Swal.fire('❌', 'Tous les champs obligatoires doivent être remplis', 'error');
-                return false;
-            }
-        }
-
-        const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
-        if (isHourly) {
-            const custom = document.getElementById('tarifCustom').checked;
-            const hours = custom
-                ? parseInt(document.getElementById('custom_hours').value)
-                : parseInt(document.querySelector('input[name="tarif_by_sejour"]:checked')?.dataset.hours);
-
-            if (!hours || hours < 1) {
-                Swal.fire('❌', 'Veuillez sélectionner une durée valide', 'error');
-                return false;
-            }
-
-            if (!document.getElementById('start_date_heure').value || !document.getElementById('start_time_heure').value) {
-                Swal.fire('❌', 'Veuillez sélectionner une date et une heure', 'error');
-                return false;
-            }
-        } else {
-            const start = document.getElementById('start_date_jour').value;
-            const end = document.getElementById('end_date_jour').value;
-
-            if (!start || !end || new Date(end) <= new Date(start)) {
-                Swal.fire('❌', 'Les dates doivent être valides', 'error');
-                return false;
-            }
-        }
-
-        reservationData = {
-            ...reservationData,
-            nom: document.getElementById('nom').value.trim(),
-            prenoms: document.getElementById('prenoms').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            phone: document.getElementById('phone').value.trim(),
-            notes: document.getElementById('notes').value.trim(),
-            appart_uuid: @json($appart->uuid),
-            property_uuid: @json($appart->property->uuid),
-            partner_uuid: @json($appart->property->partner->uuid),
-        };
-    }
-
-    if (currentStep === 2) {
-        if (!selectedPaymentMethod) {
-            Swal.fire('❌', 'Veuillez sélectionner un mode de paiement', 'error');
-            return false;
-        }
-
-        const cardNumber = document.getElementById('card-number').value.trim();
-        const cardName = document.getElementById('card-name').value.trim();
-
-        if (!cardNumber || !cardName) {
-            Swal.fire('❌', 'Veuillez remplir les informations de paiement', 'error');
-            return false;
-        }
-
-        reservationData.paymentMethod = selectedPaymentMethod.dataset.method;
-        reservationData.cardNumber = cardNumber;
-        reservationData.cardName = cardName;
-        reservationData.expiry = document.getElementById('expiry-date').value.trim();
-        reservationData.cvv = document.getElementById('cvv-code').value.trim();
-    }
-
-    return true;
-}
-
-function updateStepDisplay() {
-    document.querySelectorAll('.stepper-item').forEach((item, index) => {
-        const counter = item.querySelector('.step-counter');
-        item.classList.toggle('active', index === currentStep - 1);
-        item.classList.toggle('completed', index < currentStep - 1);
-        counter.classList.toggle('bg-secondary', index >= currentStep);
-        counter.classList.toggle('bg-success', index < currentStep - 1);
-        counter.classList.toggle('bg-primary', index === currentStep - 1);
-    });
-
-    document.querySelectorAll('.step-content').forEach((content, index) => {
-        content.classList.toggle('active', index === currentStep - 1);
-    });
-
-    document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
-    document.getElementById('next-btn').style.display = currentStep < 3 ? 'block' : 'none';
-    document.getElementById('pay-btn').style.display = currentStep === 2 ? 'block' : 'none';
-    document.getElementById('close-btn').style.display = currentStep === 3 ? 'block' : 'none';
-}
-
-function generateInvoice() {
-    const isHourly = reservationData.isHourly;
-    const invoiceHTML = `
         <div class="d-flex justify-content-between mb-2"><span>Client:</span><span>${reservationData.prenoms} ${reservationData.nom}</span></div>
         ${isHourly ? `
             <div class="d-flex justify-content-between mb-2"><span>Date et heure:</span><span>${reservationData.startDate} à ${reservationData.startTime}</span></div>
@@ -1422,67 +811,67 @@ function generateInvoice() {
         <div class="d-flex justify-content-between mb-2"><span>Acompte (10%):</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
         <div class="d-flex justify-content-between border-top pt-2 fw-bold"><span>Total à payer:</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
     `;
-    document.getElementById('invoice-details').innerHTML = invoiceHTML;
-}
+        document.getElementById('invoice-details').innerHTML = invoiceHTML;
+    }
 
-async function processPayment() {
-    Swal.fire({
-        title: 'Traitement du paiement...',
-        text: 'Veuillez patienter',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
-    });
-
-    try {
-        const payload = {
-            ...reservationData,
-            start_time: reservationData.isHourly
-                ? `${reservationData.startDate} ${reservationData.startTime}:00`
-                : `${reservationData.startDate} 00:00:00`,
-            end_time: reservationData.isHourly
-                ? (() => {
-                    const [y, m, d] = reservationData.startDate.split('-');
-                    const [h, min] = reservationData.startTime.split(':');
-                    const date = new Date(y, m - 1, d, h, min);
-                    date.setHours(date.getHours() + reservationData.hours);
-                    return date.toISOString().slice(0, 19).replace('T', ' ');
-                })()
-                : `${reservationData.endDate} 23:59:59`
-        };
-
-        const res = await fetch('/api/reservation/store', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify(payload)
+    async function processPayment() {
+        Swal.fire({
+            title: 'Traitement du paiement...',
+            text: 'Veuillez patienter',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
         });
 
-        const data = await res.json();
+        try {
+            const payload = {
+                ...reservationData,
+                start_time: reservationData.isHourly ?
+                    `${reservationData.startDate} ${reservationData.startTime}:00` :
+                    `${reservationData.startDate} 00:00:00`,
+                end_time: reservationData.isHourly ?
+                    (() => {
+                        const [y, m, d] = reservationData.startDate.split('-');
+                        const [h, min] = reservationData.startTime.split(':');
+                        const date = new Date(y, m - 1, d, h, min);
+                        date.setHours(date.getHours() + reservationData.hours);
+                        return date.toISOString().slice(0, 19).replace('T', ' ');
+                    })() :
+                    `${reservationData.endDate} 23:59:59`
+            };
 
-        if (!data.success) throw new Error(data.message || 'Erreur inconnue');
+            const res = await fetch('/api/reservation/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(payload)
+            });
 
-        reservationData.reservation = data.reservation;
-        reservationData.pdfUrl = data.pdf_url;
+            const data = await res.json();
 
-        Swal.close();
-        nextStep();
+            if (!data.success) throw new Error(data.message || 'Erreur inconnue');
 
-    } catch (err) {
-        Swal.fire('❌ Erreur', err.message || 'Erreur serveur', 'error');
+            reservationData.reservation = data.reservation;
+            reservationData.pdfUrl = data.pdf_url;
+
+            Swal.close();
+            nextStep();
+
+        } catch (err) {
+            Swal.fire('❌ Erreur', err.message || 'Erreur serveur', 'error');
+        }
     }
-}
 
-function generateReceipt() {
-    if (!reservationData.reservation) return;
+    function generateReceipt() {
+        if (!reservationData.reservation) return;
 
-    const r = reservationData.reservation;
-    document.getElementById('reservation-number').textContent = r.code;
-    document.getElementById('payment-date').textContent = new Date().toLocaleDateString('fr-FR');
+        const r = reservationData.reservation;
+        document.getElementById('reservation-number').textContent = r.code;
+        document.getElementById('payment-date').textContent = new Date().toLocaleDateString('fr-FR');
 
-    const receiptHTML = `
+        const receiptHTML = `
         <div class="d-flex justify-content-between mb-2"><span>Référence:</span><span>${r.code}</span></div>
         <div class="d-flex justify-content-between mb-2"><span>Date paiement:</span><span>${new Date().toLocaleString('fr-FR')}</span></div>
         <div class="d-flex justify-content-between mb-2"><span>Moyen de paiement:</span><span>${reservationData.paymentMethod}</span></div>
@@ -1508,30 +897,990 @@ function generateReceipt() {
             </p>
         </div>
     `;
-    document.getElementById('final-receipt').innerHTML = receiptHTML;
-}
-
-// function downloadReceipt() {
-//     if (reservationData.reservation?.uuid) {
-//         window.open(reservationData.pdfUrl, '_blank');
-//     }
-// }
-
-function downloadReceipt() {
-    if (reservationData.reservation?.uuid) {
-        window.location.href = '/api/reservation/download-receipt/' + reservationData.reservation.uuid;
+        document.getElementById('final-receipt').innerHTML = receiptHTML;
     }
-}
-// window.open(`/api/reservation/download/${reservationData.reservation.uuid}`, '_blank');
 
-function resetModal() {
-    currentStep = 1;
-    reservationData = {};
-    selectedPaymentMethod = null;
-    document.querySelector('form')?.reset();
-    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
-    document.getElementById('payment-form').classList.add('d-none');
-    updateStepDisplay();
-    initializeDates();
-}
+    // function downloadReceipt() {
+    //     if (reservationData.reservation?.uuid) {
+    //         window.open(reservationData.pdfUrl, '_blank');
+    //     }
+    // }
+
+    function downloadReceipt() {
+        if (reservationData.reservation?.uuid) {
+            window.location.href = '/api/reservation/download-receipt/' + reservationData.reservation.uuid;
+        }
+    }
+    // window.open(`/api/reservation/download/${reservationData.reservation.uuid}`, '_blank');
+
+    function resetModal() {
+        currentStep = 1;
+        reservationData = {};
+        selectedPaymentMethod = null;
+        document.querySelector('form')?.reset();
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        document.getElementById('payment-form').classList.add('d-none');
+        updateStepDisplay();
+        initializeDates();
+    }
+</script> --}}
+
+{{-- <script>
+    // Variables globales
+    const DAILY_RATE = @json($tarifByDay->price ?? 0);
+    const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
+    const MINIMUM_HOURS = 1;
+    let currentStep = 1;
+    let reservationData = {};
+    let selectedPaymentMethod = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDates();
+        setupEventListeners();
+        updatePricePreview();
+        setupSejourTypeToggle();
+    });
+
+    function initializeDates() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date_jour').min = today;
+        document.getElementById('end_date_jour').min = today;
+        document.getElementById('start_date_heure').min = today;
+
+        const now = new Date();
+        const defaultHour = now.getHours() + 1;
+        document.getElementById('start_time_heure').value = `${defaultHour.toString().padStart(2, '0')}:00`;
+    }
+
+    function setupSejourTypeToggle() {
+        const radios = document.querySelectorAll('input[name="sejour"]');
+        const tarifRadios = document.querySelectorAll('input[name="tarif_by_sejour"]');
+        const blocJour = document.getElementById('bloc-jour');
+        const blocHeure = document.getElementById('bloc-heure');
+        const customHoursBlock = document.getElementById('custom-hours-block');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'jour') {
+                    blocJour.classList.remove('d-none');
+                    blocHeure.classList.add('d-none');
+                    // Décocher les tarifs horaires
+                    tarifRadios.forEach(radio => {
+                        radio.checked = false;
+                    });
+                    // supprimer les valeurs de startTime et startDate et customHours
+                    document.getElementById('start_time_heure').value = '';
+                    document.getElementById('start_date_heure').value = '';
+                    // document.getElementById('custom_hours').value = '';
+
+                    customHoursBlock.classList.add('d-none');
+                } else if (this.value === 'heure') {
+                    blocJour.classList.add('d-none');
+                    blocHeure.classList.remove('d-none');
+                    // supprimer les valeurs de startDate , endDate, 
+                    document.getElementById('start_date_jour').value = '';
+                    document.getElementById('end_date_jour').value = '';
+                    document.getElementById('start_hour_jour').value = '';
+                    document.getElementById('end_hour_jour').value = '';
+                    // Cocher le premier tarif horaire par défaut
+                    if (tarifRadios.length > 0) {
+                        tarifRadios[0].checked = true;
+                    }
+
+                }
+                updatePricePreview();
+            });
+        });
+
+        tarifRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customHoursBlock.classList.remove('d-none');
+                } else {
+                    customHoursBlock.classList.add('d-none');
+                }
+                updatePricePreview();
+            });
+        });
+
+        // Initialiser l'état selon le type de séjour par défaut
+        const defaultType = @json($checkedType);
+        if (defaultType === 'heure' && tarifRadios.length > 0) {
+            tarifRadios[0].checked = true;
+        }
+    }
+
+    function setupEventListeners() {
+        document.getElementById('custom_hours').addEventListener('input', updatePricePreview);
+        document.getElementById('start_date_jour').addEventListener('change', updatePricePreview);
+        document.getElementById('end_date_jour').addEventListener('change', updatePricePreview);
+        document.getElementById('start_date_heure').addEventListener('change', updatePricePreview);
+        document.getElementById('start_time_heure').addEventListener('change', updatePricePreview);
+        document.getElementById('start_hour_jour').addEventListener('change', updatePricePreview);
+        document.getElementById('end_hour_jour').addEventListener('change', updatePricePreview);
+
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                selectPaymentMethod(this);
+            });
+        });
+
+        document.getElementById('reservationModal').addEventListener('hidden.bs.modal', resetModal);
+    }
+
+    function updatePricePreview() {
+        const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
+        isHourly ? updateHourlyPrice() : updateDailyPrice();
+    }
+
+    function updateHourlyPrice() {
+        const custom = document.getElementById('tarifCustom')?.checked;
+        let hours = 0,
+            unitPrice = 0;
+
+        if (custom) {
+            hours = parseInt(document.getElementById('custom_hours').value) || 0;
+            unitPrice = HOURLY_RATE;
+        } else {
+            const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
+            if (selected && selected.value !== 'custom') {
+                hours = parseInt(selected.dataset.hours);
+                unitPrice = parseFloat(selected.value);
+            }
+        }
+
+        const total = hours * unitPrice;
+        document.getElementById('unit-price').textContent = unitPrice.toLocaleString('fr-FR') + ' XOF';
+        document.getElementById('duration-value').textContent = hours + (hours > 1 ? ' heures' : ' heure');
+        document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
+
+        reservationData = {
+            ...reservationData,
+            isHourly: true,
+            hours,
+            unitPrice,
+            totalPrice: total,
+            paymentAmount: total * 0.1,
+            startDate: document.getElementById('start_date_heure').value,
+            startTime: document.getElementById('start_time_heure').value,
+            customTarif: custom
+        };
+    }
+
+    function updateDailyPrice() {
+        const start = document.getElementById('start_date_jour').value;
+        const end = document.getElementById('end_date_jour').value;
+
+        if (!start || !end) return;
+
+        const startTime = document.getElementById('start_hour_jour').value;
+        const endTime = document.getElementById('end_hour_jour').value;
+
+        // Calculer le nombre de jours (arrondi au supérieur)
+        const startDateTime = new Date(`${start}T${startTime || '00:00'}`);
+        const endDateTime = new Date(`${end}T${endTime || '23:59'}`);
+        const diffTime = endDateTime - startDateTime;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const total = diffDays * DAILY_RATE;
+
+        document.getElementById('unit-price').textContent = DAILY_RATE.toLocaleString('fr-FR') + ' XOF';
+        document.getElementById('duration-value').textContent = diffDays + (diffDays > 1 ? ' jours' : ' jour');
+        document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
+
+        reservationData = {
+            ...reservationData,
+            isHourly: false,
+            days: diffDays,
+            unitPrice: DAILY_RATE,
+            totalPrice: total,
+            paymentAmount: total * 0.1,
+            startDate: start,
+            endDate: end,
+            startTime: startTime,
+            endTime: endTime
+        };
+    }
+
+    function selectPaymentMethod(method) {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        method.classList.add('active');
+        selectedPaymentMethod = method.dataset.method;
+        document.getElementById('payment-form').classList.remove('d-none');
+    }
+
+    function nextStep() {
+        if (!validateCurrentStep()) return;
+
+        if (currentStep < 3) {
+            currentStep++;
+            updateStepDisplay();
+
+            if (currentStep === 2) generateInvoice();
+            if (currentStep === 3) generateReceipt();
+        }
+    }
+
+    function previousStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepDisplay();
+        }
+    }
+
+    function validateCurrentStep() {
+        const policies = ['policy-privacy', 'policy-refund', 'policy-terms'];
+        const allChecked = policies.every(id => document.getElementById(id).checked);
+
+        if (!allChecked) {
+            Swal.fire('⚠️', 'Veuillez accepter toutes les politiques', 'warning');
+            return false;
+        }
+
+        if (currentStep === 1) {
+            const fields = ['nom', 'prenoms', 'email', 'phone'];
+            for (const field of fields) {
+                if (!document.getElementById(field).value.trim()) {
+                    Swal.fire('❌', 'Tous les champs obligatoires doivent être remplis', 'error');
+                    return false;
+                }
+            }
+
+            const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
+            if (isHourly) {
+                const custom = document.getElementById('tarifCustom')?.checked;
+                const hours = custom ?
+                    parseInt(document.getElementById('custom_hours').value) :
+                    parseInt(document.querySelector('input[name="tarif_by_sejour"]:checked')?.dataset.hours);
+
+                if (!hours || hours < 1) {
+                    Swal.fire('❌', 'Veuillez sélectionner une durée valide', 'error');
+                    return false;
+                }
+
+                if (!document.getElementById('start_date_heure').value || !document.getElementById('start_time_heure').value) {
+                    Swal.fire('❌', 'Veuillez sélectionner une date et une heure', 'error');
+                    return false;
+                }
+            } else {
+                const start = document.getElementById('start_date_jour').value;
+                const end = document.getElementById('end_date_jour').value;
+
+                if (!start || !end || new Date(end) < new Date(start)) {
+                    Swal.fire('❌', 'Les dates doivent être valides', 'error');
+                    return false;
+                }
+            }
+
+            reservationData = {
+                ...reservationData,
+                nom: document.getElementById('nom').value.trim(),
+                prenoms: document.getElementById('prenoms').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                appart_uuid: @json($appart->uuid),
+                property_uuid: @json($appart->property->uuid),
+                partner_uuid: @json($appart->property->partner->uuid),
+            };
+        }
+
+        if (currentStep === 2) {
+            if (!selectedPaymentMethod) {
+                Swal.fire('❌', 'Veuillez sélectionner un mode de paiement', 'error');
+                return false;
+            }
+
+            const cardNumber = document.getElementById('card-number').value.trim();
+            const cardName = document.getElementById('card-name').value.trim();
+
+            if (!cardNumber || !cardName) {
+                Swal.fire('❌', 'Veuillez remplir les informations de paiement', 'error');
+                return false;
+            }
+
+            reservationData.paymentMethod = selectedPaymentMethod;
+            reservationData.cardNumber = cardNumber;
+            reservationData.cardName = cardName;
+            reservationData.expiry = document.getElementById('expiry-date').value.trim();
+            reservationData.cvv = document.getElementById('cvv-code').value.trim();
+        }
+
+        return true;
+    }
+
+    function updateStepDisplay() {
+        document.querySelectorAll('.stepper-item').forEach((item, index) => {
+            const counter = item.querySelector('.step-counter');
+            item.classList.toggle('active', index === currentStep - 1);
+            item.classList.toggle('completed', index < currentStep - 1);
+            counter.classList.toggle('bg-secondary', index >= currentStep);
+            counter.classList.toggle('bg-success', index < currentStep - 1);
+            counter.classList.toggle('bg-danger', index === currentStep - 1);
+        });
+
+        document.querySelectorAll('.step-content').forEach((content, index) => {
+            content.classList.toggle('active', index === currentStep - 1);
+        });
+
+        document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
+        document.getElementById('next-btn').style.display = currentStep < 3 ? 'block' : 'none';
+        document.getElementById('pay-btn').style.display = currentStep === 2 ? 'block' : 'none';
+        document.getElementById('close-btn').style.display = currentStep === 3 ? 'block' : 'none';
+    }
+
+    function generateInvoice() {
+        const isHourly = reservationData.isHourly;
+        const invoiceHTML = `
+            <div class="d-flex justify-content-between mb-2"><span>Client:</span><span>${reservationData.prenoms} ${reservationData.nom}</span></div>
+            ${isHourly ? `
+                <div class="d-flex justify-content-between mb-2"><span>Date et heure:</span><span>${reservationData.startDate} à ${reservationData.startTime}</span></div>
+                <div class="d-flex justify-content-between mb-2"><span>Durée:</span><span>${reservationData.hours} heure(s)</span></div>
+                <div class="d-flex justify-content-between mb-2"><span>Type tarif:</span><span>${reservationData.customTarif ? 'Personnalisé' : 'Forfait'}</span></div>
+            ` : `
+                <div class="d-flex justify-content-between mb-2"><span>Période:</span><span>${reservationData.startDate} ${reservationData.startTime ? 'à ' + reservationData.startTime : ''} - ${reservationData.endDate} ${reservationData.endTime ? 'à ' + reservationData.endTime : ''}</span></div>
+                <div class="d-flex justify-content-between mb-2"><span>Nuits:</span><span>${reservationData.days}</span></div>
+            `}
+            <div class="d-flex justify-content-between mb-2"><span>${isHourly ? 'Prix horaire' : 'Prix journalier'}:</span><span>${reservationData.unitPrice.toLocaleString('fr-FR')} XOF</span></div>
+            <div class="d-flex justify-content-between border-top pt-2 mb-2"><span>Sous-total:</span><span>${reservationData.totalPrice.toLocaleString('fr-FR')} XOF</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Acompte (10%):</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
+            <div class="d-flex justify-content-between border-top pt-2 fw-bold"><span>Total à payer:</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
+        `;
+        document.getElementById('invoice-details').innerHTML = invoiceHTML;
+    }
+
+    async function processPayment() {
+        Swal.fire({
+            title: 'Traitement du paiement...',
+            text: 'Veuillez patienter',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const payload = {
+                ...reservationData,
+                sejour: reservationData.isHourly ? 'Heure' : 'Jour',
+                nbr_of_sejour: reservationData.isHourly ? reservationData.hours : reservationData.days,
+                start_time: reservationData.isHourly ?
+                    `${reservationData.startDate} ${reservationData.startTime}:00` :
+                    `${reservationData.startDate} ${reservationData.startTime || '00:00:00'}`,
+                end_time: reservationData.isHourly ?
+                    (() => {
+                        const [y, m, d] = reservationData.startDate.split('-');
+                        const [h, min] = reservationData.startTime.split(':');
+                        const date = new Date(y, m - 1, d, h, min);
+                        date.setHours(date.getHours() + reservationData.hours);
+                        return date.toISOString().slice(0, 19).replace('T', ' ');
+                    })() :
+                    `${reservationData.endDate} ${reservationData.endTime || '23:59:59'}`,
+                payment_method: reservationData.paymentMethod,
+                card_number: reservationData.cardNumber,
+                card_name: reservationData.cardName,
+                card_expiry: reservationData.expiry,
+                card_cvv: reservationData.cvv
+            };
+
+            const res = await fetch('/api/reservation/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!data.success) throw new Error(data.message || 'Erreur inconnue');
+
+            reservationData.reservation = data.reservation;
+            reservationData.pdfUrl = data.pdf_url;
+
+            Swal.close();
+            nextStep();
+
+        } catch (err) {
+            Swal.fire('❌ Erreur', err.message || 'Erreur serveur', 'error');
+        }
+    }
+
+    function generateReceipt() {
+        if (!reservationData.reservation) return;
+
+        const r = reservationData.reservation;
+        document.getElementById('reservation-number').textContent = r.code;
+        document.getElementById('payment-date').textContent = new Date().toLocaleDateString('fr-FR');
+
+        const receiptHTML = `
+            <div class="d-flex justify-content-between mb-2"><span>Référence:</span><span>${r.code}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Date paiement:</span><span>${new Date().toLocaleString('fr-FR')}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Moyen de paiement:</span><span>${reservationData.paymentMethod}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Montant payé:</span><span>${r.payment_amount.toLocaleString('fr-FR')} XOF</span></div>
+            <div class="d-flex justify-content-between border-top pt-2 mb-2"><span>Statut:</span><span class="badge bg-success">Payé</span></div>
+            <div class="mt-3 p-3 bg-light rounded">
+                <h6>Détails</h6>
+                <p class="mb-1"><strong>${r.prenoms} ${r.nom}</strong></p>
+                <p class="mb-1">${r.email}</p>
+                <p class="mb-1">${r.phone}</p>
+                <p class="mb-0 mt-2">
+                    ${r.sejour === 'Heure' ? `
+                        Type: Réservation horaire<br>
+                        Date: ${r.start_time.split(' ')[0]}<br>
+                        Heure: ${r.start_time.split(' ')[1]}<br>
+                        Durée: ${r.nbr_of_sejour} heure(s)
+                    ` : `
+                        Type: Réservation journalière<br>
+                        Arrivée: ${r.start_time}<br>
+                        Départ: ${r.end_time}<br>
+                        Nuits: ${r.nbr_of_sejour}
+                    `}
+                </p>
+            </div>
+        `;
+        document.getElementById('final-receipt').innerHTML = receiptHTML;
+    }
+
+    function downloadReceipt() {
+        if (reservationData.reservation?.uuid) {
+            window.location.href = '/api/reservation/download-receipt/' + reservationData.reservation.uuid;
+        }
+    }
+
+    function resetModal() {
+        currentStep = 1;
+        reservationData = {};
+        selectedPaymentMethod = null;
+        document.querySelector('form')?.reset();
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        document.getElementById('payment-form').classList.add('d-none');
+        updateStepDisplay();
+        initializeDates();
+        
+        // Réinitialiser l'affichage des blocs selon le type par défaut
+        const defaultType = @json($checkedType);
+        document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
+        document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
+    }
+</script> --}}
+
+<script>
+    // Variables globales
+    const DAILY_RATE = @json($tarifByDay->price ?? 0);
+    const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
+    const MINIMUM_HOURS = 1;
+    let currentStep = 1;
+    let reservationData = {};
+    let selectedPaymentMethod = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDates();
+        setupEventListeners();
+        setupSejourTypeToggle();
+        updatePricePreview();
+    });
+
+    function initializeDates() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date_jour').min = today;
+        document.getElementById('end_date_jour').min = today;
+        document.getElementById('start_date_heure').min = today;
+
+        const now = new Date();
+        const defaultHour = now.getHours() + 1;
+        document.getElementById('start_time_heure').value = `${defaultHour.toString().padStart(2, '0')}:00`;
+    }
+
+    function setupSejourTypeToggle() {
+        const radios = document.querySelectorAll('input[name="sejour"]');
+        const tarifRadios = document.querySelectorAll('input[name="tarif_by_sejour"]');
+        const blocJour = document.getElementById('bloc-jour');
+        const blocHeure = document.getElementById('bloc-heure');
+        const customHoursBlock = document.getElementById('custom-hours-block');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'jour') {
+                    blocJour.classList.remove('d-none');
+                    blocHeure.classList.add('d-none');
+                    // Décocher les tarifs horaires
+                    tarifRadios.forEach(radio => {
+                        radio.checked = false;
+                    });
+                    // Supprimer les valeurs
+                    document.getElementById('start_time_heure').value = '';
+                    document.getElementById('start_date_heure').value = '';
+                    document.getElementById('custom_hours').value = '';
+                    document.getElementById('end_time_heure').value = '';
+                    document.getElementById('end_date_heure').value = '';
+                    customHoursBlock.classList.add('d-none');
+                } else if (this.value === 'heure') {
+                    blocJour.classList.add('d-none');
+                    blocHeure.classList.remove('d-none');
+                    // Supprimer les valeurs
+                    document.getElementById('start_date_jour').value = '';
+                    document.getElementById('end_date_jour').value = '';
+                    document.getElementById('start_hour_jour').value = '';
+                    document.getElementById('end_hour_jour').value = '';
+                    // Cocher le premier tarif horaire par défaut
+                    if (tarifRadios.length > 0) {
+                        tarifRadios[0].checked = true;
+                    }
+                }
+                updatePricePreview();
+            });
+        });
+
+        tarifRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customHoursBlock.classList.remove('d-none');
+                } else {
+                    customHoursBlock.classList.add('d-none');
+                }
+                calculateEndDateTimeHeure();
+                updatePricePreview();
+            });
+        });
+
+        // Initialiser l'état selon le type de séjour par défaut
+        const defaultType = @json($checkedType);
+        if (defaultType === 'heure' && tarifRadios.length > 0) {
+            tarifRadios[0].checked = true;
+        }
+    }
+
+    function calculateEndHourJour() {
+        const startDate = document.getElementById('start_date_jour').value;
+        const startHour = document.getElementById('start_hour_jour').value;
+        const endDate = document.getElementById('end_date_jour').value;
+
+        if (startDate && startHour && endDate) {
+            // Si c'est le même jour, on conserve l'heure de départ
+            if (startDate === endDate) {
+                document.getElementById('end_hour_jour').value = startHour;
+            } else {
+                // Si c'est un jour différent, on met l'heure par défaut (12:00)
+                // document.getElementById('end_hour_jour').value = '12:00';
+                document.getElementById('end_hour_jour').value = startHour;
+            }
+        }
+    }
+
+    function calculateEndDateTimeHeure() {
+        const startDate = document.getElementById('start_date_heure').value;
+        const startTime = document.getElementById('start_time_heure').value;
+        let customHours = 0;
+
+        if (document.getElementById('tarifCustom')?.checked) {
+            customHours = parseInt(document.getElementById('custom_hours').value) || 0;
+        } else {
+            const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
+            if (selected && selected.value !== 'custom') {
+                customHours = parseInt(selected.dataset.hours) || 0;
+            }
+        }
+
+        if (startDate && startTime && customHours > 0) {
+            const [year, month, day] = startDate.split('-');
+            const [hours, minutes] = startTime.split(':');
+
+            const startDateTime = new Date(year, month - 1, day, hours, minutes);
+            const endDateTime = new Date(startDateTime.getTime() + (customHours * 60 * 60 * 1000));
+
+            // Formater la date de fin
+            const endDateStr = endDateTime.toISOString().split('T')[0];
+            const endTimeStr = endDateTime.toTimeString().substring(0, 5);
+
+            // Mettre à jour les champs cachés
+            document.getElementById('end_date_heure').value = endDateStr;
+            document.getElementById('end_time_heure').value = endTimeStr;
+        }
+    }
+
+    function setupEventListeners() {
+        // Écouteurs pour les changements de dates/heures
+        document.getElementById('start_date_jour').addEventListener('change', function() {
+            calculateEndHourJour();
+            updatePricePreview();
+        });
+
+        document.getElementById('start_hour_jour').addEventListener('change', function() {
+            calculateEndHourJour();
+            updatePricePreview();
+        });
+
+        document.getElementById('end_date_jour').addEventListener('change', function() {
+            calculateEndHourJour();
+            updatePricePreview();
+        });
+
+        document.getElementById('start_date_heure').addEventListener('change', function() {
+            calculateEndDateTimeHeure();
+            updatePricePreview();
+        });
+
+        document.getElementById('start_time_heure').addEventListener('change', function() {
+            calculateEndDateTimeHeure();
+            updatePricePreview();
+        });
+
+        document.getElementById('custom_hours').addEventListener('input', function() {
+            calculateEndDateTimeHeure();
+            updatePricePreview();
+        });
+
+        // Écouteurs pour les méthodes de paiement
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                selectPaymentMethod(this);
+            });
+        });
+
+        // Réinitialisation du modal quand il est fermé
+        document.getElementById('reservationModal').addEventListener('hidden.bs.modal', resetModal);
+    }
+
+    function updatePricePreview() {
+        const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
+        isHourly ? updateHourlyPrice() : updateDailyPrice();
+    }
+
+    function updateHourlyPrice() {
+        const custom = document.getElementById('tarifCustom')?.checked;
+        let hours = 0,
+            unitPrice = 0;
+
+        if (custom) {
+            hours = parseInt(document.getElementById('custom_hours').value) || 0;
+            unitPrice = HOURLY_RATE;
+        } else {
+            const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
+            if (selected && selected.value !== 'custom') {
+                hours = parseInt(selected.dataset.hours);
+                unitPrice = parseFloat(selected.value);
+            }
+        }
+
+        const total = hours * unitPrice;
+        document.getElementById('unit-price').textContent = unitPrice.toLocaleString('fr-FR') + ' XOF';
+        document.getElementById('duration-value').textContent = hours + (hours > 1 ? ' heures' : ' heure');
+        document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
+
+        reservationData = {
+            ...reservationData,
+            isHourly: true,
+            hours,
+            unitPrice,
+            totalPrice: total,
+            paymentAmount: total * 0.1,
+            startDate: document.getElementById('start_date_heure').value,
+            startTime: document.getElementById('start_time_heure').value,
+            endDate: document.getElementById('end_date_heure').value,
+            endTime: document.getElementById('end_time_heure').value,
+            customTarif: custom
+        };
+    }
+
+    function updateDailyPrice() {
+        const start = document.getElementById('start_date_jour').value;
+        const end = document.getElementById('end_date_jour').value;
+
+        if (!start || !end) return;
+
+        const startTime = document.getElementById('start_hour_jour').value;
+        const endTime = document.getElementById('end_hour_jour').value;
+
+        // Calculer le nombre de jours (arrondi au supérieur)
+        const startDateTime = new Date(`${start}T${startTime || '00:00'}`);
+        const endDateTime = new Date(`${end}T${endTime || '23:59'}`);
+        const diffTime = endDateTime - startDateTime;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const total = diffDays * DAILY_RATE;
+        document.getElementById('unit-price').textContent = DAILY_RATE.toLocaleString('fr-FR') + ' XOF';
+        document.getElementById('duration-value').textContent = diffDays + (diffDays > 1 ? ' jours' : ' jour');
+        document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
+
+        reservationData = {
+            ...reservationData,
+            isHourly: false,
+            days: diffDays,
+            unitPrice: DAILY_RATE,
+            totalPrice: total,
+            paymentAmount: total * 0.1,
+            startDate: start,
+            endDate: end,
+            startTime: startTime,
+            endTime: endTime
+        };
+    }
+
+    function selectPaymentMethod(method) {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        method.classList.add('active');
+        selectedPaymentMethod = method.dataset.method;
+        document.getElementById('payment-form').classList.remove('d-none');
+    }
+
+    function nextStep() {
+        if (!validateCurrentStep()) return;
+
+        if (currentStep < 3) {
+            currentStep++;
+            updateStepDisplay();
+
+            if (currentStep === 2) generateInvoice();
+            if (currentStep === 3) generateReceipt();
+        }
+    }
+
+    function previousStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepDisplay();
+        }
+    }
+
+    function validateCurrentStep() {
+        const policies = ['policy-privacy', 'policy-refund', 'policy-terms'];
+        const allChecked = policies.every(id => document.getElementById(id).checked);
+
+        if (!allChecked) {
+            Swal.fire('⚠️', 'Veuillez accepter toutes les politiques', 'warning');
+            return false;
+        }
+
+        if (currentStep === 1) {
+            const fields = ['nom', 'prenoms', 'email', 'phone'];
+            for (const field of fields) {
+                if (!document.getElementById(field).value.trim()) {
+                    Swal.fire('❌', 'Tous les champs obligatoires doivent être remplis', 'error');
+                    return false;
+                }
+            }
+
+            const isHourly = document.querySelector('input[name="sejour"]:checked')?.value === 'heure';
+            if (isHourly) {
+                const custom = document.getElementById('tarifCustom')?.checked;
+                const hours = custom ?
+                    parseInt(document.getElementById('custom_hours').value) :
+                    parseInt(document.querySelector('input[name="tarif_by_sejour"]:checked')?.dataset.hours);
+
+                if (!hours || hours < 1) {
+                    Swal.fire('❌', 'Veuillez sélectionner une durée valide', 'error');
+                    return false;
+                }
+
+                if (!document.getElementById('start_date_heure').value || !document.getElementById('start_time_heure')
+                    .value) {
+                    Swal.fire('❌', 'Veuillez sélectionner une date et une heure', 'error');
+                    return false;
+                }
+            } else {
+                const start = document.getElementById('start_date_jour').value;
+                const end = document.getElementById('end_date_jour').value;
+
+                if (!start || !end || new Date(end) < new Date(start)) {
+                    Swal.fire('❌', "Le date d'arrivée doit suivre la date de début", 'error');
+                    return false;
+                }
+            }
+
+            reservationData = {
+                ...reservationData,
+                nom: document.getElementById('nom').value.trim(),
+                prenoms: document.getElementById('prenoms').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                appart_uuid: @json($appart->uuid),
+                property_uuid: @json($appart->property->uuid),
+                partner_uuid: @json($appart->property->partner->uuid),
+            };
+        }
+
+        if (currentStep === 2) {
+            if (!selectedPaymentMethod) {
+                Swal.fire('❌', 'Veuillez sélectionner un mode de paiement', 'error');
+                return false;
+            }
+
+            const cardNumber = document.getElementById('card-number').value.trim();
+            const cardName = document.getElementById('card-name').value.trim();
+
+            if (!cardNumber || !cardName) {
+                Swal.fire('❌', 'Veuillez remplir les informations de paiement', 'error');
+                return false;
+            }
+
+            reservationData.paymentMethod = selectedPaymentMethod;
+            reservationData.cardNumber = cardNumber;
+            reservationData.cardName = cardName;
+            reservationData.expiry = document.getElementById('expiry-date').value.trim();
+            reservationData.cvv = document.getElementById('cvv-code').value.trim();
+        }
+
+        return true;
+    }
+
+    function updateStepDisplay() {
+        document.querySelectorAll('.stepper-item').forEach((item, index) => {
+            const counter = item.querySelector('.step-counter');
+            item.classList.toggle('active', index === currentStep - 1);
+            item.classList.toggle('completed', index < currentStep - 1);
+            counter.classList.toggle('bg-secondary', index >= currentStep);
+            counter.classList.toggle('bg-success', index < currentStep - 1);
+            counter.classList.toggle('bg-danger', index === currentStep - 1);
+        });
+
+        document.querySelectorAll('.step-content').forEach((content, index) => {
+            content.classList.toggle('active', index === currentStep - 1);
+        });
+
+        document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
+        document.getElementById('next-btn').style.display = currentStep < 3 ? 'block' : 'none';
+        document.getElementById('pay-btn').style.display = currentStep === 2 ? 'block' : 'none';
+        document.getElementById('close-btn').style.display = currentStep === 3 ? 'block' : 'none';
+    }
+
+    function generateInvoice() {
+        const isHourly = reservationData.isHourly;
+        const invoiceHTML = `
+        <div class="d-flex justify-content-between mb-2"><span>Client:</span><span>${reservationData.prenoms} ${reservationData.nom}</span></div>
+        ${isHourly ? `
+            <div class="d-flex justify-content-between mb-2"><span>Date et heure:</span><span>${reservationData.startDate} à ${reservationData.startTime}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Heure de fin:</span><span>${reservationData.endTime}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Durée:</span><span>${reservationData.hours} heure(s)</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Type tarif:</span><span>${reservationData.customTarif ? 'Personnalisé' : 'Forfait'}</span></div>
+        ` : `
+            <div class="d-flex justify-content-between mb-2"><span>Période:</span><span>${reservationData.startDate} ${reservationData.startTime ? 'à ' + reservationData.startTime : ''} - ${reservationData.endDate} ${reservationData.endTime ? 'à ' + reservationData.endTime : ''}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>Nuits:</span><span>${reservationData.days}</span></div>
+        `}
+        <div class="d-flex justify-content-between mb-2"><span>${isHourly ? 'Prix horaire' : 'Prix journalier'}:</span><span>${reservationData.unitPrice.toLocaleString('fr-FR')} XOF</span></div>
+        <div class="d-flex justify-content-between border-top pt-2 mb-2"><span>Sous-total:</span><span>${reservationData.totalPrice.toLocaleString('fr-FR')} XOF</span></div>
+        <div class="d-flex justify-content-between mb-2"><span>Acompte (10%):</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
+        <div class="d-flex justify-content-between border-top pt-2 fw-bold"><span>Total à payer:</span><span>${reservationData.paymentAmount.toLocaleString('fr-FR')} XOF</span></div>
+    `;
+        document.getElementById('invoice-details').innerHTML = invoiceHTML;
+    }
+
+    async function processPayment() {
+        Swal.fire({
+            title: 'Traitement du paiement...',
+            text: 'Veuillez patienter',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const payload = {
+                ...reservationData,
+                sejour: reservationData.isHourly ? 'Heure' : 'Jour',
+                nbr_of_sejour: reservationData.isHourly ? reservationData.hours : reservationData.days,
+                start_time: reservationData.isHourly ?
+                    `${reservationData.startDate} ${reservationData.startTime}:00` :
+                    `${reservationData.startDate} ${reservationData.startTime || '00:00:00'}`,
+                end_time: reservationData.isHourly ?
+                    `${reservationData.endDate} ${reservationData.endTime}:00` :
+                    `${reservationData.endDate} ${reservationData.endTime || '23:59:59'}`,
+                payment_method: reservationData.paymentMethod,
+                card_number: reservationData.cardNumber,
+                card_name: reservationData.cardName,
+                card_expiry: reservationData.expiry,
+                card_cvv: reservationData.cvv
+            };
+
+            const res = await fetch('/api/reservation/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!data.success) throw new Error(data.message || 'Erreur inconnue');
+
+            reservationData.reservation = data.reservation;
+            reservationData.pdfUrl = data.pdf_url;
+
+            Swal.close();
+            nextStep();
+
+        } catch (err) {
+            Swal.fire('❌ Erreur', err.message || 'Erreur serveur', 'error');
+        }
+    }
+
+    function generateReceipt() {
+        if (!reservationData.reservation) return;
+
+        const r = reservationData.reservation;
+        document.getElementById('reservation-number').textContent = r.code;
+        document.getElementById('payment-date').textContent = new Date().toLocaleDateString('fr-FR');
+
+        const receiptHTML = `
+        <div class="d-flex justify-content-between mb-2"><span>Référence:</span><span>${r.code}</span></div>
+        <div class="d-flex justify-content-between mb-2"><span>Date paiement:</span><span>${new Date().toLocaleString('fr-FR')}</span></div>
+        <div class="d-flex justify-content-between mb-2"><span>Moyen de paiement:</span><span>${reservationData.paymentMethod}</span></div>
+        <div class="d-flex justify-content-between mb-2"><span>Montant payé:</span><span>${r.payment_amount.toLocaleString('fr-FR')} XOF</span></div>
+        <div class="d-flex justify-content-between border-top pt-2 mb-2"><span>Statut:</span><span class="badge bg-success">Payé</span></div>
+        <div class="mt-3 p-3 bg-light rounded">
+            <h6>Détails</h6>
+            <p class="mb-1"><strong>${r.prenoms} ${r.nom}</strong></p>
+            <p class="mb-1">${r.email}</p>
+            <p class="mb-1">${r.phone}</p>
+            <p class="mb-0 mt-2">
+                ${r.sejour === 'Heure' ? `
+                    Type: Réservation horaire<br>
+                    Date: ${r.start_time.split(' ')[0]}<br>
+                    Heure de début: ${r.start_time.split(' ')[1]}<br>
+                    Heure de fin: ${r.end_time.split(' ')[1]}<br>
+                    Durée: ${r.nbr_of_sejour} heure(s)
+                ` : `
+                    Type: Réservation journalière<br>
+                    Arrivée: ${r.start_time}<br>
+                    Départ: ${r.end_time}<br>
+                    Nuits: ${r.nbr_of_sejour}
+                `}
+            </p>
+        </div>
+    `;
+        document.getElementById('final-receipt').innerHTML = receiptHTML;
+    }
+
+    function downloadReceipt() {
+        if (reservationData.reservation?.uuid) {
+            window.location.href = '/api/reservation/download-receipt/' + reservationData.reservation.uuid;
+        }
+    }
+
+    function resetModal() {
+        currentStep = 1;
+        reservationData = {};
+        selectedPaymentMethod = null;
+        document.querySelector('form')?.reset();
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        document.getElementById('payment-form').classList.add('d-none');
+
+        // Réinitialiser les champs cachés
+        document.getElementById('end_hour_jour').value = '';
+        document.getElementById('end_date_heure').value = '';
+        document.getElementById('end_time_heure').value = '';
+
+        updateStepDisplay();
+        initializeDates();
+
+        // Réinitialiser l'affichage des blocs selon le type par défaut
+        const defaultType = @json($checkedType);
+        document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
+        document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
+    }
 </script>

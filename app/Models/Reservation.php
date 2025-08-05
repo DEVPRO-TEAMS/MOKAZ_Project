@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Partner;
 use App\Models\receipt;
 use App\Models\Property;
 use App\Models\Appartement;
