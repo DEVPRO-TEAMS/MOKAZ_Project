@@ -97,6 +97,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         // reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
+        Route::get('/reservation/show/{uuid}', [ReservationController::class, 'show'])->name('reservation.show');
     });
 });
 
@@ -127,7 +128,7 @@ Route::prefix('partner')->name('partner.')->group(function(){
 
         // Route reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
-        Route::get('/reservation/show/{uuid}', [ReservationController::class, 'showPartner'])->name('reservation.show');
+        Route::get('/reservation/show/{uuid}', [ReservationController::class, 'show'])->name('reservation.show');
         Route::post('/reservation/confirm/{uuid}', [ReservationController::class, 'confirmReservation'])->name('reservation.confirm');
 
         // Route::post('/appart/add', [AppartController::class, 'store'])->name('apartments.store');

@@ -160,12 +160,11 @@
             <div class="col-md-12">
                 <!-- Filtres et recherche -->
                 <div class="widget-box-2 mb-4">
-                    <form action="{{ route('partner.reservation.index') }}" method="get">
+                    <form action="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}" method="get">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Rechercher</label>
-                                {{-- <input type="text" value="{{ request('search') }}" name="search" class="form-control" placeholder="Nom, email, téléphone, code..."> --}}
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                                     <input type="text" class="form-control" name="search"
@@ -306,7 +305,7 @@
                                         <small class="text-muted">{{ $reservation->created_at->format('H:i') }}</small>
                                     </td>
                                     <td>
-                                        <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="Voir détails" href="{{ route('partner.reservation.show', $reservation->uuid) }}">
+                                        <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="Voir détails" href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.show', $reservation->uuid) : route('partner.reservation.show', $reservation->uuid) }}">
                                             <i class="icon icon-eye"></i>
                                         </a>
                                     </td>
@@ -318,7 +317,7 @@
                                             <i class="icon icon-calendar mb-2" style="font-size: 48px;"></i>
                                             <h5 class="fw-semibold">Aucune réservation trouvée</h5>
                                             <p class="text-muted">Aucune réservation ne correspond à vos critères de recherche</p>
-                                            <a href="{{ route('partner.reservation.index') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                            <a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}" class="btn btn-sm btn-outline-primary mt-2">
                                                 <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
                                             </a>
                                         </div>

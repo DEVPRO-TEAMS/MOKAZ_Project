@@ -8,21 +8,13 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            @if (Auth::user()->user_type == 'admin')
-                                <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
-                                href="{{ route('admin.index') }}">
-                                    <i class="bi bi-house-door me-3 fs-5"></i>
-                                    <span>Tableau de Bord</span>
-                                    </a>
-                            @else
-                                <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                                href="{{ route('partner.index') }}">
-                                    <i class="bi bi-house-door me-3 fs-5"></i>
-                                    <span>Tableau de Bord</span>
-                                </a>
-                            @endif
+                            <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
+                            href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('admin.index') }}">
+                                <i class="bi bi-house-door me-3 fs-5"></i>
+                                <span>Tableau de Bord</span>
+                            </a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ route('partner.reservation.index') }}">Réservations</a></li>
+                        <li class="breadcrumb-item"><a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}">Réservations</a></li>
                         <li class="breadcrumb-item active">{{ $reservation->code }}</li>
                     </ol>
                 </nav>
@@ -37,7 +29,7 @@
                     <div>
                         <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST" class="submitForm">
                             @csrf
-                            @if($reservation->status !== 'confirmed')
+                            @if($reservation->status !== 'confirmed' && Auth::user()->user_type == 'partner')
                                 
                                 <button class="btn btn-success" type="submit">
                                     <i class="icon icon-mail"></i> Envoyer confirmation
@@ -319,15 +311,6 @@
                         @else
                             <p class="text-muted">Aucune note particulière</p>
                         @endif
-
-                        {{-- <div class="form-group mt-3">
-                            <label class="fw-bold">Ajouter une note interne :</label>
-                            <form action="" method="POST">
-                                @csrf
-                                <textarea name="internal_note" class="form-control mb-2" rows="3" placeholder="Note interne (visible uniquement par l'équipe)"></textarea>
-                                <button type="submit" class="btn btn-sm btn-primary">Ajouter note</button>
-                            </form>
-                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -378,26 +361,22 @@
         <!-- Actions en bas -->
         <div class="row my-4">
             <div class="col-md-12">
-                <div class="d-flex justify-content-between">
-                    <a href="{{ route('partner.reservation.index') }}" class="btn btn-secondary">
-                        <i class="icon icon-arrow-left"></i> Retour à la liste
-                    </a>
-                    {{-- <div>
-                        @if($reservation->status !== 'cancelled')
-                            <button class="btn btn-danger me-2" onclick="cancelReservation({{ $reservation->id }})">
-                                <i class="icon icon-x"></i> Annuler réservation
-                            </button>
-                        @endif
-                        @if($reservation->still_to_pay > 0)
-                            <button class="btn btn-success" onclick="addPayment({{ $reservation->id }})">
-                                <i class="icon icon-credit-card"></i> Ajouter paiement
-                            </button>
-                        @endif
-                    </div> --}}
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}" class="btn btn-secondary">
+                            <i class="icon icon-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $reservation->uuid }}">
+                            <i class="fas fa-receipt"></i> Voir le reçu
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    @include('components.receip')
 @endsection
 
 @push('styles')

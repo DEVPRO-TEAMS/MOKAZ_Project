@@ -39,12 +39,12 @@
                         </td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $reservation->uuid }}">
-                                <i class="fas fa-receipt"></i>
+                                <i class="fas fa-receipt"></i> Voir le reçu
                             </button>
                         </td>
                     </tr>
 
-                    @include('components.receip' , ['reservation' => $reservation])
+                    @include('components.receip')
 
                 @endforeach
             </tbody>
