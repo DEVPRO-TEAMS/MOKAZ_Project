@@ -17,7 +17,6 @@
                         </div>
                     </center>
 
-                    
                     <div class="header-account">
                         <ul class="icon-box">
                             <li title="Mes Souhaits">
@@ -26,6 +25,7 @@
                                 </a>
                             </li>
                         </ul>
+                        
 
                         @if (Auth::check())
                             <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
@@ -36,7 +36,7 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index') ) }}">Tableau de bord</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">Se deconnecter</a>
+                                                        document.getElementById('logout-form').submit();">Se deconnecter</a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -72,6 +72,13 @@
                 </a>
                 </div>
             <div class="bottom-canvas">
+                <ul class="icon-box">
+                    <li title="Mes Souhaits">
+                        <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
+                            <span class="fs-4 icon icon-heart"></span>
+                        </a>
+                    </li>
+                </ul>
                 @if (Auth::check())
                     <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
                         <div class="avatar avt-40 round">
@@ -96,7 +103,7 @@
                 
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
-                    <a class="tf-btn primary" href="{{ route('reservation') }}">Découvrire nos biens</a>
+                    <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrire nos biens</a>
                 </div>
                 
 

@@ -7,7 +7,7 @@
         <div class="header-lower">
             <div class="row">                      
                 <div class="col-lg-12">             
-                    <div class="inner-container d-flex justify-content-between align-items-center">
+                    <div class="inner-container inner-container-dashboard d-flex justify-content-between align-items-center">
                         <!-- Logo Box -->
                         <div class="logo-box d-flex">
                             <div class="logo"  style="width: 6.8rem;"><a href="{{ route('welcome') }}"><img
@@ -17,6 +17,7 @@
                                 <span class="icon icon-categories"></span>
                             </div>
                         </div>
+
                         <div class="nav-outer">
                             <!-- Main Menu -->
                             <nav class="main-menu show navbar-expand-md">
@@ -26,6 +27,7 @@
                             </nav>
                             <!-- Main Menu End-->
                         </div>
+
                         <div class="header-account">
                             <a href="#" class="box-avatar dropdown-toggle" data-bs-toggle="dropdown">
                                 <div class="avatar avt-40 mr-2 round">
