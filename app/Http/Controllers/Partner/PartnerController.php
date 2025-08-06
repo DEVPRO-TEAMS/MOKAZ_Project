@@ -211,7 +211,9 @@ class PartnerController extends Controller
 
         $appartUuid = $appart->pluck('uuid')->toArray();
 
-        $reservations = Reservation::whereIn('appart_uuid', $appartUuid)->get();
+        $reservations = Reservation::where('partner_uuid', $uuid)->get();
+        // dd($reservations);
+        // $reservations = Reservation::whereIn('appart_uuid', $appartUuid)->get();
 
         return view('partners.pages.show', compact('partner', 'appart', 'reservations'));
     }

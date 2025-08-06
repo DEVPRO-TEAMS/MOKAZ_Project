@@ -32,7 +32,8 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('admin.units.show', $unit->uuid) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#showApartmentModal{{ $unit->code }}"
+                                                                title="Voir détails"  class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>
@@ -41,6 +42,10 @@
             </tbody>
         </table>
     </div>
+
+    @foreach($units->where('etat','!=', "inactif") as $apartement)
+        @include('properties.apparts.showModal' , ['apartement' => $apartement])
+    @endforeach
 @else
     <p class="text-muted mt-3">Aucune unité enregistrée.</p>
 @endif

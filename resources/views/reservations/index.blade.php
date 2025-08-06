@@ -74,46 +74,131 @@
     </div> --}}
 
     <div class="main-content-inner wrap-dashboard-content">
-        <div class="button-show-hid show-m">
-            <span class="body-1">Affichage des réservations</span>
+
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        {{-- <i class="fas fa-bed  me-2 text-danger"></i> --}}
+                        <i class="fas fa-hotel  me-2 text-danger"></i>
+                         Affichage des réservations
+                    </h3>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Cards Counters -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Total Reservations</h6>
+                                <h3 class="mb-0">{{ count($reservations) }}</h3>
+                            </div>
+                            <div class="counter-icon text-primary">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">En Attente</h6>
+                                <h3 class="mb-0">{{ count($reservations->where('status', 'pending')) }}</h3>
+                            </div>
+                            <div class="counter-icon text-warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Confirmées</h6>
+                                <h3 class="mb-0">{{ count($reservations->where('status', 'confirmed')) }}</h3>
+                            </div>
+                            <div class="counter-icon text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Annulées</h6>
+                                <h3 class="mb-0">{{ count($reservations->where('status', 'cancelled')) }}</h3>
+                            </div>
+                            <div class="counter-icon text-danger">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="row">
             <div class="col-md-12">
                 <!-- Filtres et recherche -->
                 <div class="widget-box-2 mb-4">
+                    <form action="{{ route('partner.reservation.index') }}" method="get">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Rechercher</label>
-                                <input type="text" class="form-control" placeholder="Nom, email, téléphone...">
+                                {{-- <input type="text" value="{{ request('search') }}" name="search" class="form-control" placeholder="Nom, email, téléphone, code..."> --}}
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" name="search"
+                                        value="{{ request('search') }}" placeholder="Nom, email, téléphone, code...">
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Statut</label>
-                                <select class="form-control">
+                                <select class="form-control" name="status">
                                     <option value="">Tous</option>
-                                    <option value="confirmed">Confirmé</option>
-                                    <option value="pending">En attente</option>
-                                    <option value="cancelled">Annulé</option>
+                                    <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmé</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
+                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Annulé</option>
+                                    <option value="reconducted" {{ request('status') == 'reconducted' ? 'selected' : '' }}>Reconduite</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Type de séjour</label>
-                                <select class="form-control">
+                                <select class="form-control" name="sejour">
                                     <option value="">Tous</option>
-                                    <option value="Jour">Jour</option>
-                                    <option value="Heure">Heure</option>
+                                    <option value="Jour" {{ request('sejour') == 'Jour' ? 'selected' : '' }}>Jour</option>
+                                    <option value="Heure" {{ request('sejour') == 'Heure' ? 'selected' : '' }}>Heure</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>&nbsp;</label>
-                                <button class="btn btn-primary w-100">Filtrer</button>
+                                <button class="btn btn-outline-danger py-3 w-100"><i class="fas fa-filter me-1"></i>Filtrer</button>
                             </div>
                         </div>
                     </div>
@@ -122,21 +207,11 @@
         </div>
 
         <div class="widget-box-2 wd-listing">
-            <div class="row align-items-start justify-content-between">
-                <div class="flat-bt-top col-md-6">
-                    <h6 class="title">{{ count($reservations) }} Réservations</h6>
-                </div>
-                <div class="col-md-6 text-end">
-                    {{-- <a href="" class="btn btn-primary">
-                        <i class="icon icon-plus"></i> Nouvelle réservation
-                    </a> --}}
-                </div>
-            </div>
-             
-            <div class="wrap-table">
+           
+            <div class="wrap-table border-0 p-0">
                 <div class="table-responsive">
-                    <table class="table">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0" id="example2">
+                        <thead class="table-light text-nowrap">
                             <tr>
                                 <th>Code</th>
                                 <th>Client</th>
@@ -231,13 +306,9 @@
                                         <small class="text-muted">{{ $reservation->created_at->format('H:i') }}</small>
                                     </td>
                                     <td>
-                                        <ul class="list-action d-flex align-items-center justify-content-center">
-                                            <li class="border rounded me-2" title="Voir détails">
-                                                <a class="item p-2" href="{{ route('partner.reservation.show', $reservation->uuid) }}">
-                                                    <i class="icon icon-eye"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="Voir détails" href="{{ route('partner.reservation.show', $reservation->uuid) }}">
+                                            <i class="icon icon-eye"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @empty
@@ -245,7 +316,11 @@
                                     <td colspan="10" class="text-center py-4">
                                         <div class="text-muted">
                                             <i class="icon icon-calendar mb-2" style="font-size: 48px;"></i>
-                                            <p>Aucune réservation trouvée</p>
+                                            <h5 class="fw-semibold">Aucune réservation trouvée</h5>
+                                            <p class="text-muted">Aucune réservation ne correspond à vos critères de recherche</p>
+                                            <a href="{{ route('partner.reservation.index') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

@@ -89,7 +89,8 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/partner/update/{uuid}', [PartnerController::class, 'updatePartner'])->name('updatePartner');
         Route::post('/partner/destroy/{uuid}', [PartnerController::class, 'destroyPartner'])->name('destroyPartner');
         Route::get('/partner/show/{uuid}', [PartnerController::class, 'showPartner'])->name('showPartner');
-
+        
+        Route::get('/partner/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
         // user 
         Route::post('/update/user/{uuid}', [UserController::class, 'update'])->name('user.update');
         Route::post('/destroy/user/{uuid}', [UserController::class, 'destroy'])->name('user.destroy');

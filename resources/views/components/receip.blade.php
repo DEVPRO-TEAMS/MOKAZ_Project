@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body px-5 py-4">
-                    <h4 class="mb-3">{{ $reservation->nom }} {{ $reservation->prenoms }}</h4>
+                    {{-- <h4 class="mb-3">{{ $reservation->nom }} {{ $reservation->prenoms }}</h4>
                     <p><strong>Email :</strong> {{ $reservation->email }}</p>
                     <p><strong>Téléphone :</strong> {{ $reservation->phone }}</p>
 
@@ -33,7 +33,12 @@
                     @if ($reservation->notes)
                         <hr>
                         <p><strong>Notes :</strong><br>{{ $reservation->notes }}</p>
-                    @endif
+                    @endif --}}
+
+                    <div class="d-flex justify-content-center">
+                        <iframe src="{{ asset($reservation->receipt->filepath) }}" frameborder="0" style="width: 100%; height: 500px;"></iframe>
+                        {{-- <img src="{{ asset($reservation->receipt->filepath) }}" alt="Reçu de Réservation" class="img-fluid"> --}}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

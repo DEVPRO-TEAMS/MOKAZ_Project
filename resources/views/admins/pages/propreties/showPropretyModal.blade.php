@@ -187,12 +187,6 @@
                 <div class="d-flex justify-content-between w-100">
                     <div>
                         @if($property->etat == 'pending')
-                            {{-- <button type="button" class="btn btn-success me-2" onclick="approveProperty({{ $property->id }})">
-                                <i class="fas fa-check me-1"></i> Approuver
-                            </button>
-                            <button type="button" class="btn btn-danger" onclick="rejectProperty({{ $property->id }})">
-                                <i class="fas fa-times me-1"></i> 
-                            </button> --}}
 
                             <button class="btn btn-success me-2 text-white">
                                 <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
@@ -233,24 +227,3 @@
 </div>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Récupération des coordonnées depuis les variables Blade (Laravel)
-        const latitude = @json($property->latitude);
-        const longitude = @json($property->longitude);
-        
-
-        // Initialisation de la carte
-        const map = L.map('map-location-property').setView([latitude, longitude], 16);
-
-        // Chargement des tuiles OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }).addTo(map);
-
-        // Ajout d’un marqueur à l’emplacement
-        L.marker([latitude, longitude]).addTo(map)
-            .bindPopup("Emplacement de la propriété")
-            .openPopup();
-    });
-</script>

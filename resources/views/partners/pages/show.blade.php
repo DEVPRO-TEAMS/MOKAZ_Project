@@ -76,6 +76,7 @@
                 <h6>Historique des réservations</h6>
                 <p class="text-muted">Toutes les réservations associées au partenaire</p>
                 <!-- TODO: ajouter tableau des réservations -->
+                @include('partners.components.reservationByPartner', ['partner' => $partner->uuid])
             </div>
         </div>
     </div>

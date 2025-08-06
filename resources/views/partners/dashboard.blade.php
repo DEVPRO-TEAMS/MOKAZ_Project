@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total Employés</div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Collaborateurs</div>
                                 <div class="h5 mb-0 font-weight-bold" id="totalRequests"> {{ count($partnerUsers) }} </div>
                             </div>
                             <div class="col-auto">
@@ -145,7 +145,7 @@
             <div class="col-xl-4 pt-5 col-lg-5">
                 <div class="card dashboard-card">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Répartition par statut de reservation</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Répartition par statut</h6>
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -715,7 +715,7 @@
                 cutout: '70%', // Pour un effet "anneau" plus prononcé
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
                             boxWidth: 12,
                             padding: 20,

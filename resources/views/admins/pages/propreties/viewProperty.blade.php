@@ -140,7 +140,7 @@
             <div class="col-xl-12">
                 <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
                     <div class="card-body p-0">
-                        <div class="table-responsive-lg p-3">
+                        <div class="table-responsive p-3">
                             <table class="table table-hover align-middle mb-0" id="example2">
                                 <thead class="table-light">
                                     <tr>
@@ -162,7 +162,7 @@
                                                 <div class="property-image me-3">
                                                     @if ($property->image)
                                                         <img src="{{ asset($property->image) }}"
-                                                            alt="{{ $property->title }}" class="rounded-2"
+                                                            alt="image" class="rounded-2"
                                                             style="width: 50px; height: 50px; object-fit: cover;">
                                                     @else
                                                         <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
@@ -173,7 +173,7 @@
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0 fw-semibold">{{ $property->title ?? '' }}</h6>
-                                                    <small class="text-muted d-block">{{ Str::limit($property->description ?? '', 50) }}</small>
+                                                    <small class="text-muted d-block">{!! Str::limit($property->description ?? '', 50) !!}</small>
                                                 </div>
                                             </div>
                                         </td>
@@ -299,5 +299,27 @@
             }
         }
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupération des coordonnées depuis les variables Blade (Laravel)
+        const latitude = @json($property->latitude);
+        const longitude = @json($property->longitude);
+        
+
+        // Initialisation de la carte
+        const map = L.map('map-location-property').setView([latitude, longitude], 16);
+
+        // Chargement des tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map);
+
+        // Ajout d’un marqueur à l’emplacement
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup("Emplacement de la propriété")
+            .openPopup();
+    });
+</script>
 
 @endsection

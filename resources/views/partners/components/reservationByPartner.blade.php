@@ -1,6 +1,6 @@
 @if ($reservations->count())
     <div class="table-responsive mt-3">
-        <table class="table table-striped table-hover align-middle mb-0">
+        <table class="table table-striped table-hover align-middle mb-0" id="example2">
             <thead class="table-light">
                 <tr>
                     <th>Code</th>

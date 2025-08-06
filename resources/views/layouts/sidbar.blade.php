@@ -204,36 +204,13 @@
                                         <span>Type de appartement</span>
                                     </a>
                                 </li>
-                                {{-- <li class="nav-item">
-                                    <a href="{{ route('setting.indexCommodity') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
-                                        <i class="bi bi-circle me-2"></i>
-                                        <span>Commodités</span>
-                                    </a>
-                                </li> --}}
+                                
                             </ul>
                         </div>
                     </li>
 
                     <!-- Séparateur -->
-                    <hr class="my-3">
-
-                    <!-- Profil utilisateur -->
-                    <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                        href="#profile">
-                            <i class="bi bi-person-circle me-3 fs-5"></i>
-                            <span>Mon Profil</span>
-                        </a>
-                    </li>
-
-                    <!-- Paramètres -->
-                    <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                        href="#settings">
-                            <i class="bi bi-gear me-3 fs-5"></i>
-                            <span>Paramètres</span>
-                        </a>
-                    </li>
+                    
                     
                     <li class="nav-item mb-1">
                         <!-- Footer du menu -->
@@ -250,6 +227,12 @@
                                     </small>
                                 </div>
                             </div>
+
+                            <a class="btn btn-outline-info w-100 d-flex align-items-center mb-3 justify-content-center" 
+                            href="#profile">
+                                <i class="bi bi-person-circle me-3 fs-5"></i>
+                                <span>Mon Profil</span>
+                            </a>
             
                             <!-- Bouton de déconnexion -->
                             <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center" 

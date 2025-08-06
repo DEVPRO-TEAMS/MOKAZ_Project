@@ -22,9 +22,49 @@ use Illuminate\Support\Facades\Validator;
 class ReservationController extends Controller
 {
     // Liste des réservations
-    public function index()
+    public function index(Request $request)
     {
-        $reservations = Reservation::where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->get();
+        // $reservations = Reservation::where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->get();
+
+        $query = Reservation::query();
+
+        if($request->filled('search')) {
+            $query->where('code', 'like', '%' . $request->search . '%')
+                ->orWhere('nom', 'like', '%' . $request->search . '%')
+                ->orWhere('prenoms', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtre par date
+        if($request->filled('date_debut') && $request->filled('date_fin')) {
+            $query->whereBetween('created_at', [
+                $request->date_debut . ' 00:00:00', 
+                $request->date_fin . ' 23:59:59'
+            ]);
+        } elseif ($request->filled('date_debut')) {
+            $query->where('created_at', '>=', $request->date_debut . ' 00:00:00');
+        } elseif ($request->filled('date_fin')) {
+            $query->where('created_at', '<=', $request->date_fin . ' 23:59:59');
+        }
+
+        // Filtre par statut
+        if($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        // Filtre par sejour
+        if($request->filled('sejour')) {
+            $query->where('sejour', $request->sejour);
+        }
+
+        if(Auth::user()->user_type == 'admin') {
+            $reservations = $query->where('etat', 'actif')->orderBy('created_at', 'desc')->get();
+        }else {
+            
+            $reservations = $query->where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
+        }
+
         return view('reservations.index', compact('reservations'));
     }
     
