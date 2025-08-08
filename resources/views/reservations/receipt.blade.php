@@ -71,6 +71,9 @@
     </style>
 </head>
 <body>
+    <div class="header" style="width: 30%; margin: 0 auto">
+        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path("assets/images/logo/logo-main.png"))) }}" style="width: 100%" alt="MOKAZ Logo" class="logo">
+    </div>
     <div class="header">
         <div class="title">Reçu de Réservation</div>
         <div>Date: {{ $date }}</div>
@@ -104,12 +107,13 @@
                 <div>Réservation horaire</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Date:</div>
-                <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y') }}</div>
+                <div class="info-label">Arrivée:</div>
+                <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y à H:i') }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Heure:</div>
-                <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('H:i') }}</div>
+                <div class="info-label">Depart:</div>
+                {{-- <div>{{ \Carbon\Carbon::parse($reservation->start_time)->format('H:i') }}</div> --}}
+                <div>{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y à H:i') }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Durée:</div>
@@ -167,7 +171,7 @@
             </tr>
             <tr>
                 <td>Méthode de paiement</td>
-                <td>{{ $reservation->payment_method }}</td>
+                <td>{{ $reservation->payment_method ?? 'N/A' }}</td>
             </tr>
             <tr>
                 <td>Statut</td>

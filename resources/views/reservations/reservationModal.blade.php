@@ -472,74 +472,6 @@
     }
 </style>
 
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const radios = document.querySelectorAll('input[name="sejour"]');
-        const tarifRadios = document.querySelectorAll('input[name="tarif_by_sejour"]');
-        const startDate = document.getElementById('start_date');
-        const startTime = document.getElementById('time_start');
-        const blocJour = document.getElementById('bloc-jour');
-        const nbrOfSejour = document.getElementById('nbr_of_sejour');
-        const sejourAutreNumber = document.getElementById('custom-hours-block');
-        const blocHeure = document.getElementById('bloc-heure');
-
-
-        radios.forEach(radio => {
-            radio.addEventListener('change', function () {
-                if (this.value === 'jour') {
-                    blocJour.classList.remove('d-none');
-                    blocHeure.classList.add('d-none');
-                    // décoché tarifRadios
-                    tarifRadios.forEach(radio => {
-                        radio.checked = false;
-                    })
-                    startDate.value = '';
-                    startTime.value = '';
-                    nbrOfSejour.value = '';
-                    // ajouter un readonly sur startTime et startDate
-                    startDate.setAttribute('readonly', true);
-                    startTime.setAttribute('readonly', true);
-                    sejourAutreNumber.classList.add('d-none');
-                } else if (this.value === 'heure') {
-                    blocJour.classList.add('d-none');
-                    blocHeure.classList.remove('d-none');
-                }
-            });
-        });
-        if (nbrOfSejour && startDate && startTime) {
-            nbrOfSejour.addEventListener('input', function () {
-                if (parseInt(this.value) > 1) {
-                    startDate.removeAttribute('readonly');
-                    startTime.removeAttribute('readonly');
-                } else {
-                    startDate.value = '';
-                    startTime.value = '';
-                    this.value = '';
-                    startDate.setAttribute('readonly', true);
-                    startTime.setAttribute('readonly', true);
-                }
-            });
-        } else {
-            console.warn('Un des éléments (#nbrOfSejour, #startDate, #startTime) est introuvable dans le DOM.');
-        }
-        tarifRadios.forEach(radio => {
-            radio.addEventListener('change', function () {
-                if (this.value === 'custom') {
-                    sejourAutreNumber.classList.remove('d-none');
-                    
-                    startDate.setAttribute('readonly', true);
-                    startTime.setAttribute('readonly', true);
-                } else {
-                    sejourAutreNumber.classList.add('d-none');
-                    startDate.removeAttribute('readonly');
-                    startTime.removeAttribute('readonly');
-                }
-            });
-        });
-    });
-</script> --}}
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 {{-- <script>
@@ -925,7 +857,7 @@
     }
 </script> --}}
 
-<script>
+{{-- <script>
     // Variables globales
     const DAILY_RATE = @json($tarifByDay->price ?? 0);
     const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
@@ -1364,9 +1296,9 @@
         document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
         document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
     }
-</script>
+</script> --}}
 
-{{-- <script>
+<script>
     // Variables globales
     const DAILY_RATE = @json($tarifByDay->price ?? 0);
     const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
@@ -1557,15 +1489,22 @@
         if (custom) {
             hours = parseInt(document.getElementById('custom_hours').value) || 0;
             unitPrice = HOURLY_RATE;
+            totalPrice = hours * unitPrice;
         } else {
             const selected = document.querySelector('input[name="tarif_by_sejour"]:checked');
             if (selected && selected.value !== 'custom') {
                 hours = parseInt(selected.dataset.hours);
                 unitPrice = parseFloat(selected.value);
+                totalPrice = unitPrice;
             }
         }
 
-        const total = hours * unitPrice;
+        const total = totalPrice;
+        // if (custom) {
+            
+        // else {
+        //     const total = unitPrice;
+        // }
         document.getElementById('unit-price').textContent = unitPrice.toLocaleString('fr-FR') + ' XOF';
         document.getElementById('duration-value').textContent = hours + (hours > 1 ? ' heures' : ' heure');
         document.getElementById('total-amount').textContent = total.toLocaleString('fr-FR') + ' XOF';
@@ -1742,7 +1681,7 @@
         });
 
         document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
-        document.getElementById('next-btn').style.display = currentStep < 3 ? 'block' : 'none';
+        document.getElementById('next-btn').style.display = currentStep < 2 ? 'block' : 'none';
         document.getElementById('pay-btn').style.display = currentStep === 2 ? 'block' : 'none';
         document.getElementById('close-btn').style.display = currentStep === 3 ? 'block' : 'none';
     }
@@ -1883,4 +1822,4 @@
         document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
         document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
     }
-</script> --}}
+</script>

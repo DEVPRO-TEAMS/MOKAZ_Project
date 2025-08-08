@@ -212,7 +212,7 @@
     @endphp
     <div class="email-container">
         <div class="header">
-            <img src="{{ asset('assets/images/logo/logo-main.png')}}" alt="MOKAZ Logo" class="logo">
+            <img src="{{ url('assets/images/logo/logo-main.png')}}" alt="MOKAZ Logo" class="logo">
             <h1>Réservation 
                 @if($emailData['status'] == 'confirmed')
                     confirmée
