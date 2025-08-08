@@ -67,29 +67,32 @@
                         {{-- <a href="#" class="flag-tag primary">En </a> --}}
                         <h4 class="title link">{{ $appart->title }}</h4>
                     </div>
-                    <div class="box-price d-flex align-items-center">
-                        <span class="body-1 text-variant-1">À partir de &nbsp;&nbsp; </span>
-                        <h5>
-                            @if ($tarifHeure)
-                                {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
-                            @endif
-                        </h5>
-                        <span class="body-1 text-variant-1">
-                            @if ($tarifHeure)
-                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
-                            @endif
-                        </span> &nbsp;&nbsp;-&nbsp;&nbsp;
-                        <h5>
-                            @if ($tarifJour)
-                                {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
-                            @endif
-                        </h5>
-                        <span class="body-1 text-variant-1">
-                            @if ($tarifJour)
-                                /{{ $tarifJour->nbr_of_sejour ?? '' }}jr
-                            @endif
-                        </span>
-
+                    <span class="body-1 text-variant-1">À partir de :</span>
+                    <div class="box-price d-flex align-items-center flex-column">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <h5>
+                                @if ($tarifHeure)
+                                    {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA &nbsp;
+                                @endif
+                            </h5>
+                            <span class="body-1 text-variant-1">
+                                @if ($tarifHeure)
+                                    / {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                @endif
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <h5>
+                                @if ($tarifJour)
+                                    {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA &nbsp;
+                                @endif
+                            </h5>
+                            <span class="body-1 text-variant-1">
+                                @if ($tarifJour)
+                                    / {{ $tarifJour->nbr_of_sejour ?? '' }}jr
+                                @endif
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="content-bottom">
@@ -100,7 +103,6 @@
                                 Chambres à couché</li>
                             <li class="meta-item"><span class="icon icon-bathtub"></span>
                                 {{ $appart->nbr_bathroom ?? '0' }} Salle de bain</li>
-                            {{-- <li class="meta-item"><span class="icon icon-ruler"></span> 6,000 m<sup>²</sup></li> --}}
                         </ul>
                     </div>
                     <div class="info-box">
@@ -110,8 +112,6 @@
                             {{ $appart->property->pays->label ?? '' }}</p>
                     </div>
                     <ul class="icon-box">
-                        {{-- <li><a href="#" class="item"><span class="icon icon-arrLeftRight"></span> </a></li>
-                        <li><a href="#" class="item"><span class="icon icon-share"></span></a></li> --}}
                         <li><a href="#" class="item"><span class="icon icon-heart"></span></a></li>
                     </ul>
 
@@ -507,16 +507,8 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="flat-tab flat-tab-form widget-filter-search widget-box bg-surface">
+                        {{-- <div class="flat-tab flat-tab-form widget-filter-search widget-box bg-surface">
                             <div class="h7 title fw-7">Recherche d'autres hebergements</div>
-                            {{-- <ul class="nav-tab-form" role="tablist">
-                                <li class="nav-tab-item" role="presentation">
-                                    <a href="#forRent" class="nav-link-item active" data-bs-toggle="tab">For Rent</a>
-                                </li>
-                                <li class="nav-tab-item" role="presentation">
-                                    <a href="#forSale" class="nav-link-item" data-bs-toggle="tab">For Sale</a>
-                                </li>
-                            </ul> --}}
                             <div class="tab-content">
                                 <div class="tab-pane fade active show" role="tabpanel">
                                     <div class="form-sl">
@@ -815,7 +807,7 @@
                                 </div>
 
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="widget-box single-property-whychoose bg-surface">
                             <div class="h7 title fw-7">Pourquoi nous choisir ?</div>
                             <ul class="box-whychoose">
