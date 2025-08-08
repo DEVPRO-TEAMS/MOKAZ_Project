@@ -289,7 +289,7 @@
                             throw new Error(result.message || 'Erreur lors du traitement');
                         }
 
-                        windows.location.reload();
+                        window.location.reload();
 
                         return result;
                     } catch (error) {

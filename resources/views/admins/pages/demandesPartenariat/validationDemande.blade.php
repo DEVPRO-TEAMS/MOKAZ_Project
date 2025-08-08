@@ -204,7 +204,7 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 
-                                                @if($demande->etat == 'pending')
+                                                {{-- @if($demande->etat == 'pending')
                                                     <button class="btn btn-sm btn-icon btn-outline-success rounded-circle"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#approveDemandModal{{ $demande->id }}"
@@ -217,7 +217,7 @@
                                                             title="Rejeter">
                                                         <i class="fas fa-times"></i>
                                                     </button>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </td>
                                     </tr>
