@@ -202,48 +202,48 @@ class AdminController extends Controller
             $partner_uuid = Str::uuid();
 
 
-            // $partner = Partner::create([
-            //     'uuid' => $partner_uuid,
-            //     'code' => Refgenerate(Partner::class, 'P', 'code'),
-            //     'raison_social' => $demande->company,
-            //     'email' => $demande->email,
-            //     'phone' => $demande->phone,
-            //     'website' => $demande->website,
-            //     'adresse' => $demande->activity_zone,
-            //     'etat' => 'actif',
-            // ]);
+            $partner = Partner::create([
+                'uuid' => $partner_uuid,
+                'code' => Refgenerate(Partner::class, 'P', 'code'),
+                'raison_social' => $demande->company,
+                'email' => $demande->email,
+                'phone' => $demande->phone,
+                'website' => $demande->website,
+                'adresse' => $demande->activity_zone,
+                'etat' => 'actif',
+            ]);
 
-            // // Création du partenariat
-            // $partner_user = User::create([
-            //     'uuid' => Str::uuid(),
-            //     'code' => Refgenerate(User::class, 'U', 'code'),
-            //     'name' => $demande->first_name,
-            //     'lastname' => $demande->last_name,
-            //     'user_type' => 'partner',
-            //     'phone' => $demande->phone,
-            //     'partner_uuid' => $partner_uuid,
-            //     'email' => $demande->email,
-            //     'password' => Hash::make('12345678'),
-            //     'etat' => 'actif',
-            // ]);
+            // Création du partenariat
+            $partner_user = User::create([
+                'uuid' => Str::uuid(),
+                'code' => Refgenerate(User::class, 'U', 'code'),
+                'name' => $demande->first_name,
+                'lastname' => $demande->last_name,
+                'user_type' => 'partner',
+                'phone' => $demande->phone,
+                'partner_uuid' => $partner_uuid,
+                'email' => $demande->email,
+                'password' => Hash::make('12345678'),
+                'etat' => 'actif',
+            ]);
 
-            // if($partner){
-            //     $nom = $demande->first_name . ' ' . $demande->last_name;
+            if($partner){
+                $nom = $demande->first_name . ' ' . $demande->last_name;
 
-            //     $emailSubject = "Bienvenue ";
-            //     $message = 'Nous vous recommandons de modifier ce mot de passe après votre première connexion.';
+                $emailSubject = "Bienvenue ";
+                $message = 'Nous vous recommandons de modifier ce mot de passe après votre première connexion.';
 
-            //     $emailData = [
-            //         'nom' => $nom,
-            //         'email' => $demande->email,
-            //         'password' => '12345678',
-            //         'message' => $message,
-            //         'url' => env('APP_URL') . '/login',
-            //         'buttonText' => 'Finaliser la création du compte',
-            //     ];
+                $emailData = [
+                    'nom' => $nom,
+                    'email' => $demande->email,
+                    'password' => '12345678',
+                    'message' => $message,
+                    'url' => env('APP_URL') . '/login',
+                    'buttonText' => 'Finaliser la création du compte',
+                ];
 
-            //     Mail::to($demande->email)->send(new NotificationPartenaire($emailData, $emailSubject));
-            // }
+                Mail::to($demande->email)->send(new NotificationPartenaire($emailData, $emailSubject));
+            }
 
 
             DB::commit();
@@ -252,8 +252,8 @@ class AdminController extends Controller
                 'status' => true,
                 'message' => 'Demande acceptée avec succès',
                 'data' => $demande,
-                // 'partner' => $partner,
-                // 'partner_user' => $partner_user
+                'partner' => $partner,
+                'partner_user' => $partner_user
             ], 200);
 
         } catch (\Exception $e) {

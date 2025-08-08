@@ -925,7 +925,7 @@
     }
 </script> --}}
 
-{{-- <script>
+<script>
     // Variables globales
     const DAILY_RATE = @json($tarifByDay->price ?? 0);
     const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
@@ -1364,9 +1364,9 @@
         document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
         document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
     }
-</script> --}}
+</script>
 
-<script>
+{{-- <script>
     // Variables globales
     const DAILY_RATE = @json($tarifByDay->price ?? 0);
     const HOURLY_RATE = @json($tarifHeureSort->price ?? 0);
@@ -1883,4 +1883,4 @@
         document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
         document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
     }
-</script>
+</script> --}}
