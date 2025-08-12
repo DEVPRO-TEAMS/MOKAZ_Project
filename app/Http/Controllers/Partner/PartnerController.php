@@ -43,7 +43,6 @@ class PartnerController extends Controller
 
         // Récupération des reservations actives associées aux appartements
         $reservations = Reservation::whereIn('appart_uuid', $partnerPropertyApartments->pluck('uuid'))
-            ->where('status', 'confirmed')
             ->get();
         return view('partners.dashboard', compact(
             'partnerUsers', 

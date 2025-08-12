@@ -73,7 +73,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-uppercase mb-1">Total Reservations</div>
-                                <div class="h5 mb-0 font-weight-bold" id="inactiveRequests"> {{ $reservations->count() }}
+                                <div class="h5 mb-0 font-weight-bold" id="inactiveRequests"> {{ $reservations->where('status', 'confirmed')->count() }}
                                 </div>
                             </div>
                             <div class="col-auto">

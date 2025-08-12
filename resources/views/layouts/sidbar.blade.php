@@ -127,7 +127,7 @@
                         href="{{ route('admin.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">{{ $reservations->count() }}</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->where('status', 'pending')->count() }}</span>
                         </a>
                     </li>
                     @endif
