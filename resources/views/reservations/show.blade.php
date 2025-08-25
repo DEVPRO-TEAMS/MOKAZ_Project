@@ -8,13 +8,15 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
-                            href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('admin.index') }}">
+                            <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger"
+                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('admin.index') }}">
                                 <i class="bi bi-house-door me-3 fs-5"></i>
                                 <span>Tableau de Bord</span>
                             </a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}">Réservations</a></li>
+                        <li class="breadcrumb-item"><a
+                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}">Réservations</a>
+                        </li>
                         <li class="breadcrumb-item active">{{ $reservation->code }}</li>
                     </ol>
                 </nav>
@@ -24,20 +26,28 @@
         <!-- Actions principales -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-start align-items-center">
                     <h4 class="mb-0">Réservation {{ $reservation->code }}</h4>
-                    <div>
-                        <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST" class="submitForm">
+                </div>
+                <div class="d-flex justify-content-end align-items-center">
+                    @if ($reservation->status !== 'confirmed' && Auth::user()->user_type == 'partner')
+                        <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST"
+                            class="submitForm">
                             @csrf
-                            @if($reservation->status !== 'confirmed' && Auth::user()->user_type == 'partner')
-                                
-                                <button class="btn btn-success" type="submit">
-                                    <i class="icon icon-mail"></i> Envoyer confirmation
-                                </button>
-                            @endif
+                            <button class="btn btn-success" type="submit">
+                                <i class="icon icon-mail"></i> Envoyer confirmation
+                            </button>
                         </form>
-                        
-                    </div>
+                    @elseif ($reservation->is_present == 0 && Auth::user()->user_type == 'partner')
+                        <form id="presentForm">
+                            @csrf
+                            <span>Le client est-il arrivé ? &nbsp; </span>
+                            <input type="hidden" name="reservation_uuid" id="reservation_uuid"
+                                value="{{ $reservation->uuid }}">
+                            <label for="is_presentNo" class="btn btn-danger" data-value="0">Non</label>
+                            <label for="is_presentYes" class="btn btn-success" data-value="1">Oui</label>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -109,7 +119,8 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="fw-bold">Durée :</label>
-                                    <p class="mb-2">{{ $reservation->nbr_of_sejour }} {{ $reservation->sejour == 'Heure' ? 'heure(s)' : 'jour(s)' }}</p>
+                                    <p class="mb-2">{{ $reservation->nbr_of_sejour }}
+                                        {{ $reservation->sejour == 'Heure' ? 'heure(s)' : 'jour(s)' }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -119,16 +130,20 @@
                                         @switch($reservation->status)
                                             @case('confirmed')
                                                 <span class="badge bg-success">Confirmé</span>
-                                                @break
+                                            @break
+
                                             @case('pending')
                                                 <span class="badge bg-warning">En attente</span>
-                                                @break
+                                            @break
+
                                             @case('cancelled')
                                                 <span class="badge bg-danger">Annulé</span>
-                                                @break
+                                            @break
+
                                             @case('reconducted')
                                                 <span class="badge bg-info">Reconduite</span>
-                                                @break
+                                            @break
+
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->status }}</span>
                                         @endswitch
@@ -177,8 +192,12 @@
                                     <label class="fw-bold">Durée totale :</label>
                                     <p class="mb-2">
                                         @php
-                                            $start_time = \Carbon\Carbon::parse($reservation->start_time->format('Y-m-d H:i'));
-                                            $end_time =  \Carbon\Carbon::parse($reservation->end_time->format('Y-m-d H:i'));
+                                            $start_time = \Carbon\Carbon::parse(
+                                                $reservation->start_time->format('Y-m-d H:i'),
+                                            );
+                                            $end_time = \Carbon\Carbon::parse(
+                                                $reservation->end_time->format('Y-m-d H:i'),
+                                            );
                                             $duration = $start_time->diff($end_time);
                                             if ($reservation->sejour === 'Heure') {
                                                 echo $duration->h . 'h ' . $duration->i . 'min';
@@ -210,11 +229,11 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label class="fw-bold">Appartement/Chambre :</label>
+                                    <label class="fw-bold">Hébergement/Chambre :</label>
                                     <p class="mb-2">{{ $reservation->appartement->title ?? 'N/A' }}</p>
                                 </div>
                             </div>
-                            @if($reservation->partner_uuid)
+                            @if ($reservation->partner_uuid)
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label class="fw-bold">Partenaire :</label>
@@ -245,30 +264,39 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="fw-bold">Prix total :</label>
-                                    <p class="mb-2 text-primary fw-bold">{{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</p>
+                                    <label class="fw-bold">Prix total du sejour :</label>
+                                    <p class="mb-2 text-primary fw-bold">
+                                        {{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</p>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="fw-bold">Montant payé :</label>
-                                    <p class="mb-2 text-success">{{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA</p>
+                            @if ($reservation->statut_paiement === 'paid')
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold">Montant payé :</label>
+                                        <p class="mb-2 text-success">
+                                            {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="fw-bold">Reste à payer :</label>
-                                    <p class="mb-2 {{ $reservation->still_to_pay > 0 ? 'text-danger' : 'text-success' }}">
-                                        {{ number_format($reservation->still_to_pay, 0, ',', ' ') }} FCFA
-                                    </p>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold">Reste à payer :</label>
+                                        <p
+                                            class="mb-2 {{ $reservation->still_to_pay > 0 ? 'text-danger' : 'text-success' }}">
+                                            {{ number_format($reservation->still_to_pay, 0, ',', ' ') }} FCFA
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="fw-bold">Mode de paiement :</label>
-                                    <p class="mb-2">{{ ucfirst($reservation->payment_method) }}</p>
+                            @endif
+                            @if (
+                                $reservation->statut_paiement === 'paid' &&
+                                    ($reservation->payment_method !== '' || $reservation->payment_method !== null))
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold">Mode de paiement :</label>
+                                        <p class="mb-2">{{ ucfirst($reservation->payment_method) }}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="fw-bold">Statut paiement :</label>
@@ -276,13 +304,16 @@
                                         @switch($reservation->statut_paiement)
                                             @case('paid')
                                                 <span class="badge bg-success">Payé</span>
-                                                @break
+                                            @break
+
                                             @case('pending')
                                                 <span class="badge bg-danger">Non payé</span>
-                                                @break
+                                            @break
+
                                             @case('unpaid')
                                                 <span class="badge bg-warning">Non payé</span>
-                                                @break
+                                            @break
+
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->statut_paiement }}</span>
                                         @endswitch
@@ -301,7 +332,7 @@
                         <h6 class="title"><i class="icon icon-note me-2"></i>Notes et Remarques</h6>
                     </div>
                     <div class="wrap-content">
-                        @if($reservation->notes)
+                        @if ($reservation->notes)
                             <div class="form-group">
                                 <label class="fw-bold">Notes client :</label>
                                 <div class="p-3 bg-light rounded">
@@ -332,8 +363,8 @@
                                     <p class="timeline-text">{{ $reservation->created_at->format('d/m/Y à H:i') }}</p>
                                 </div>
                             </div>
-                            
-                            @if($reservation->status === 'confirmed')
+
+                            @if ($reservation->status === 'confirmed')
                                 <div class="timeline-item">
                                     <div class="timeline-marker bg-info"></div>
                                     <div class="timeline-content">
@@ -343,12 +374,14 @@
                                 </div>
                             @endif
 
-                            @if($reservation->statut_paiement === 'paid')
+                            @if ($reservation->statut_paiement === 'paid')
                                 <div class="timeline-item">
                                     <div class="timeline-marker bg-success"></div>
                                     <div class="timeline-content">
                                         <h6 class="timeline-title">Paiement effectué</h6>
-                                        <p class="timeline-text">{{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA via {{ ucfirst($reservation->payment_method) }}</p>
+                                        <p class="timeline-text">
+                                            {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA via
+                                            {{ ucfirst($reservation->payment_method) }}</p>
                                     </div>
                                 </div>
                             @endif
@@ -363,12 +396,14 @@
             <div class="col-md-12">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center justify-content-start">
-                        <a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}" class="btn btn-secondary">
+                        <a href="{{ Auth::user()->user_type == 'admin' ? route('admin.reservation.index') : route('partner.reservation.index') }}"
+                            class="btn btn-secondary">
                             <i class="icon icon-arrow-left"></i> Retour à la liste
                         </a>
                     </div>
                     <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $reservation->uuid }}">
+                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
+                            data-bs-target="#receiptModal{{ $reservation->uuid }}">
                             <i class="fas fa-receipt"></i> Voir le reçu
                         </button>
                     </div>
@@ -377,149 +412,103 @@
         </div>
     </div>
     @include('components.receip')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('presentForm');
+            const reservationUuid = document.getElementById('reservation_uuid').value;
+
+            // Ajouter un event listener sur les labels Oui / Non
+            form.querySelectorAll("label[data-value]").forEach(label => {
+                label.addEventListener("click", function() {
+                    let isPresent = this.getAttribute("data-value");
+
+                    axios.post("/api/customerIsPresent", {
+                            reservation_uuid: reservationUuid,
+                            is_present: isPresent
+                        }, {
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            console.log(response.data.message);
+                            Swal.fire({
+                                icon: 'success',
+                                text: response.data.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            Swal.fire({
+                                icon: 'error',
+                                text: "Erreur lors de l'enregistrement"
+                            });
+                        });
+                });
+            });
+        });
+    </script>
 @endsection
 
 @push('styles')
-<style>
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 15px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #e9ecef;
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 20px;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -22px;
-        top: 5px;
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px #e9ecef;
-    }
-
-    .timeline-content {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 5px;
-        border-left: 3px solid #007bff;
-    }
-
-    .timeline-title {
-        margin: 0 0 5px 0;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .timeline-text {
-        margin: 0;
-        font-size: 13px;
-        color: #6c757d;
-    }
-</style>
-@endpush
-
-{{-- @push('scripts')
-<script>
-function sendConfirmation() {
-    if (confirm('Envoyer un email de confirmation au client ?')) {
-        // Logique pour envoyer l'email
-        fetch(`/reservations/{{ $reservation->id }}/send-confirmation`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Email de confirmation envoyé avec succès !');
-            } else {
-                alert('Erreur lors de l\'envoi de l\'email');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erreur lors de l\'envoi de l\'email');
-        });
-    }
-}
-
-function cancelReservation(id) {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-        const reason = prompt('Raison de l\'annulation (optionnel):');
-        
-        fetch(`/reservations/${id}/cancel`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                reason: reason
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Erreur lors de l\'annulation');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erreur lors de l\'annulation');
-        });
-    }
-}
-
-function addPayment(id) {
-    const amount = prompt('Montant du paiement (FCFA):');
-    if (amount && !isNaN(amount) && amount > 0) {
-        const method = prompt('Mode de paiement (cash, card, transfer, mobile):');
-        if (method) {
-            fetch(`/reservations/${id}/add-payment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    amount: parseFloat(amount),
-                    method: method,
-                    notes: prompt('Notes sur le paiement (optionnel):')
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Erreur lors de l\'ajout du paiement');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Erreur lors de l\'ajout du paiement');
-            });
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 30px;
         }
-    }
-}
-</script>
-@endpush --}}
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -22px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #e9ecef;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #007bff;
+        }
+
+        .timeline-title {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .timeline-text {
+            margin: 0;
+            font-size: 13px;
+            color: #6c757d;
+        }
+    </style>
+@endpush

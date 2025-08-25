@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Appartement;
+use App\Models\Comment;
 use App\Models\Property;
-use Illuminate\Http\Request;
+use App\Models\Appartement;
 
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
 
 class PagesController extends Controller
@@ -16,6 +18,7 @@ class PagesController extends Controller
         // $bestApparts = Appartement::where('etat', 'actif')->take(3)->with('reservations')->orderBy('created_at', 'desc')->get();
         $bestApparts = Appartement::withCount('reservations')
         ->where('etat', 'actif')
+        ->where('nbr_available', '>', 0)
         ->orderByDesc('reservations_count')
         ->take(3)
         ->with('tarifications') // si tu as une relation tarifications() dans le modèle Appartement
@@ -140,7 +143,6 @@ class PagesController extends Controller
 
         return response()->json($properties);
     }
-
     public function indexReservations()
     {
         return view('pages.reservation');
@@ -176,5 +178,62 @@ class PagesController extends Controller
         $appart = Appartement::where('etat', '=', 'actif')->where('uuid', $uuid)->first();
         // dd($appart);
         return view('pages.detail', compact('appart'));
+    }
+
+
+    public function addComment(Request $request)
+    {
+
+        $comment = Comment::create([
+            'uuid' => Str::uuid(),
+            'name' => $request->name,
+            'appart_uuid' => $request->appart_uuid,
+            'property_uuid' => $request->property_uuid,
+            'partner_uuid' => $request->partner_uuid,
+            'email' => $request->email,
+            'rating' => $request->rating,
+            'comment' => $request->comment
+        ]);
+
+        if (!$comment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de l\'ajout du commentaire',
+                'code' => 500
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Commentaire ajouté avec succès',
+            'data' => $comment,
+            'code' => 200
+        ]);
+    }
+
+    // public function getComments(Request $request)
+    // {
+    //     $perPage = $request->get('perPage', 2);
+
+    //     $comments = Comment::orderBy('created_at', 'desc')->paginate($perPage);
+
+    //     return response()->json($comments);
+    // }
+
+    public function getComments(Request $request)
+    {
+        $perPage = $request->get('perPage', 2);
+
+        $comments = Comment::where('appart_uuid', $request->appart_uuid)->where('etat', 'actif')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+        return response()->json([
+            'data' => $comments->items(),
+            'meta' => [
+                'current_page' => $comments->currentPage(),
+                'last_page' => $comments->lastPage(),
+                'per_page' => $comments->perPage(),
+                'total' => $comments->total()
+            ]
+        ]);
     }
 }

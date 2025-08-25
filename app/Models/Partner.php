@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Comment;
 use App\Models\Property;
 use App\Models\Appartement;
 use App\Models\Reservation;
@@ -40,6 +41,11 @@ class Partner extends Model
     public function property()
     {
         return $this->hasMany(Property::class, 'partner_uuid', 'uuid');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'appart_uuid', 'uuid');
     }
 
 }

@@ -28,7 +28,63 @@
         [aria-expanded="true"] .read-more-toggle i {
             transform: rotate(180deg);
         }
+
+        .rating {
+            direction: rtl;
+            /* Permet de remplir les étoiles de droite à gauche */
+            unicode-bidi: bidi-override;
+            display: inline-flex;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 3rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .rating input:checked~label,
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #ffc107;
+            /* Jaune bootstrap */
+        }
+
+        .list-star-note {
+            display: flex;
+        }
+
+        .list-star-note .icon-star {
+            color: #ddd;
+            font-size: 16px;
+        }
+
+        .pagination .page-item .page-link {
+            color: #dc3545;
+            /* Rouge Bootstrap */
+            border-radius: 8px;
+            margin: 0 4px;
+            border: 1px solid #dc3545;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
+
 
     <section class="flat-location flat-slider-detail-v1">
         <div class="swiper tf-sw-location" data-preview-lg="2.03" data-preview-md="2" data-preview-sm="2" data-space="20"
@@ -39,7 +95,8 @@
                         <a href="{{ asset($image->doc_url) }}" target="_blank" data-fancybox="gallery"
                             class="box-imgage-detail d-block">
                             <center>
-                                <img src="{{ asset($image->doc_url) }}" class="img-fluid" style="max-height: 70vh; max-width: 100%; object-fit: cover;" alt="img-appart">
+                                <img src="{{ asset($image->doc_url) }}" class="img-fluid"
+                                    style="max-height: 70vh; max-width: 100%; object-fit: cover;" alt="img-appart">
                             </center>
                         </a>
                     </div>
@@ -55,10 +112,10 @@
     <section class="flat-section pt-0 flat-property-detail">
         @php
             // Récupérer la tarification à l'heure la moins chère
-            $tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+$tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-            // Récupérer la tarification à la journée la moins chère
-            $tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
         @endphp
         <div class="container border rounded shadow p-4">
             <div class="header-property-detail">
@@ -77,7 +134,8 @@
                             </h5>
                             <span class="body-1 text-variant-1">
                                 @if ($tarifHeure)
-                                    / {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                    /
+                                    {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
                                 @endif
                             </span>
                         </div>
@@ -119,54 +177,54 @@
             </div>
             <div class="row">
                 <div class="col-lg-8">
-                @php
-                    $fullDescription = $appart->description;
-                    $wordLimit = 100;
+                    @php
+                        $fullDescription = $appart->description;
+                        $wordLimit = 100;
 
-                    // Nettoyage initial et normalisation des espaces
-                    $normalizedContent = preg_replace('/\s+/', ' ', $fullDescription);
-                    $textOnly = strip_tags($normalizedContent);
+                        // Nettoyage initial et normalisation des espaces
+                        $normalizedContent = preg_replace('/\s+/', ' ', $fullDescription);
+                        $textOnly = strip_tags($normalizedContent);
 
-                    // Découpage des mots en gérant les espaces particuliers
-                    $words = preg_split('/\s+/', trim($textOnly));
-                    $wordCount = count($words);
+                        // Découpage des mots en gérant les espaces particuliers
+                        $words = preg_split('/\s+/', trim($textOnly));
+                        $wordCount = count($words);
 
-                    if ($wordCount > $wordLimit) {
-                        // On prend les premiers mots (sans HTML)
-                        $limitedText = implode(' ', array_slice($words, 0, $wordLimit));
+                        if ($wordCount > $wordLimit) {
+                            // On prend les premiers mots (sans HTML)
+                            $limitedText = implode(' ', array_slice($words, 0, $wordLimit));
 
-                        // On trouve la position approximative dans le HTML original
-                        $pos = 0;
-                        $currentWordCount = 0;
-                        $pattern = '/(?:<[^>]+>)|(?:\s*\S+\s*)/';
-                        preg_match_all($pattern, $fullDescription, $matches, PREG_OFFSET_CAPTURE);
+                            // On trouve la position approximative dans le HTML original
+                            $pos = 0;
+                            $currentWordCount = 0;
+                            $pattern = '/(?:<[^>]+>)|(?:\s*\S+\s*)/';
+                            preg_match_all($pattern, $fullDescription, $matches, PREG_OFFSET_CAPTURE);
 
-                        foreach ($matches[0] as $match) {
-                            if (!preg_match('/^<[^>]+>$/', $match[0])) {
-                                // Si ce n'est pas une balise HTML
-                            $currentWordCount++;
-                            if ($currentWordCount >= $wordLimit) {
-                                $pos = $match[1];
-                                break;
-                            }
-                        }
-                    }
+                            foreach ($matches[0] as $match) {
+                                if (!preg_match('/^<[^>]+>$/', $match[0])) {
+                                    // Si ce n'est pas une balise HTML
+            $currentWordCount++;
+            if ($currentWordCount >= $wordLimit) {
+                $pos = $match[1];
+                break;
+            }
+        }
+    }
 
-                    if ($pos > 0) {
-                        $limitedHtml = substr($fullDescription, 0, $pos);
-                        $remainingHtml = substr($fullDescription, $pos);
-                    } else {
-                        // Fallback si la méthode échoue
-                        $limitedHtml = Str::words($fullDescription, $wordLimit, '');
-                        $remainingHtml = Str::after($fullDescription, $limitedHtml);
-                    }
-                    } else {
-                        $limitedHtml = $fullDescription;
-                        $remainingHtml = '';
-                    }
+    if ($pos > 0) {
+        $limitedHtml = substr($fullDescription, 0, $pos);
+        $remainingHtml = substr($fullDescription, $pos);
+    } else {
+        // Fallback si la méthode échoue
+        $limitedHtml = Str::words($fullDescription, $wordLimit, '');
+        $remainingHtml = Str::after($fullDescription, $limitedHtml);
+    }
+} else {
+    $limitedHtml = $fullDescription;
+    $remainingHtml = '';
+}
 
-                    $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
-                @endphp
+$hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
+                    @endphp
 
                     <div class="single-property-element single-property-desc">
                         <div class="h7 title fw-7">Description</div>
@@ -195,7 +253,7 @@
                                 <a href="#" class="box-icon w-52"><i class="icon icon-house-line"></i></a>
                                 <div class="content">
                                     <span class="label">ID:</span>
-                                    <span>{{ $appart->id  ?? ''}}</span>
+                                    <span>{{ $appart->id ?? '' }}</span>
                                 </div>
                             </li>
                             <li class="item col-lg-4 col-md-6">
@@ -209,25 +267,29 @@
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bed"></i></a>
                                 <div class="content">
                                     <span class="label">Chambre à couché:</span>
-                                    <span>{{ $appart->nbr_room ?? '0'}} Chambres</span>
+                                    <span>{{ $appart->nbr_room ?? '0' }} Chambres</span>
                                 </div>
                             </li>
                             <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bathtub"></i></a>
                                 <div class="content">
                                     <span class="label">Salle de bain:</span>
-                                    <span>{{ $appart->nbr_bathroom ?? '0'}} salles</span>
+                                    <span>{{ $appart->nbr_bathroom ?? '0' }} salles</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                     @php
-          
-                        if (!function_exists('generateEmbedUrl')) {
-                            function generateEmbedUrl($url) {
-                                if (!$url) return null;
+                    @php
 
-                                $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:shorts/|watch\?v=|embed/|v/)|youtu\.be/)([^"&?/ ]{11})%i';
+                        if (!function_exists('generateEmbedUrl')) {
+                            function generateEmbedUrl($url)
+                            {
+                                if (!$url) {
+                                    return null;
+                                }
+
+                                $pattern =
+                                    '%(?:youtube(?:-nocookie)?\.com/(?:shorts/|watch\?v=|embed/|v/)|youtu\.be/)([^"&?/ ]{11})%i';
 
                                 preg_match($pattern, $url, $matches);
 
@@ -237,37 +299,37 @@
 
                         $videoUrl = generateEmbedUrl($appart->video_url);
                         $commodities = explode(',', $appart->commodities);
-                        @endphp
+                    @endphp
                     <div class="single-property-element single-property-video">
                         <div class="h7 title fw-7">Video</div>
                         <div class="img-video">
                             <img src="{{ asset($appart->image) }}" alt="img-video">
-                            <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video"> <span
-                                    class="icon icon-play"></span></a>
+                            <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video">
+                                <span class="icon icon-play"></span></a>
                         </div>
                     </div>
                     <div class="single-property-element single-property-info">
-                        <div class="h7 title fw-7">Détails de la appartement</div>
+                        <div class="h7 title fw-7">Détails de l'hébergement</div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Code:</span>
-                                    <div class="content fw-7">{{ $appart->code ?? ''}}</div>
+                                    <div class="content fw-7">{{ $appart->code ?? '' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Chambre:</span>
-                                    <div class="content fw-7">{{ $appart->nbr_room ?? '0'}}</div>
+                                    <div class="content fw-7">{{ $appart->nbr_room ?? '0' }}</div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Prix:</span>
                                     <div class="content fw-7">
                                         <span class="caption-1 fw-4 text-variant-1">À partir de &nbsp;</span>
-                                         @if ($tarifHeure)
+                                        @if ($tarifHeure)
                                             {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
                                         @elseif ($tarifJour)
                                             {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
@@ -289,13 +351,13 @@
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Salle de bain:</span>
-                                    <div class="content fw-7">{{ $appart->nbr_bathroom ?? '0'}}</div>
+                                    <div class="content fw-7">{{ $appart->nbr_bathroom ?? '0' }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="inner-box">
                                     <span class="label">Type:</span>
-                                    <div class="content fw-7">{{ $appart->type->libelle ?? ''}}</div>
+                                    <div class="content fw-7">{{ $appart->type->libelle ?? '' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -318,7 +380,8 @@
                     @endif
                     <div class="single-property-element single-property-map">
                         <div class="h7 title fw-7">Map</div>
-                        <div id="map-location-property" class="map-single" data-map-zoom="16" data-map-scroll="true"></div>
+                        <div id="map-location-property" class="map-single" data-map-zoom="16" data-map-scroll="true">
+                        </div>
                         {{-- <ul class="info-map">
                             <li>
                                 <div class="fw-7">Address</div>
@@ -387,100 +450,59 @@
                         </div>
                         <div class="wrap-review">
                             <ul class="box-review">
-                                <li class="list-review-item">
-                                    <div class="avatar avt-60 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-2.jpg') }}" alt="avatar">
-                                    </div>
-                                    <div class="content">
-                                        <div class="name h7 fw-7 text-black">John Doe
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M0 8C0 12.4112 3.5888 16 8 16C12.4112 16 16 12.4112 16 8C16 3.5888 12.4112 0 8 0C3.5888 0 0 3.5888 0 8ZM12.1657 6.56569C12.4781 6.25327 12.4781 5.74673 12.1657 5.43431C11.8533 5.1219 11.3467 5.1219 11.0343 5.43431L7.2 9.26863L5.36569 7.43431C5.05327 7.12189 4.54673 7.12189 4.23431 7.43431C3.9219 7.74673 3.9219 8.25327 4.23431 8.56569L6.63432 10.9657C6.94673 11.2781 7.45327 11.2781 7.76569 10.9657L12.1657 6.56569Z"
-                                                    fill="#198754" />
-                                            </svg>
-                                        </div>
-                                        <span class="mt-4 d-inline-block  date body-3 text-variant-2">04 Août 2025</span>
-                                        <ul class="mt-8 list-star">
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                            <li class="icon-star"></li>
-                                        </ul>
-                                        <p class="mt-12 body-2 text-black">J'ai vraiment apprécié le professionnalisme et les connaissances approfondies de l'équipe
-                                        de courtage. Ils
-                                        m'ont non seulement aidé à trouver la maison idéale, mais ils m'ont également assisté pour
-                                        les aspects juridiques et financiers,
-                                        , ce qui m'a permis de me sentir confiant et sûr de ma décision.</p>
-                                        {{-- <ul class="box-img-review">
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review1.jpg') }}"
-                                                        alt="img-review">
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review2.jpg') }}"
-                                                        alt="img-review">
 
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review3.jpg') }}"
-                                                        alt="img-review">
-
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <img src="{{ asset('assets/images/blog/review4.jpg') }}"
-                                                        alt="img-review">
-
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="img-review">
-                                                    <span class="fw-7">+12</span>
-                                                </a>
-                                            </li>
-                                        </ul> --}}
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                         <div class="wrap-form-comment">
                             <div class="h7">Laisser un commentaire</div>
                             <div id="comments" class="comments">
                                 <div class="respond-comment">
-                                    <form class="comment-form form-submit"
-                                        >
+                                    <form class="comment-form form-submit" id="comment-form">
 
                                         <div class="form-wg group-ip">
                                             <fieldset>
                                                 <label class="sub-ip">Nom</label>
-                                                <input type="text" class="form-control" name="text"
-                                                    placeholder="Your name" required="">
+                                                <input type="text" class="form-control" name="name"
+                                                    placeholder="Votre nom et prénom(s)" required>
+
+                                                <input type="hidden" class="form-control" id="appart_uuid"
+                                                    name="appart_uuid" value="{{ $appart->uuid }}">
+
+                                                <input type="hidden" class="form-control" name="property_uuid"
+                                                    value="{{ $appart->property_uuid ?? '' }}">
+
+                                                <input type="hidden" class="form-control" name="partner_uuid"
+                                                    value="{{ $appart->property->partner_uuid ?? '' }}">
                                             </fieldset>
                                             <fieldset>
                                                 <label class="sub-ip">Email</label>
                                                 <input type="email" class="form-control" name="email"
-                                                    placeholder="Your email" required="">
+                                                    placeholder="Votre adresse email" required>
                                             </fieldset>
                                         </div>
-                                        {{-- <fieldset class="form-wg d-flex align-items-center gap-8">
-                                            <input type="checkbox" class="tf-checkbox" id="cb-ip">
-                                            <label for="cb-ip" class="text-black text-checkbox">Save your name, email
-                                                for the next time review </label>
-                                        </fieldset> --}}
+                                        <!-- ⭐ Ajout des étoiles -->
+                                        <fieldset class="form-wg">
+                                            <label class="sub-ip d-block">Votre note</label>
+                                            <div class="rating">
+                                                <input type="radio" id="star5" name="rating" value="5"
+                                                    required />
+                                                <label for="star5" title="5 étoiles">★</label>
+                                                <input type="radio" id="star4" name="rating" value="4" />
+                                                <label for="star4" title="4 étoiles">★</label>
+                                                <input type="radio" id="star3" name="rating" value="3" />
+                                                <label for="star3" title="3 étoiles">★</label>
+                                                <input type="radio" id="star2" name="rating" value="2" />
+                                                <label for="star2" title="2 étoiles">★</label>
+                                                <input type="radio" id="star1" name="rating" value="1" />
+                                                <label for="star1" title="1 étoile">★</label>
+                                            </div>
+                                        </fieldset>
                                         <fieldset class="form-wg">
                                             <label class="sub-ip">Commentaire</label>
-                                            <textarea id="comment-message" name="message" rows="4" tabindex="4" placeholder="Write comment "
+                                            <textarea id="comment-message" name="comment" rows="4" tabindex="4" placeholder="Votre commentaire"
                                                 aria-required="true"></textarea>
                                         </fieldset>
-                                        <button class="form-wg tf-btn primary" name="submit" type="submit">
+                                        <button class="form-wg tf-btn primary" type="submit">
                                             <span>Envoyer</span>
                                         </button>
                                     </form>
@@ -998,7 +1020,7 @@
             // Récupération des coordonnées depuis les variables Blade (Laravel)
             const latitude = @json($appart->property->latitude);
             const longitude = @json($appart->property->longitude);
-            
+
 
             // Initialisation de la carte
             const map = L.map('map-location-property').setView([latitude, longitude], 16);
@@ -1014,4 +1036,218 @@
                 .openPopup();
         });
     </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('comment-form');
+            const appartUuid = document.getElementById('appart_uuid').value;
+            const commentsList = document.querySelector('.box-review');
+            const commentsWrapper = document.querySelector('.wrap-review');
+            let currentPage = 1;
+            const perPage = 2;
+
+            // Charger les commentaires au démarrage
+            loadComments(currentPage);
+
+            // ✅ Soumission du formulaire
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch("/api/add-comments", {
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        form.reset();
+                        loadComments(1);
+                        Swal.fire({
+                            icon: 'success',
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } catch (err) {
+                    console.error("Erreur Fetch:", err);
+                }
+            });
+
+            function timeAgo(dateString) {
+                const now = new Date();
+                const commentDate = new Date(dateString);
+                const diff = Math.floor((now - commentDate) / 1000); // différence en secondes
+
+                if (diff < 60) return `il y a ${diff} seconde${diff > 1 ? 's' : ''}`;
+                if (diff < 3600) {
+                    const minutes = Math.floor(diff / 60);
+                    return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+                }
+                if (diff < 86400) {
+                    const hours = Math.floor(diff / 3600);
+                    return `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+                }
+                const days = Math.floor(diff / 86400);
+                return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+            }
+            // ✅ Charger les commentaires avec pagination
+            function loadComments(page = 1) {
+                fetch(`/api/get-comments?page=${page}&perPage=${perPage}&appart_uuid=${appartUuid}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        commentsList.innerHTML = "";
+
+                        if (data.data.length === 0) {
+                            commentsList.innerHTML = "<li>Aucun commentaire pour le moment.</li>";
+                            return;
+                        }
+
+                        data.data.forEach(comment => {
+                            let rating = parseInt(comment.rating) ||
+                                0; // on s'assure que c'est un nombre
+                            let stars = "";
+
+                            for (let i = 0; i < 5; i++) {
+                                stars +=
+                                    `<li class="icon-star ${i < rating ? 'text-warning' : ''}"></li>`;
+                            }
+
+                            commentsList.innerHTML += `
+                            <li class="list-review-item">
+                                <div class="avatar avt-60 round">
+                                    <img src="/assets/images/avatar/user-profile.webp" alt="avatar">
+                                </div>
+                                <div class="content">
+                                    <div class="name h7 fw-7 text-black">${comment.name}</div>
+                                    <span class="mt-4 d-inline-block date body-3 text-variant-2">
+                                        ${timeAgo(comment.created_at)}
+                                    </span>
+                                    <ul class="mt-8 list-star-note">${stars}</ul>
+                                    <p class="mt-12 body-2 text-black">${comment.comment}</p>
+                                </div>
+                            </li>
+                        `;
+                        });
+
+                        renderPagination(data.meta);
+                    })
+                    .catch(err => console.error(err));
+            }
+
+            // function renderPagination(meta) {
+            //     let paginationHTML = "";
+            //     const totalPages = meta.last_page;
+
+            //     if (totalPages > 1) {
+            //         paginationHTML += `
+        //         <nav class="mt-4">
+        //             <ul class="pagination justify-content-center">`;
+
+            //                     for (let i = 1; i <= totalPages; i++) {
+            //                         paginationHTML += `
+        //             <li class="page-item ${i === meta.current_page ? 'active' : ''}">
+        //                 <a class="page-link" href="#" data-page="${i}">${i}</a>
+        //             </li>`;
+            //                     }
+
+            //                     paginationHTML += `
+        //             </ul>
+        //         </nav>`;
+            //     }
+
+            //     commentsWrapper.querySelector(".pagination")?.remove(); // Supprime ancienne pagination
+            //     commentsWrapper.insertAdjacentHTML("beforeend", paginationHTML);
+
+            //     // Gestion des clics
+            //     document.querySelectorAll('.page-link').forEach(link => {
+            //         link.addEventListener('click', function(e) {
+            //             e.preventDefault();
+            //             currentPage = parseInt(this.dataset.page);
+            //             loadComments(currentPage);
+            //         });
+            //     });
+            // }
+            function renderPagination(meta) {
+                const totalPages = meta.last_page;
+                const currentPage = meta.current_page;
+                let paginationHTML = "";
+
+                if (totalPages > 1) {
+                    paginationHTML += `
+        <nav class="pt-4">
+            <ul class="pagination justify-content-center">`;
+
+                    // Bouton "Précédent"
+                    paginationHTML += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a>
+            </li>`;
+
+                    // Pages
+                    for (let i = 1; i <= totalPages; i++) {
+                        // Afficher toujours la première et dernière page
+                        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                            paginationHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>`;
+                        } else if (i === 2 && currentPage > 3) {
+                            paginationHTML +=
+                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                        } else if (i === totalPages - 1 && currentPage < totalPages - 2) {
+                            paginationHTML +=
+                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                        }
+                    }
+
+                    // Bouton "Suivant"
+                    paginationHTML += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a>
+            </li>`;
+
+                    paginationHTML += `
+            </ul>
+        </nav>`;
+                }
+
+                // Supprime l'ancienne pagination et ajoute la nouvelle
+                commentsWrapper.querySelector(".pagination")?.remove();
+                commentsWrapper.insertAdjacentHTML("beforeend", paginationHTML);
+
+                // Gestion des clics
+                document.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const page = parseInt(this.dataset.page);
+                        if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                            loadComments(page);
+                        }
+                    });
+                });
+            }
+
+        });
+    </script>
+
+
+
+
 @endsection

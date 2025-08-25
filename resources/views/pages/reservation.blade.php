@@ -9,8 +9,8 @@
     <!-- Contenu centré -->
     <div class="row h-100 align-items-center justify-content-center text-center position-relative" style="z-index: 2; animation: fadeIn 1.5s ease;">
         <div class="col-11 col-md-8">
-            <h2 class="text-white display-4 fw-bold mb-3">Liste des appartements</h2>
-            <p class="text-white lead mb-4">Trouvez l’appartement idéal selon vos préférences et votre budget.</p>
+            <h2 class="text-white display-4 fw-bold mb-3">Liste des hébergements</h2>
+            <p class="text-white lead mb-4">Trouvez l’hébergement idéal selon vos préférences et votre budget.</p>
             <a href="#liste-appartements" class="btn btn-outline-light px-4 py-2 rounded-pill shadow-sm">Voir les offres</a>
         </div>
     </div>

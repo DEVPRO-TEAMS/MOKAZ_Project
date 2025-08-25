@@ -29,23 +29,28 @@
                         <textarea name="adresse" class="form-control" rows="2"></textarea>
                     </div>
 
-                   <div class="col-md-12">
-                        <fieldset class="row">
-                            <legend class="form-label"><small >Contact</small> </legend>
+                    <div class="col-md-12 p-3">
+                        <fieldset class="row border border-2 rounded p-3 position-relative mb-3">
+                            <legend class="float-none w-auto px-2 text-primary fw-bold" style="font-size: 0.9rem;">
+                                <small>Contact</small>
+                            </legend>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Nom <span class="text-danger">*</span></label>
                                 <input type="text" name="contact_name" class="form-control" required>
-                                </div>
-                                <div class="col-md-6">
-                                <label class="form-label">Prenoms <span class="text-danger">*</span></label>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Prénoms <span class="text-danger">*</span></label>
                                 <input type="text" name="contact_lastname" class="form-control" required>
-                                </div>
-                                <div class="col-md-12">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
                                 <label class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="contact_email" class="form-control" required>
                             </div>
                         </fieldset>
+
                     </div>
                 </div>
             </div>

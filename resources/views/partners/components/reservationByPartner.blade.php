@@ -5,7 +5,7 @@
                 <tr>
                     <th>Code</th>
                     <th>Client</th>
-                    <th>Appartement</th>
+                    <th>Hébergement</th>
                     <th>Dates</th>
                     <th>Prix total</th>
                     <th>Paiement</th>

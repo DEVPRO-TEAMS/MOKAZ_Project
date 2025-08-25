@@ -51,7 +51,7 @@
             <span class="info-value">{{ $reservation->property->title ?? 'N/A' }}</span>
         </div>
         <div class="info-row">
-            <span class="info-label">Appartement/Chambre :</span>
+            <span class="info-label">Hébergement/Chambre :</span>
             <span class="info-value">{{ $reservation->appartement->title ?? 'N/A' }}</span>
         </div>
         @if($reservation->partner_uuid)

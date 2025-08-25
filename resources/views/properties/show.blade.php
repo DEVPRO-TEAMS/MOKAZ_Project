@@ -352,8 +352,35 @@
                     <h3 class="title"></h3>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
-                    <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->uuid) }}"><i class="icon icon-plus"></i>
-                        Ajouter un appartement</a>
+                    @if (Auth::user()->user_type == 'admin')
+                        @if($property->etat == 'pending')
+
+                            <button class="btn btn-success me-2">
+                                <a class="deleteConfirmation text-white" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.approveProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point d'accepter la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Accepter</a>
+                            </button>
+                        
+                            <button class="btn btn-danger">
+                                <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.rejectProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point de rejeter la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
+                                <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
+                            </button>
+                        @endif
+                    @else
+                        <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->uuid) }}"><i class="icon icon-plus"></i>
+                            Ajouter un hébergement</a>
+                    @endif
                 </div>
             </div>
             <div class="wrap-table p-3">
@@ -364,16 +391,7 @@
 
                         <div class="row g-0">
                             <div class="property-image-container col-12 mb-3" style="height: 380px; background: url('{{ asset($property->image) }}') no-repeat center center; background-size: cover; border-radius: 10px;">
-                                {{-- @if ($property->image)
-                                        <img src="{{ asset($property->image) }}"
-                                        alt="{{ $property->title }}" class="img-fluid rounded-3 shadow-sm w-100"
-                                        style="height: 100%;  object-fit: cover;">
-                                @else
-                                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center"
-                                        style="height: 200px;">
-                                        <i class="fas fa-home fa-3x text-muted"></i>
-                                    </div>
-                                @endif --}}
+                                
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="info-item">
@@ -500,7 +518,7 @@
 
                 <!-- Statut et Préférences -->
                 <div class="info-section fade-in">
-                    <h6><i class="fas fa-building text-danger"></i>Appartements associés</h6>
+                    <h6><i class="fas fa-building text-danger"></i>Hébergements associés</h6>
                     <div class="partner-info-card">
                         <div class="row g-0">
                             <div class="col-12">
@@ -510,7 +528,7 @@
                                             <tr>
                                                 <th width="80">Code</th>
                                                 <th>Libellé</th>
-                                                <th>Type d'appart</th>
+                                                <th>Type</th>
                                                 <th width="140">Date</th>
                                                 <th>Statut</th>
                                                 <th>Qté disponible</th>
@@ -571,8 +589,8 @@
                                                     <td colspan="8" class="text-center py-5">
                                                         <div class="d-flex flex-column align-items-center">
                                                             <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
-                                                            <h5 class="fw-semibold">Aucun appartement trouvée</h5>
-                                                            <p class="text-muted">Aucun appartement n'est associé à la propriété</p>
+                                                            <h5 class="fw-semibold">Aucun hébergement trouvée</h5>
+                                                            <p class="text-muted">Aucun hébergement n'est associé à la propriété</p>
                                                             
                                                         </div>
                                                     </td>
@@ -631,7 +649,7 @@
 
                     Swal.fire({
                         title: 'Êtes-vous sûr ?',
-                        text: "Cet appartement sera définitivement supprimée.",
+                        text: "Cet hébergement sera définitivement supprimée.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -692,7 +710,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Erreur',
-                                    text: 'Une erreur s’est produite lors de la suppression de l’appartement.',
+                                    text: 'Une erreur s’est produite lors de la suppression de l’hébergement.',
                                     showConfirmButton: true,
                                 });
                             });

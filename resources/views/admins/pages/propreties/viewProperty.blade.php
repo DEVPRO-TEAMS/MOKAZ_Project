@@ -215,12 +215,17 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
+                                                {{-- <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#showPropertyModal{{ $property->id }}"
                                                         title="Voir détails">
                                                     <i class="fas fa-eye"></i>
-                                                </button>
+                                                </button> --}}
+                                                <a title="Voir détails"
+                                                    class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
+                                                    href="{{ route('admin.properties.show', $property->uuid) }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
                                                 
                                                 {{-- <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
                                                         onclick="editProperty({{ $property->id }})"
@@ -228,7 +233,7 @@
                                                     <i class="fas fa-edit"></i>
                                                 </button> --}}
                                                 
-                                                @if($property->etat == 'pending')
+                                                {{-- @if($property->etat == 'pending')
                                                     <button class="btn btn-sm btn-icon btn-outline-success rounded-circle">
                                                         <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
                                                         data-type="confirmation_redirect" data-placement="top"
@@ -250,7 +255,7 @@
                                                         data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
                                                         <i class="fas fa-times" style="cursor: pointer"></i></a>
                                                     </button>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </td>
                                     </tr>

@@ -152,7 +152,7 @@
             <input type="hidden" name="partner_uuid" value="{{ Auth::user()->partner_uuid ?? '' }}">
             <input type="hidden" name="property_uuid" id="property_uuid" value="{{ $uuid }}">
             <div class="widget-box-2">
-                <h6 class="title">Charger l'images de l'appartement</h6>
+                <h6 class="title">Charger l'images de l'hébergement</h6>
                 <div class="box-uploadfile text-center">
                     <label class="uploadfile">
                         <span class="icon icon-img-2"></span>
@@ -165,7 +165,7 @@
                 </div>
             </div>
             <div class="widget-box-2">
-                <h6 class="title">Information sur l'appartement</h6>
+                <h6 class="title">Information sur l'hébergement</h6>
                 <div class="box-info-property">
                     <fieldset class="box box-fieldset">
                         <label for="title">
@@ -230,11 +230,11 @@
                 <div class="row box">
                     <fieldset class="box-fieldset col-md-3">
                         <label for="appartType">
-                            Type de l'appartment:<span>*</span>
+                            Type de l'hébergement:<span>*</span>
                         </label>
 
                         <select class="form-select nice-select list style-1" id="appartType" name="type_uuid" required>
-                            <option value="" disabled selected>-- Choisir le type d'appartement --</option>
+                            <option value="" disabled selected>-- Choisir le type d'hébergement --</option>
                             @foreach ($typeAppart as $item)
                                 <option value="{{ $item->uuid }}">{{ $item->libelle }}</option>
                             @endforeach
@@ -341,7 +341,7 @@
             </div>
 
             <div class="widget-box-2">
-                <h6 class="title">Charger les images de l'appartement</h6>
+                <h6 class="title">Charger les images de l'hébergement</h6>
                 <div class="box-uploadfile text-center">
                     <label class="uploadfile">
                         <span class="icon icon-img-2"></span>
@@ -360,7 +360,7 @@
             </div>
 
             <div class="widget-box-2">
-                <h6 class="title">Videos de l'appartement</h6>
+                <h6 class="title">Videos de l'hébergement</h6>
                 <fieldset class="box-fieldset">
                     <label for="video">URL de la vidéo :</label>
                     <input type="url" class="form-control style-1" id="video" name="video_url"
@@ -441,7 +441,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Succès',
-                    text: 'Appartement ajoutée avec succès',
+                    text: 'Hébergement ajoutée avec succès',
                     timer: 5000,
                     showConfirmButton: false,
                     position: 'top-end',

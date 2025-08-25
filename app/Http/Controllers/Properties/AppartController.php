@@ -74,7 +74,7 @@ class AppartController extends Controller
                     'description' => $request->description,
                     'created_by' => $request->user_uuid,
                     'updated_by' => $request->user_uuid,
-                    'etat' => 'actif'
+                    // 'etat' => 'actif'
                 ]
             );
 

@@ -20,9 +20,9 @@
                     <div class="header-account">
                         <ul class="icon-box">
                             <li title="Mes Souhaits">
-                                <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
+                                {{-- <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
                                     <span class="fs-4 icon icon-heart"></span>
-                                </a>
+                                </a> --}}
                             </li>
                         </ul>
                         
@@ -74,9 +74,9 @@
             <div class="bottom-canvas">
                 <ul class="icon-box">
                     <li title="Mes Souhaits">
-                        <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
+                        {{-- <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
                             <span class="fs-4 icon icon-heart"></span>
-                        </a>
+                        </a> --}}
                     </li>
                 </ul>
                 @if (Auth::check())
@@ -110,11 +110,11 @@
                 <div class="mobi-icon-box">
                     <div class="box d-flex align-items-center">
                         <span class="icon icon-phone2"></span>
-                        <div>1-333-345-68688</div>
+                        <div>+225 07 87 24 51 97</div>
                     </div>
                     <div class="box d-flex align-items-center">
                         <span class="icon icon-mail"></span>
-                        <div>info@mokaz.com</div>
+                        <div>info@jsbeyci.com</div>
                     </div>
                 </div>
             </div>

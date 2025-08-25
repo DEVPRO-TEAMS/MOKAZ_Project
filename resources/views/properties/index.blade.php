@@ -156,7 +156,7 @@
         <div class="widget-box-2 wd-listing">
             <div class="row align-items-center justify-content-center">
                 <div class="flat-bt-top col-md-9">
-                    <h6 class="title">Mes Properties</h6>
+                    <h6 class="title">Mes Propriétés</h6>
                 </div>
                 <div class="flat-bt-top col-md-3 text-end">
                     <a class="tf-btn primary" href="{{ route('partner.properties.create') }}"><i
@@ -249,7 +249,6 @@
                                                         <a title="Voir détails"
                                                             class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
                                                             href="{{ route('partner.properties.show', $property->uuid) }}">
-                                                            {{-- <i class="icon icon-eye"></i> --}}
                                                             <i class="fas fa-eye"></i>
                                                         </a>
 

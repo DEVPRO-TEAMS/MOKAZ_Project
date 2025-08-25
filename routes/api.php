@@ -32,6 +32,9 @@ Route::post('/reservation/store', [ReservationController::class, 'store']);
 Route::get('/reservation/download-receipt/{uuid}', [ReservationController::class, 'downloadReceipt'])
     ->name('reservation.download-receipt');
 
+Route::post('/cron/autoRemiseReservation', [ReservationController::class, 'autoRemiseReservation']);
+Route::post('/customerIsPresent', [ReservationController::class, 'customerIsPresent']);
+
 
 
 
@@ -64,6 +67,10 @@ Route::post('/appart/update/{uuid}/{property_uuid}', [AppartController::class, '
 Route::post('/appart/destroy/{uuid}', [AppartController::class, 'destroy']);
 Route::post('/delete-appart-image/{uuid}', [AppartController::class, 'deleteAppartImage']);
 Route::post('/delete-appart-tarif/{uuid}', [AppartController::class, 'deleteAppartTarif']);
+
+Route::post('/add-comments', [PagesController::class, 'addComment']);
+Route::get('/get-comments', [PagesController::class, 'getComments']);
+
 
 
 

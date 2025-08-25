@@ -9,6 +9,7 @@
 
         <meta name="author" content="themesflat.com">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- font -->
         <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
         <!-- Icons -->
@@ -155,7 +156,7 @@
 
         <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
         <script>
              $(document).ready(function() {
     

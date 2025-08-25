@@ -8,7 +8,7 @@
                     <i class="fas fa-tachometer-alt me-2 text-danger"></i>
                     Tableau de Bord - {{ Auth::user()->partner->raison_social }}
                 </h1>
-                <p class="text-muted">Gestion des employés, propriétés, appartements et reservations</p>
+                <p class="text-muted">Gestion des employés, propriétés, hébergements et reservations</p>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total Appartements</div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total hébergements</div>
                                 <div class="h5 mb-0 font-weight-bold" id="activeRequests">
                                     {{ $partnerPropertyApartments->count() }} </div>
                             </div>

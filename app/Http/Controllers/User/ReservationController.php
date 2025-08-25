@@ -28,7 +28,7 @@ class ReservationController extends Controller
 
         $query = Reservation::query();
 
-        if($request->filled('search')) {
+        if ($request->filled('search')) {
             $query->where('code', 'like', '%' . $request->search . '%')
                 ->orWhere('nom', 'like', '%' . $request->search . '%')
                 ->orWhere('prenoms', 'like', '%' . $request->search . '%')
@@ -38,9 +38,9 @@ class ReservationController extends Controller
         }
 
         // Filtre par date
-        if($request->filled('date_debut') && $request->filled('date_fin')) {
+        if ($request->filled('date_debut') && $request->filled('date_fin')) {
             $query->whereBetween('created_at', [
-                $request->date_debut . ' 00:00:00', 
+                $request->date_debut . ' 00:00:00',
                 $request->date_fin . ' 23:59:59'
             ]);
         } elseif ($request->filled('date_debut')) {
@@ -50,24 +50,24 @@ class ReservationController extends Controller
         }
 
         // Filtre par statut
-        if($request->filled('status')) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
         // Filtre par sejour
-        if($request->filled('sejour')) {
+        if ($request->filled('sejour')) {
             $query->where('sejour', $request->sejour);
         }
 
-        if(Auth::user()->user_type == 'admin') {
+        if (Auth::user()->user_type == 'admin') {
             $reservations = $query->where('etat', 'actif')->orderBy('created_at', 'desc')->get();
-        }else {
-            
+        } else {
+
             $reservations = $query->where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
         }
 
         return view('reservations.index', compact('reservations'));
     }
-    
+
 
     public function store(Request $request)
     {
@@ -100,33 +100,31 @@ class ReservationController extends Controller
                 'total_price' => $request->totalPrice,
                 'unit_price' => $request->unitPrice,
                 'still_to_pay' => $still_to_pay,
-                'statut_paiement' => 'paid',
+                'statut_paiement' => 'pending',
                 'status' => 'pending',
                 'notes' => $request->notes,
                 'payment_method' => $request->payment_method,
-                // 'custom_tarif' => $request->custom_tarif ?? false,
                 'payment_amount' => $request->paymentAmount
             ]);
 
-            if($reservation){
+            if ($reservation) {
                 // faire une decrementation du stock de l'appartement
                 $appartement = Appartement::where('uuid', $request->appart_uuid)->first();
-                $appartement->nbr_available = (int) $appartement->nbr_available - (int) $reservation->nbr_of_sejour;
+                $appartement->nbr_available = (int) $appartement->nbr_available - 1;
                 $appartement->save();
             }
 
             // Génération du PDF après enregistrement
             $pdfUrl = $this->generateReceiptPDF($reservation);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Réservation enregistrée avec succès',
                 'reservation' => $reservation,
                 'pdf_url' => $pdfUrl
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -141,7 +139,7 @@ class ReservationController extends Controller
     {
         $directory = 'receipts';
         $externalUploadDir = base_path(env('STORAGE_FILES', '../uploads/'));
-        
+
         // Créer le dossier s'il n'existe pas
         if (!is_dir($externalUploadDir . $directory)) {
             mkdir($externalUploadDir . $directory, 0755, true);
@@ -153,12 +151,12 @@ class ReservationController extends Controller
         ];
 
         $pdf = PDF::loadView('reservations.receipt', $data);
-        
+
         $filename = 'Recu_' . $reservation->code . '_' . $reservation->uuid . '.pdf';
         $filePath = $externalUploadDir . $directory . '/' . $filename;
-        
+
         $pdf->save($filePath);
-        
+
         // Enregistrer dans la table receipts
         Receipt::create([
             'uuid' => Str::uuid(),
@@ -167,18 +165,35 @@ class ReservationController extends Controller
             'filename' => $filename,
             'filepath' => "storage/files/{$directory}/{$filename}"
         ]);
-        
+
         return "storage/files/{$directory}/{$filename}";
+    }
+
+    public function paiementSuccess($reservation_uuid)
+    {
+        $reservation = Reservation::where('uuid', $reservation_uuid)->first();
+        return view('reservations.paiement-success', compact('reservation'));
+    }
+
+    public function paiementFailed($reservation_uuid)
+    {
+        $reservation = Reservation::where('uuid', $reservation_uuid)->first();
+        return view('reservations.paiement-failed', compact('reservation'));
     }
 
     public function downloadReceipt($uuid)
     {
         $reservation = Reservation::with('receipt')->where('uuid', $uuid)->firstOrFail();
+        $reservation->statut_paiement = 'paid';
+        $reservation->save();
         $directory = 'receipts/';
-
         if (!$reservation->receipt) {
             $this->generateReceiptPDF($reservation);
             $reservation->load('receipt');
+        } else {
+            // supprimer la ligne et le fichier PDF existant et enregistrer un nouveau
+            $reservation->receipt->delete();
+            $this->generateReceiptPDF($reservation);
         }
 
         $externalStorageDir = base_path(env('STORAGE_FILES', '../uploads/'));
@@ -201,7 +216,7 @@ class ReservationController extends Controller
         DB::beginTransaction();
         try {
             $reservation = Reservation::where('uuid', $uuid)->first();
-            
+
             if (!$reservation) {
                 return response()->json([
                     'type' => 'error',
@@ -222,21 +237,21 @@ class ReservationController extends Controller
             $emailSubject = "✅ Réservation Confirmée";
             $emailContent = view('mail.confirm_reservation', [
                 'reservation' => $reservation
-                ])->render();
-                
-                $emailData = [
-                    'message' => $emailContent,
-                    'status' => $reservation->status,
-                    'code' => $reservation->code,
-                    'url' => url($reservation->receipt->filepath ?? '#'),
-                    'buttonText' => 'Télécharger le reçu',
-                ];
-                
-                Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
-                
-            
+            ])->render();
+
+            $emailData = [
+                'message' => $emailContent,
+                'status' => $reservation->status,
+                'code' => $reservation->code,
+                'url' => url($reservation->receipt->filepath ?? '#'),
+                'buttonText' => 'Télécharger le reçu',
+            ];
+
+            Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+
+
             DB::commit();
-            
+
             return response()->json([
                 'type' => 'success',
                 'success' => true,
@@ -244,11 +259,10 @@ class ReservationController extends Controller
                 'urlback' => 'back',
                 'message' => 'La reservation a bien ete confirmer',
             ]);
-            
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Reservation confirmation failed: ' . $e->getMessage());
-            
+
             return response()->json([
                 'type' => 'error',
                 'success' => false,
@@ -277,6 +291,102 @@ class ReservationController extends Controller
         }
 
         return view('reservations.show', compact('reservation'));
+    }
+
+    public function autoRemiseReservation()
+    {
+        DB::beginTransaction();
+        try {
+            $now = Carbon::now();
+
+            // On récupère toutes les réservations encore "pending" ou "confirmed"
+            $reservations = Reservation::whereIn('status', ['pending', 'confirmed'])
+                ->where('is_present', false)
+                ->with('appartement')
+                ->get();
+
+            foreach ($reservations as $reservation) {
+                $start = Carbon::parse($reservation->start_time);
+                $end = Carbon::parse($reservation->end_time);
+
+                // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
+                $totalDurationMinutes = $start->diffInMinutes($end);
+                $threshold = $start->copy()->addMinutes($totalDurationMinutes * 0.1);
+
+                if ($now->greaterThan($threshold) && $reservation->is_present == false) {
+                    // Le client ne s'est pas présenté → remise en dispo
+                    $this->releaseAppartement($reservation, "no_show");
+                    $results[] = [
+                        'reservation' => $reservation->code,
+                        'status' => 'cancelled',
+                        'message' => 'Réservation annulée (no-show)'
+                    ];
+                    continue;
+                }
+
+                // 2️ Vérifier si le séjour est terminé
+                if ($now->greaterThanOrEqualTo($end)) {
+                    $this->releaseAppartement($reservation, "finished");
+                    $results[] = [
+                        'reservation' => $reservation->code,
+                        'status' => 'completed',
+                        'message' => 'Séjour terminée'
+                    ];
+                    continue;
+                }
+            }
+
+            DB::commit();
+            // retouner la résponse en foction de no_show : résponse = reservation annulée ou finished : reservation terminée
+            return response()->json([
+                'success' => true,
+                'message' => count($results) > 0 ? "Certaines réservations ont été mises à jour" : "Aucune réservation à libérer",
+                'details' => $results
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => "Erreur lors de la remise automatique",
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Fonction utilitaire pour remettre un appartement disponible
+     */
+    private function releaseAppartement($reservation, $reason)
+    {
+        // Incrémenter le stock de l’appartement
+        $appartement = $reservation->appartement;
+        if ($appartement) {
+            $appartement->nbr_available = (int) $appartement->nbr_available + 1;
+            $appartement->save();
+        }
+
+        // Mettre à jour la réservation
+        $reservation->status = ($reason == "finished") ? "completed" : "cancelled";
+        // $reservation->etat = "libéré";
+        $reservation->save();
+    }
+
+    // Créer une nouvelle réservation
+    public function customerIsPresent(Request $request)
+    {
+        $reservation = Reservation::where('uuid', $request->reservation_uuid)->first();
+        if (!$reservation) {
+            return response()->json(['success' => false, 'message' => 'Réservation non trouvée'], 404);
+        }
+
+        $reservation->is_present = $request->is_present;
+        $reservation->save();
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'Client présent', 
+            'data' => $reservation
+        ]);
     }
 
     // Mettre à jour une réservation

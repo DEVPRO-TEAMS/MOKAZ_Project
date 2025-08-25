@@ -292,7 +292,7 @@
                                             @case('partial')
                                                 <small class="badge bg-warning">Partiel</small>
                                                 @break
-                                            @case('unpaid')
+                                            @case('pending')
                                                 <small class="badge bg-danger">Non payé</small>
                                                 @break
                                             @default

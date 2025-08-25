@@ -207,7 +207,7 @@
                 <h5 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h5>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                @foreach ($apparts as $item)
+                @foreach ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
                         $tarifHeure = $item->tarifications
@@ -355,7 +355,6 @@
                 </div>
                 <div class="wrap-property">
                     <div class="box-left  wow fadeInLeftSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                        @foreach ($bestApparts as $item)
                             @php
                                 $firstAppart = $bestApparts->first();
                                 $tarifHeure = $firstAppart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
@@ -419,7 +418,6 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
                     </div>
 
                     <div class="box-right wow fadeInRightSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
@@ -512,8 +510,8 @@
                                     <img src="{{ asset('assets/images/avatar/avt-7.jpg') }}" alt="avatar">
                                 </div>
                                 <div class="info">
-                                    <div class="h7 fw-7">Lorem, ipsum.</div>
-                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
+                                    {{-- <div class="h7 fw-7">Lorem, ipsum.</div>
+                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p> --}}
                                 </div>
                             </div>
                         </div>
@@ -539,8 +537,8 @@
                                     <img src="{{ asset('assets/images/avatar/avt-5.jpg') }}" alt="avatar">
                                 </div>
                                 <div class="info">
-                                    <div class="h7 fw-7">Lorem, ipsum.</div>
-                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
+                                    {{-- <div class="h7 fw-7">Lorem, ipsum.</div>
+                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p> --}}
                                 </div>
                             </div>
                         </div>

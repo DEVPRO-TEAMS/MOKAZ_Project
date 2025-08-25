@@ -60,6 +60,9 @@ Route::get('/faq', [PagesController::class, 'indexFaq'])->name('faq');
 Route::get('/confidentialite', [PagesController::class, 'indexPolitiq'])->name('politiq');
 Route::get('/detail/appartement/{uuid}', [PagesController::class, 'show'])->name('appart.detail.show');
 
+Route::get('/reservation/paiement-success/{reservation_uuid}', [ReservationController::class, 'paiementSuccess'])->name('reservation.paiement.success');
+Route::get('/reservation/paiement-failed/{reservation_uuid}', [ReservationController::class, 'paiementFailed'])->name('reservation.paiement.failed');
+
 
 
 
@@ -78,11 +81,16 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         // validation de demande de partenariat 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
-        Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
 
+        Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
+        Route::get('/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
         // approve et refuser une propriete 
         Route::post('/approveProperty/{uuid}', [AdminController::class, 'approveProperty'])->name('approveProperty');
         Route::post('/rejectProperty/{uuid}', [AdminController::class, 'rejectProperty'])->name('rejectProperty');
+
+        // approve et refuser une appartement 
+        Route::post('/approveAppart/{uuid}', [AdminController::class, 'approveAppart'])->name('approveAppart');
+        Route::post('/rejectAppart/{uuid}', [AdminController::class, 'rejectAppart'])->name('rejectAppart');
 
         Route::get('/partner/list', [PartnerController::class, 'partners'])->name('partner.index');
         Route::post('/partner/add', [PartnerController::class, 'storePartner'])->name('storePartner');
@@ -98,6 +106,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
         Route::get('/reservation/show/{uuid}', [ReservationController::class, 'show'])->name('reservation.show');
+        
     });
 });
 

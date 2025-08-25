@@ -74,11 +74,11 @@
                     <div class="mobi-icon-box mt-3">
                         <div class="box d-flex align-items-center">
                             <span class="icon icon-phone2"></span>
-                            <div>1-333-345-6868</div>
+                            <div>+225 07 87 24 51 97</div>
                         </div>
                         <div class="box d-flex align-items-center">
                             <span class="icon icon-mail"></span>
-                            <div>themesflat@gmail.com</div>
+                            <div>info@jsbeyci.com</div>
                         </div>
                     </div>
                 </nav>
@@ -201,7 +201,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('setting.indexAppart') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
-                                        <span>Type de appartement</span>
+                                        <span>Type d'hébergement</span>
                                     </a>
                                 </li>
                                 

@@ -169,10 +169,10 @@
                 @endphp
                 <td> {{ number_format($reste, 0, ',', ' ') }} </td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <td>Méthode de paiement</td>
                 <td>{{ $reservation->payment_method ?? 'N/A' }}</td>
-            </tr>
+            </tr> --}}
             <tr>
                 <td>Statut</td>
                 <td><span style="color: green;">{{ $reservation->statut_paiement == 'paid' ? 'Payé' : 'En attente de paiement' }}</span></td>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Comment;
 use App\Models\Property;
 use App\Models\Variable;
 use App\Models\AppartDoc;
@@ -56,6 +57,11 @@ class Appartement extends Model
         return $this->belongsTo(Variable::class, 'type_uuid', 'uuid');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'appart_uuid', 'uuid');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'uuid');
@@ -68,5 +74,6 @@ class Appartement extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by', 'uuid');
     }
+
 
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationPartenaire;
+use App\Models\Appartement;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -322,7 +323,7 @@ class AdminController extends Controller
             }
 
             // Vérification si la demande n'est pas déjà approuvée
-            if ($property->etat === 'actif') {
+            if ($property->etat == 'actif') {
                 Log::info('Propriete deja approuvee donc actif');
                 return response()->json([
                     'type' => 'error',
@@ -333,10 +334,10 @@ class AdminController extends Controller
             }
 
             // Mise à jour de l'état
-            foreach($property->apartements->where('etat', '==', 'inactif') as $appart){
-                $appart->etat = 'actif';
-                $appart->save();
-            }
+            // foreach($property->apartements->where('etat', '==', 'inactif') as $appart){
+            //     $appart->etat = 'actif';
+            //     $appart->save();
+            // }
             $property->etat = 'actif';
             $property->save();
 
@@ -418,6 +419,116 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    public function approveAppart($uuid)
+    {
+        DB::beginTransaction();
+        try {
+            
+            $appart = Appartement::where('uuid', $uuid)->first();
+            
+            // Vérification si la demande existe
+            if (!$appart) {
+                Log::info('hébergement non trouvee donca 404 error');
+                return response()->json([
+                    'type' => 'error',
+                    'status' => false,
+                    'urlback' => '',
+                    'message' => 'Hébergement non trouvée'
+                ], 404);
+            }
+
+            // Vérification si la demande n'est pas déjà approuvée
+            if ($appart->etat === 'actif') {
+                Log::info('hébergement deja approuvee donc actif');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'status' => false,
+                    'message' => 'Cette hébergement a déjà été accepter'
+                ], 400);
+            }
+
+            // Mise à jour de l'état
+            $appart->etat = 'actif';
+            $appart->save();
+
+            DB::commit();
+            
+            return response()->json([
+                'type' => 'success',
+                'status' => true,
+                'urlback' => 'back',
+                'message' => 'Hébergement accepté avec succès',
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'status' => false,
+                'message' => "Une erreur s'est produite lors de l'acceptation de l'hébergement",
+                'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+    public function rejectAppart($uuid)
+    {
+        DB::beginTransaction();
+        try {
+            
+            $appart = Appartement::where('uuid', $uuid)->first();
+            
+            // Vérification si la demande existe
+            if (!$appart) {
+                Log::info('Hébergement non trouvee donca 404 error');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'status' => false,
+                    'message' => 'Hébergement non trouvée non trouvée'
+                ], 404);
+            }
+
+            // Vérification si la demande n'est pas déjà approuvée
+            if ($appart->etat === 'inactif') {
+                Log::info('Hébergement deja rejete donc inactif');
+                return response()->json([
+                    'type' => 'error',
+                    'status' => false,
+                    'urlback' => '',
+                    'message' => 'Cet hébergement a déjà été rejeté'
+                ], 400);
+            }
+
+            // Mise à jour de l'état
+            $appart->etat = 'inactif';
+            $appart->save();
+
+            DB::commit();
+            
+            return response()->json([
+                'type' => 'success',
+                'status' => true,
+                'urlback' => 'back',
+                'message' => 'Hébergement rejeté avec succès',
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'status' => false,
+                'urlback' => '',
+                'message' => "Une erreur s'est produite lors du rejet de l'hébergement",
+                'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+    
 
 
     /**

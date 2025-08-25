@@ -188,6 +188,9 @@
     <script src="{{ asset('assets/js/marker.js') }}"></script>
     <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
 
+    {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script> --}}
+
+    {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script> --}}
     <script src="{{ asset('assets/js/map-single.js') }}"></script>
 
     <script>
@@ -197,6 +200,42 @@
                 dateFormat: "Y-m-d H:i",
                 minDate: "today"
             });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let isJobRunning = false;
+    
+            function executeCronJob() {
+                if (!isJobRunning) {
+                    isJobRunning = true;
+                    axios.post("/api/cron/autoRemiseReservation", {}, {
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        })
+                        .then(response => {
+                            console.log('Cron job executed successfully:',response.data.message);
+                            console.log('Response:',response.data.details); 
+                        })
+                        .catch(error => {
+                            console.error("Erreur lors de l'exécution du cron :", error);
+                        })
+                        .finally(() => {
+                            isJobRunning = false;
+                        });
+                } else {
+                    console.log("La tâche cron est déjà en cours.");
+                }
+            }
+    
+            // Exécuter toutes les 60 secondes (1 minute)
+            setInterval(executeCronJob, 60000);
         });
     </script>
 

@@ -42,7 +42,7 @@
             <button class="nav-link" id="properties-tab" data-bs-toggle="tab" data-bs-target="#properties" type="button" role="tab">Propriétés</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="apartments-tab" data-bs-toggle="tab" data-bs-target="#apartments" type="button" role="tab">Appartements</button>
+            <button class="nav-link" id="apartments-tab" data-bs-toggle="tab" data-bs-target="#apartments" type="button" role="tab">Hébergements</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="reservations-tab" data-bs-toggle="tab" data-bs-target="#reservations" type="button" role="tab">Historique des réservations</button>
@@ -66,8 +66,8 @@
         </div>
         <div class="tab-pane fade" id="apartments" role="tabpanel">
             <div class="card card-body border-0 shadow-sm">
-                <h6>Appartements liés</h6>
-                <p class="text-muted">Liste des appartements du partenaire</p>
+                <h6>Hébergements liés</h6>
+                <p class="text-muted">Liste des hébergements du partenaire</p>
                 @include('partners.components.appartByPartner', ['units' => $appart])
             </div>
         </div>

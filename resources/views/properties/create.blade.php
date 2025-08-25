@@ -56,7 +56,7 @@
                         <textarea class="textarea-tinymce" name="description" placeholder="Entrer la description de la propriété" cols="30" rows="10" id="desc"></textarea>
                     </fieldset>
 
-                    <div class="box grid-2 gap-30">
+                    <div class="box grid-1 gap-30">
                         <fieldset class="box-fieldset">
                             <label for="address">
                                 Adresse complète:<span>*</span>
@@ -64,13 +64,13 @@
                             <input type="text" class="form-control style-1"
                                 placeholder="Entrer l'adresse complète de la propriété" name="address" required>
                         </fieldset>
-                        <fieldset class="box-fieldset">
+                        {{-- <fieldset class="box-fieldset">
                             <label for="zip">
                                 Code postal:<span></span>
                             </label>
                             <input type="text" class="form-control style-1" placeholder="Entrer le code postal"
                                 name="zipCode" value="">
-                        </fieldset>
+                        </fieldset> --}}
 
                     </div>
                     <div class="box grid-2 gap-30">
