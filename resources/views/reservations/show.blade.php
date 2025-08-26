@@ -30,7 +30,7 @@
                     <h4 class="mb-0">Réservation {{ $reservation->code }}</h4>
                 </div>
                 <div class="d-flex justify-content-end align-items-center">
-                    @if ($reservation->status !== 'confirmed' && Auth::user()->user_type == 'partner')
+                    @if ($reservation->status == 'pending' && Auth::user()->user_type == 'partner')
                         <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST"
                             class="submitForm">
                             @csrf
@@ -38,7 +38,7 @@
                                 <i class="icon icon-mail"></i> Envoyer confirmation
                             </button>
                         </form>
-                    @elseif ($reservation->is_present == 0 && Auth::user()->user_type == 'partner')
+                    @elseif (($reservation->status == 'pending' || $reservation->status == 'confirmed') && $reservation->is_present == 0 && Auth::user()->user_type == 'partner')
                         <form id="presentForm">
                             @csrf
                             <span>Le client est-il arrivé ? &nbsp; </span>
@@ -138,6 +138,9 @@
 
                                             @case('cancelled')
                                                 <span class="badge bg-danger">Annulé</span>
+                                            @break
+                                            @case('completed')
+                                                <span class="badge bg-success">Séjour Terminé</span>
                                             @break
 
                                             @case('reconducted')

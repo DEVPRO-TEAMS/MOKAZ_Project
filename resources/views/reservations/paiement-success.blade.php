@@ -9,7 +9,13 @@
                     <p class="mb-0">Le paiement a été effectué avec successe. Merci de votre confiance.</p>
                 </div>
             </div>
-
+            @php
+                $start = \Carbon\Carbon::parse($reservation->start_time);
+                $end = \Carbon\Carbon::parse($reservation->end_time);
+                $totalMinutes = $start->diffInMinutes($end);
+                $limit = $start->copy()->addMinutes($totalMinutes * 0.06);
+                $date_limit = $limit->format('d/m/Y à H:i');
+            @endphp
             <div class="card border-danger">
                 <div class="card-header bg-danger-light text-white">
                     <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Reçu de Paiement</h5>
@@ -103,6 +109,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const reservationData = @json($reservation);
+            const dateLimit = @json($date_limit);
 
             const reservationUuid = reservationData.uuid;
             let receiptDownloaded = false; // flag de validation
@@ -142,6 +149,7 @@
                             Nuits: ${r.nbr_of_sejour}
                         `}
                 </p>
+                <p class="mb-1 text-danger">NB: Afin de garantir votre réservation, merci de vous présenter au plus tard le <strong>${dateLimit}</strong>. En cas de retard, votre reservation sera automatiquement annulée.</p>
             </div>
         `;
                 document.getElementById('final-receipt').innerHTML = receiptHTML;

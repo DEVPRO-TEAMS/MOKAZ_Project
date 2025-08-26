@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmation de votre réservation - MOKAZ</title>
+    <title> {{ $emailData['title'] }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -98,6 +98,30 @@
             color: #6c757d;
             text-align: right;
         }
+        .cancelled-dates {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            opacity: 0.8;
+        }
+        .cancelled-dates h3 {
+            margin-top: 0;
+            color: white;
+        }
+
+        .completed-dates {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .completed-dates h3 {
+            margin-top: 0;
+            color: white;
+        }
         .highlight-dates {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
@@ -109,10 +133,76 @@
             margin-top: 0;
             color: white;
         }
+        .highlight-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            margin: 15px 0;
+        }
         .date-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
+        }
+        .cancellation-info {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .cancellation-info h3 {
+            color: #721c24;
+            margin-top: 0;
+        }
+        .refund-summary {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .refund-summary h3 {
+            color: #0c5460;
+            margin-top: 0;
+        }
+        .refund-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .feedback-section {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .feedback-section h3 {
+            color: #0056b3;
+            margin-top: 0;
+        }
+        .thank-you-summary {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .thank-you-summary h3 {
+            color: #155724;
+            margin-top: 0;
+        }
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
         }
         .price-summary {
             background: #fff3cd;
@@ -188,6 +278,31 @@
             font-weight: bold;
             text-align: center;
         }
+
+        .btn-support {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px auto;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .btn-review {
+            background-color: #17a2b8;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px auto;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
         @media (max-width: 600px) {
             .email-container {
                 margin: 10px;
@@ -213,15 +328,17 @@
     <div class="email-container">
         <div class="header">
             <img src="{{ url('assets/images/logo/logo-main.png')}}" alt="MOKAZ Logo" class="logo">
-            <h1>Réservation 
+            <h1> 
                 @if($emailData['status'] == 'confirmed')
-                    confirmée
+                   Réservation confirmée
                 @elseif($emailData['status'] == 'pending')
-                    en attente de confirmation
+                   Réservation en attente de confirmation
                 @elseif($emailData['status'] == 'cancelled')
-                    annulée
+                  Réservation annulée
+                @elseif($emailData['status'] == 'completed')
+                   Merci pour votre séjour !
                 @elseif($emailData['status'] == 'reconducted')
-                    reconduite
+                   Réservation reconduite
                 @endif
             </h1>
             <div class="status-badge">
@@ -231,6 +348,8 @@
                     en attente de confirmation
                 @elseif($emailData['status'] == 'cancelled')
                     annulé
+                @elseif($emailData['status'] == 'completed')
+                    Séjour terminé
                 @elseif($emailData['status'] == 'reconducted')
                     reconduit
                 @endif

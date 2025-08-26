@@ -56,7 +56,7 @@
         </div>
         @if($reservation->partner_uuid)
         <div class="info-row">
-            <span class="info-label">Géré par :</span>
+            <span class="info-label">Chez :</span>
             <span class="info-value">{{ $reservation->partner->raison_social ?? 'N/A' }}</span>
         </div>
         @endif
@@ -77,10 +77,10 @@
             <span class="info-label">Nombre de {{ strtolower($reservation->sejour) }}(s) :</span>
             <span class="info-value">{{ $reservation->nbr_of_sejour }}</span>
         </div>
-        <div class="info-row">
+        {{-- <div class="info-row">
             <span class="info-label">Mode de paiement :</span>
             <span class="info-value">{{ ucfirst($reservation->payment_method) }}</span>
-        </div>
+        </div> --}}
 
         <div class="total-price">
             Total : {{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA
@@ -135,8 +135,8 @@
         <h4 style="margin-top: 0; color: #495057;">📞 Besoin d'aide ?</h4>
         <p style="margin: 5px 0;">
             <strong>Service client :</strong><br>
-            Téléphone : <a href="tel:+2250123456789" style="color: #dc3545;">+225 01 23 45 67 89</a><br>
-            Email : <a href="mailto:support@mokaz.com" style="color: #dc3545;">support@mokaz.com</a>
+            Téléphone : <a href="tel:+2250787245197" style="color: #dc3545;">+225 07 87 24 51 97</a><br>
+            Email : <a href="mailto:info@jsbeyci.com" style="color: #dc3545;">info@jsbeyci.com</a>
         </p>
         <p style="margin: 15px 0 0 0; font-size: 14px; color: #6c757d;">
             Nous sommes disponibles 24h/24 et 7j/7 pour vous accompagner

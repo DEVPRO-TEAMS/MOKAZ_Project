@@ -281,6 +281,9 @@
                                             @case('cancelled')
                                                 <span class="badge bg-danger">Annulé</span>
                                                 @break
+                                            @case('completed')
+                                                <span class="badge bg-success">Terminé</span>
+                                                @break
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->status }}</span>
                                         @endswitch
