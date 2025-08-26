@@ -13,7 +13,7 @@
                     </div>
                     <center class="d-none d-lg-block">
                         <div class="flat-bt-top">
-                            <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrire nos biens</a>
+                            <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
                         </div>
                     </center>
 
@@ -103,7 +103,7 @@
                 
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
-                    <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrire nos biens</a>
+                    <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
                 </div>
                 
 

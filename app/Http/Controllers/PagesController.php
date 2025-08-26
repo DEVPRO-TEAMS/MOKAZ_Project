@@ -4,27 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Property;
-use App\Models\Appartement;
+use App\Models\Variable;
 
+use App\Models\Appartement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
 
 class PagesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $apparts = Appartement::where('etat', 'actif')->get();
-        // $bestApparts = Appartement::where('etat', 'actif')->take(3)->with('reservations')->orderBy('created_at', 'desc')->get();
+        $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+
+        $query = Appartement::with('property');
+
+        // Recherche par mot-clé
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('description', 'like', '%' . $request->search . '%')
+                    ->orWhere('commodities', 'like', '%' . $request->search . '%')
+                    ->orWhere('nbr_room', 'like', '%' . $request->search . '%')
+                    ->orWhere('nbr_bathroom', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Recherche par localisation (dans Property)
+        if ($request->filled('location')) {
+            $query->whereHas('property', function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->location . '%')
+                    ->orWhere('address', 'like', '%' . $request->location . '%')
+                    ->orWhere('longitude', 'like', '%' . $request->location . '%')
+                    ->orWhere('latitude', 'like', '%' . $request->location . '%')
+                    ->orWhere('description', 'like', '%' . $request->location . '%');
+            });
+        }
+
+        // Filtre par type
+        if ($request->filled('type')) {
+            $query->where('type_uuid', $request->type);
+        }
+
+        // Récupérer les appartements actifs
+        $apparts = $query->where('etat', 'actif')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $bestApparts = Appartement::withCount('reservations')
-        ->where('etat', 'actif')
-        ->where('nbr_available', '>', 0)
-        ->orderByDesc('reservations_count')
-        ->take(3)
-        ->with('tarifications') // si tu as une relation tarifications() dans le modèle Appartement
-        ->get();
-        // dd($bestApparts);
-        return view('welcome', compact('apparts', 'bestApparts'));
+            ->where('etat', 'actif')
+            ->where('nbr_available', '>', 0)
+            ->orderByDesc('reservations_count')
+            ->take(3)
+            ->with('tarifications') // si tu as une relation tarifications() dans le modèle Appartement
+            ->get();
+
+        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
     }
     // Récupérer tous les propriétés de lequel il y a des appartements disponibles nbr_available>0
     // $properties = Property::where('etat', 'pending')

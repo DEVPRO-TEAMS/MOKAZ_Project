@@ -1,16 +1,17 @@
 @extends('layouts.main')
 @section('content')
-<style>
+    <style>
         @media (max-width: 768px) {
-        /* Moyens écrans et plus */
-        .flat-map.my-content {
-            margin-top: 80px;
+
+            /* Moyens écrans et plus */
+            .flat-map.my-content {
+                margin-top: 80px;
+            }
         }
-    }
-</style>
+    </style>
     <!-- Map -->
     <section class="flat-map my-content">
-        
+
         <div id="map" class="top-map" data-map-zoom="16" data-map-scroll="true"></div>
 
         <div class="container">
@@ -24,49 +25,48 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" role="tabpanel">
                             <div class="form-sl pt-5">
-                                <form action="">
+                                <form action="{{ route('welcome') }}" method="get">
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
                                             <div class="form-group-1 search-form form-style">
                                                 <label>Mot-clé</label>
                                                 <input type="text" class="form-control"
-                                                    placeholder="Rechercher par Mot-clé." value="" name="s"
-                                                    title="Search for" required="">
+                                                    placeholder="Rechercher par Mot-clé." name="search"
+                                                    value="{{ request('search') }}">
                                             </div>
                                             <div class="form-group-2 form-style">
                                                 <label>Localisation</label>
                                                 <div class="group-ip">
                                                     <input type="text" class="form-control"
-                                                        placeholder="rechercher par Localisation" value="" name="s"
-                                                        title="Search for" required="">
+                                                        placeholder="rechercher par Localisation"
+                                                        value="{{ request('location') }}" name="location">
                                                     {{-- <a href="#" class="icon icon-location"></a> --}}
                                                 </div>
                                             </div>
                                             <div class="form-group-3 form-style">
-                                                <label>Type</label>
+                                                <label id="type">Type</label>
                                                 <div class="group-select">
-                                                    <div class="nice-select" tabindex="0"><span
-                                                            class="current">Tous</span>
-                                                        <ul class="list">
-                                                            <li data-value class="option selected">Tous</li>
-                                                            <li data-value="villa" class="option">Villa</li>
-                                                            <li data-value="studio" class="option">Studio</li>
-                                                            <li data-value="office" class="option">Bureau</li>
-                                                            <li data-value="house" class="option">Maison</li>
-                                                        </ul>
-                                                    </div>
+                                                    <select name="type" id="type" class="nice-select form-select">
+                                                        <option value="">Tous</option>
+                                                        @foreach ($typeAppart as $type)
+                                                            <option value="{{ $type->uuid }}"
+                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
+                                                                {{ $type->libelle }}</option>
+                                                        @endforeach
+                                                    </select>
+
                                                 </div>
                                             </div>
-                                            <div class="form-group-4 box-filter">
+                                            {{-- <div class="form-group-4 box-filter">
                                                 <a class="filter-advanced pull-right">
                                                     <span class="icon icon-faders"></span>
                                                     <span class="text-1">Avancé</span>
                                                 </a>
-                                            </div>
+                                            </div> --}}
                                         </div>
-                                        <button type="submit" class="tf-btn primary" href="#">Rechercher</button>
+                                        <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
-                                    <div class="wd-search-form">
+                                    {{-- <div class="wd-search-form">
                                         <div class="grid-2 group-box group-price">
                                             <div class="widget-price">
                                                 <div class="box-title-price">
@@ -187,7 +187,7 @@
                                         </div>
 
                                         
-                                    </div>
+                                    </div> --}}
                                 </form>
                             </div>
                         </div>
@@ -207,19 +207,13 @@
                 <h5 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h5>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                @foreach ($apparts->where('nbr_available', '>', 0) as $item)
+                @forelse ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
-                        $tarifHeure = $item->tarifications
-                            ->where('sejour', 'Heure')
-                            ->sortBy('price')
-                            ->first();
+$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-                        // Récupérer la tarification à la journée la moins chère
-                        $tarifJour = $item->tarifications
-                            ->where('sejour', 'Jour')
-                            ->sortBy('price')
-                            ->first();
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                     @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
@@ -246,7 +240,8 @@
                                     </ul>
                                 </div>
                                 <div class="content">
-                                    <div class="title text-1 text-capitalize"><a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                    <div class="title text-1 text-capitalize"><a
+                                            href="{{ route('appart.detail.show', $item->uuid) }}"
                                             class="link text-white">{{ $item->title ?? '' }}</a></div>
                                     <ul class="meta-list">
                                         <li class="item">
@@ -261,10 +256,11 @@
                                             <i class="icon icon-money"></i>
                                             <span>
                                                 @if ($tarifHeure)
-                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }} 
-                                                
+                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
+                                                    FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
                                                 @elseif ($tarifJour)
-                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }} 
+                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
+                                                    FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
                                                 @else
                                                     Prix non disponible
                                                 @endif
@@ -275,12 +271,33 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
-                
+                @empty
+                    {{-- verifier si il y a une recherche effectuée --}}
+                    @if (request()->has('search') || request()->has('type') || request()->has('location'))
+                        <div class="d-flex flex-column align-items-center">
+                            <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                            <h5 class="fw-semibold">Aucun hébergement trouvée</h5>
+                            <p class="text-muted">Aucun hébergement ne correspond à vos critères
+                                de recherche</p>
+                            <a href="{{ route('welcome') }}" class="btn btn-sm btn-outline-danger mt-2">
+                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                            </a>
+                        </div>
+                    @else
+                        <div class="d-flex flex-column align-items-center">
+                            <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                            <h5 class="fw-semibold">Aucun hébergement pour le moment</h5>                            
+                        </div>
+                    @endif
+                @endforelse
+
             </div>
-            <div class="text-center">
-                <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
-            </div>
+        
+            @if($apparts->count() > 0)
+                <div class="text-center pt-4">
+                    <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
+                </div>
+            @endif
         </div>
     </section>
     <!-- End Recommended -->
@@ -355,69 +372,77 @@
                 </div>
                 <div class="wrap-property">
                     <div class="box-left  wow fadeInLeftSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                            @php
-                                $firstAppart = $bestApparts->first();
-                                $tarifHeure = $firstAppart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
-                                $tarifJour = $firstAppart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
-                            @endphp
+                        @php
+                            $firstAppart = $bestApparts->first();
+                            $tarifHeure = $firstAppart->tarifications
+                                ->where('sejour', 'Heure')
+                                ->sortBy('price')
+                                ->first();
+                            $tarifJour = $firstAppart->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                        @endphp
 
-                            <div class="homeya-box lg">
-                                <div class="archive-top">
-                                    {{-- Exemple d’image --}}
-                                    <a href="{{ route('appart.detail.show', $firstAppart->uuid) }}" class="images-group">
-                                        <div class="images-style">
-                                            <img src="{{ $firstAppart->image ?? '' }}" alt="img">
-                                        </div>
-                                        <div class="top">
-                                            <ul class="d-flex gap-8">
-                                                <li class="flag-tag success style-3">En vedette</li>
-                                            </ul>
-                                            <ul class="d-flex gap-4">
-                                                {{-- <li class="box-icon w-40"><span class="icon icon-arrLeftRight"></span></li> --}}
-                                                <li class="box-icon w-40"><span class="icon icon-heart"></span></li>
-                                                <li class="box-icon w-40"><span class="icon icon-eye"></span></li>
-                                            </ul>
-                                        </div>
-                                        <div class="bottom"><span class="flag-tag style-2">{{ $firstAppart->type->libelle }}</span></div>
-                                    </a>
-                                    <div class="content">
-                                        <h5 class="text-capitalize"><a href="{{ route('appart.detail.show', $firstAppart->uuid) }}" class="link">{{ $firstAppart->title }}</a></h5>
-                                        <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $firstAppart->property->adresse ?? 'Adresse non définie' }}</p></div>
-                                        <p class="note">{!! Str::limit($firstAppart->description, 100) !!}</p>
-                                        <ul class="meta-list">
-                                            <li class="item"><i class="icon icon-bed"></i><span>{{ $firstAppart->nbr_room }}</span></li>
-                                            <li class="item"><i class="icon icon-bathtub"></i><span>{{ $firstAppart->nbr_bathroom }}</span></li>
+                        <div class="homeya-box lg">
+                            <div class="archive-top">
+                                {{-- Exemple d’image --}}
+                                <a href="{{ route('appart.detail.show', $firstAppart->uuid) }}" class="images-group">
+                                    <div class="images-style">
+                                        <img src="{{ $firstAppart->image ?? '' }}" alt="img">
+                                    </div>
+                                    <div class="top">
+                                        <ul class="d-flex gap-8">
+                                            <li class="flag-tag success style-3">En vedette</li>
+                                        </ul>
+                                        <ul class="d-flex gap-4">
+                                            {{-- <li class="box-icon w-40"><span class="icon icon-arrLeftRight"></span></li> --}}
+                                            <li class="box-icon w-40"><span class="icon icon-heart"></span></li>
+                                            <li class="box-icon w-40"><span class="icon icon-eye"></span></li>
                                         </ul>
                                     </div>
-                                </div>
-                                <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
-                                            alt="avt">
+                                    <div class="bottom"><span
+                                            class="flag-tag style-2">{{ $firstAppart->type->libelle }}</span></div>
+                                </a>
+                                <div class="content">
+                                    <h5 class="text-capitalize"><a
+                                            href="{{ route('appart.detail.show', $firstAppart->uuid) }}"
+                                            class="link">{{ $firstAppart->title }}</a></h5>
+                                    <div class="desc"><i class="icon icon-mapPin"></i>
+                                        <p>{{ $firstAppart->property->adresse ?? 'Adresse non définie' }}</p>
                                     </div>
-                                    <div class="d-flex align-items-center">
-                                        <h6>
-                                            @if ($tarifHeure)
-                                                À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
-                                                
-                                            @elseif ($tarifJour)
-                                                À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
-                                            @else
-                                                Prix non disponible
-                                            @endif
-                                        </h6>
-                                        <span class="text-variant-1">
-                                            @if ($tarifHeure)
-                                                /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
-                                            @elseif ($tarifJour)
-                                                /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
-                                            @else
-                                               
-                                            @endif
-                                        </span>
-                                    </div>
+                                    <p class="note">{!! Str::limit($firstAppart->description, 100) !!}</p>
+                                    <ul class="meta-list">
+                                        <li class="item"><i
+                                                class="icon icon-bed"></i><span>{{ $firstAppart->nbr_room }}</span></li>
+                                        <li class="item"><i
+                                                class="icon icon-bathtub"></i><span>{{ $firstAppart->nbr_bathroom }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
+                            <div class="archive-bottom d-flex justify-content-between align-items-center">
+                                <div class="avatar avt-40 round">
+                                    <img src="{{ asset('assets/images/avatar/user-profile.webp') }}" alt="avt">
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <h6>
+                                        @if ($tarifHeure)
+                                            À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA
+                                        @elseif ($tarifJour)
+                                            À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA
+                                        @else
+                                            Prix non disponible
+                                        @endif
+                                    </h6>
+                                    <span class="text-variant-1">
+                                        @if ($tarifHeure)
+                                            /{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'heure' : 'heures' }}
+                                        @elseif ($tarifJour)
+                                            /{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jour' : 'jours' }}
+                                        @else
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="box-right wow fadeInRightSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
@@ -442,28 +467,38 @@
                                             <li class="box-icon w-28"><span class="icon icon-eye"></span></li>
                                         </ul>
                                     </div>
-                                    <div class="bottom"><span class="flag-tag style-2">{{ $item->type->libelle }}</span></div>
+                                    <div class="bottom"><span class="flag-tag style-2">{{ $item->type->libelle }}</span>
+                                    </div>
                                 </a>
                                 <div class="content">
                                     <div class="archive-top">
-                                        <div class="h7 text-capitalize fw-7"><a href="{{ route('appart.detail.show', $item->uuid) }}" class="link">{{ $item->title }}</a></div>
-                                        <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $item->property->adresse ?? '' }}</p></div>
+                                        <div class="h7 text-capitalize fw-7"><a
+                                                href="{{ route('appart.detail.show', $item->uuid) }}"
+                                                class="link">{{ $item->title }}</a></div>
+                                        <div class="desc"><i class="icon icon-mapPin"></i>
+                                            <p>{{ $item->property->adresse ?? '' }}</p>
+                                        </div>
                                         <ul class="meta-list">
-                                            <li class="item"><i class="icon icon-bed"></i><span>{{ $item->nbr_room }}</span></li>
-                                            <li class="item"><i class="icon icon-bathtub"></i><span>{{ $item->nbr_bathroom }}</span></li>
+                                            <li class="item"><i
+                                                    class="icon icon-bed"></i><span>{{ $item->nbr_room }}</span></li>
+                                            <li class="item"><i
+                                                    class="icon icon-bathtub"></i><span>{{ $item->nbr_bathroom }}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avt-40 round">
-                                                <img src="{{asset('assets/images/avatar/user-profile.webp')}}"
+                                                <img src="{{ asset('assets/images/avatar/user-profile.webp') }}"
                                                     alt="avt">
                                             </div>
                                             <div class="h7 fw-7">
                                                 @if ($tarifHeure)
-                                                    À partir de  {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA / {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hr' : 'hrs' }}
+                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA /
+                                                    {{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hr' : 'hrs' }}
                                                 @elseif ($tarifJour)
-                                                   À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA / {{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA /
+                                                    {{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
                                                 @else
                                                     Prix non disponible
                                                 @endif
@@ -612,7 +647,8 @@
                         <div class="text-subtitle text-primary">Devenir partenaire</div>
                         <h4 class="mt-4">Inscrivez vos propriétés sur Mokaz, rejoignez-nous maintenant !</h4>
                     </div>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#demandPartnariaModal" class="tf-btn primary size-1">Devenir hébergeur</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#demandPartnariaModal"
+                        class="tf-btn primary size-1">Devenir hébergeur</a>
                 </div>
                 <div class="box-right">
                     <img src="{{ asset('assets/images/banner/banner.png') }}" alt="image">
