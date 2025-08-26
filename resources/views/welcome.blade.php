@@ -364,7 +364,7 @@
                             <div class="homeya-box lg">
                                 <div class="archive-top">
                                     {{-- Exemple d’image --}}
-                                    <a href="#" class="images-group">
+                                    <a href="{{ route('appart.detail.show', $firstAppart->uuid) }}" class="images-group">
                                         <div class="images-style">
                                             <img src="{{ $firstAppart->image ?? '' }}" alt="img">
                                         </div>
@@ -381,7 +381,7 @@
                                         <div class="bottom"><span class="flag-tag style-2">{{ $firstAppart->type->libelle }}</span></div>
                                     </a>
                                     <div class="content">
-                                        <h5 class="text-capitalize"><a href="#" class="link">{{ $firstAppart->title }}</a></h5>
+                                        <h5 class="text-capitalize"><a href="{{ route('appart.detail.show', $firstAppart->uuid) }}" class="link">{{ $firstAppart->title }}</a></h5>
                                         <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $firstAppart->property->adresse ?? 'Adresse non définie' }}</p></div>
                                         <p class="note">{!! Str::limit($firstAppart->description, 100) !!}</p>
                                         <ul class="meta-list">
@@ -428,7 +428,7 @@
                             @endphp
 
                             <div class="homeya-box list-style-1">
-                                <a href="#" class="images-group">
+                                <a href="{{ route('appart.detail.show', $item->uuid) }}" class="images-group">
                                     <div class="images-style">
                                         <img src="{{ $item->image ?? '' }}" alt="img">
                                     </div>
@@ -446,7 +446,7 @@
                                 </a>
                                 <div class="content">
                                     <div class="archive-top">
-                                        <div class="h7 text-capitalize fw-7"><a href="#" class="link">{{ $item->title }}</a></div>
+                                        <div class="h7 text-capitalize fw-7"><a href="{{ route('appart.detail.show', $item->uuid) }}" class="link">{{ $item->title }}</a></div>
                                         <div class="desc"><i class="icon icon-mapPin"></i><p>{{ $item->property->adresse ?? '' }}</p></div>
                                         <ul class="meta-list">
                                             <li class="item"><i class="icon icon-bed"></i><span>{{ $item->nbr_room }}</span></li>
