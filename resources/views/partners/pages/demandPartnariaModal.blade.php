@@ -86,8 +86,8 @@
                             <div class="card border-primary">
                                 <div class="card-body">
                                     <h5 class="text-primary mb-3">Contactez-nous</h5>
-                                    <p><i class="fas fa-envelope text-primary me-2"></i> <a href="mailto:contact@partnaria.com">contact@partnaria.com</a></p>
-                                    <p><i class="fas fa-phone text-primary me-2"></i> <a href="tel:+33123456789">+33 1 23 45 67 89</a></p>
+                                    <p><i class="fas fa-envelope text-primary me-2"></i> <a href="mailto:contact@partnaria.com">info@jsbeyci.com</a></p>
+                                    <p><i class="fas fa-phone text-primary me-2"></i> <a href="tel:+33123456789">+225 00 00 00 00</a></p>
                                     
                                     <div class="d-flex justify-content-center mt-4">
                                         <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
@@ -165,7 +165,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" name="accepts_newsletter" type="checkbox" id="terms" value="1" required>
                                             <label class="form-check-label" for="terms">
-                                                J'accepte les <a href="#" class="text-primary">conditions</a> <span class="text-danger">*</span>
+                                                J'ai et j'accepte les <a href="{{asset('/conditions/cgu.pdf')}}" target="_blank" class="text-primary">conditions génrales d'utilisation</a> <span class="text-danger">*</span>
                                             </label>
                                         </div>
                                     </div>

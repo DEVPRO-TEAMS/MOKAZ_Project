@@ -361,21 +361,21 @@
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="policy-privacy" required>
                             <label class="form-check-label" for="policy-privacy">
-                                <strong>Politique de confidentialité:</strong> J'accepte que mes données personnelles
+                                <strong> <a href="#" target="_blank" class="text-primary">Politique de confidentialité</a> :</strong> J'accepte que mes données personnelles
                                 soient collectées et traitées conformément à la politique de confidentialité
                             </label>
                         </div>
-                        <div class="form-check mb-3">
+                        {{-- <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="policy-refund" required>
                             <label class="form-check-label" for="policy-refund">
                                 <strong>Politique de remboursement:</strong> J'ai lu et j'accepte les conditions de
                                 remboursement (remboursement intégral jusqu'à 48h avant l'arrivée)
                             </label>
-                        </div>
+                        </div> --}}
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="policy-terms" required>
                             <label class="form-check-label" for="policy-terms">
-                                <strong>Conditions générales:</strong> J'accepte les conditions générales d'utilisation
+                                <strong> <a href="{{asset('/conditions/cgu.pdf')}}" target="_blank" class="text-primary">Conditions générales d'utilisation </a> :</strong> J'accepte les conditions générales d'utilisation
                                 et de séjour
                             </label>
                         </div>
@@ -383,11 +383,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="prev-btn" onclick="previousStep()"
+                <button type="button" class="btn btn-outline-secondary" id="prev-btn" onclick="previousStep()"
                     style="display: none;">
                     <i class="fas fa-arrow-left me-2"></i>Précédent
                 </button>
-                <button type="button" class="btn btn-primary" id="next-btn" onclick="nextStep()">
+                <button type="button" class="btn btn-outline-success" id="next-btn" onclick="nextStep()">
                     Suivant <i class="fas fa-arrow-right ms-2"></i>
                 </button>
                 <button type="button" class="btn btn-success" id="pay-btn" onclick="processPayment()"
@@ -786,7 +786,7 @@
     }
 
     function validateCurrentStep() {
-        const policies = ['policy-privacy', 'policy-refund', 'policy-terms'];
+        const policies = ['policy-privacy', 'policy-terms'];
         const allChecked = policies.every(id => document.getElementById(id).checked);
 
         if (!allChecked) {
