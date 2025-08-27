@@ -823,9 +823,15 @@
             } else {
                 const start = document.getElementById('start_date_jour').value;
                 const end = document.getElementById('end_date_jour').value;
+                const start_hour_jour = document.getElementById('start_hour_jour').value;
 
                 if (!start || !end || new Date(end) < new Date(start)) {
                     Swal.fire('❌', "Le date d'arrivée doit suivre la date de début", 'error');
+                    return false;
+                }
+
+                if (!start_hour_jour) {
+                    Swal.fire('❌', "Veuillez sélectionner une heure d'arrivée", 'error');
                     return false;
                 }
             }

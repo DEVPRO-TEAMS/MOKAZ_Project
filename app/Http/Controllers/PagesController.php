@@ -61,64 +61,6 @@ class PagesController extends Controller
 
         return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
     }
-    // Récupérer tous les propriétés de lequel il y a des appartements disponibles nbr_available>0
-    // $properties = Property::where('etat', 'pending')
-    // ->whereHas('apartements', function ($query) {
-    //     $query->where('nbr_available', '>', 0);
-    // })
-    // ->with(['type', 'apartements' => function ($query) {
-    //     $query->where('nbr_available', '>', 0);
-    // }])->get();
-    // return response()->json($properties);
-
-    // public function getAllProperties()
-    // {
-
-    //     $properties = Property::where('etat', 'pending')
-    //         ->whereHas('apartements', function ($query) {
-    //             $query->where('nbr_available', '>', 0);
-    //         })
-    //         ->with([
-    //             'type',
-    //             'apartements' => function ($query) {
-    //                 $query->where('nbr_available', '>', 0)
-    //                     ->with(['tarifications']);
-    //             }
-    //         ])
-    //         ->get()
-    //     ->map(function ($property) {
-    //     $tarifsHeure = [];
-    //     $tarifsJour = [];
-
-    //     foreach ($property->apartements as $appartement) {
-    //         foreach ($appartement->tarifications as $tarif) {
-    //             if ($tarif->sejour === 'Heure') {
-    //                 $tarifsHeure[] = $tarif->price;
-    //             } elseif ($tarif->sejour === 'Jour') {
-    //                 $tarifsJour[] = $tarif->price;
-    //             }
-    //         }
-    //     }
-
-    //     $minHeure = !empty($tarifsHeure) ? min($tarifsHeure) : null;
-    //     $minJour = !empty($tarifsJour) ? min($tarifsJour) : null;
-
-    //     if ($minHeure !== null && ($minJour === null || $minHeure < $minJour)) {
-    //         $property->min_tarif = $minHeure;
-    //         $property->tarif_type = 'Heure';
-    //     } elseif ($minJour !== null) {
-    //         $property->min_tarif = $minJour;
-    //         $property->tarif_type = 'Jour';
-    //     } else {
-    //         $property->min_tarif = null;
-    //         $property->tarif_type = null;
-    //     }
-
-    //     return $property;
-    //     });
-
-    //     return response()->json($properties);
-    // }
 
     public function getAllProperties()
     {
