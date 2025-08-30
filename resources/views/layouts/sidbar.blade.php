@@ -3,6 +3,7 @@
         <!-- Header Lower -->
         @php
             $reservations = App\Models\Reservation::all();
+            $comments = App\Models\Comment::all();
         @endphp
         <div class="header-lower">
             <div class="row">                      
@@ -38,7 +39,7 @@
                                 @endif
                                 {{-- <p class="name">{{ Auth::user()->name ?? ''}} {{ Auth::user()->lastname ?? '' }} <span class="icon icon-arr-down"></span></p> --}}
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="my-profile.html">My Profile</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Mon compte</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Se deconnecter</a>
                                 </div>
@@ -96,19 +97,12 @@
                     
                     <!-- Tableau de Bord -->
                     <li class="nav-item mb-1">
-                        @if (Auth::user()->user_type == 'admin')
-                            <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
-                            href="{{ route('admin.index') }}">
-                                <i class="bi bi-house-door me-3 fs-5"></i>
-                                <span>Tableau de Bord</span>
-                            </a>
-                        @else
-                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                            href="{{ route('partner.index') }}">
-                                <i class="bi bi-house-door me-3 fs-5"></i>
-                                <span>Tableau de Bord</span>
-                            </a>
-                        @endif
+                        <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
+                        href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('partner.index') }}">
+                            <i class="bi bi-house-door me-3 fs-5"></i>
+                            <span>Tableau de Bord</span>
+                        </a>
+                        
                     </li>
 
                     @if (Auth::user()->user_type == 'partner')
@@ -118,7 +112,7 @@
                         href="{{ route('partner.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">{{ $reservations->where('partner_uuid', Auth::user()->partner_uuid)->count() ?? 0 }}</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->where('status', 'pending', 'partner_uuid', Auth::user()->partner_uuid)->count() ?? 0 }}</span>
                         </a>
                     </li>
                     @else
@@ -152,19 +146,19 @@
 
                     <!-- Propriétés -->
                     <li class="nav-item mb-1">
-                        @if (Auth::user()->user_type == 'admin')
-                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                            href="{{ route('admin.proprety.view') }}">
-                                <i class="bi bi-building me-3 fs-5"></i>
-                                <span>Propriétés</span>
-                            </a>
-                        @else
-                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
-                            href="{{ route('partner.properties.index') }}">
-                                <i class="bi bi-house-heart me-3 fs-5"></i>
-                                <span>Mes Propriétés</span>
-                            </a>
-                        @endif
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ Auth::user()->user_type == 'admin' ? route('admin.proprety.view') :  route('partner.properties.index') }}">
+                            <i class="bi bi-house-door me-3 fs-5"></i>
+                            <span> {{ Auth::user()->user_type == 'admin' ? '' : 'Mes '}}Propriétés</span>
+                        </a> 
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href="{{ Auth::user()->user_type == 'admin' ? route('admin.comment.index') :  route('partner.comment.index') }}">
+                            <i class="bi bi-chat-left me-3 fs-5"></i>
+                            <span>Commentaires et avis </span>
+                            <span class="badge bg-danger ms-auto">{{ Auth::user()->user_type == 'admin' ? $comments->where('etat', 'pending')->count() : $comments->where('etat', 'pending', 'partner_uuid', Auth::user()->partner_uuid)->count() }}</span>
+                        </a>
                     </li>
 
                     <!-- Partenaires (Admin seulement) -->

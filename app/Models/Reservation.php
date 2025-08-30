@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Partner;
 use App\Models\receipt;
+use App\Models\Paiement;
 use App\Models\Property;
 use App\Models\Appartement;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,11 @@ class Reservation extends Model
     public function receipt()
     {
         return $this->hasOne(receipt::class, 'reservation_uuid', 'uuid');
+    }
+
+    public function paiement()
+    {
+        return $this->hasOne(Paiement::class, 'reservation_code', 'code');
     }
 
     public function appartement()

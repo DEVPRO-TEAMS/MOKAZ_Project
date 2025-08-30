@@ -86,12 +86,12 @@
             Total : {{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA
         </div>
 
-        @if($reservation->statut_paiement === 'paid')
+        @if($reservation->paiement->payment_status === 'paid')
         <div class="status-partial">
             ⚠️ Accompte : {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA payés<br>
             <strong>Reste à payer : {{ number_format($reservation->still_to_pay, 0, ',', ' ') }} FCFA</strong>
         </div>
-        @elseif($reservation->statut_paiement === 'pending')
+        @elseif($reservation->paiement->payment_status === 'pending' || $reservation->paiement->payment_status === 'unpaid')
         <div class="status-partial">
             ⚠️ Paiement en attente de confirmation
         </div>

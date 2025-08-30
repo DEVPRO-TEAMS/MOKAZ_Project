@@ -30,23 +30,25 @@
                     <h4 class="mb-0">Réservation {{ $reservation->code }}</h4>
                 </div>
                 <div class="d-flex justify-content-end align-items-center">
-                    @if ($reservation->status == 'pending' && Auth::user()->user_type == 'partner')
-                        <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST"
-                            class="submitForm">
-                            @csrf
-                            <button class="btn btn-success" type="submit">
-                                <i class="icon icon-mail"></i> Envoyer confirmation
-                            </button>
-                        </form>
-                    @elseif (($reservation->status == 'pending' || $reservation->status == 'confirmed') && $reservation->is_present == 0 && Auth::user()->user_type == 'partner')
-                        <form id="presentForm">
-                            @csrf
-                            <span>Le client est-il arrivé ? &nbsp; </span>
-                            <input type="hidden" name="reservation_uuid" id="reservation_uuid"
-                                value="{{ $reservation->uuid }}">
-                            <label for="is_presentNo" class="btn btn-danger" data-value="0">Non</label>
-                            <label for="is_presentYes" class="btn btn-success" data-value="1">Oui</label>
-                        </form>
+                    @if($reservation->paiement && $reservation->paiement->payment_status == 'paid')
+                        @if ($reservation->status == 'pending' && Auth::user()->user_type == 'partner')
+                            <form action="{{ route('partner.reservation.confirm', $reservation->uuid) }}" method="POST"
+                                class="submitForm">
+                                @csrf
+                                <button class="btn btn-success" type="submit">
+                                    <i class="icon icon-mail"></i> Envoyer confirmation
+                                </button>
+                            </form>
+                        @elseif (($reservation->status == 'pending' || $reservation->status == 'confirmed') && $reservation->is_present == 0 && Auth::user()->user_type == 'partner')
+                            <form id="presentForm">
+                                @csrf
+                                <span>Le client est-il arrivé ? &nbsp; </span>
+                                <input type="hidden" name="reservation_uuid" id="reservation_uuid"
+                                    value="{{ $reservation->uuid }}">
+                                <label for="is_presentNo" class="btn btn-danger" data-value="0">Non</label>
+                                <label for="is_presentYes" class="btn btn-success" data-value="1">Oui</label>
+                            </form>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -272,54 +274,73 @@
                                         {{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</p>
                                 </div>
                             </div>
-                            @if ($reservation->statut_paiement === 'paid')
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="fw-bold">Montant payé :</label>
-                                        <p class="mb-2 text-success">
-                                            {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA</p>
+                            @if($reservation->paiement)
+                                @if ($reservation->paiement->payment_status === 'paid')
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="fw-bold">Montant payé :</label>
+                                            <p class="mb-2 text-success">
+                                                {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="fw-bold">Reste à payer :</label>
-                                        <p
-                                            class="mb-2 {{ $reservation->still_to_pay > 0 ? 'text-danger' : 'text-success' }}">
-                                            {{ number_format($reservation->still_to_pay, 0, ',', ' ') }} FCFA
-                                        </p>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="fw-bold">Reste à payer :</label>
+                                            <p
+                                                class="mb-2 {{ $reservation->still_to_pay > 0 ? 'text-danger' : 'text-success' }}">
+                                                {{ number_format($reservation->still_to_pay, 0, ',', ' ') }} FCFA
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
+                                @if (
+                                    $reservation->paiement->payment_status === 'paid' &&
+                                        ($reservation->paiement->payment_mode !== '' || $reservation->paiement->payment_mode !== null))
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="fw-bold">Mode de paiement :</label>
+                                            
+                                            <p class="mb-2">
+                                                @switch($reservation->paiement->payment_mode)
+                                                @case('PAIEMENTMARCHANDOMPAYCIDIRECT')
+                                                    <span class="badge bg-success" style="background-color: #FFA500 !important">Orange Money</span>
+                                                @break
+
+                                                @case('PAIEMENTMARCHAND_MTN_CI')
+                                                    <span class="badge bg-danger" style="background-color: #ffee00 !important">MTN Money</span>
+                                                @break
+                                                @case('PAIEMENTMARCHAND_MOOV_CI')
+                                                    <span class="badge bg-danger" style="background-color: #0080ff !important">Moov Money</span>
+                                                @break
+                                                @case('CI_PAIEMENTWAVE_TP')
+                                                    <span class="badge bg-info" style="background-color: #00b3ff !important">Wave</span>
+                                                @break
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $reservation->paiement->payment_mode }}</span>
+                                            @endswitch
+                                                {{-- {{ ucfirst($reservation->paiement->payment_mode) }}</p> --}}
+                                        </div>
+                                    </div>
+                                @endif
                             @endif
-                            @if (
-                                $reservation->statut_paiement === 'paid' &&
-                                    ($reservation->payment_method !== '' || $reservation->payment_method !== null))
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="fw-bold">Mode de paiement :</label>
-                                        <p class="mb-2">{{ ucfirst($reservation->payment_method) }}</p>
-                                    </div>
-                                </div>
-                            @endif
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="fw-bold">Statut paiement :</label>
                                     <p class="mb-2">
-                                        @switch($reservation->statut_paiement)
-                                            @case('paid')
-                                                <span class="badge bg-success">Payé</span>
-                                            @break
+                                        @if($reservation->paiement)
+                                            @switch($reservation->paiement->payment_status)
+                                                @case('paid')
+                                                    <span class="badge bg-success">Payé</span>
+                                                @break
 
-                                            @case('pending')
-                                                <span class="badge bg-danger">Non payé</span>
-                                            @break
-
-                                            @case('unpaid')
-                                                <span class="badge bg-warning">Non payé</span>
-                                            @break
-
-                                            @default
-                                                <span class="badge bg-secondary">{{ $reservation->statut_paiement }}</span>
-                                        @endswitch
+                                                @case('pending' || 'unpaid')
+                                                    <span class="badge bg-danger">Non payé</span>
+                                                @break
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $reservation->paiement->payment_status }}</span>
+                                            @endswitch
+                                        @endif
                                     </p>
                                 </div>
                             </div>
@@ -366,7 +387,17 @@
                                     <p class="timeline-text">{{ $reservation->created_at->format('d/m/Y à H:i') }}</p>
                                 </div>
                             </div>
-
+                            @if ($reservation->paiement && $reservation->paiement->payment_status === 'paid')
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">Paiement effectué</h6>
+                                        <p class="timeline-text">
+                                            {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA via
+                                            {{ ucfirst($reservation->paiement->payment_mode) }}</p>
+                                    </div>
+                                </div>
+                            @endif
                             @if ($reservation->status === 'confirmed')
                                 <div class="timeline-item">
                                     <div class="timeline-marker bg-info"></div>
@@ -376,18 +407,8 @@
                                     </div>
                                 </div>
                             @endif
-
-                            @if ($reservation->statut_paiement === 'paid')
-                                <div class="timeline-item">
-                                    <div class="timeline-marker bg-success"></div>
-                                    <div class="timeline-content">
-                                        <h6 class="timeline-title">Paiement effectué</h6>
-                                        <p class="timeline-text">
-                                            {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA via
-                                            {{ ucfirst($reservation->payment_method) }}</p>
-                                    </div>
-                                </div>
-                            @endif
+                            
+                            
                         </div>
                     </div>
                 </div>

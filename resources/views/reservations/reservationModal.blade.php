@@ -503,7 +503,7 @@
     let reservationData = {};
     let selectedPaymentMethod = null;
 
-    let urlSuccess = "{{ route('reservation.paiement.success', ['reservation_uuid' => ':reservation_uuid']) }}";
+    let urlSuccess = "{{ route('reservation.paiement.waiting', ['reservation_uuid' => ':reservation_uuid']) }}";
     let urlFailed = "{{ route('reservation.paiement.failed', ['reservation_uuid' => ':reservation_uuid']) }}";
     let domain_name = "jsbeyci.com";
 
@@ -913,57 +913,6 @@
     `;
         document.getElementById('invoice-details').innerHTML = invoiceHTML;
     }
-
-    // async function processPayment() {
-    //     Swal.fire({
-    //         title: 'Traitement du paiement...',
-    //         text: 'Veuillez patienter',
-    //         allowOutsideClick: false,
-    //         didOpen: () => Swal.showLoading()
-    //     });
-
-    //     try {
-    //         const payload = {
-    //             ...reservationData,
-    //             sejour: reservationData.isHourly ? 'Heure' : 'Jour',
-    //             nbr_of_sejour: reservationData.isHourly ? reservationData.hours : reservationData.days,
-    //             start_time: reservationData.isHourly ?
-    //                 `${reservationData.startDate} ${reservationData.startTime}:00` :
-    //                 `${reservationData.startDate} ${reservationData.startTime || '00:00:00'}`,
-    //             end_time: reservationData.isHourly ?
-    //                 `${reservationData.endDate} ${reservationData.endTime}:00` :
-    //                 `${reservationData.endDate} ${reservationData.endTime || '23:59:59'}`,
-    //             payment_method: reservationData.paymentMethod,
-    //             card_number: reservationData.cardNumber,
-    //             card_name: reservationData.cardName,
-    //             card_expiry: reservationData.expiry,
-    //             card_cvv: reservationData.cvv
-    //         };
-
-    //         const res = await fetch('/api/reservation/store', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Accept': 'application/json',
-    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-    //             },
-    //             body: JSON.stringify(payload)
-    //         });
-
-    //         const data = await res.json();
-
-    //         if (!data.success) throw new Error(data.message || 'Erreur inconnue');
-
-    //         reservationData.reservation = data.reservation;
-    //         reservationData.pdfUrl = data.pdf_url;
-
-    //         Swal.close();
-    //         nextStep();
-
-    //     } catch (err) {
-    //         Swal.fire('❌ Erreur', err.message || 'Erreur serveur', 'error');
-    //     }
-    // }
 
     // Fonction TouchPay
     function calltouchpay() {

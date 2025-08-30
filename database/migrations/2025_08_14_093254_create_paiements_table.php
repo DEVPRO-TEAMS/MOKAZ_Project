@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
-            $table->string('reservation_id');
+            $table->uuid('uuid')->index();
+            $table->string('code')->nullable();
+            $table->string('reservation_code')->nullable();
+            $table->string('payment_mode')->nullable();
+            $table->string('paid_sum')->nullable();
+            $table->string('paid_amount')->nullable();
+            $table->string('payment_token')->nullable();
+            $table->string('payment_status')->nullable();
+            $table->string('command_number')->nullable();
+            $table->string('payment_validation_date')->nullable();
             $table->timestamps();
         });
     }

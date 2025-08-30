@@ -14,6 +14,7 @@ use App\Mail\reservatierNotifier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Paiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -169,16 +170,74 @@ class ReservationController extends Controller
         return "storage/files/{$directory}/{$filename}";
     }
 
+    public function paiementWaiting($reservation_uuid)
+    {
+        $reservation = Reservation::where('uuid', $reservation_uuid)->first();
+        return view('reservations.paiement-waiting', compact('reservation'));
+    }
+
+    public function getPaiementStatus($reservation_code)
+    {
+        $paiement = Paiement::where('reservation_code', $reservation_code)->first();
+        if (!$paiement) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Paiement introuvable'
+            ], 404);
+        }else {
+            $payment_status = $paiement->payment_status;
+            return response()->json([
+                'success' => true,
+                'payment_status' => $payment_status,
+                'message' => 'Paiement trouvée',
+            ]);
+        }
+    }
     public function paiementSuccess($reservation_uuid)
     {
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
         return view('reservations.paiement-success', compact('reservation'));
     }
+    
 
     public function paiementFailed($reservation_uuid)
     {
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
         return view('reservations.paiement-failed', compact('reservation'));
+    } 
+
+    public function getPaiementData(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $payment_status = ($request->payment_status == 200) ? 'paid' : 'unpaid';
+            $paiement = Paiement::create([
+                'uuid' => Str::uuid(),
+                'code' => 'PAI-' . strtoupper(Str::random(6)),
+                'reservation_code' => $request->command_number,
+                'payment_mode' => $request->payment_mode,
+                'paid_sum' => $request->paid_sum,
+                'paid_amount' => $request->paid_amount,
+                'payment_token' => $request->payment_token,
+                'payment_status' => $payment_status,
+                'command_number' => $request->command_number,
+                'payment_validation_date' => $request->payment_validation_date
+            ]);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'payment_status' => $payment_status,
+                'message' => 'Paiement enregistré', 
+                'data' => $paiement
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'enregistrement',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function downloadReceipt($uuid)
@@ -294,69 +353,6 @@ class ReservationController extends Controller
         return view('reservations.show', compact('reservation'));
     }
 
-    // public function autoRemiseReservation()
-    // {
-    //     DB::beginTransaction();
-    //     try {
-
-    //         // $results = [];
-    //         $now = Carbon::now();
-
-    //         // On récupère toutes les réservations encore "pending" ou "confirmed"
-    //         $reservations = Reservation::whereIn('status', ['pending', 'confirmed'])
-    //             ->where('is_present', false)
-    //             ->with('appartement')
-    //             ->get();
-
-    //         foreach ($reservations as $reservation) {
-    //             $start = Carbon::parse($reservation->start_time);
-    //             $end = Carbon::parse($reservation->end_time);
-
-    //             // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
-    //             $totalDurationMinutes = $start->diffInMinutes($end);
-    //             $threshold = $start->copy()->addMinutes($totalDurationMinutes * 0.1);
-
-    //             if ($now->greaterThan($threshold) && $reservation->is_present == false) {
-    //                 // Le client ne s'est pas présenté → remise en dispo
-    //                 $this->releaseAppartement($reservation, "no_show");
-    //                 $results[] = [
-    //                     'reservation' => $reservation->code,
-    //                     'status' => 'cancelled',
-    //                     'message' => 'Réservation annulée (no-show)'
-    //                 ];
-    //                 continue;
-    //             }
-
-    //             // 2️ Vérifier si le séjour est terminé
-    //             if ($now->greaterThanOrEqualTo($end)) {
-    //                 $this->releaseAppartement($reservation, "finished");
-    //                 $results[] = [
-    //                     'reservation' => $reservation->code,
-    //                     'status' => 'completed',
-    //                     'message' => 'Séjour terminée'
-    //                 ];
-    //                 continue;
-    //             }
-    //         }
-
-    //         DB::commit();
-    //         // retouner la résponse en foction de no_show : résponse = reservation annulée ou finished : reservation terminée
-    //         // Log::info('Reservation auto remise: ' . json_encode($results));
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => count($results) > 0 ? "Certaines réservations ont été mises à jour" : "Aucune réservation à libérer",
-    //             'details' => $results
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         Log::info('Reservation auto remise failed: ' . $e->getMessage());
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => "Erreur lors de la remise automatique",
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
     public function autoRemiseReservation()
     {
         DB::beginTransaction();
@@ -375,7 +371,7 @@ class ReservationController extends Controller
                 $start = Carbon::parse($reservation->start_time);
                 $end = Carbon::parse($reservation->end_time);
 
-                Log::info('Heure de debut: ' . $start . ' | Heure de fin: ' . $end . ' | Reservation: ' . json_encode($reservation));
+                // Log::info('Heure de debut: ' . $start . ' | Heure de fin: ' . $end . ' | Reservation: ' . json_encode($reservation));
 
                 // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
                 $totalDurationMinutes = $start->diffInMinutes($end);

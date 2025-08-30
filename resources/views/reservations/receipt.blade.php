@@ -219,14 +219,58 @@
                 <td>{{ number_format($reservation->payment_amount, 0, ',', ' ') }}</td>
             </tr>
             <tr>
+                <td>Mode de paiement</td>
+                <td>
+                    @switch($reservation->paiement->payment_mode)
+                        @case('PAIEMENTMARCHANDOMPAYCIDIRECT')
+                            <span
+                                style="background-color: #ffa600a1 !important; color: #FFA500; font-weight: bold; padding: 5px; border-radius: 5px">Orange
+                                Money</span>
+                        @break
+
+                        @case('PAIEMENTMARCHAND_MTN_CI')
+                            <span
+                                style="background-color: #ffee00a1 !important; color: #ffee00; font-weight: bold; padding: 5px; border-radius: 5px">MTN
+                                Money</span>
+                        @break
+
+                        @case('PAIEMENTMARCHAND_MOOV_CI')
+                            <span
+                                style="background-color: #0080ffa1 !important; color: #0080ff; font-weight: bold; padding: 5px; border-radius: 5px">Moov
+                                Money</span>
+                        @break
+
+                        @case('CI_PAIEMENTWAVE_TP')
+                            <span
+                                style="background-color: #00b3ffa1 !important; color: #00b3ff; font-weight: bold; padding: 5px; border-radius: 5px">Wave</span>
+                        @break
+
+                        @default
+                            <span
+                                style="background-color: #444a4da1 !important; color: #444; font-weight: bold; padding: 5px; border-radius: 5px">{{ $reservation->paiement->payment_mode }}</span>
+                    @endswitch
+                </td>
+            </tr>
+            <tr>
                 <td>Reste à payer</td>
                 <td>{{ number_format((float) $reservation->total_price - (float) $reservation->payment_amount, 0, ',', ' ') }}
                 </td>
             </tr>
             <tr>
                 <td>Statut</td>
-                <td><span
-                        style="color: green;">{{ $reservation->statut_paiement == 'paid' ? 'Payé' : 'En attente de paiement' }}</span>
+                <td>
+                    @switch($reservation->paiement->payment_status)
+                        @case('paid')
+                            <span style="color: green;">Payé</span>
+                        @break
+
+                        @case('pending' || 'unpaid')
+                            <span style="color: red;">Non payé</span>
+                        @break
+
+                        @default
+                            <span style="background-color: #444a4da1 !important; color: #444; font-weight: bold; padding: 5px; border-radius: 5px">{{ $reservation->paiement->payment_status }}</span>
+                    @endswitch
                 </td>
             </tr>
         </table>

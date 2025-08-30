@@ -257,8 +257,8 @@
                                             <small class="d-block">Du: {{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y à H:i') }}</small>
                                             <small class="text-muted">Au: {{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y à H:i') }}</small>
                                             @else
-                                                <small class="d-block">Du: {{ $reservation->start_time->format('d/m/Y') }}</small>
-                                                <small class="text-muted">Au: {{ $reservation->end_time->format('d/m/Y') }}</small>
+                                                <small class="d-block">Du: {{ $reservation->start_time->format('d/m/Y à H:i') }}</small>
+                                                <small class="text-muted">Au: {{ $reservation->end_time->format('d/m/Y à H:i') }}</small>
                                             @endif
                                         </div>
                                     </td>
@@ -288,19 +288,21 @@
                                                 <span class="badge bg-secondary">{{ $reservation->status }}</span>
                                         @endswitch
                                         <br>
-                                        @switch($reservation->statut_paiement)
-                                            @case('paid')
-                                                <small class="badge bg-success">Payé</small>
-                                                @break
-                                            @case('partial')
-                                                <small class="badge bg-warning">Partiel</small>
-                                                @break
-                                            @case('pending')
-                                                <small class="badge bg-danger">Non payé</small>
-                                                @break
-                                            @default
-                                                <small class="badge bg-secondary">{{ $reservation->statut_paiement }}</small>
-                                        @endswitch
+                                        @if($reservation->paiement)
+                                            @switch($reservation->paiement->payment_status)
+                                                @case('paid')
+                                                    <small class="badge bg-success">Payé</small>
+                                                    @break
+                                                @case('partial')
+                                                    <small class="badge bg-warning">Partiel</small>
+                                                    @break
+                                                @case('pending' || 'unpaid')
+                                                    <small class="badge bg-danger">Non payé</small>
+                                                    @break
+                                                @default
+                                                    <small class="badge bg-secondary">{{ $reservation->paiement->payment_status }}</small>
+                                            @endswitch
+                                        @endif
                                     </td>
                                     <td>
                                         <span>{{ $reservation->created_at->format('d/m/Y') }}</span>

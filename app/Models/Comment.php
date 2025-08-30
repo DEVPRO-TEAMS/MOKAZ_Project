@@ -27,6 +27,10 @@ class Comment extends Model
     {
         return $this->belongsTo(Appartement::class, 'appart_uuid', 'uuid');
     }
+    public function property()
+    {
+        return $this->belongsTo(Property::class, 'property_uuid', 'uuid');
+    }
     public function partner()
     {
         return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Partner\PartnerController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\Properties\AppartController;
@@ -60,8 +61,10 @@ Route::get('/faq', [PagesController::class, 'indexFaq'])->name('faq');
 Route::get('/confidentialite', [PagesController::class, 'indexPolitiq'])->name('politiq');
 Route::get('/detail/appartement/{uuid}', [PagesController::class, 'show'])->name('appart.detail.show');
 
+Route::get('/reservation/paiement-waiting/{reservation_uuid}', [ReservationController::class, 'paiementWaiting'])->name('reservation.paiement.waiting');
 Route::get('/reservation/paiement-success/{reservation_uuid}', [ReservationController::class, 'paiementSuccess'])->name('reservation.paiement.success');
 Route::get('/reservation/paiement-failed/{reservation_uuid}', [ReservationController::class, 'paiementFailed'])->name('reservation.paiement.failed');
+
 
 
 
@@ -144,6 +147,11 @@ Route::prefix('partner')->name('partner.')->group(function(){
         // Route apparts
         Route::get('/appart/create-in-property/{uuid}', [AppartController::class, 'create'])->name('apartments.create');
         Route::get('/appart/edit-in-property/{uuid}/{property_uuid}', [AppartController::class, 'edit'])->name('apartments.edit');
+
+
+        // Comment route 
+        Route::get('/comment/index', [CommentController::class, 'index'])->name('comment.index');
+        Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
     });
 });
 

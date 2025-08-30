@@ -32,11 +32,10 @@
             </div>
         </div>
     </section>
-    {{-- <div class="d-flex justify-content-between mb-2"><span>Moyen de paiement:</span><span>${r.payment_method ?? 'Non spécifié'}</span></div> --}}
 
     <script type="text/javascript">
             const reservationData = @json($reservation);
-            let urlSuccess = "{{ route('reservation.paiement.success', ['reservation_uuid' => ':reservation_uuid']) }}";
+            let urlWaiting = "{{ route('reservation.paiement.waiting', ['reservation_uuid' => ':reservation_uuid']) }}";
             let urlFailed = "{{ route('reservation.paiement.failed', ['reservation_uuid' => ':reservation_uuid']) }}";
             const reservationUuid = reservationData.uuid;
         document.addEventListener('DOMContentLoaded', function() {
@@ -79,26 +78,8 @@
                 `;
                 document.getElementById('final-receipt').innerHTML = receiptHTML;
             }
-
             // Exécuter à l'ouverture
             generateReceipt();
-
-            
-
-            // Attache la fonction au bouton
-            // const btnPay = document.getElementById("payNowBtn");
-            // if (btnPay) {
-            //     btnPay.addEventListener("click", processPayment);
-            // }
-
-            // Bloquer la fermeture si le reçu n’est pas téléchargé
-            // window.addEventListener('beforeunload', function(e) {
-            //     if (!reservationValid) {
-            //         e.preventDefault();
-            //         e.returnValue = "⚠️ Votre réservation n’est pas encore confirmée. Veuillez effectuer le paiement.";
-            //         return e.returnValue;
-            //     }
-            // });
         });
         // Fonction TouchPay
             function calltouchpay() {
@@ -106,7 +87,7 @@
                 const agency_code = "JSBEY11380";
                 const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
                 const domain_name = 'jsbeyci.com';
-                const url_redirection_success = urlSuccess.replace(':reservation_uuid', reservationUuid);
+                const url_redirection_success = urlWaiting.replace(':reservation_uuid', reservationUuid);
                 const url_redirection_failed = urlFailed.replace(':reservation_uuid', reservationUuid);
                 const amount = reservationData.payment_amount;
                 const city = "";
@@ -138,7 +119,7 @@
                     allowOutsideClick: false,
                     didOpen: () => Swal.showLoading()
                 });
-                // Appel vers TouchPay (ta fonction existante)
+                // Appel vers TouchPay
                 calltouchpay();
             }
     </script>

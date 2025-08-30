@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Partner\PartnerController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\Properties\AppartController;
@@ -36,8 +37,8 @@ Route::post('/cron/autoRemiseReservation', [ReservationController::class, 'autoR
 Route::post('/customerIsPresent', [ReservationController::class, 'customerIsPresent']);
 
 
-
-
+Route::post('/get-paiement-data', [ReservationController::class, 'getPaiementData']);
+Route::get('/cron/get-paiement-status/{reservation_code}', [ReservationController::class, 'getPaiementStatus']);
 
 
 
@@ -71,6 +72,7 @@ Route::post('/delete-appart-tarif/{uuid}', [AppartController::class, 'deleteAppa
 Route::post('/add-comments', [PagesController::class, 'addComment']);
 Route::get('/get-comments', [PagesController::class, 'getComments']);
 
+Route::post('/comment/destroy/{uuid}', [CommentController::class, 'destroy']);
 
 
 
