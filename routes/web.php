@@ -109,7 +109,12 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
         Route::get('/reservation/show/{uuid}', [ReservationController::class, 'show'])->name('reservation.show');
+
+        // Comment route 
         Route::get('/comment/index', [CommentController::class, 'index'])->name('comment.index');
+        // Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
+        Route::post('/approveComment/{uuid}', [CommentController::class, 'approveComment'])->name('approveComment');
+        Route::post('/rejectComment/{uuid}', [CommentController::class, 'rejectComment'])->name('rejectComment');
         
     });
 });
@@ -152,7 +157,9 @@ Route::prefix('partner')->name('partner.')->group(function(){
 
         // Comment route 
         Route::get('/comment/index', [CommentController::class, 'index'])->name('comment.index');
-        Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
+        // Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
+        Route::post('/approveComment/{uuid}', [CommentController::class, 'approveComment'])->name('approveComment');
+        Route::post('/rejectComment/{uuid}', [CommentController::class, 'rejectComment'])->name('rejectComment');
     });
 });
 
