@@ -1128,7 +1128,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                                 stars +=
                                     `<li class="icon-star ${i < rating ? 'text-warning' : ''}"></li>`;
                             }
-
+                            
                             commentsList.innerHTML += `
                             <li class="list-review-item">
                                 <div class="avatar avt-60 round">

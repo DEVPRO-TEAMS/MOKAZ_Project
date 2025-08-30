@@ -9,7 +9,7 @@
                         <i class="bi bi-chat-left me-2 text-danger"></i> Commentaires et avis
                     </h3>
                 </div>
-                
+
             </div>
         </div>
         <div class="row mb-4">
@@ -190,7 +190,7 @@
 
                                                             @if ($item->property->image)
                                                                 <img src="{{ asset($item->property->image) }}"
-                                                                    alt="{{ $item->property->title }}" class="rounded-2"
+                                                                    alt="{!! Str::words($item->property->title ?? '', 3, '...') ?? '' !!}" class="rounded-2"
                                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                                             @else
                                                                 <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
@@ -200,7 +200,7 @@
                                                             @endif
                                                         </div>
                                                         <div>
-                                                            <h6 class="mb-0 fw-semibold">{{ $item->property->title ?? '' }}</h6>
+                                                            <h6 class="mb-0 fw-semibold">{!! Str::words($item->property->title ?? '', 3, '...') ?? '' !!}</h6>
                                                             {{-- <small
                                                                 class="text-muted d-block">{!! Str::words($property->description ?? '', 4, '...') !!}</small> --}}
                                                         </div>
@@ -212,7 +212,7 @@
 
                                                             @if ($item->appart->image)
                                                                 <img src="{{ asset($item->appart->image) }}"
-                                                                    alt="{{ $item->appart->title }}" class="rounded-2"
+                                                                    alt="{!! Str::words($item->appart->title ?? '', 3, '...') !!}" class="rounded-2"
                                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                                             @else
                                                                 <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
@@ -222,7 +222,7 @@
                                                             @endif
                                                         </div>
                                                         <div>
-                                                            <h6 class="mb-0 fw-semibold">{{ $item->appart->title ?? '' }}</h6>
+                                                            <h6 class="mb-0 fw-semibold">{!! Str::words($item->appart->title ?? '', 3, '...') !!}</h6>
                                                             <small
                                                                 class="text-muted d-block">{!! Str::words($item->appart->description ?? '', 4, '...') !!}</small>
                                                         </div>
@@ -260,16 +260,22 @@
                                                     @endif
                                                 </td>
                                                 <td class="">
-                                                    <input type="hidden" name="uuid" value="{{ $item->uuid ?? '' }}">
+                                                    <input type="hidden" name="uuid"
+                                                        value="{{ $item->uuid ?? '' }}">
                                                     <div class="d-flex gap-2">
                                                         <a title="Voir détails"
                                                             class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
-                                                            href="">
+                                                            href="javascript:void(0);" data-bs-toggle="modal"
+                                                            data-bs-target="#showCommentModal{{ $item->uuid }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <button class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteComment" title="Supprimer">
-                                                            <i class="icon icon-trash"></i>
-                                                        </button>
+                                                        @if (Auth::user()->user_type == 'partner')
+                                                            <button
+                                                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteComment"
+                                                                title="Supprimer">
+                                                                <i class="icon icon-trash"></i>
+                                                            </button>
+                                                        @endif
 
 
                                                     </div>
@@ -281,7 +287,8 @@
                                                     <div class="d-flex flex-column align-items-center">
                                                         <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
                                                         <h5 class="fw-semibold">Aucun commentaire trouvée</h5>
-                                                        <p class="text-muted">Aucun commentaire ne correspond à vos critères
+                                                        <p class="text-muted">Aucun commentaire ne correspond à vos
+                                                            critères
                                                             de recherche</p>
                                                         <a href="{{ route('partner.comment.index') }}"
                                                             class="btn btn-sm btn-outline-primary mt-2">
@@ -301,17 +308,21 @@
         </div>
     </div>
 
+    @foreach ($comments->where('etat', '!=', 'inactif') as $item)
+        @include('comments.showModal', ['comment' => $item])
+    @endforeach
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // supprimer un appartement
-            document.querySelectorAll('.deleteComment').forEach(function (button) {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.deleteComment').forEach(function(button) {
+                button.addEventListener('click', function() {
                     const propertyRow = this.closest('.property-row'); // corrige ici le sélecteur
                     const commentUuid = propertyRow.querySelector('input[name="uuid"]').value;
 
                     Swal.fire({
                         title: 'Êtes-vous sûr ?',
-                        text: "Cette propriété sera définitivement supprimée.",
+                        text: "Ce commentaire sera définitivement supprimée.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -333,50 +344,51 @@
                             });
 
                             fetch(`/api/comment/destroy/${commentUuid}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
-                                    'Accept': 'application/json',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Succès',
-                                        text: data.message,
-                                        timer: 1500,
-                                        showConfirmButton: false,
-                                        toast: true,
-                                        position: 'top-end',
-                                        timerProgressBar: true,
-                                    });
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]')?.content,
+                                        'Accept': 'application/json',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Succès',
+                                            text: data.message,
+                                            timer: 1500,
+                                            showConfirmButton: false,
+                                            toast: true,
+                                            position: 'top-end',
+                                            timerProgressBar: true,
+                                        });
 
-                                    // setTimeout(() => {
-                                    //     location.reload();
-                                    // }, 1000);
+                                        // setTimeout(() => {
+                                        //     location.reload();
+                                        // }, 1000);
 
-                                    propertyRow.remove();
-                                    // defaultItem.classList.add();
-                                } else {
+                                        propertyRow.remove();
+                                        // defaultItem.classList.add();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Erreur',
+                                            text: data.message,
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Erreur',
-                                        text: data.message,
+                                        text: 'Une erreur s’est produite lors de la suppression du commentaire.',
                                         showConfirmButton: true,
                                     });
-                                }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erreur',
-                                    text: 'Une erreur s’est produite lors de la suppression de la propriété.',
-                                    showConfirmButton: true,
                                 });
-                            });
                         }
                     });
                 });
