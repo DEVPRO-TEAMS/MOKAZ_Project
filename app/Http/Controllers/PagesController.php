@@ -10,6 +10,7 @@ use App\Models\Appartement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
+use Illuminate\Support\Facades\Http;
 
 class PagesController extends Controller
 {
@@ -212,5 +213,23 @@ class PagesController extends Controller
                 'total' => $comments->total()
             ]
         ]);
+    }
+
+    public function demoSms(Request $request)
+    {
+
+        $to = '2250789078557';
+        $message = 'test sms';
+        $response = sendSms($to, $message);
+
+        return response()->json([
+            'status' => 'success',
+            'to' => $to,
+            'message' => $message,
+            'api_response' => $response
+        ]);
+
+
+        
     }
 }

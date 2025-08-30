@@ -74,6 +74,7 @@ Route::get('/get-comments', [PagesController::class, 'getComments']);
 
 Route::post('/comment/destroy/{uuid}', [CommentController::class, 'destroy']);
 
+Route::post('/send-sms-helper', [PagesController::class, 'demoSms']);
 
 
 

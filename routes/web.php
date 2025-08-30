@@ -109,6 +109,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // reservation
         Route::get('/reservation/index', [ReservationController::class, 'index'])->name('reservation.index');
         Route::get('/reservation/show/{uuid}', [ReservationController::class, 'show'])->name('reservation.show');
+        Route::get('/comment/index', [CommentController::class, 'index'])->name('comment.index');
         
     });
 });

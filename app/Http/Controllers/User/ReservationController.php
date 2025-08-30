@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 
 use Carbon\Carbon;
+use App\Models\Partner;
 use App\Models\receipt;
+use App\Models\Paiement;
 use App\Models\Appartement;
 use App\Models\Reservation;
 use Illuminate\Support\Str;
@@ -14,7 +16,6 @@ use App\Mail\reservatierNotifier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Paiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -115,8 +116,16 @@ class ReservationController extends Controller
                 $appartement->save();
             }
 
+            $partner = Partner::where('uuid', $request->partner_uuid)->first();
+            $phone = $partner->phone;
+            $message = "Bonjour {$partner->raison_social}, vous avez une nouvelle réservation. - " . env('APP_NAME');
+
+            $this->sendSms($phone, $message);
+
             // Génération du PDF après enregistrement
             $pdfUrl = $this->generateReceiptPDF($reservation);
+
+            
 
             DB::commit();
 
@@ -291,6 +300,15 @@ class ReservationController extends Controller
             $reservation->traited_at = now();
 
             $reservation->save();
+
+
+            // envoie de sms 
+
+            $phone = $reservation->phone;
+            $message = "Bonjour, votre réservation est confirmée. Merci pour votre confiance. - " . env('APP_NAME');
+
+            $this->sendSms($phone, $message);
+
             // Log::info('Reservation confirmed: ' . $reservation->code);
             // Use a proper Blade view for the email content
             $emailSubject = "✅ Réservation Confirmée";
@@ -379,6 +397,10 @@ class ReservationController extends Controller
 
                 if ($now->greaterThan($threshold) && $reservation->is_present == false) {
                     $this->releaseAppartement($reservation, "no_show");
+
+                    $message = "Bonjour, votre réservation a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
+
+                    $this->sendSms($reservation->phone, $message);
 
 
                     $emailSubject = "❌ Réservation annulée";
@@ -528,5 +550,32 @@ class ReservationController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Réservation validée', 'data' => $reservation]);
+    }
+
+    private function sendSms($to, $message)
+    {
+
+        try{
+
+            if($to && $message){
+                $response = sendSms($to, $message);
+            }
+
+            
+            return response()->json([
+                'status' => 'success',
+                'to' => $to,
+                'message' => $message,
+                'api_response' => $response
+            ]);
+
+        }catch(\Exception $e){
+            Log::error('Error sending SMS: ' . $e->getMessage());
+        }
+
+        
+
+
+        
     }
 }
