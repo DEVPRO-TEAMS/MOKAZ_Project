@@ -107,17 +107,17 @@
                 <p class="mb-1">${r.phone}</p>
                 <p class="mb-0 mt-2">
                     ${r.sejour === 'Heure' ? `
-                                                Type: Réservation horaire<br>
-                                                Date: ${start.toLocaleDateString('fr-FR')}<br>
-                                                Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                                Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                                Durée: ${r.nbr_of_sejour} heure(s)
-                                            ` : `
-                                                Type: Réservation journalière<br>
-                                                Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                                Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                                Nuits: ${r.nbr_of_sejour}
-                                            `}
+                                                    Type: Réservation horaire<br>
+                                                    Date: ${start.toLocaleDateString('fr-FR')}<br>
+                                                    Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                                    Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                                    Durée: ${r.nbr_of_sejour} heure(s)
+                                                ` : `
+                                                    Type: Réservation journalière<br>
+                                                    Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                                    Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                                    Nuits: ${r.nbr_of_sejour}
+                                                `}
                 </p>
                 <p class="mb-1 text-danger">NB: Afin de garantir votre réservation, merci de vous présenter au plus tard le <strong>${dateLimit}</strong>. En cas de retard, votre reservation sera automatiquement annulée.</p>
             </div>
@@ -149,30 +149,101 @@
         });
     </script>
 
-
-    {{-- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Récupération des coordonnées depuis les variables Blade (Laravel)
             const latitude = @json($reservation->property->latitude);
             const longitude = @json($reservation->property->longitude);
-
 
             // Initialisation de la carte
             const map = L.map('map-location-property-intinerary').setView([latitude, longitude], 16);
 
-            // Chargement des tuiles OpenStreetMap
+            // Tuiles OpenStreetMap
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
 
-            // Ajout d’un marqueur à l’emplacement
-            L.marker([latitude, longitude]).addTo(map)
+            // Marqueur de la propriété
+            const propertyMarker = L.marker([latitude, longitude]).addTo(map)
                 .bindPopup("Emplacement de la propriété")
                 .openPopup();
-        });
-    </script> --}}
 
-    <script>
+            let userMarker, control;
+            let currentMode = "driving"; // OSRM public gère seulement "driving"
+
+            // Fonction pour créer ou mettre à jour l'itinéraire
+            function updateRoute(userLat, userLng) {
+                if (control) {
+                    map.removeControl(control);
+                }
+
+                control = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLng),
+                        L.latLng(latitude, longitude)
+                    ],
+                    router: L.Routing.osrmv1({
+                        serviceUrl: 'https://router.project-osrm.org/route/v1'
+                    }),
+                    lineOptions: {
+                        styles: [{
+                            color: 'red',
+                            weight: 4
+                        }]
+                    },
+                    show: false,
+                    addWaypoints: false
+                }).addTo(map);
+
+                control.on('routesfound', function(e) {
+                    const route = e.routes[0];
+                    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+                    const durationMin = Math.round(route.summary.totalTime / 60);
+
+                    // Mise à jour des infos
+                    document.querySelector('.info-map li:nth-child(2) span').innerText = distanceKm + " km";
+                    document.querySelector('.info-map li:nth-child(3) span').innerText = durationMin +
+                        " min en véhicule";
+
+                    // Estimations approximatives
+                    document.querySelector('.info-map li:nth-child(4) span').innerText =
+                        Math.round(distanceKm * 12) + " min à pied"; // vitesse 5 km/h
+                });
+
+                control.on('routingerror', function(err) {
+                    console.error("Erreur de calcul d'itinéraire", err);
+                    alert("Impossible de calculer l'itinéraire pour le moment.");
+                });
+            }
+
+            // Suivi en temps réel de la position utilisateur
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    if (!userMarker) {
+                        userMarker = L.marker([userLat, userLng], {
+                                color: 'blue'
+                            }).addTo(map)
+                            .bindPopup("Votre position")
+                            .openPopup();
+                    } else {
+                        userMarker.setLatLng([userLat, userLng]);
+                    }
+
+                    updateRoute(userLat, userLng);
+
+                }, () => {
+                    alert("Impossible de récupérer votre position GPS.");
+                }, {
+                    enableHighAccuracy: true
+                });
+            }
+        });
+    </script>
+
+
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const latitude = @json($reservation->property->latitude);
             const longitude = @json($reservation->property->longitude);
@@ -269,6 +340,6 @@
                 });
             }
         });
-    </script>
+    </script> --}}
 @endsection
 {{-- il me veux quoi ce mec --}}
