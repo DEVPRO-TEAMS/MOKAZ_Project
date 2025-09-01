@@ -221,15 +221,15 @@
 
             const customUserIcon = L.icon({
                 iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png", // ton icône perso
-                iconSize: [40, 40],
-                iconAnchor: [20, 38],
+                iconSize: [25, 25],
+                iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             });
 
             // Marqueur de la propriété
             const propertyMarker = L.marker([latitude, longitude], {
                     icon: propertyIcon,
-                    color: 'transparent'
+                    color: 'red'
                 })
                 .addTo(map)
                 .bindPopup("🏠 Emplacement de la propriété")
@@ -290,10 +290,23 @@
                     const userLat = position.coords.latitude;
                     const userLng = position.coords.longitude;
 
+                    const userIcon = L.divIcon({
+                        className: 'user-location-marker',
+                        html: `<div class="user-marker" style="
+                            width: 25px;
+                            height: 25px;
+                            background: radial-gradient(circle, #007bff 30%, #0056b3 70%);
+                            border-radius: 50%;
+                            border: 2px solid white;
+                            box-shadow: 0 0 8px rgba(0, 123, 255, 0.8);
+                        "></div>`,
+                        iconSize: [25, 25],
+                        iconAnchor: [12, 12]
+                    });
+
                     if (!userMarker) {
                         userMarker = L.marker([userLat, userLng], {
-                                icon: customUserIcon,
-                                color: "transparent"
+                                icon: userIcon
                             }) // ici ton icône perso
                             .addTo(map)
                             .bindPopup("📍 Votre position")
