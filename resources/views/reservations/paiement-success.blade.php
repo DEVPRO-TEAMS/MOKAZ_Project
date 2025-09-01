@@ -107,17 +107,17 @@
                 <p class="mb-1">${r.phone}</p>
                 <p class="mb-0 mt-2">
                     ${r.sejour === 'Heure' ? `
-                                                    Type: Réservation horaire<br>
-                                                    Date: ${start.toLocaleDateString('fr-FR')}<br>
-                                                    Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                                    Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                                    Durée: ${r.nbr_of_sejour} heure(s)
-                                                ` : `
-                                                    Type: Réservation journalière<br>
-                                                    Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                                    Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                                    Nuits: ${r.nbr_of_sejour}
-                                                `}
+                                                        Type: Réservation horaire<br>
+                                                        Date: ${start.toLocaleDateString('fr-FR')}<br>
+                                                        Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                                        Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                                        Durée: ${r.nbr_of_sejour} heure(s)
+                                                    ` : `
+                                                        Type: Réservation journalière<br>
+                                                        Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                                        Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                                        Nuits: ${r.nbr_of_sejour}
+                                                    `}
                 </p>
                 <p class="mb-1 text-danger">NB: Afin de garantir votre réservation, merci de vous présenter au plus tard le <strong>${dateLimit}</strong>. En cas de retard, votre reservation sera automatiquement annulée.</p>
             </div>
@@ -149,7 +149,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const latitude = @json($reservation->property->latitude);
             const longitude = @json($reservation->property->longitude);
@@ -240,7 +240,123 @@
                 });
             }
         });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const latitude = @json($reservation->property->latitude);
+            const longitude = @json($reservation->property->longitude);
+
+            // Initialisation de la carte
+            const map = L.map('map-location-property-intinerary').setView([latitude, longitude], 15);
+
+            // Tuiles modernes
+            L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors | Design HOT'
+            }).addTo(map);
+
+            // Icônes personnalisées
+            const propertyIcon = L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -35]
+            });
+
+            const userIcon = L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                iconSize: [35, 35],
+                iconAnchor: [17, 35],
+                popupAnchor: [0, -30]
+            });
+
+            // Marqueur de la propriété
+            const propertyMarker = L.marker([latitude, longitude], {
+                    icon: propertyIcon
+                }).addTo(map)
+                .bindPopup("<b>🏠 Propriété</b><br>Destination finale")
+                .openPopup();
+
+            let userMarker, control;
+            let currentMode = "driving";
+
+            // Fonction pour créer ou mettre à jour l'itinéraire
+            function updateRoute(userLat, userLng) {
+                if (control) {
+                    map.removeControl(control);
+                }
+
+                control = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLng),
+                        L.latLng(latitude, longitude)
+                    ],
+                    router: L.Routing.osrmv1({
+                        serviceUrl: 'https://router.project-osrm.org/route/v1'
+                    }),
+                    lineOptions: {
+                        styles: [{
+                                color: 'red',
+                                weight: 5,
+                                opacity: 0.7
+                            },
+                            {
+                                color: 'blue',
+                                weight: 3,
+                                opacity: 0.5
+                            }
+                        ]
+                    },
+                    show: false,
+                    addWaypoints: false,
+                    fitSelectedRoutes: true // ajuste la vue automatiquement
+                }).addTo(map);
+
+                control.on('routesfound', function(e) {
+                    const route = e.routes[0];
+                    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+                    const durationMin = Math.round(route.summary.totalTime / 60);
+
+                    // Popup dynamique sur le marqueur utilisateur
+                    userMarker.bindPopup(`
+                    <b>📍 Vous êtes ici</b><br>
+                    Distance : <b>${distanceKm} km</b><br>
+                    Temps en véhicule 🚗 : <b>${durationMin} min</b><br>
+                    Temps à pied 🚶 : <b>${Math.round(distanceKm * 12)} min</b>
+                `).openPopup();
+                });
+
+                control.on('routingerror', function(err) {
+                    console.error("Erreur de calcul d'itinéraire", err);
+                    alert("Impossible de calculer l'itinéraire pour le moment.");
+                });
+            }
+
+            // Suivi de la position utilisateur
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    if (!userMarker) {
+                        userMarker = L.marker([userLat, userLng], {
+                            icon: userIcon
+                        }).addTo(map);
+                    } else {
+                        userMarker.setLatLng([userLat, userLng]);
+                    }
+
+                    updateRoute(userLat, userLng);
+
+                }, () => {
+                    alert("Impossible de récupérer votre position GPS.");
+                }, {
+                    enableHighAccuracy: true
+                });
+            }
+        });
     </script>
+
 
 
     {{-- <script>
