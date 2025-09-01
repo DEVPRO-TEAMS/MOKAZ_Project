@@ -285,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Marqueur de la propriété
     const propertyMarker = L.marker([latitude, longitude], { icon: propertyIcon })
         .addTo(map)
-        .bindPopup("🏠 Emplacement de la propriété")
-        .openPopup();
+        // .bindPopup("🏠 Emplacement de la propriété")
+        // .openPopup();
 
     let userMarker, control;
     let currentMode = "driving";
