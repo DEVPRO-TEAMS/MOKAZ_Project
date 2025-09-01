@@ -212,6 +212,8 @@
                 keepCurrentZoomLevel: false
             }).addTo(map);
 
+            console.log('Locate plugin:', L.control.locate);
+
             // Suivi position utilisateur
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(position => {
