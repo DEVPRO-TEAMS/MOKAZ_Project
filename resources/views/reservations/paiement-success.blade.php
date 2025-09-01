@@ -110,6 +110,7 @@
 
     </section>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const latitude = @json($reservation->property->latitude);
@@ -132,7 +133,7 @@
             const map = L.map('map-location-property-intinerary', {
                 center: [latitude, longitude],
                 zoom: 15,
-                layers: [baseMaps["Clair"]]
+                layers: [baseMaps["Classique"]]
             });
 
             // Contrôle pour changer de fond
@@ -140,7 +141,7 @@
 
             // Icônes personnalisées
             const propertyIcon = L.icon({
-                iconUrl: "https://cdn-icons-png.flaticon.com/512/69/69524.png", // maison
+                iconUrl: "{{ asset('assets/images/location/map-icon.png') }}", // maison
                 iconSize: [32, 32],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
@@ -206,7 +207,9 @@
                 position: 'topleft',
                 strings: {
                     title: "Recentrer sur ma position"
-                }
+                },
+                flyTo: true,
+                keepCurrentZoomLevel: false
             }).addTo(map);
 
             // Suivi position utilisateur
