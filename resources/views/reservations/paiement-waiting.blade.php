@@ -412,96 +412,6 @@
         </div>
     </div>
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script> --}}
-
-
-    {{-- <script>
-        // Animation du texte de statut
-        const reservationData = @json($reservation);
-        const reservationUuid = reservationData.uuid;
-        const statusMessages = [
-            'Vérification des informations de paiement...',
-            'Confirmation auprès de votre opérateur...',
-            'Finalisation de la transaction...',
-            'Génération de votre reçu...'
-        ];
-
-        let messageIndex = 0;
-        const statusElement = document.getElementById('statusText');
-
-        function updateStatus() {
-            statusElement.style.opacity = '0';
-
-            setTimeout(() => {
-                statusElement.textContent = statusMessages[messageIndex];
-                statusElement.style.opacity = '1';
-                messageIndex = (messageIndex + 1) % statusMessages.length;
-            }, 500);
-        }
-        // Changer le message toutes les 3 secondes
-        setInterval(updateStatus, 3000);
-
-        let isJobRunning = false;
-
-        function executeCronJob() {
-            if (!isJobRunning) {
-                isJobRunning = true;
-                axios.get("/api/cron/get-paiement-status", {}, {
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => {
-                        console.log('Cron job executed successfully:', response.data.message);
-                        console.log('Response:', response.data.details);
-                        if (response.data.details.payment_status == 'paid') {
-                            // Redirection vers la page de paiement success
-                            setTimeout(() => {
-                                Swail.fire({
-                                    title: 'Paiement Réussi !',
-                                    text: 'Redirection...',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                })
-                                window.location.href = '/reservation/paiement-success/' + reservationUuid;
-                            }, 15000);
-                        }
-                        // verifier si payment_status != 'paid' et le temps d'exécution de executeCronJob vaux 3mins ou plus et rediriger vers la page de paiement echoué
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors de l'exécution du cron :", error);
-                    })
-                    .finally(() => {
-                        isJobRunning = false;
-                    });
-            } else {
-                console.log("La tâche cron est déjà en cours.");
-            }
-        }
-
-        // Exécuter toutes les  secondes
-        setInterval(executeCronJob, 6000);
-
-        // Empêcher la fermeture accidentelle de la page
-        window.addEventListener('beforeunload', function(e) {
-            const confirmationMessage =
-                'Votre paiement est en cours de traitement. Êtes-vous sûr de vouloir quitter cette page ?';
-            e.returnValue = confirmationMessage;
-            return confirmationMessage;
-        });
-
-        // Animation du curseur de points
-        const dotsElement = document.querySelector('.dots');
-        let dotCount = 0;
-
-        setInterval(() => {
-            dotCount = (dotCount + 1) % 4;
-            dotsElement.textContent = '.'.repeat(dotCount);
-        }, 500);
-    </script> --}}
 
     <script>
         // Récupération des données réservation
@@ -591,12 +501,12 @@
         setInterval(executeCronJob, 10000);
 
         // Empêcher la fermeture accidentelle de la page
-        window.addEventListener('beforeunload', function(e) {
-            const confirmationMessage =
-                'Votre paiement est en cours de traitement. Êtes-vous sûr de vouloir quitter cette page ?';
-            e.returnValue = confirmationMessage;
-            return confirmationMessage;
-        });
+        // window.addEventListener('beforeunload', function(e) {
+        //     const confirmationMessage =
+        //         'Votre paiement est en cours de traitement. Êtes-vous sûr de vouloir quitter cette page ?';
+        //     e.returnValue = confirmationMessage;
+        //     return confirmationMessage;
+        // });
 
         // Animation du curseur de points (...)
         const dotsElement = document.querySelector('.dots');
