@@ -110,7 +110,8 @@
 
     </section>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const latitude = @json($reservation->property->latitude);
@@ -202,17 +203,19 @@
                 });
             }
 
-            // Bouton recentrer
-            L.control.locate({
-                position: 'topleft',
-                strings: {
-                    title: "Recentrer sur ma position"
-                },
-                flyTo: true,
-                keepCurrentZoomLevel: false
-            }).addTo(map);
+            // console.log('Locate plugin:', L.control.locate);
 
-            console.log('Locate plugin:', L.control.locate);
+            // Bouton recentrer
+            // L.control.locate({
+            //     position: 'topleft',
+            //     strings: {
+            //         title: "Recentrer sur ma position"
+            //     },
+            //     flyTo: true,
+            //     keepCurrentZoomLevel: false
+            // }).addTo(map);
+
+            
 
             // Suivi position utilisateur
             if (navigator.geolocation) {

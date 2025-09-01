@@ -22,7 +22,7 @@
     <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.css" />
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -188,7 +188,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.js"></script>
+    
     
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
