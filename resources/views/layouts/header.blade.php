@@ -5,25 +5,24 @@
             <div class="col-lg-12">
                 <div class="inner-container d-flex justify-content-between align-items-center">
                     <!-- Logo Box -->
-                    <div class="logo-box " style="width: 6.5rem; margin-top: 0">
+                    <div class="logo-box" style="width: 5rem; margin-top: 0">
                         <div class="logo"><a href="{{ route('welcome') }}"><img
                                     src="{{ asset('assets/images/logo/logo-main.png') }}" alt="logo" width="100%"
                                     height="33"></a>
                         </div>
                     </div>
-                    <center class="d-none d-lg-block">
-                        <div class="flat-bt-top">
-                            <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
-                        </div>
-                        <ul class="icon-box">
-                            <li title="Ma reservation">
-                                <a href="javascript:void(0);" data-bs-toggle="modal"
+                    <center class="d-none d-lg-block pt-3 w-100">
+                        <div class="row align-items-center justify-content-center" style="width: 35%">
+                            <div class="flat-bt-top col-md-6">
+                                <a class="tf-btn primary" href="{{ route('appart.all') }}">Tous nos biens</a>
+                            </div>
+                            <div class="flat-bt-top col-md-6">
+                                <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-toggle="modal"
                                     data-bs-target="#showReservationModal" class="item">
-                                    <span class="fs-4 icon icon-home"></span>
                                     Ma reservation
                                 </a>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </center>
 
                     <div class="header-account">
@@ -125,7 +124,13 @@
 
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
-                    <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
+                    <a class="tf-btn primary" href="{{ route('appart.all') }}">Tous nos biens</a>
+                </div>
+                <div class="button-mobi-sell">
+                    <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-toggle="modal"
+                        data-bs-target="#showReservationModal" class="item">
+                        Ma reservation
+                    </a>
                 </div>
 
 
