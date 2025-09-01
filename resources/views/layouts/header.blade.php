@@ -7,17 +7,27 @@
                     <!-- Logo Box -->
                     <div class="logo-box " style="width: 6.5rem; margin-top: 0">
                         <div class="logo"><a href="{{ route('welcome') }}"><img
-                            src="{{ asset('assets/images/logo/logo-main.png') }}" alt="logo" width="100%"
+                                    src="{{ asset('assets/images/logo/logo-main.png') }}" alt="logo" width="100%"
                                     height="33"></a>
-                            </div>
+                        </div>
                     </div>
                     <center class="d-none d-lg-block">
                         <div class="flat-bt-top">
                             <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
                         </div>
+                        <ul class="icon-box">
+                            <li title="Ma reservation">
+                                <a href="javascript:void(0);" data-bs-toggle="modal"
+                                    data-bs-target="#showReservationModal" class="item">
+                                    <span class="fs-4 icon icon-home"></span>
+                                    Ma reservation
+                                </a>
+                            </li>
+                        </ul>
                     </center>
 
                     <div class="header-account">
+
                         <ul class="icon-box">
                             <li title="Mes Souhaits">
                                 {{-- <a href="javascript:void(0);" class="item" onclick="toggleWishlistCart()">
@@ -25,18 +35,24 @@
                                 </a> --}}
                             </li>
                         </ul>
-                        
+
 
                         @if (Auth::check())
-                            <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                            <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2"
+                                data-bs-toggle="dropdown">
                                 <div class="avatar avt-40 round">
-                                    <img src="{{asset('assets/images/avatar/user-profile.webp')}}" alt="avt">
+                                    <img src="{{ asset('assets/images/avatar/user-profile.webp') }}" alt="avt">
                                 </div>
-                                <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span class="icon icon-arr-down"></span></p>
+                                <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span
+                                        class="icon icon-arr-down"></span></p>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index') ) }}">Tableau de bord</a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">Se deconnecter</a>
+                                    <a class="dropdown-item"
+                                        href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index')) }}">Tableau
+                                        de bord</a>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                        document.getElementById('logout-form').submit();">Se
+                                        deconnecter</a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -44,13 +60,13 @@
                                 </div>
                             </a>
                         @else
-                        <div class="register">
-                            <ul class="d-flex">
-                                <li><a href="#modalLogin" data-bs-toggle="modal">Connexion</a></li>
-                            </ul>
-                        </div>
+                            <div class="register">
+                                <ul class="d-flex">
+                                    <li><a href="#modalLogin" data-bs-toggle="modal">Connexion</a></li>
+                                </ul>
+                            </div>
                         @endif
-                        
+
                     </div>
 
                     <div class="mobile-nav-toggler mobile-button"><span></span></div>
@@ -68,9 +84,9 @@
         <nav class="menu-box">
             <div class="nav-logo">
                 <a href="{{ route('welcome') }}">
-                    <img src="{{ asset('assets/images/logo/logo-main.png') }}" alt="nav-logo"  width="60%">
+                    <img src="{{ asset('assets/images/logo/logo-main.png') }}" alt="nav-logo" width="60%">
                 </a>
-                </div>
+            </div>
             <div class="bottom-canvas">
                 <ul class="icon-box">
                     <li title="Mes Souhaits">
@@ -80,15 +96,21 @@
                     </li>
                 </ul>
                 @if (Auth::check())
-                    <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                    <a href="#" class="box-avatar dropdown-toggle d-flex align-items-center gap-2"
+                        data-bs-toggle="dropdown">
                         <div class="avatar avt-40 round">
-                            <img src="{{asset('assets/images/avatar/user-profile.webp')}}" alt="avt">
+                            <img src="{{ asset('assets/images/avatar/user-profile.webp') }}" alt="avt">
                         </div>
-                        <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span class="icon icon-arr-down"></span></p>
+                        <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span
+                                class="icon icon-arr-down"></span></p>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index') ) }}">Tableau de bord</a>
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">Se deconnecter</a>
+                            <a class="dropdown-item"
+                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index')) }}">Tableau
+                                de bord</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">Se
+                                deconnecter</a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
@@ -100,12 +122,12 @@
                         <a href="#modalLogin" data-bs-toggle="modal">Connexion</a>
                     </div>
                 @endif
-                
+
                 <div class="menu-outer"></div>
                 <div class="button-mobi-sell">
                     <a class="tf-btn primary" href="{{ route('appart.all') }}">Découvrir nos biens</a>
                 </div>
-                
+
 
                 <div class="mobi-icon-box">
                     <div class="box d-flex align-items-center">

@@ -208,6 +208,7 @@ class ReservationController extends Controller
         return view('reservations.paiement-success', compact('reservation'));
     }
     
+    
 
     public function paiementFailed($reservation_uuid)
     {
@@ -277,6 +278,32 @@ class ReservationController extends Controller
         return response()->download($fileFullPath, $reservation->receipt->filename, [
             'Content-Type' => 'application/pdf'
         ]);
+    }
+
+    public function myReservation(Request $request)
+    {
+        $reservation = Reservation::where('code', $request->code)->first();
+        if (!$reservation) {
+            return response()->json([
+                'type' => 'error',
+                'code' => 404,
+                'message' => 'Aucune réservation trouvée pour ce code',
+                'urlback' => '',
+            ]);
+        }
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Réservation trouvée. Redirection en cours...',
+            'data' => $reservation,
+            'urlback' => route('reservation.detail', ['reservation_uuid' => $reservation->uuid]),
+            'code' => 200
+        ]);
+    }
+
+    public function reservationDetail($reservation_uuid)
+    {
+        $reservation = Reservation::where('uuid', $reservation_uuid)->first();
+        return view('reservations.detail', compact('reservation'));
     }
 
     public function confirmReservation($uuid)

@@ -22,8 +22,8 @@
     <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -161,13 +161,14 @@
 
 
     @include('components.loginModal')
+    @include('components.getReservationModal')
 
     @include('partners.pages.demandPartnariaModal')
 
 
 
     <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 
 
 
@@ -175,8 +176,11 @@
 
 
     <!-- Javascript -->
-    <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
+     <!-- JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
     <script type="text/javascript" src="{{ asset('assets/js/owl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/carousel.js') }}"></script>
@@ -187,12 +191,13 @@
     <script type="text/javascript" src="{{ asset('assets/js/shortcodes.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js" ></script>
-    
-    
+    <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
@@ -205,7 +210,7 @@
 
     {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script> --}}
 
-    <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript">
+    {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript"> --}}
     </script>
     <script src="{{ asset('assets/js/map-single.js') }}"></script>
 

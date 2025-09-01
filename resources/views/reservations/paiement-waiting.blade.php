@@ -445,7 +445,7 @@
         // Gestion du cron job
         let isJobRunning = false;
         let startTime = Date.now(); // début du suivi
-        const TIMEOUT = 1 * 60 * 1000; // 3 minutes en ms
+        const TIMEOUT = 3 * 60 * 1000; // 3 minutes en ms
         function executeCronJob() {
             if (!isJobRunning) {
                 isJobRunning = true;

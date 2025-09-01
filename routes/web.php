@@ -62,6 +62,8 @@ Route::get('/confidentialite', [PagesController::class, 'indexPolitiq'])->name('
 Route::get('/detail/appartement/{uuid}', [PagesController::class, 'show'])->name('appart.detail.show');
 
 Route::get('/reservation/paiement-waiting/{reservation_uuid}', [ReservationController::class, 'paiementWaiting'])->name('reservation.paiement.waiting');
+Route::get('/reservation/detail/{reservation_uuid}', [ReservationController::class, 'reservationDetail'])->name('reservation.detail');
+
 Route::get('/reservation/paiement-success/{reservation_uuid}', [ReservationController::class, 'paiementSuccess'])->name('reservation.paiement.success');
 Route::get('/reservation/paiement-failed/{reservation_uuid}', [ReservationController::class, 'paiementFailed'])->name('reservation.paiement.failed');
 
