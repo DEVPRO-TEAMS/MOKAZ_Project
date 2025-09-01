@@ -110,9 +110,7 @@
 
     </section>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.locatecontrol/0.77.0/L.Control.Locate.min.js" defer></script>
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const latitude = @json($reservation->property->latitude);
             const longitude = @json($reservation->property->longitude);
@@ -202,18 +200,15 @@
                         `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${latitude},${longitude}&travelmode=${currentMode}`;
                 });
             }
-
-            // console.log('Locate plugin:', L.control.locate);
-
             // Bouton recentrer
-            // L.control.locate({
-            //     position: 'topleft',
-            //     strings: {
-            //         title: "Recentrer sur ma position"
-            //     },
-            //     flyTo: true,
-            //     keepCurrentZoomLevel: false
-            // }).addTo(map);
+            L.control.locate({
+                position: 'topleft',
+                strings: {
+                    title: "Recentrer sur ma position"
+                },
+                flyTo: true,
+                keepCurrentZoomLevel: false
+            }).addTo(map);
 
             
 
@@ -242,7 +237,117 @@
                 });
             }
         });
-    </script>
+    </script> --}}
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const latitude = @json($reservation->property->latitude);
+    const longitude = @json($reservation->property->longitude);
+
+    // Fonds de carte
+    const baseMaps = {
+        "Clair": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+        }),
+        "Sombre": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM &copy; CARTO'
+        }),
+        "Classique": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        })
+    };
+
+    // Initialisation de la carte
+    const map = L.map('map-location-property-intinerary', {
+        center: [latitude, longitude],
+        zoom: 15,
+        layers: [baseMaps["Classique"]]
+    });
+
+    // Contrôle pour changer de fond
+    L.control.layers(baseMaps).addTo(map);
+
+    // Icônes personnalisées
+    const propertyIcon = L.icon({
+        iconUrl: "{{ asset('assets/images/location/map-icon.png') }}",
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
+
+    const customUserIcon = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png", // ton icône perso
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
+
+    // Marqueur de la propriété
+    const propertyMarker = L.marker([latitude, longitude], { icon: propertyIcon })
+        .addTo(map)
+        .bindPopup("🏠 Emplacement de la propriété")
+        .openPopup();
+
+    let userMarker, control;
+    let currentMode = "driving";
+
+    // Fonction mise à jour itinéraire
+    function updateRoute(userLat, userLng) {
+        if (control) map.removeControl(control);
+        control = L.Routing.control({
+            waypoints: [L.latLng(userLat, userLng), L.latLng(latitude, longitude)],
+            router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' }),
+            lineOptions: { styles: [{ color: 'red', weight: 5, opacity: 0.8 }] },
+            show: false,
+            addWaypoints: false
+        }).addTo(map);
+
+        control.on('routesfound', function(e) {
+            const route = e.routes[0];
+            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+            const durationMin = Math.round(route.summary.totalTime / 60);
+
+            document.querySelector('.info-map li:nth-child(2) span').innerText = distanceKm + " km";
+            document.querySelector('.info-map li:nth-child(3) span').innerText = durationMin + " min en véhicule";
+            document.querySelector('.info-map li:nth-child(4) span').innerText = Math.round(distanceKm * 12) + " min à pied";
+
+            // Lien Google Maps
+            document.getElementById('googleMapsBtn').href =
+                `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${latitude},${longitude}&travelmode=${currentMode}`;
+        });
+    }
+
+    // Bouton recentrer
+    L.control.locate({
+        position: 'topleft',
+        strings: { title: "Recentrer sur ma position" },
+        flyTo: true,
+        keepCurrentZoomLevel: false
+    }).addTo(map);
+
+    // Suivi position utilisateur
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(position => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            if (!userMarker) {
+                userMarker = L.marker([userLat, userLng], { icon: customUserIcon }) // ici ton icône perso
+                    .addTo(map)
+                    .bindPopup("📍 Votre position")
+                    .openPopup();
+            } else {
+                userMarker.setLatLng([userLat, userLng]); // mise à jour fluide
+            }
+
+            updateRoute(userLat, userLng);
+        }, () => {
+            alert("Impossible de récupérer votre position GPS.");
+        }, { enableHighAccuracy: true });
+    }
+});
+</script>
+
 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
