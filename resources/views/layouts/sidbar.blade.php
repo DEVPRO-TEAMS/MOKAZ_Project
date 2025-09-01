@@ -112,7 +112,7 @@
                         href="{{ route('partner.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
-                            <span class="badge bg-danger ms-auto">{{ $reservations->where('status', 'pending', 'partner_uuid', Auth::user()->partner_uuid)->count() ?? 0 }}</span>
+                            <span class="badge bg-danger ms-auto">{{ $reservations->where('status', 'pending')->where('partner_uuid', Auth::user()->partner_uuid)->count() ?? 0 }}</span>
                         </a>
                     </li>
                     @else
@@ -157,10 +157,9 @@
                         href="{{ Auth::user()->user_type == 'admin' ? route('admin.comment.index') :  route('partner.comment.index') }}">
                             <i class="bi bi-chat-left me-3 fs-5"></i>
                             <span>Commentaires et avis </span>
-                            <span class="badge bg-danger ms-auto">{{ Auth::user()->user_type == 'admin' ? $comments->where('etat', 'pending')->count() : $comments->where('etat', 'pending', 'partner_uuid', Auth::user()->partner_uuid)->count() }}</span>
+                            <span class="badge bg-danger ms-auto">{{ Auth::user()->user_type == 'admin' ? $comments->where('etat', 'pending')->count() : $comments->where('etat', 'pending')->where('partner_uuid', Auth::user()->partner_uuid)->count() }}</span>
                         </a>
                     </li>
-
                     <!-- Partenaires (Admin seulement) -->
                     @if (Auth::user()->user_type == 'admin')
                     <li class="nav-item mb-1">

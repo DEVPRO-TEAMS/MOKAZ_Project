@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet"type="text/css" href="{{ asset('assets/css/styles.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,16 +33,23 @@
     <style>
         /* Conteneur des champs de saisie pour placer l'icône */
         /* Applique le style aux éléments en lecture seule */
-        input[readonly], textarea[readonly], select[readonly] {
-            background-color: #f0f0f0;  /* Couleur de fond gris pour les champs en readonly */
-            border: 1px solid #ccc;     /* Bordure gris clair */
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #f0f0f0;
+            /* Couleur de fond gris pour les champs en readonly */
+            border: 1px solid #ccc;
+            /* Bordure gris clair */
             /* cursor: not-allowed;        Curseur indiquant que l'action est interdite */
             cursor: no-drop;
-            pointer-events: none;       /* Empêche toute interaction avec ces éléments */
+            pointer-events: none;
+            /* Empêche toute interaction avec ces éléments */
         }
 
         /* Remplacer le curseur par l'emoji 🚫 lors du survol des champs readonly */
-        input[readonly]:hover, textarea[readonly]:hover, select[readonly]:hover {
+        input[readonly]:hover,
+        textarea[readonly]:hover,
+        select[readonly]:hover {
             cursor: no-drop;
             /* cursor: wait; */
         }
@@ -128,7 +136,7 @@
         });
     </script>
 
-    
+
     <script>
         function toggleWishlistCart() {
             const cart = document.getElementById('wishlistCart');
@@ -148,11 +156,11 @@
         </svg>
     </div>
 
-    
 
-    @include("components.loginModal")
 
-    @include("partners.pages.demandPartnariaModal")
+    @include('components.loginModal')
+
+    @include('partners.pages.demandPartnariaModal')
 
 
 
@@ -177,10 +185,11 @@
     <script type="text/javascript" src="{{ asset('assets/js/shortcodes.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/animation_heading.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
     <script src="{{ asset('assets/js/map.js') }}"></script>
@@ -190,11 +199,12 @@
 
     {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script> --}}
 
-    <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script>
+    <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript">
+    </script>
     <script src="{{ asset('assets/js/map-single.js') }}"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             flatpickr(".datetime", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
@@ -205,23 +215,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             let isJobRunning = false;
-    
+
             function executeCronJob() {
                 if (!isJobRunning) {
                     isJobRunning = true;
                     axios.post("/api/cron/autoRemiseReservation", {}, {
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
                         })
                         .then(response => {
-                            console.log('Cron job executed successfully:',response.data.message);
-                            console.log('Response:',response.data.details); 
+                            console.log('Cron job executed successfully:', response.data.message);
+                            console.log('Response:', response.data.details);
                         })
                         .catch(error => {
                             console.error("Erreur lors de l'exécution du cron :", error);
@@ -233,7 +242,7 @@
                     console.log("La tâche cron est déjà en cours.");
                 }
             }
-    
+
             // Exécuter toutes les 60 secondes (1 minute)
             setInterval(executeCronJob, 60000);
         });
