@@ -1,17 +1,15 @@
 @extends('layouts.main')
 @section('content')
     <style>
-        
-
         /* body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #fef5f5 100%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        } */
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background: linear-gradient(135deg, #ffffff 0%, #fef5f5 100%);
+                    height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                } */
 
         .container-waiting {
             text-align: center;
@@ -446,59 +444,128 @@
         let isJobRunning = false;
         let startTime = Date.now(); // début du suivi
         const TIMEOUT = 3 * 60 * 1000; // 3 minutes en ms
+        let cronInterval = null; // identifiant de l'intervalle
+
         function executeCronJob() {
-            if (!isJobRunning) {
-                isJobRunning = true;
-
-                axios.get("/api/cron/get-paiement-status/"+ reservationData.code, {
-                        headers: {
-                            'Accept': 'application/json',
-                        },
-                    })
-                    .then(response => {
-                        console.log('Cron job executed successfully:', response.data.message);
-                        // console.log('Details paiement:', response.data.details);
-
-                        if (response.data.payment_status === 'paid') {
-                            // Paiement validé
-                            setTimeout(() => {
-                                Swal.fire({
-                                    title: 'Paiement Réussi !',
-                                    text: 'Redirection...',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-                                window.location.href = '/reservation/paiement-success/' + reservationUuid;
-                            }, 1500);
-                        } else {
-                            // Vérifier si délai dépassé
-                            let elapsed = Date.now() - startTime;
-                            if (elapsed >= TIMEOUT) {
-                                Swal.fire({
-                                    title: 'Échec du Paiement',
-                                    text: 'Le paiement n’a pas pu être confirmé dans le temps imparti.',
-                                    icon: 'error',
-                                    showConfirmButton: true,
-                                }).then(() => {
-                                    window.location.href = '/reservation/paiement-failed/' + reservationUuid;
-                                });
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors de l'exécution du cron :", error);
-                    })
-                    .finally(() => {
-                        isJobRunning = false;
-                    });
-            } else {
+            if (isJobRunning) {
                 console.log("La tâche cron est déjà en cours.");
+                return;
             }
+
+            isJobRunning = true;
+
+            axios.post("/api/cron/get-paiement-status/" + reservationData.code, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    console.log('Cron job executed successfully:', response.data);
+
+                    if (response.data.payment_status === 'paid') {
+                        clearInterval(cronInterval); // on arrête la boucle
+                        Swal.fire({
+                            title: 'Paiement Réussi !',
+                            text: 'Redirection...',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        setTimeout(() => {
+                            window.location.href = '/reservation/paiement-success/' + reservationUuid;
+                        }, 1500);
+                    } else {
+                        // Vérifier si délai dépassé
+                        let elapsed = Date.now() - startTime;
+                        if (elapsed >= TIMEOUT) {
+                            clearInterval(cronInterval); // stop la boucle
+                            Swal.fire({
+                                title: 'Échec du Paiement',
+                                text: "Le paiement n'a pas pu être confirmé dans le temps imparti.",
+                                icon: 'error',
+                                showConfirmButton: true,
+                            }).then(() => {
+                                window.location.href = '/reservation/paiement-failed/' + reservationUuid;
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'exécution du cron :", error);
+                })
+                .finally(() => {
+                    isJobRunning = false;
+                });
         }
 
-        // Exécuter toutes les 11 secondes
-        setInterval(executeCronJob, 10000);
+        // Exécuter toutes les 10 secondes tant que les 3 minutes ne sont pas passées
+        cronInterval = setInterval(executeCronJob, 10000);
+
+
+        // // Gestion du cron job
+        // let isJobRunning = false;
+        // let startTime = Date.now(); // début du suivi
+        // const TIMEOUT = 3 * 60 * 1000; // 3 minutes en ms
+        // function executeCronJob() {
+        //     if (!isJobRunning) {
+        //         isJobRunning = true;
+
+        //         axios.post("/api/cron/get-paiement-status/" + reservationData.code, {
+        //                 // headers: {
+        //                 //     'Accept': 'application/json',
+        //                 // },
+        //                 headers: {
+        //                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        //                     'Accept': 'application/json',
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //             })
+        //             .then(response => {
+        //                 console.log('Cron job executed successfully:', response.data.message);
+
+        //                 if (response.data.payment_status === 'paid') {
+        //                     // Paiement validé
+        //                     setTimeout(() => {
+        //                         Swal.fire({
+        //                             title: 'Paiement Réussi !',
+        //                             text: 'Redirection...',
+        //                             icon: 'success',
+        //                             showConfirmButton: false,
+        //                             timer: 3000
+        //                         });
+        //                         window.location.href = '/reservation/paiement-success/' + reservationUuid;
+        //                     }, 1500);
+        //                 } else {
+        //                     // Vérifier si délai dépassé
+        //                     let elapsed = Date.now() - startTime;
+        //                     if (elapsed >= TIMEOUT) {
+        //                         Swal.fire({
+        //                             title: 'Échec du Paiement',
+        //                             text: "Le paiement n'a pas pu être confirmé dans le temps imparti.",
+        //                             icon: 'error',
+        //                             showConfirmButton: true,
+        //                         }).then(() => {
+        //                             window.location.href = '/reservation/paiement-failed/' + reservationUuid;
+        //                         });
+        //                     }
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 console.error("Erreur lors de l'exécution du cron :", error);
+        //             })
+        //             .finally(() => {
+        //                 isJobRunning = false;
+        //             });
+        //     } else {
+        //         console.log("La tâche cron est déjà en cours.");
+        //     }
+        // }
+
+
+        // // Exécuter toutes les 10 secondes tant que les 3 minutes ne sont pas passées
+        // setInterval(executeCronJob, 10000);
 
         // Empêcher la fermeture accidentelle de la page
         // window.addEventListener('beforeunload', function(e) {

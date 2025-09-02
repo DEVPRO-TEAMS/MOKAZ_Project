@@ -38,7 +38,7 @@ Route::post('/customerIsPresent', [ReservationController::class, 'customerIsPres
 
 
 Route::post('/get-paiement-data', [ReservationController::class, 'getPaiementData']);
-Route::get('/cron/get-paiement-status/{reservation_code}', [ReservationController::class, 'getPaiementStatus']);
+Route::post('/cron/get-paiement-status/{reservation_code}', [ReservationController::class, 'getPaiementStatus']);
 
 Route::post('/my-reservation', [ReservationController::class, 'myReservation'])->name('myReservation');
 

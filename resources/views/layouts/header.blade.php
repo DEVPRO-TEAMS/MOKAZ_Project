@@ -17,7 +17,7 @@
                                 <a class="tf-btn primary" href="{{ route('appart.all') }}">Tous nos biens</a>
                             </div>
                             <div class="flat-bt-top col-md-6">
-                                <a href="javascript:void(0);" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                <a href="javascript:void(0);" class=" tf-btn btn btn-outline-dark" data-bs-toggle="modal"
                                     data-bs-target="#showReservationModal" class="item">
                                     Ma reservation
                                 </a>

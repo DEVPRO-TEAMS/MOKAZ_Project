@@ -125,7 +125,7 @@ class ReservationController extends Controller
             // Génération du PDF après enregistrement
             $pdfUrl = $this->generateReceiptPDF($reservation);
 
-            
+
 
             DB::commit();
 
@@ -187,34 +187,49 @@ class ReservationController extends Controller
 
     public function getPaiementStatus($reservation_code)
     {
-        $paiement = Paiement::where('reservation_code', $reservation_code)->first();
-        if (!$paiement) {
+        try {
+            $paiement = Paiement::where('reservation_code', $reservation_code)->first();
+
+            if ($paiement) {
+                $payment_status = $paiement->payment_status;
+
+                Log::info('Paiement trouvée: ' . json_encode($paiement));
+
+                return response()->json([
+                    'success' => true,
+                    'payment_status' => $payment_status,
+                    'message' => 'Paiement trouvé',
+                ]);
+            } else {
+                Log::info('Paiement introuvable pour reservation_code: ' . $reservation_code);
+                return response()->json([
+                    'success' => false,
+                    'payment_status' => null,
+                    'message' => 'Paiement introuvable'
+                ]);
+            }
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Paiement introuvable'
-            ], 404);
-        }else {
-            $payment_status = $paiement->payment_status;
-            return response()->json([
-                'success' => true,
-                'payment_status' => $payment_status,
-                'message' => 'Paiement trouvée',
-            ]);
+                'message' => 'Erreur lors de la recherche du paiement',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
     public function paiementSuccess($reservation_uuid)
     {
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
         return view('reservations.paiement-success', compact('reservation'));
     }
-    
-    
+
+
 
     public function paiementFailed($reservation_uuid)
     {
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
         return view('reservations.paiement-failed', compact('reservation'));
-    } 
+    }
 
     public function getPaiementData(Request $request)
     {
@@ -237,7 +252,7 @@ class ReservationController extends Controller
             return response()->json([
                 'success' => true,
                 'payment_status' => $payment_status,
-                'message' => 'Paiement enregistré', 
+                'message' => 'Paiement enregistré',
                 'data' => $paiement
             ]);
         } catch (\Exception $e) {
@@ -467,7 +482,7 @@ class ReservationController extends Controller
                         'message' => $emailContent,
                         'status' => $reservation->status,
                         'code' => $reservation->code,
-                        'url' => url('/detail/appartement/'.$reservation->appartement->uuid),
+                        'url' => url('/detail/appartement/' . $reservation->appartement->uuid),
                         'buttonText' => "Noter l'hébergement",
                     ];
 
@@ -582,27 +597,21 @@ class ReservationController extends Controller
     private function sendSms($to, $message)
     {
 
-        try{
+        try {
 
-            if($to && $message){
+            if ($to && $message) {
                 $response = sendSms($to, $message);
             }
 
-            
+
             return response()->json([
                 'status' => 'success',
                 'to' => $to,
                 'message' => $message,
                 'api_response' => $response
             ]);
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::error('Error sending SMS: ' . $e->getMessage());
         }
-
-        
-
-
-        
     }
 }
