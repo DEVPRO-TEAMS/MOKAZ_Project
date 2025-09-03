@@ -223,8 +223,6 @@ class ReservationController extends Controller
         return view('reservations.paiement-success', compact('reservation'));
     }
 
-
-
     public function paiementFailed($reservation_uuid)
     {
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
@@ -268,8 +266,8 @@ class ReservationController extends Controller
     public function downloadReceipt($uuid)
     {
         $reservation = Reservation::with('receipt')->where('uuid', $uuid)->firstOrFail();
-        $reservation->statut_paiement = 'paid';
-        $reservation->save();
+        // $reservation->statut_paiement = 'paid';
+        // $reservation->save();
         $directory = 'receipts/';
         if (!$reservation->receipt) {
             $this->generateReceiptPDF($reservation);

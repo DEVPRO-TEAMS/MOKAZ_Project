@@ -16,6 +16,34 @@
                 <div class="card-body">
                     <div class="text-center mb-3">
                         <p class="text-muted mb-1">Numéro de réservation: <strong id="reservation-number"></strong></p>
+                        <p class="text-muted">Statut: &nbsp; 
+                            <strong>
+                                @switch($reservation->status)
+                                    @case('confirmed')
+                                        <span class="badge bg-success">Reservation Confirmé</span>
+                                    @break
+
+                                    @case('pending')
+                                        <span class="badge bg-warning">Reservation en attente de confirmation</span>
+                                    @break
+
+                                    @case('cancelled')
+                                        <span class="badge bg-danger">Reservation Annulé</span>
+                                    @break
+
+                                    @case('completed')
+                                        <span class="badge bg-success">Séjour Terminé</span>
+                                    @break
+
+                                    @case('reconducted')
+                                        <span class="badge bg-info">Reservation Reconduite</span>
+                                    @break
+
+                                    @default
+                                        <span class="badge bg-secondary">{{ $reservation->status }}</span>
+                                @endswitch
+                            </strong>
+                        </p>
                         <p class="text-muted">Date: <strong id="payment-date"></strong></p>
                     </div>
                     <div id="final-receipt">
@@ -26,18 +54,15 @@
 
             <div class="row py-4">
                 <div class="col-12 col-md-6 col-lg-6 mb-3 text-start">
-                    <button class="btn btn-success btn-lg" onclick="downloadReceipt()">
-                        <i class="fas fa-download me-2"></i>Télécharger le reçu
-                    </button>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 mb-3 text-end">
                     {{-- <button class="btn btn-danger btn-lg">
                         <i class="fas fa-trash me-2"></i>Annuler la reservation
                     </button> --}}
                 </div>
-
-
-
+                <div class="col-12 col-md-6 col-lg-6 mb-3 text-end">
+                    <button class="btn btn-success btn-lg" onclick="downloadReceipt()">
+                        <i class="fas fa-download me-2"></i>Télécharger le reçu
+                    </button>
+                </div>
             </div>
 
             <div class="single-property-element single-property-map">
@@ -105,17 +130,17 @@
                 <p class="mb-1">${r.phone}</p>
                 <p class="mb-0 mt-2">
                     ${r.sejour === 'Heure' ? `
-                                Type: Réservation horaire<br>
-                                Date: ${start.toLocaleDateString('fr-FR')}<br>
-                                Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                Durée: ${r.nbr_of_sejour} heure(s)
-                            ` : `
-                                Type: Réservation journalière<br>
-                                Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                Nuits: ${r.nbr_of_sejour}
-                            `}
+                                    Type: Réservation horaire<br>
+                                    Date: ${start.toLocaleDateString('fr-FR')}<br>
+                                    Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                    Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                    Durée: ${r.nbr_of_sejour} heure(s)
+                                ` : `
+                                    Type: Réservation journalière<br>
+                                    Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                    Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                    Nuits: ${r.nbr_of_sejour}
+                                `}
                 </p>
                 <p class="mb-1 text-danger">NB: Afin de garantir votre réservation, merci de vous présenter au plus tard le <strong>${dateLimit}</strong>. En cas de retard, votre reservation sera automatiquement annulée.</p>
             </div>

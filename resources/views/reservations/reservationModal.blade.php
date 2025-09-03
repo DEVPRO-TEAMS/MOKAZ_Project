@@ -361,7 +361,7 @@
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="policy-privacy" required>
                             <label class="form-check-label" for="policy-privacy">
-                                <strong> <a href="#" target="_blank" class="text-primary">Politique de confidentialité</a> :</strong> J'accepte que mes données personnelles
+                                <strong> <a href="javascript:void(0);" target="_blank" class="text-primary">Politique de confidentialité</a> :</strong> J'accepte que mes données personnelles
                                 soient collectées et traitées conformément à la politique de confidentialité
                             </label>
                         </div>

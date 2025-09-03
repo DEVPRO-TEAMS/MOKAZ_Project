@@ -21,14 +21,13 @@
     <div class="bottom-footer">
         <div class="container">
         <div class="content-footer-bottom">
-            <div class="copyright">©2025 MOKAZ. Tous droits réservés.</div>
+            <div class="copyright">©2025 MOKAZ by jsbey. Tous droits réservés.</div>
                 
             <ul class="menu-bottom">
-                <li><a href="our-service.html">Conditions d'utilisation</a> </li>
+                <li><a href="{{asset('/conditions/cgu.pdf')}}" target="_blank">CGU et Politique de confidentialité</a> </li>
 
-                <li><a href="pricing.html">Politique de confidentialité</a> </li>
-                <li><a href="contact.html">Politique en matière de cookies</a> </li>
-
+                {{-- <li><a href="javascript:void(0);">Politique de confidentialité</a> </li>
+                <li><a href="javascript:void(0);">Politique en matière de cookies</a> </li> --}}
             </ul>
         </div>
         </div>
