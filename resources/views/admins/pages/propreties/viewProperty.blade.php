@@ -308,8 +308,8 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Récupération des coordonnées depuis les variables Blade (Laravel)
-        const latitude = @json($property->latitude);
-        const longitude = @json($property->longitude);
+        const latitude = @json($property->latitude) || 0;
+        const longitude = @json($property->longitude) || 0;
         
 
         // Initialisation de la carte

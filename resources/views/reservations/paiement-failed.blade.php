@@ -34,7 +34,7 @@
     </section>
 
     <script type="text/javascript">
-            const reservationData = @json($reservation);
+            const reservationData = @json($reservation) || null;
             let urlWaiting = "{{ route('reservation.paiement.waiting', ['reservation_uuid' => ':reservation_uuid']) }}";
             let urlFailed = "{{ route('reservation.paiement.failed', ['reservation_uuid' => ':reservation_uuid']) }}";
             const reservationUuid = reservationData.uuid;

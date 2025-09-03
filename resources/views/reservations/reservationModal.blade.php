@@ -580,7 +580,7 @@
         });
 
         // Initialiser l'état selon le type de séjour par défaut
-        const defaultType = @json($checkedType);
+        const defaultType = @json($checkedType ?? '');
         if (defaultType === 'heure' && tarifRadios.length > 0) {
             tarifRadios[0].checked = true;
         }
@@ -843,9 +843,9 @@
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 notes: document.getElementById('notes').value.trim(),
-                appart_uuid: @json($appart->uuid),
-                property_uuid: @json($appart->property->uuid),
-                partner_uuid: @json($appart->property->partner->uuid),
+                appart_uuid: @json($appart->uuid ?? null),
+                property_uuid: @json($appart->property->uuid ?? null),
+                partner_uuid: @json($appart->property->partner->uuid ?? null),
             };
         }
 
@@ -1055,7 +1055,7 @@
         initializeDates();
 
         // Réinitialiser l'affichage des blocs selon le type par défaut
-        const defaultType = @json($checkedType);
+        const defaultType = @json($checkedType ?? '');
         document.getElementById('bloc-jour').classList.toggle('d-none', defaultType !== 'jour');
         document.getElementById('bloc-heure').classList.toggle('d-none', defaultType !== 'heure');
     }

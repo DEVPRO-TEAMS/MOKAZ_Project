@@ -73,8 +73,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const reservationData = @json($reservation);
-            const dateLimit = @json($date_limit);
+            const reservationData = @json($reservation) || null;
+            const dateLimit = @json($date_limit) || null;
 
             const reservationUuid = reservationData.uuid;
             let receiptDownloaded = false; // flag de validation
@@ -146,8 +146,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const latitude = @json($reservation->property->latitude);
-            const longitude = @json($reservation->property->longitude);
+            const latitude = @json($reservation->property->latitude) || 0;
+            const longitude = @json($reservation->property->longitude) || 0;
 
             // Fonds de carte
             const baseMaps = {

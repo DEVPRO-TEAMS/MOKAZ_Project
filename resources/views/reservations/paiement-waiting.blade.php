@@ -413,8 +413,8 @@
 
     <script>
         // Récupération des données réservation
-        const reservationData = @json($reservation);
-        const reservationUuid = reservationData.uuid;
+        const reservationData = @json($reservation) || {};
+        const reservationUuid = reservationData.uuid || '';
 
         // Messages animés
         const statusMessages = [
