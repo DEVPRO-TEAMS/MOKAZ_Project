@@ -174,8 +174,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const latitude = @json($reservation->property->latitude) || 0;
-            const longitude = @json($reservation->property->longitude) || 0;
+            const latitude = @json($reservation->property->latitude ?? 0);
+            const longitude = @json($reservation->property->longitude ?? 0);
 
             // Fonds de carte
             const baseMaps = {
