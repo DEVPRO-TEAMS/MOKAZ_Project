@@ -99,8 +99,8 @@
                     <i class="fas fa-home fs-3 me-2"></i>
                     <h1 class="fs-4 fw-bold mb-0 text-uppercase text-white">Mokaz</h1>
                 </div>
-                <span class="small fw-light"><a href="#demandPartnariaModal" data-bs-toggle="modal" class="text-white text-decoration-none fs-5 btn btn-outline-warning bg-warning text-white"><strong>Devenir partenaire</strong></a></span>
-                <span class="small fw-light"><a href="#modalLogin" data-bs-toggle="modal" class="text-white text-decoration-none">Connexion</a></span>
+                <span class="small fw-light"><a href="#demandPartnariaModal" data-bs-toggle="modal" class="text-white text-decoration-none fs-5 btn btn-outline-warning bg-warning text-white"><strong> <i class="fas fa-handshake me-1"></i> Devenir partenaire</strong></a></span>
+                <span class="small fw-light"><a href="#modalLogin" data-bs-toggle="modal" class="text-white text-decoration-none fs-5"> <i class="fas fa-sign-in-alt me-1"></i> Connexion</a></span>
             </div>
         </div>
     </header>
@@ -145,11 +145,11 @@
                                     <ul class="list-unstyled">
                                         <li class="d-flex align-items-start mb-2">
                                             <i class="fas fa-phone-alt text-red-600 mt-1 me-2"></i>
-                                            <span>Contactez-nous au <strong>+225 XX XX XX XX</strong></span>
+                                            <span>Contactez-nous au <strong>+225 07 87 24 51 97</strong></span>
                                         </li>
                                         <li class="d-flex align-items-start mb-2">
                                             <i class="fas fa-envelope text-red-600 mt-1 me-2"></i>
-                                            <span>Envoyez-nous un email à <strong>contact@jsbeyci.com</strong></span>
+                                            <span>Envoyez-nous un email à <strong>info@jsbeyci.com</strong></span>
                                         </li>
                                         <li class="d-flex align-items-start mb-2">
                                             <i class="fas fa-calendar-check text-red-600 mt-1 me-2"></i>
@@ -182,7 +182,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                     <p class="small mb-0">
-                        &copy; 2023 <span class="text-red-400">JSBey</span> - Tous droits réservés
+                        &copy; 2025 <span class="text-red-400">JSBey</span> - Tous droits réservés
                     </p>
                 </div>
                 <div class="col-md-6">
@@ -190,8 +190,8 @@
                         <a href="#" class="text-muted footer-link text-decoration-none">
                             <i class="fas fa-globe me-1"></i> jsbeyci.com
                         </a>
-                        <a href="#" class="text-muted footer-link text-decoration-none">
-                            <i class="fas fa-lock me-1"></i> Politique de confidentialité
+                        <a href="{{asset('/conditions/cgu.pdf')}}" target="_blank" class="text-muted footer-lin text-decoration-none text-white">
+                            <i class="fas fa-lock me-1"></i> CGU et Politique de confidentialité
                         </a>
                     </div>
                 </div>

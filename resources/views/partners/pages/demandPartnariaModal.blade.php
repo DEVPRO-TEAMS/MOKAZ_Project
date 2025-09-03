@@ -86,8 +86,8 @@
                             <div class="card border-primary">
                                 <div class="card-body">
                                     <h5 class="text-primary mb-3">Contactez-nous</h5>
-                                    <p><i class="fas fa-envelope text-primary me-2"></i> <a href="mailto:contact@partnaria.com">info@jsbeyci.com</a></p>
-                                    <p><i class="fas fa-phone text-primary me-2"></i> <a href="tel:+33123456789">+225 00 00 00 00</a></p>
+                                    <p><i class="fas fa-envelope text-primary me-2"></i> <a href="mailto:info@jsbeyci.com">info@jsbeyci.com</a></p>
+                                    <p><i class="fas fa-phone text-primary me-2"></i> <a href="tel:+2250787245197">+225 07 87 24 51 97 </a></p>
                                     
                                     <div class="d-flex justify-content-center mt-4">
                                         <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
