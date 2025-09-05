@@ -24,7 +24,7 @@ class PartnerController extends Controller
      */
     public function index()
     {
-         $partner = auth()->user()->partner;
+        $partner = auth()->user()->partner;
 
         $partnerUsers = User::where('partner_uuid', $partner->uuid)->get();
 
@@ -38,19 +38,20 @@ class PartnerController extends Controller
 
         // Récupération des appartements actifs associés à ces propriétés
         $partnerPropertyApartments = Appartement::whereIn('property_uuid', $propertyUuids)
-        ->where('etat', 'actif')
-        ->get();
+            ->where('etat', 'actif')
+            ->get();
 
         // Récupération des reservations actives associées aux appartements
         $reservations = Reservation::whereIn('appart_uuid', $partnerPropertyApartments->pluck('uuid'))
             ->get();
         return view('partners.dashboard', compact(
-            'partnerUsers', 
+            'partnerUsers',
             'partnerProperties',
             'partnerPropertyApartments',
-            'reservations'));
+            'reservations'
+        ));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -59,6 +60,12 @@ class PartnerController extends Controller
     {
         $partners = Partner::all();
         return view('partners.pages.index', compact('partners'));
+    }
+    public function partnersCollaborator()
+    {
+        $partner_uuid = auth()->user()->partner_uuid;
+        $collaborators = User::where('partner_uuid', $partner_uuid)->get();
+        return view('partners.collaborators.index', compact('collaborators'));
     }
     public function create()
     {
@@ -72,7 +79,7 @@ class PartnerController extends Controller
     {
 
         DB::beginTransaction();
-        try{
+        try {
 
 
             $partnership = PartnershipRequest::create(
@@ -103,20 +110,19 @@ class PartnerController extends Controller
                 ],
                 201
             );
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => false,
-                'message' => 'Une erreur s’est produite lors de la création de la partenariat.' . $e], 500);
+                'message' => 'Une erreur s’est produite lors de la création de la partenariat.' . $e
+            ], 500);
         }
-      
     }
 
     public function storePartner(Request $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $partner_uuid = Str::uuid();
 
             $partner = Partner::create([
@@ -130,7 +136,7 @@ class PartnerController extends Controller
                 'etat' => 'actif',
             ]);
 
-            if($partner){
+            if ($partner) {
                 $user = User::create([
                     'uuid' => Str::uuid(),
                     'code' => Refgenerate(User::class, 'U', 'code'),
@@ -145,7 +151,7 @@ class PartnerController extends Controller
                 ]);
             }
 
-            if($partner){
+            if ($partner) {
                 $nom = $request->contact_name . ' ' . $request->contact_lastname;
 
                 $emailSubject = "Bienvenue ";
@@ -167,31 +173,111 @@ class PartnerController extends Controller
 
             if ($partner) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Enregistré avec succes!",
-                    'data'=>$partner,
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Enregistré avec succes!",
+                    'data' => $partner,
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de l'enregistrement!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de l'enregistrement!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+
+    public function addCollaborator(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $partner_uuid = auth()->user()->partner_uuid;
+
+            $isExist = User::where('email', $request->contact_email)->first();
+            if ($isExist) {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Utilisateur avec cet email existe deja !",
+                    'code' => 500,
+                ];
+            }else {
+                $user = User::create([
+                    'uuid' => Str::uuid(),
+                    'code' => Refgenerate(User::class, 'U', 'code'),
+                    'name' => $request->contact_name,
+                    'lastname' => $request->contact_lastname,
+                    'user_type' => 'partner',
+                    'phone' => $request->phone,
+                    'partner_uuid' => $partner_uuid,
+                    'email' => $request->contact_email,
+                    'password' => Hash::make('12345678'),
+                    'etat' => 'actif',
+                ]);
+    
+                if ($user) {
+                    $nom = $request->contact_name . ' ' . $request->contact_lastname;
+    
+                    $emailSubject = "Bienvenue ";
+                    $message = 'Nous vous recommandons de modifier ce mot de passe après votre première connexion.';
+    
+                    $emailData = [
+                        'nom' => $nom,
+                        'email' => $request->contact_email,
+                        'password' => '12345678',
+                        'message' => $message,
+                        'url' => env('APP_URL') . '/login',
+                        'buttonText' => 'Finaliser la création du compte',
+                    ];
+    
+                    Mail::to($request->contact_email)->send(new NotificationPartenaire($emailData, $emailSubject));
+                }
+    
+                DB::commit();
+    
+                if ($user) {
+    
+                    $dataResponse = [
+                        'type' => 'success',
+                        'urlback' => "back",
+                        'message' => "Enregistré avec succes!",
+                        'data' => $user,
+                        'code' => 200,
+                    ];
+                    DB::commit();
+                } else {
+                    DB::rollback();
+                    $dataResponse = [
+                        'type' => 'error',
+                        'urlback' => '',
+                        'message' => "Erreur lors de l'enregistrement!",
+                        'code' => 500,
+                    ];
+                }
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
@@ -232,7 +318,7 @@ class PartnerController extends Controller
     {
 
         DB::beginTransaction();
-        try{
+        try {
 
             $partner = Partner::where('uuid', $uuid)->update([
                 'raison_social' => $request->raison_social,
@@ -246,31 +332,75 @@ class PartnerController extends Controller
 
             if ($partner) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Mise a jour avec succes!",
-                    'data'=>$partner,
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Mise a jour avec succes!",
+                    'data' => $partner,
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la mise a jour!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la mise a jour!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function updateCollaborator(Request $request, string $uuid)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $collaborator = User::where('uuid', $uuid)->update([
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+                'phone' => $request->phone,
+            ]);
+
+            DB::commit();
+
+            if ($collaborator) {
+
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Mise a jour avec succes!",
+                    'data' => $collaborator,
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la mise a jour!",
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
@@ -280,9 +410,9 @@ class PartnerController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroyPartner(string $uuid)
-     {
+    {
         DB::beginTransaction();
-        try{
+        try {
             $partner = Partner::where('uuid', $uuid)->update([
                 'etat' => 'inactif',
             ]);
@@ -291,31 +421,68 @@ class PartnerController extends Controller
 
             if ($partner) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Supprimé avec succes!",
-                    'data'=>$partner,
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Supprimé avec succes!",
+                    'data' => $partner,
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la suppression!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function destroyCollaborator(string $uuid)
+    {
+        DB::beginTransaction();
+        try {
+            $collaborators = User::where('uuid', $uuid)->delete();
+            DB::commit();
+
+            if ($collaborators) {
+
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Supprimé avec succes!",
+                    'data' => $collaborators,
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);

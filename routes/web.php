@@ -162,7 +162,16 @@ Route::prefix('partner')->name('partner.')->group(function(){
         // Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
         Route::post('/approveComment/{uuid}', [CommentController::class, 'approveComment'])->name('approveComment');
         Route::post('/rejectComment/{uuid}', [CommentController::class, 'rejectComment'])->name('rejectComment');
+
+
+        // collaborator route
+        Route::get('/partner/collaborator/list', [PartnerController::class, 'partnersCollaborator'])->name('collaborator.index');
+        Route::post('/partner/collaborator/add', [PartnerController::class, 'addCollaborator'])->name('collaborator.store');
+        Route::post('/partner/collaborator/update/{uuid}', [PartnerController::class, 'updateCollaborator'])->name('collaborator.update');
+        Route::post('/partner/collaborator/destroy/{uuid}', [PartnerController::class, 'destroyCollaborator'])->name('destroyCollaborator');
     });
+
+    // addCollaborator
 });
 
 

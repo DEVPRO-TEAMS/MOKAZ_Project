@@ -169,6 +169,14 @@
                             <span>Partenaires</span>
                         </a>
                     </li>
+                    @else
+                        <li class="nav-item mb-1">
+                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                            href="{{ route('partner.collaborator.index') }}">
+                                <i class="bi bi-people me-3 fs-5"></i>
+                                <span>Mes collaborateurs</span>
+                            </a>
+                        </li>
                     @endif
 
                     <!-- Menu déroulant Dashboard -->
