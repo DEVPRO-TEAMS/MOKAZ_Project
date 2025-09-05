@@ -524,7 +524,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
 
                             <div class="card-footer">
                                 <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal"
-                                    data-bs-target="#reservationModal">
+                                    data-bs-target="#reservationModal" disabled title="Les reservations ne sont pas disponible pour l'instant ...">
                                     <i class="fas fa-calendar-plus"></i> Reserver maintenant
                                 </button>
                             </div>
