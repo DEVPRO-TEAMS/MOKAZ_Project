@@ -578,7 +578,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
+                    {{-- <div class="swiper-slide">
                         <div class="box-tes-item style-2">
                             <ul class="list-star">
                                 <li class="icon icon-star"></li>
@@ -629,7 +629,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
                 <div class="sw-pagination sw-pagination-testimonial"></div>
