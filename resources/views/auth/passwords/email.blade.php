@@ -1,11 +1,25 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
+
+@endsection --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+    <title>{{ __('Reset Password') }}</title>
+</head>
+<body>
+    <div class="container">
+    <div class="row justify-content-center py-5 align-items-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+                <div class="card-header">{{ __('Reinitialiser le mot de passe') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -18,7 +32,7 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Adresse email') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -33,8 +47,8 @@
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
+                                <button type="submit" class="tf-btn primary">
+                                    {{ __('Evoyer le lien de reinitialisation') }}
                                 </button>
                             </div>
                         </div>
@@ -44,4 +58,7 @@
         </div>
     </div>
 </div>
-@endsection
+
+<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

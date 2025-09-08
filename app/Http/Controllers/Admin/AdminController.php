@@ -239,7 +239,7 @@ class AdminController extends Controller
                     'email' => $demande->email,
                     'password' => '12345678',
                     'message' => $message,
-                    'url' => env('APP_URL') . '/login',
+                    'url' => route('password.request'),
                     'buttonText' => 'Finaliser la création du compte',
                 ];
 

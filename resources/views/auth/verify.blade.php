@@ -1,11 +1,19 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+    <title>{{ __('confirm Password') }}</title>
+</head>
+<body>
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center align-items-center py-5">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Verify Your Email Address') }}</div>
+                <div class="card-header">{{ __('Verifier votre adresse email') }}</div>
 
                 <div class="card-body">
                     @if (session('resent'))
@@ -25,4 +33,6 @@
         </div>
     </div>
 </div>
-@endsection
+<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>
