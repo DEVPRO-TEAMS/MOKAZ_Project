@@ -169,6 +169,13 @@
                             <span>Partenaires</span>
                         </a>
                     </li>
+                    <li class="nav-item mb-1">
+                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        href=" https://jsbeyci.com:2096/" target="_blank">
+                            <i class="bi bi-chat-right me-3 fs-5"></i>
+                            <span>Messagerie equipe MOKAZ</span>
+                        </a>
+                    </li>
                     @else
                         <li class="nav-item mb-1">
                             <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
