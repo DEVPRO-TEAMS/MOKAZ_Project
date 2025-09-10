@@ -14,7 +14,8 @@
                     <center class="d-none d-lg-block pt-3 w-100">
                         <div class="row align-items-center justify-content-center" style="width: 35%">
                             <div class="flat-bt-top col-md-6">
-                                <a class="tf-btn primary" href="{{ route('appart.all') }}">Tous nos biens</a>
+                                <a class="tf-btn primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#demandPartnariaModal">Devenir hébergeur</a>
+                                {{-- <a class="tf-btn primary" href="{{ route('appart.all') }}" data-bs-toggle="modal" data-bs-target="#demandPartnariaModal">Devenir hébergeur</a> --}}
                             </div>
                             <div class="flat-bt-top col-md-6">
                                 <a href="javascript:void(0);" class="tf-btn btn btn-outline-dark" data-bs-toggle="modal"
