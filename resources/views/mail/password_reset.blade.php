@@ -19,8 +19,8 @@
                                 <tr>
                                     <td style="padding: 40px 40px 20px; text-align: center;">
                                         <!-- Placeholder pour le logo - remplacez par votre logo -->
-                                        <div style="width: 80px; height: 80px; margin: 0 auto 20px; padding: 7px background: #f0fff4; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);">
-                                            <img src="{{ url('assets/images/logo/logo-main.png')}}" style="width: 100%; height: auto; border-radius: 20px;" class="logo" alt="Laravel Logo">
+                                        <div style="width: 50px; height: 50px; margin: 0 auto 10px; padding: 7px background: #f0fff4; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);">
+                                            <img src="{{ url('assets/images/logo/logo-main.png')}}" style="width: 50px; height: 50px; border-radius: 20px;" class="logo" alt="Laravel Logo">
                                             {{-- <div style="color: white; font-size: 32px; font-weight: bold;">
                                             </div> --}}
                                         </div>
