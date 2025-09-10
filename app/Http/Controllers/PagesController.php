@@ -67,12 +67,13 @@ class PagesController extends Controller
     {
         $properties = Property::where('etat', 'actif')
             ->whereHas('apartements', function ($query) {
-                $query->where('nbr_available', '>', 0);
+                $query->where('nbr_available', '>', 0)->where('etat', 'actif');
             })
             ->with([
                 'type',
                 'apartements' => function ($query) {
                     $query->where('nbr_available', '>', 0)
+                        ->where('etat', 'actif')
                         ->with('tarifications');
                 }
             ])

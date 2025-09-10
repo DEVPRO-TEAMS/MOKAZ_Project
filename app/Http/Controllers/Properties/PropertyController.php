@@ -212,21 +212,21 @@ class PropertyController extends Controller
         foreach($property->apartements->where('etat', '!=', 'inactif') as $appart){
 
             foreach($appart->tarifications->where('etat', '!=', 'inactif') as $tarif){
-                $tarif->etat = 'inactif';
-                $tarif->save();
+                // $tarif->etat = 'inactif';
+                $tarif->delete();
             }
 
             foreach($appart->images->where('etat', '!=', 'inactif') as $appartDoc){
-                $appartDoc->etat = 'inactif';
-                $appartDoc->save();
+                // $appartDoc->etat = 'inactif';
+                $appartDoc->delete();
             }
-            $appart->etat = 'inactif';
-            $appart->deleted_at = now();
-            $appart->save();  
+            // $appart->etat = 'inactif';
+            // $appart->deleted_at = now();
+            $appart->delete();  
         }
-        $property->etat = 'inactif';
-        $property->deleted_at = now();
-        $isDeleted = $property->save();
+        // $property->etat = 'inactif';
+        // $property->deleted_at = now();
+        $isDeleted = $property->delete();
 
         if (!$isDeleted) {
             return response()->json([

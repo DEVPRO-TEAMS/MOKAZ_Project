@@ -376,6 +376,28 @@
                                 data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
                                 <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
                             </button>
+                        @elseif ($property->etat == 'actif')
+                            <button class="btn btn-danger">
+                                <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.rejectProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point de desactiver la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
+                                <i class="fas fa-times" style="cursor: pointer"></i> Désactiver</a>
+                            </button>
+                        @elseif($property->etat == 'inactif')
+                            <button class="btn btn-success">
+                                <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{route('admin.approveProperty',$property->uuid)}}"
+                                data-title="Vous êtes sur le point d'activer la propriété {{$property->code}} "
+                                data-id="{{$property->uuid}}" data-param="0"
+                                data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Activer</a>
+                            </button>
                         @endif
                     @else
                         <a class="tf-btn primary" href="{{ route('partner.apartments.create', $property->uuid) }}"><i class="icon icon-plus"></i>
@@ -537,7 +559,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="apartements-row">
-                                            @forelse ($property->apartements->where('etat','!=', "inactif") as $apartement)
+                                            @forelse ($property->apartements as $apartement)
                                                 <tr class="position-relative">
                                                     <td class="fw-semibold">#{{ $apartement->code ?? '' }}</td>
                                                     <td class="fw-semibold">{{ $apartement->title ?? '' }}</td>
@@ -606,7 +628,7 @@
             </div>
         </div>
 
-        @foreach($property->apartements->where('etat','!=', "inactif") as $apartement)
+        @foreach($property->apartements as $apartement)
             @include('properties.apparts.showModal' , ['apartement' => $apartement])
         @endforeach
 

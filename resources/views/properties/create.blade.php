@@ -175,6 +175,27 @@
 
         document.getElementById('addPropertyForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const textareaId = 'desc';
+
+            // Synchroniser le contenu TinyMCE avec le textarea
+            if (typeof tinymce !== 'undefined' && tinymce.get(textareaId)) {
+                tinymce.triggerSave();
+            }
+
+            const content = document.getElementById(textareaId).value.trim();
+
+            if (!content) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champ requis',
+                    text: 'Le champ de description est obligatoire.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    progressBar: true
+                });
+                return;
+            }
         
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;

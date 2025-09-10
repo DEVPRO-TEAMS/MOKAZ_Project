@@ -16,10 +16,10 @@
             <div class="modal-body">
                 @php
                     // Récupérer la tarification à l'heure la moins chère
-              $tarifHeure = $apartement->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+$tarifHeure = $apartement->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-              // Récupérer la tarification à la journée la moins chère
-              $tarifJour = $apartement->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $apartement->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                 @endphp
                 <!-- Image principale -->
                 <div class="position-relative">
@@ -189,6 +189,28 @@
                                 data-id="{{ $apartement->uuid }}" data-param="0"
                                 data-route="{{ route('admin.rejectAppart', $property->uuid) }}" title="Rejeter">
                                 <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
+                        </button>
+                    @elseif ($apartement->etat == 'actif')
+                        <button class="btn btn-danger">
+                            <a class="deleteConfirmation  text-white" data-uuid="{{ $apartement->uuid }}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{ route('admin.rejectAppart', $apartement->uuid) }}"
+                                data-title="Vous êtes sur le point de desactiver l'hebergement {{ $apartement->code }}"
+                                data-id="{{ $apartement->uuid }}" data-param="0"
+                                data-route="{{ route('admin.rejectAppart', $property->uuid) }}" title="Rejeter">
+                                <i class="fas fa-times" style="cursor: pointer"></i> Désactiver</a>
+                        </button>
+                    @elseif ($apartement->etat == 'inactif')
+                        <button class="btn btn-success me-2">
+                            <a class="deleteConfirmation text-white" data-uuid="{{ $apartement->uuid }}"
+                                data-type="confirmation_redirect" data-placement="top"
+                                data-token="{{ csrf_token() }}"
+                                data-url="{{ route('admin.approveAppart', $apartement->uuid) }}"
+                                data-title="Vous êtes sur le point d'activer l'hebergement {{ $apartement->code }} "
+                                data-id="{{ $apartement->uuid }}" data-param="0"
+                                data-route="{{ route('admin.approveAppart', $apartement->uuid) }}" title="Approuver">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Activer</a>
                         </button>
                     @endif
                 @else

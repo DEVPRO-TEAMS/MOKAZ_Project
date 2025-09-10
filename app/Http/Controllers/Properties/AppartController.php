@@ -321,18 +321,18 @@ class AppartController extends Controller
         $appart = Appartement::where('uuid', $uuid)->first();
 
         foreach($appart->tarifications as $tarif){
-            $tarif->etat = 'inactif';
-            $tarif->save();
+            // $tarif->etat = 'inactif';
+            $tarif->delete();
         }
 
         foreach($appart->images as $appartDoc){
             
-            $appartDoc->etat = 'inactif';
-            $appartDoc->save();
+            // $appartDoc->etat = 'inactif';
+            $appartDoc->delete();
         }
-        $appart->etat = 'inactif';
-        $appart->deleted_at = now();
-        $isDeleted = $appart->save();
+        // $appart->etat = 'inactif';
+        // $appart->deleted_at = now();
+        $isDeleted = $appart->delete();
 
         if (!$isDeleted) {
             return response()->json([
