@@ -154,6 +154,9 @@
                 <h4 class="text-center">Aucun hébergement disponible pour le moment</h4>
             @endforelse
         </div>
+        <div class="nav-pagination pt-4">
+            {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
+        </div>
         <div class="row pt-5" style="height: 560px">
             <div id="map" style="height: 100%" class="top-map col-12" data-map-zoom="16" data-map-scroll="true"></div>
         </div>

@@ -176,14 +176,16 @@ class PagesController extends Controller
     {
         return view('pages.reservation');
     }
-    public function appartByProperty($uuid)
+    public function appartByProperty(Request $request ,$uuid)
     {
-        $apparts = Appartement::where('property_uuid', $uuid)->where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->get();
+        $perPage = $request->get('perPage', 6);
+        $apparts = Appartement::where('property_uuid', $uuid)->where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
         return view('pages.apparts', compact('apparts'));
     }
-    public function allApparts()
+    public function allApparts(Request $request)
     {
-        $apparts = Appartement::where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->get();
+        $perPage = $request->get('perPage', 6);
+        $apparts = Appartement::where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
         return view('pages.showAllApparts', compact('apparts'));
     }
     public function indexApropos()

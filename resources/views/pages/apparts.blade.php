@@ -41,10 +41,10 @@
             @foreach ($apparts->where('nbr_available', '>', 0) as $item)
                 @php
                     // Récupérer la tarification à l'heure la moins chère
-$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                    $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-// Récupérer la tarification à la journée la moins chère
-$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                    // Récupérer la tarification à la journée la moins chère
+                    $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                 @endphp
                 <div class="col-sm-12 col-xl-4 col-lg-4 col-md-6 mb-4">
                     <div class="homeya-box">
@@ -161,6 +161,9 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                     </div>
                 </div>
             @endforeach
+        </div>
+        <div class="nav-pagination pt-4">
+            {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
         </div>
         <div class="row pt-5" style="height: 560px">
             <div id="map" style="height: 100%" class="top-map col-12" data-map-zoom="16" data-map-scroll="true"></div>
