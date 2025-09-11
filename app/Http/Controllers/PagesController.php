@@ -184,7 +184,7 @@ class PagesController extends Controller
     }
     public function allApparts(Request $request)
     {
-        $perPage = $request->get('perPage', 6);
+        $perPage = $request->get('perPage', 2);
         $apparts = Appartement::where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
         return view('pages.showAllApparts', compact('apparts'));
     }
