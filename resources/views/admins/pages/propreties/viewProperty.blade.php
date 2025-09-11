@@ -172,7 +172,7 @@
                                                     @endif
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0 fw-semibold">{{ $property->title ?? '' }}</h6>
+                                                    <h6 class="mb-0 fw-semibold">{!! Str::words($property->title ?? '', 3, '...') ?? '' !!}</h6>
                                                     <small class="text-muted d-block">{!! Str::limit($property->description ?? '', 50) !!}</small>
                                                 </div>
                                             </div>
