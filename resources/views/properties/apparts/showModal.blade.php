@@ -187,7 +187,7 @@ $tarifJour = $apartement->tarifications->where('sejour', 'Jour')->sortBy('price'
                                 data-url="{{ route('admin.rejectAppart', $apartement->uuid) }}"
                                 data-title="Vous êtes sur le point de rejeter l'hebergement {{ $apartement->code }}"
                                 data-id="{{ $apartement->uuid }}" data-param="0"
-                                data-route="{{ route('admin.rejectAppart', $property->uuid) }}" title="Rejeter">
+                                data-route="{{ route('admin.rejectAppart', $apartement->uuid) }}" title="Rejeter">
                                 <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
                         </button>
                     @elseif ($apartement->etat == 'actif')
@@ -198,7 +198,7 @@ $tarifJour = $apartement->tarifications->where('sejour', 'Jour')->sortBy('price'
                                 data-url="{{ route('admin.rejectAppart', $apartement->uuid) }}"
                                 data-title="Vous êtes sur le point de desactiver l'hebergement {{ $apartement->code }}"
                                 data-id="{{ $apartement->uuid }}" data-param="0"
-                                data-route="{{ route('admin.rejectAppart', $property->uuid) }}" title="Rejeter">
+                                data-route="{{ route('admin.rejectAppart', $apartement->uuid) }}" title="Rejeter">
                                 <i class="fas fa-times" style="cursor: pointer"></i> Désactiver</a>
                         </button>
                     @elseif ($apartement->etat == 'inactif')

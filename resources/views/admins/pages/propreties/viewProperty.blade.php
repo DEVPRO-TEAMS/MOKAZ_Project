@@ -181,15 +181,12 @@
                                             <div class="d-flex flex-column">
                                                 <span class="fw-semibold">{{ $property->ville->label ?? '' }}, {{ $property->pays->label ?? '' }}</span>
                                                 <small class="text-muted">{{ $property->address ?? '' }}</small>
-                                                @if($property->zipCode)
-                                                    <small class="text-muted">{{ $property->zipCode }}</small>
-                                                @endif
                                             </div>
                                         </td>
                                         <td>
                                             <span class="badge bg-info bg-opacity-10 text-info">
                                                 <i class="fas fa-handshake me-1"></i>
-                                                {{ $property->partner_uuid->code ?? 'Non assigné' }}
+                                                {{ $property->partner->raison_social ?? 'Non assigné' }}
                                             </span>
                                         </td>
                                         <td>
@@ -306,25 +303,25 @@
     </script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Récupération des coordonnées depuis les variables Blade (Laravel)
-        const latitude = @json($property->latitude ?? 0);
-        const longitude = @json($property->longitude ?? 0);
-        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Récupération des coordonnées depuis les variables Blade (Laravel)
+            const latitude = @json($property->latitude ?? 0);
+            const longitude = @json($property->longitude ?? 0);
+            
 
-        // Initialisation de la carte
-        const map = L.map('map-location-property').setView([latitude, longitude], 16);
+            // Initialisation de la carte
+            const map = L.map('map-location-property').setView([latitude, longitude], 16);
 
-        // Chargement des tuiles OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }).addTo(map);
+            // Chargement des tuiles OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }).addTo(map);
 
-        // Ajout d’un marqueur à l’emplacement
-        L.marker([latitude, longitude]).addTo(map)
-            .bindPopup("Emplacement de la propriété")
-            .openPopup();
-    });
-</script>
+            // Ajout d’un marqueur à l’emplacement
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup("Emplacement de la propriété")
+                .openPopup();
+        });
+    </script>
 
 @endsection

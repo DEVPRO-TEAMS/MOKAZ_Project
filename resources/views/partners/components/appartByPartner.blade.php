@@ -43,7 +43,7 @@
         </table>
     </div>
 
-    @foreach($units->where('etat','!=', "inactif") as $apartement)
+    @foreach($units as $apartement)
         @include('properties.apparts.showModal' , ['apartement' => $apartement])
     @endforeach
 @else

@@ -182,7 +182,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($properties->where('etat','!=', "inactif") as $property)
+                                        @forelse ($properties as $property)
                                             <tr class="position-relative text-wrap property-row">
                                                 <td class="fw-semibold">#{{ $property->property_code ?? '' }}</td>
                                                 <td>

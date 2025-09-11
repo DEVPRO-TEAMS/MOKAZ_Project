@@ -91,7 +91,7 @@ class AdminController extends Controller
 
         if($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%')
-                ->orWhere('partner_code', 'like', '%' . $request->search . '%')
+                // ->orWhere('partner_code', 'like', '%' . $request->search . '%')
                 ->orWhere('address', 'like', '%' . $request->search . '%');
         }
 
