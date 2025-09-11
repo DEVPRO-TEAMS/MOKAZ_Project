@@ -57,7 +57,7 @@
                                 <li class="page-item"><a class="page-link" href="{{ $paginator->url($i) }}">{{ $i }}</a></li>
                             @endif
                         {{-- Points de suspension après la première page --}}
-                        @elseif ($i === 2 && $currentPage > 3)
+                        @elseif ($i === 2 && $currentPage > 2)
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                         {{-- Points de suspension avant la dernière page --}}
                         @elseif ($i === $lastPage - 1 && $currentPage < $lastPage - 2)
