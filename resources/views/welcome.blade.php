@@ -210,10 +210,10 @@
                 @forelse ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
-$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                        $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-// Récupérer la tarification à la journée la moins chère
-$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                        // Récupérer la tarification à la journée la moins chère
+                        $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                     @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
@@ -290,7 +290,29 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                         </div>
                     @endif
                 @endforelse
+                
+            </div>
 
+            {{-- <div class="nav-pagination">
+                <nav class="pt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#">Précédent</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Suivant</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div> --}}
+            <div class="nav-pagination pt-4">
+                {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
             </div>
         
             @if($apparts->count() > 0)

@@ -20,14 +20,14 @@ class UserController extends Controller
         return view('users.pages.index');
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
 
         $partner_uuid = Auth::user()->partner_uuid;
 
-        try{
-            
+        try {
+
             $user = User::create([
                 'uuid' => Str::uuid(),
                 'code' => Refgenerate(User::class, 'U', 'code'),
@@ -44,11 +44,10 @@ class UserController extends Controller
             DB::commit();
 
             return response()->json(['message' => 'Utilisateur créé avec succès', 'user' => $user]);
-        }catch (\Exception $e){
-            
+        } catch (\Exception $e) {
+
             return response()->json(['message' => 'Une erreur s\'est produite lors de la création de l\'utilisateur' . $e], 500);
         }
-        
     }
 
     /**
@@ -57,7 +56,7 @@ class UserController extends Controller
     public function update(Request $request, $uuid)
     {
 
-        try{
+        try {
             DB::beginTransaction();
 
             $user = User::where('uuid', $uuid)->update([
@@ -73,35 +72,32 @@ class UserController extends Controller
 
             if ($user) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Mise à jour reussie!",
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Mise à jour reussie!",
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la mise à jour!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la mise à jour!",
+                    'code' => 500,
                 ];
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
-        
-
-        
     }
 
     /**
@@ -109,7 +105,7 @@ class UserController extends Controller
      */
     public function destroy($uuid)
     {
-        try{
+        try {
             DB::beginTransaction();
 
             $user = User::findOrFail($uuid);
@@ -119,33 +115,31 @@ class UserController extends Controller
 
             if ($user) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Supprimé avec succes!",
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Supprimé avec succes!",
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la suppression!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
-        
     }
 }

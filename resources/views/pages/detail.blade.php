@@ -1,91 +1,5 @@
 @extends('layouts.main')
 @section('content')
-    <style>
-        .more-content.collapse:not(.show) {
-            display: block !important;
-            height: 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .read-more-toggle {
-            color: var(--primary-color);
-            cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .read-more-toggle:hover {
-            opacity: 0.8;
-        }
-
-        .read-more-toggle i {
-            transition: transform 0.2s ease;
-        }
-
-        [aria-expanded="true"] .read-more-toggle i {
-            transform: rotate(180deg);
-        }
-
-        .rating {
-            direction: rtl;
-            /* Permet de remplir les étoiles de droite à gauche */
-            unicode-bidi: bidi-override;
-            display: inline-flex;
-        }
-
-        .rating input {
-            display: none;
-        }
-
-        .rating label {
-            font-size: 3rem;
-            color: #ddd;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .rating input:checked~label,
-        .rating label:hover,
-        .rating label:hover~label {
-            color: #ffc107;
-            /* Jaune bootstrap */
-        }
-
-        .list-star-note {
-            display: flex;
-        }
-
-        .list-star-note .icon-star {
-            color: #ddd;
-            font-size: 16px;
-        }
-
-        .pagination .page-item .page-link {
-            color: #dc3545;
-            /* Rouge Bootstrap */
-            border-radius: 8px;
-            margin: 0 4px;
-            border: 1px solid #dc3545;
-            transition: all 0.3s ease;
-        }
-
-        .pagination .page-item .page-link:hover {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
-            font-weight: bold;
-        }
-    </style>
-
-
     <section class="flat-location flat-slider-detail-v1">
         <div class="swiper tf-sw-location" data-preview-lg="2.03" data-preview-md="2" data-preview-sm="2" data-space="20"
             data-centered="true" data-loop="true">
@@ -300,14 +214,16 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                         $videoUrl = generateEmbedUrl($appart->video_url);
                         $commodities = explode(',', $appart->commodities);
                     @endphp
-                    <div class="single-property-element single-property-video">
-                        <div class="h7 title fw-7">Video</div>
-                        <div class="img-video">
-                            <img src="{{ asset($appart->image) }}" alt="img-video">
-                            <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video">
-                                <span class="icon icon-play"></span></a>
+                    @if(!empty($videoUrl) && !is_null($videoUrl) && $videoUrl != '' || $appart->video_url != null || $appart->video_url != '')
+                        <div class="single-property-element single-property-video">
+                            <div class="h7 title fw-7">Video</div>
+                            <div class="img-video">
+                                <img src="{{ asset($appart->image) }}" alt="img-video">
+                                <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video">
+                                    <span class="icon icon-play"></span></a>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="single-property-element single-property-info">
                         <div class="h7 title fw-7">Détails de l'hébergement</div>
                         <div class="row">
@@ -382,67 +298,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                         <div class="h7 title fw-7">Map</div>
                         <div id="map-location-property" class="map-single" data-map-zoom="16" data-map-scroll="true">
                         </div>
-                        {{-- <ul class="info-map">
-                            <li>
-                                <div class="fw-7">Address</div>
-                                <span class="mt-4 text-variant-1">8 Broadway, Brooklyn, New York</span>
-                            </li>
-                            <li>
-                                <div class="fw-7">Downtown</div>
-                                <span class="mt-4 text-variant-1">5 min</span>
-
-                            </li>
-                            <li>
-                                <div class="fw-7">FLL</div>
-                                <span class="mt-4 text-variant-1">15 min</span>
-                            </li>
-                        </ul> --}}
                     </div>
-                    {{-- <div class="single-property-element single-property-nearby">
-                        <div class="h7 title fw-7">Qu'y a-t-il à proximité ?</div>
-                        <p class="body-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse aliquid, quod
-                            quisquam debitis exercitationem minima. Ipsam, provident nihil. Dolores a corrupti ipsam nam
-                            tempore mollitia quis odio accusantium recusandae sit </p>
-                        <div class="grid-2 box-nearby">
-                            <ul class="box-left">
-                                <li class="item-nearby">
-                                    <span class="label">School:</span>
-                                    <span class="fw-7">0.7 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">University:</span>
-                                    <span class="fw-7">1.3 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">Grocery center:</span>
-                                    <span class="fw-7">0.6 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">Market:</span>
-                                    <span class="fw-7">1.1 km</span>
-                                </li>
-                            </ul>
-                            <ul class="box-right">
-                                <li class="item-nearby">
-                                    <span class="label">Hospital:</span>
-                                    <span class="fw-7">0.4 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">Metro station:</span>
-                                    <span class="fw-7">1.8 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">Gym, wellness:</span>
-                                    <span class="fw-7">1.3 km</span>
-                                </li>
-                                <li class="item-nearby">
-                                    <span class="label">River:</span>
-                                    <span class="fw-7">2.1 km</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div> --}}
                     <div class="single-property-element single-wrapper-review">
                         <div class="box-title-review d-flex justify-content-between align-items-center flex-wrap gap-20">
                             <div class="h7 fw-7">Avis des clients</div>
@@ -529,307 +385,6 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                                 </button>
                             </div>
                         </div>
-                        {{-- <div class="flat-tab flat-tab-form widget-filter-search widget-box bg-surface">
-                            <div class="h7 title fw-7">Recherche d'autres hebergements</div>
-                            <div class="tab-content">
-                                <div class="tab-pane fade active show" role="tabpanel">
-                                    <div class="form-sl">
-                                        <form method="post">
-                                            <div class="wd-filter-select">
-                                                <div class="inner-group inner-filter">
-                                                    <div class="form-style">
-                                                        <label class="title-select">Mot-clé</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Search Keyword." value="" name="s"
-                                                            title="Search for" required="">
-                                                    </div>
-                                                    <div class="form-style">
-                                                        <label class="title-select">Emplacement</label>
-                                                        <div class="group-ip ip-icon">
-                                                            <input type="text" class="form-control"
-                                                                placeholder="Search Location" value=""
-                                                                name="s" title="Search for" required="">
-                                                            <a href="#" class="icon-right icon-location"></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style">
-                                                        <label class="title-select">Type</label>
-                                                        <div class="group-select">
-                                                            <div class="nice-select" tabindex="0"><span
-                                                                    class="current">Tous</span>
-                                                                <ul class="list">
-                                                                    <li data-value class="option selected">Tous</li>
-                                                                    <li data-value="villa" class="option">Villa</li>
-                                                                    <li data-value="studio" class="option">Studio</li>
-                                                                    <li data-value="office" class="option">Office</li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style box-select">
-                                                        <label class="title-select">Chambres</label>
-                                                        <div class="nice-select" tabindex="0"><span
-                                                                class="current">2</span>
-                                                            <ul class="list">
-                                                                <li data-value="2" class="option">1</li>
-                                                                <li data-value="2" class="option selected">2</li>
-                                                                <li data-value="3" class="option">3</li>
-                                                                <li data-value="4" class="option">4</li>
-                                                                <li data-value="5" class="option">5</li>
-                                                                <li data-value="6" class="option">6</li>
-                                                                <li data-value="7" class="option">7</li>
-                                                                <li data-value="8" class="option">8</li>
-                                                                <li data-value="9" class="option">9</li>
-                                                                <li data-value="10" class="option">10</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style box-select">
-                                                        <label class="title-select">Salles de bains</label>
-                                                        <div class="nice-select" tabindex="0"><span
-                                                                class="current">4</span>
-                                                            <ul class="list">
-                                                                <li data-value="all" class="option">All</li>
-                                                                <li data-value="1" class="option">1</li>
-                                                                <li data-value="2" class="option">2</li>
-                                                                <li data-value="3" class="option">3</li>
-                                                                <li data-value="4" class="option selected">4</li>
-                                                                <li data-value="5" class="option">5</li>
-                                                                <li data-value="6" class="option">6</li>
-                                                                <li data-value="7" class="option">7</li>
-                                                                <li data-value="8" class="option">8</li>
-                                                                <li data-value="9" class="option">9</li>
-                                                                <li data-value="10" class="option">10</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style box-select">
-                                                        <label class="title-select">Chambres à coucher</label>
-                                                        <div class="nice-select" tabindex="0"><span
-                                                                class="current">4</span>
-                                                            <ul class="list">
-                                                                <li data-value="1" class="option">All</li>
-                                                                <li data-value="1" class="option">1</li>
-                                                                <li data-value="2" class="option">2</li>
-                                                                <li data-value="3" class="option">3</li>
-                                                                <li data-value="4" class="option selected">4</li>
-                                                                <li data-value="5" class="option">5</li>
-                                                                <li data-value="6" class="option">6</li>
-                                                                <li data-value="7" class="option">7</li>
-                                                                <li data-value="8" class="option">8</li>
-                                                                <li data-value="9" class="option">9</li>
-                                                                <li data-value="10" class="option">10</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style widget-price">
-                                                        <div class="box-title-price">
-                                                            <span class="title-price">Gamme de prix </span>
-                                                            <div class="caption-price">
-                                                                <span>de</span>
-                                                                <span id="slider-range-value1" class="fw-7"></span>
-                                                                <span>à</span>
-                                                                <span id="slider-range-value2" class="fw-7"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div id="slider-range"></div>
-                                                        <div class="slider-labels">
-                                                            <input type="hidden" name="min-value" value="">
-                                                            <input type="hidden" name="max-value" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style widget-price wd-price-2">
-                                                        <div class="box-title-price">
-                                                            <span class="title-price">Gamme de tailles </span>
-                                                            <div class="caption-price">
-                                                                <span>de</span>
-                                                                <span id="slider-range-value01" class="fw-7"></span>
-                                                                <span>à</span>
-                                                                <span id="slider-range-value02" class="fw-7"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div id="slider-range2"></div>
-                                                        <div class="slider-labels">
-                                                            <input type="hidden" name="min-value2" value="">
-                                                            <input type="hidden" name="max-value2" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style btn-show-advanced">
-                                                        <a class="filter-advanced pull-right">
-                                                            <span class="icon icon-faders"></span>
-                                                            <span class="text-advanced">Afficher avancé</span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="form-style wd-amenities">
-                                                        <div class="group-checkbox">
-                                                            <div class="text-1">Amenities:</div>
-                                                            <div class="group-amenities">
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb1" checked>
-                                                                    <label for="cb1" class="text-cb-amenities">Air
-                                                                        Condition</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb2">
-                                                                    <label for="cb2"
-                                                                        class="text-cb-amenities">Disabled Access</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb3">
-                                                                    <label for="cb3"
-                                                                        class="text-cb-amenities">Ceiling Height</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb4" checked>
-                                                                    <label for="cb4"
-                                                                        class="text-cb-amenities">Floor</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb5">
-                                                                    <label for="cb5"
-                                                                        class="text-cb-amenities">Heating</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb6">
-                                                                    <label for="cb6"
-                                                                        class="text-cb-amenities">Renovation</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb7">
-                                                                    <label for="cb7" class="text-cb-amenities">Window
-                                                                        Type</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb8">
-                                                                    <label for="cb8" class="text-cb-amenities">Cable
-                                                                        TV</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb9" checked>
-                                                                    <label for="cb9"
-                                                                        class="text-cb-amenities">Elevator</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb10">
-                                                                    <label for="cb10"
-                                                                        class="text-cb-amenities">Furnishing</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb11">
-                                                                    <label for="cb11"
-                                                                        class="text-cb-amenities">Intercom</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb12">
-                                                                    <label for="cb12"
-                                                                        class="text-cb-amenities">Security</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb13">
-                                                                    <label for="cb13" class="text-cb-amenities">Search
-                                                                        property</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb14">
-                                                                    <label for="cb14"
-                                                                        class="text-cb-amenities">Ceiling Height</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb15">
-                                                                    <label for="cb15"
-                                                                        class="text-cb-amenities">Fence</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb16">
-                                                                    <label for="cb16"
-                                                                        class="text-cb-amenities">Fence</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb17" checked>
-                                                                    <label for="cb17"
-                                                                        class="text-cb-amenities">Garage</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb18">
-                                                                    <label for="cb18"
-                                                                        class="text-cb-amenities">Parking</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb19">
-                                                                    <label for="cb19"
-                                                                        class="text-cb-amenities">Swimming Pool</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb20">
-                                                                    <label for="cb20"
-                                                                        class="text-cb-amenities">Construction Year</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb21">
-                                                                    <label for="cb21"
-                                                                        class="text-cb-amenities">Fireplace</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb22">
-                                                                    <label for="cb22"
-                                                                        class="text-cb-amenities">Garden</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb23">
-                                                                    <label for="cb23" class="text-cb-amenities">Pet
-                                                                        Friendly</label>
-                                                                </fieldset>
-                                                                <fieldset class="amenities-item">
-                                                                    <input type="checkbox" class="tf-checkbox style-1"
-                                                                        id="cb24">
-                                                                    <label for="cb24"
-                                                                        class="text-cb-amenities">WiFi</label>
-                                                                </fieldset>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-style btn-hide-advanced">
-                                                        <a class="filter-advanced pull-right">
-                                                            <span class="icon icon-faders"></span>
-                                                            <span class="text-advanced">Masquer avancé</span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="form-style">
-                                                        <button type="submit" class="tf-btn primary"
-                                                            href="#">Trouver des propriétés</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div> --}}
                         <div class="widget-box single-property-whychoose bg-surface">
                             <div class="h7 title fw-7">Pourquoi nous choisir ?</div>
                             <ul class="box-whychoose">
@@ -858,147 +413,6 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
         </div>
 
     </section>
-    {{-- <section class="flat-section pt-0 flat-latest-property">
-        <div class="container">
-            <div class="box-title">
-                <div class="text-subtitle text-primary">Propriétés en vedette</div>
-                <h4 class="mt-4">La succession la plus récente</h4>
-            </div>
-            <div class="swiper tf-latest-property" data-preview-lg="3" data-preview-md="2" data-preview-sm="2"
-                data-space="30" data-loop="true">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="homeya-box style-2">
-                            <div class="archive-top">
-                                <a href="#" class="images-group">
-                                    <div class="images-style">
-                                        <img src="https://i.pinimg.com/736x/1e/d4/b7/1ed4b7b8112f91e889cfe4ce9802eb8e.jpg"
-                                            alt="img">
-                                    </div>
-                                    <div class="top">
-                                        <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">en vedette</li>
-                                        </ul>
-                                        <ul class="d-flex gap-4">
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-arrLeftRight"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-heart"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-eye"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="bottom">
-                                        <span class="flag-tag style-2">Villa</span>
-                                    </div>
-                                </a>
-                                <div class="content">
-                                    <div class="h7 text-capitalize fw-7"><a href="#" class="link"> Sunset Heights
-                                            Estate, Beverly Hills</a></div>
-                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                        <p>1040 Ocean, Santa Monica, California</p>
-                                    </div>
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>3</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>2</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-ruler"></i>
-                                            <span>600 SqFT</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-8.jpg') }}" alt="avt">
-                                    </div>
-                                    <span>Jacob Jones</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <h6>250,00 Fcfa</h6>
-                                    <span class="text-variant-1">/Jour</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="homeya-box style-2">
-                            <div class="archive-top">
-                                <a href="#" class="images-group">
-                                    <div class="images-style">
-                                        <img src="https://i.pinimg.com/736x/a7/3d/28/a73d28c212b6b76b448dccdc8bf34604.jpg"
-                                            alt="img">
-                                    </div>
-                                    <div class="top">
-                                        <ul class="d-flex gap-8">
-                                            <li class="flag-tag success">Location</li>
-                                        </ul>
-                                        <ul class="d-flex gap-4">
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-arrLeftRight"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-heart"></span>
-                                            </li>
-                                            <li class="box-icon w-32">
-                                                <span class="icon icon-eye"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="bottom">
-                                        <span class="flag-tag style-2">Bureau</span>
-                                    </div>
-                                </a>
-                                <div class="content">
-                                    <div class="h7 text-capitalize fw-7"><a href="#" class="link">Coastal
-                                            Serenity Cottage</a></div>
-                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i>
-                                        <p>21 Hillside Drive, Beverly Hills, California</p>
-                                    </div>
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>4</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>2</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-ruler"></i>
-                                            <span>600 SqFT</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-8 align-items-center">
-                                    <div class="avatar avt-40 round">
-                                        <img src="{{ asset('assets/images/avatar/avt-6.jpg') }}" alt="avt">
-                                    </div>
-                                    <span>Kathryn Murphy</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <h6>$2050,00</h6>
-                                    <span class="text-variant-1">/SqFT</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
 
     @include('reservations.reservationModal')
 
@@ -1150,40 +564,6 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                     })
                     .catch(err => console.error(err));
             }
-
-            // function renderPagination(meta) {
-            //     let paginationHTML = "";
-            //     const totalPages = meta.last_page;
-
-            //     if (totalPages > 1) {
-            //         paginationHTML += `
-        //         <nav class="mt-4">
-        //             <ul class="pagination justify-content-center">`;
-
-            //                     for (let i = 1; i <= totalPages; i++) {
-            //                         paginationHTML += `
-        //             <li class="page-item ${i === meta.current_page ? 'active' : ''}">
-        //                 <a class="page-link" href="#" data-page="${i}">${i}</a>
-        //             </li>`;
-            //                     }
-
-            //                     paginationHTML += `
-        //             </ul>
-        //         </nav>`;
-            //     }
-
-            //     commentsWrapper.querySelector(".pagination")?.remove(); // Supprime ancienne pagination
-            //     commentsWrapper.insertAdjacentHTML("beforeend", paginationHTML);
-
-            //     // Gestion des clics
-            //     document.querySelectorAll('.page-link').forEach(link => {
-            //         link.addEventListener('click', function(e) {
-            //             e.preventDefault();
-            //             currentPage = parseInt(this.dataset.page);
-            //             loadComments(currentPage);
-            //         });
-            //     });
-            // }
             function renderPagination(meta) {
                 const totalPages = meta.last_page;
                 const currentPage = meta.current_page;
@@ -1191,41 +571,41 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
 
                 if (totalPages > 1) {
                     paginationHTML += `
-        <nav class="pt-4">
-            <ul class="pagination justify-content-center">`;
+                    <nav class="pt-4">
+                        <ul class="pagination justify-content-center">`;
 
-                    // Bouton "Précédent"
-                    paginationHTML += `
-            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a>
-            </li>`;
+                                // Bouton "Précédent"
+                                paginationHTML += `
+                        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a>
+                        </li>`;
 
-                    // Pages
-                    for (let i = 1; i <= totalPages; i++) {
-                        // Afficher toujours la première et dernière page
-                        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                            paginationHTML += `
-                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>`;
-                        } else if (i === 2 && currentPage > 3) {
-                            paginationHTML +=
-                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                        } else if (i === totalPages - 1 && currentPage < totalPages - 2) {
-                            paginationHTML +=
-                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                        }
-                    }
+                                // Pages
+                                for (let i = 1; i <= totalPages; i++) {
+                                    // Afficher toujours la première et dernière page
+                                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                                        paginationHTML += `
+                            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                                <a class="page-link" href="#" data-page="${i}">${i}</a>
+                            </li>`;
+                                    } else if (i === 2 && currentPage > 3) {
+                                        paginationHTML +=
+                                            `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                                    } else if (i === totalPages - 1 && currentPage < totalPages - 2) {
+                                        paginationHTML +=
+                                            `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                                    }
+                                }
 
-                    // Bouton "Suivant"
-                    paginationHTML += `
-            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a>
-            </li>`;
+                                // Bouton "Suivant"
+                                paginationHTML += `
+                        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a>
+                        </li>`;
 
-                    paginationHTML += `
-            </ul>
-        </nav>`;
+                                paginationHTML += `
+                        </ul>
+                    </nav>`;
                 }
 
                 // Supprime l'ancienne pagination et ajoute la nouvelle

@@ -55,6 +55,88 @@
             cursor: no-drop;
             /* cursor: wait; */
         }
+        .more-content.collapse:not(.show) {
+            display: block !important;
+            height: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .read-more-toggle {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .read-more-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .read-more-toggle i {
+            transition: transform 0.2s ease;
+        }
+
+        [aria-expanded="true"] .read-more-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .rating {
+            direction: rtl;
+            /* Permet de remplir les étoiles de droite à gauche */
+            unicode-bidi: bidi-override;
+            display: inline-flex;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 3rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .rating input:checked~label,
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #ffc107;
+            /* Jaune bootstrap */
+        }
+
+        .list-star-note {
+            display: flex;
+        }
+
+        .list-star-note .icon-star {
+            color: #ddd;
+            font-size: 16px;
+        }
+
+        .pagination .page-item .page-link {
+            color: #dc3545;
+            /* Rouge Bootstrap */
+            border-radius: 8px;
+            margin: 0 4px;
+            border: 1px solid #dc3545;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
 </head>
 
