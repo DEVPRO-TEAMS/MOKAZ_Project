@@ -1,9 +1,9 @@
 @if ($paginator->hasPages())
     <nav class="d-flex justify-items-center justify-content-between">
         {{-- Version Mobile (XS) : uniquement Précédent / Suivant --}}
-        <div class="d-flex justify-content-between flex-fill d-sm-none">
+        {{-- <div class="d-flex justify-content-between flex-fill d-sm-none">
             <ul class="pagination">
-                {{-- Previous Page Link --}}
+                 Previous Page Link 
                 @if ($paginator->onFirstPage())
                     <li class="page-item disabled" aria-disabled="true">
                         <span class="page-link">@lang('pagination.previous')</span>
@@ -14,7 +14,7 @@
                     </li>
                 @endif
 
-                {{-- Next Page Link --}}
+                Next Page Link
                 @if ($paginator->hasMorePages())
                     <li class="page-item">
                         <a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next">@lang('pagination.next')</a>
@@ -25,10 +25,10 @@
                     </li>
                 @endif
             </ul>
-        </div>
+        </div> --}}
 
         {{-- Version Desktop (SM et +) --}}
-        <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+        <div class="d-non flex-fill d-flex align-items-center justify-content-between">
             <div class="m-auto">
                 <ul class="pagination">
                     {{-- Previous Page Link --}}
