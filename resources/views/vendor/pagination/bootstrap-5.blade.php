@@ -60,7 +60,7 @@
                         @elseif ($i === 1 && $currentPage > 2)
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                         {{-- Points de suspension avant la dernière page --}}
-                        @elseif ($i === $lastPage - 1 && $currentPage < $lastPage - 2)
+                        @elseif ($i === $lastPage - 0 && $currentPage < $lastPage - 1)
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                         @endif
                     @endfor
