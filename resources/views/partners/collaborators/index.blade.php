@@ -12,22 +12,24 @@
     </nav>
 
     <!-- ✅ HEADER + BUTTON AJOUT -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
+    <div class="row align-items-center my-3">
+        <div class="col-md-6 text-start">
             <h4 class="fw-bold mb-1"><i class="fas fa-handshake text-primary me-2"></i>Liste des collaborateurs</h4>
             <p class="text-muted small mb-0">{{ count($collaborators) }} Collaborateurs enregistrés</p>
         </div>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCollaboratorModal">
-            <i class="fas fa-plus-circle me-1"></i> Ajouter un collaborateur
-        </button>
+        <div class="col-md-6 text-end my-3">
+            <button class="btn btn-success " data-bs-toggle="modal" data-bs-target="#addCollaboratorModal">
+                <i class="fas fa-plus-circle me-1"></i> Ajouter un collaborateur
+            </button>
+        </div>
     </div>
 
     <!-- ✅ TABLE CARD -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
+    <div class="card shadow-sm border-0 widget-box-2 wd-listing">
+        <div class="card-body wrap-table border-0 p-0">
             <div class="table-responsive">
-                <table class="table align-middle mb-0 table-hover table-bordered">
-                    <thead class="bg-light text-dark fw-semibold">
+                <table class="table table-hover align-middle mb-0" id="example2">
+                    <thead class="table-light text-nowrap">
                         <tr>
                             <th>code</th>
                             <th>Nom complet</th>

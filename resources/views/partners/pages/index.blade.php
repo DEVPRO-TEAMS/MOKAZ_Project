@@ -23,11 +23,11 @@
     </div>
 
     <!-- ✅ TABLE CARD -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
+    <div class="card shadow-sm border-0 widget-box-2 wd-listing">
+        <div class="card-body wrap-table border-0 p-0">
             <div class="table-responsive">
-                <table class="table align-middle mb-0 table-hover table-bordered">
-                    <thead class="bg-light text-dark fw-semibold">
+                <table class="table table-hover align-middle mb-0" id="example2">
+                    <thead class="table-light text-nowrap">
                         <tr>
                             <th>Entreprise</th>
                             <th>Email</th>
