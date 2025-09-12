@@ -17,35 +17,40 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="dashboard-card stat-card">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Collaborateurs</div>
-                                <div class="h5 mb-0 font-weight-bold" id="totalRequests"> {{ count($partnerUsers) }} </div>
+                        <a href="{{ route('partner.collaborator.index') }}">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-uppercase mb-1">Collaborateurs</div>
+                                    <div class="h5 mb-0 font-weight-bold" id="totalRequests"> {{ count($partnerUsers) }} </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-info"></i>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-users fa-2x text-info"></i>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="dashboard-card stat-card pending">
+
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
+                        <a href="{{ route('partner.properties.index') }}">
                             <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-uppercase mb-1">Total Propriétés</div>
-                                    <div class="h5 mb-0 font-weight-bold" id="pendingRequests">
-                                        {{ count($partnerProperties) }}
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">Total Propriétés</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="pendingRequests">
+                                            {{ count($partnerProperties) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-home fa-2x text-primary"></i>
                                     </div>
                                 </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-home fa-2x text-primary"></i>
-                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -53,16 +58,19 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="dashboard-card stat-card actif">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total hébergements</div>
-                                <div class="h5 mb-0 font-weight-bold" id="activeRequests">
-                                    {{ $partnerPropertyApartments->count() }} </div>
+                        <a href="{{ route('partner.properties.index') }}">
+
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-uppercase mb-1">Total hébergements</div>
+                                    <div class="h5 mb-0 font-weight-bold" id="activeRequests">
+                                        {{ $partnerPropertyApartments->count() }} </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-building fa-2x text-success"></i>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-building fa-2x text-success"></i>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -70,16 +78,19 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="dashboard-card stat-card inactif">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Total Reservations</div>
-                                <div class="h5 mb-0 font-weight-bold" id="inactiveRequests"> {{ $reservations->where('status', 'confirmed')->count() }}
+                        <a href="{{ route('partner.reservation.index') }}">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-uppercase mb-1">Total Reservations</div>
+                                    <div class="h5 mb-0 font-weight-bold" id="inactiveRequests">
+                                        {{ $reservations->where('status', 'confirmed')->count() }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar fa-2x text-danger"></i>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-calendar fa-2x text-danger"></i>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -163,26 +174,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Récupération des réservations depuis le contrôleur
             const reservations = {!! json_encode($reservations) !!};
-            
+
             // Fonction pour formater la date en "05 Aoû"
             function formatDay(date) {
                 const day = date.getDate().toString().padStart(2, '0');
-                const month = date.toLocaleString('fr-FR', { month: 'short' });
+                const month = date.toLocaleString('fr-FR', {
+                    month: 'short'
+                });
                 return `${day} ${month}`;
             }
 
             // Fonction pour formater une période de semaine "05 Aoû - 12 Aoû"
             function formatWeek(startDate, endDate) {
                 const startDay = startDate.getDate().toString().padStart(2, '0');
-                const startMonth = startDate.toLocaleString('fr-FR', { month: 'short' });
+                const startMonth = startDate.toLocaleString('fr-FR', {
+                    month: 'short'
+                });
                 const endDay = endDate.getDate().toString().padStart(2, '0');
-                const endMonth = endDate.toLocaleString('fr-FR', { month: 'short' });
+                const endMonth = endDate.toLocaleString('fr-FR', {
+                    month: 'short'
+                });
                 return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
             }
 
             // Fonction pour formater le mois "Aoû"
             function formatMonth(date) {
-                return date.toLocaleString('fr-FR', { month: 'short' });
+                return date.toLocaleString('fr-FR', {
+                    month: 'short'
+                });
             }
 
             // Fonction pour obtenir le début et la fin d'une semaine à partir d'une date
@@ -191,7 +210,10 @@
                 const diff = date.getDate() - day + (day === 0 ? -6 : 1); // ajuste pour lundi comme premier jour
                 const start = new Date(date.setDate(diff));
                 const end = new Date(date.setDate(diff + 6));
-                return { start, end };
+                return {
+                    start,
+                    end
+                };
             }
 
             // Fonction pour grouper les réservations par jour (4 derniers jours)
@@ -199,22 +221,22 @@
                 const result = {};
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
+
                 for (let i = 3; i >= 0; i--) {
                     const date = new Date(today);
                     date.setDate(date.getDate() - i);
                     const key = formatDay(date);
                     result[key] = 0;
                 }
-                
+
                 reservations.forEach(reservation => {
                     const resDate = new Date(reservation.created_at);
                     resDate.setHours(0, 0, 0, 0);
-                    
+
                     for (let i = 0; i < 4; i++) {
                         const date = new Date(today);
                         date.setDate(date.getDate() - i);
-                        
+
                         if (resDate.getTime() === date.getTime()) {
                             const key = formatDay(date);
                             result[key]++;
@@ -222,7 +244,7 @@
                         }
                     }
                 });
-                
+
                 return result;
             }
 
@@ -231,23 +253,29 @@
                 const result = {};
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
+
                 for (let i = 3; i >= 0; i--) {
                     const date = new Date(today);
                     date.setDate(date.getDate() - (i * 7));
-                    const { start, end } = getWeekRange(date);
+                    const {
+                        start,
+                        end
+                    } = getWeekRange(date);
                     const key = formatWeek(start, end);
                     result[key] = 0;
                 }
-                
+
                 reservations.forEach(reservation => {
                     const resDate = new Date(reservation.created_at);
-                    
+
                     for (let i = 0; i < 4; i++) {
                         const date = new Date(today);
                         date.setDate(date.getDate() - (i * 7));
-                        const { start, end } = getWeekRange(date);
-                        
+                        const {
+                            start,
+                            end
+                        } = getWeekRange(date);
+
                         if (resDate >= start && resDate <= end) {
                             const key = formatWeek(start, end);
                             result[key]++;
@@ -255,7 +283,7 @@
                         }
                     }
                 });
-                
+
                 return result;
             }
 
@@ -263,14 +291,14 @@
             function getCurrentYearMonthsData(reservations) {
                 const result = {};
                 const currentYear = new Date().getFullYear();
-                
+
                 // Initialiser tous les mois de l'année
                 for (let month = 0; month < 12; month++) {
                     const date = new Date(currentYear, month, 1);
                     const key = formatMonth(date);
                     result[key] = 0;
                 }
-                
+
                 // Compter les réservations
                 reservations.forEach(reservation => {
                     const resDate = new Date(reservation.created_at);
@@ -279,7 +307,7 @@
                         result[key]++;
                     }
                 });
-                
+
                 return result;
             }
 
@@ -290,8 +318,10 @@
 
             // Création des graphiques avec superposition ligne/barres
             createCombinedChart('reservationsChartDay', Object.keys(dailyData), Object.values(dailyData), 'Jour');
-            createCombinedChart('reservationsChartWeek', Object.keys(weeklyData), Object.values(weeklyData), 'Semaine');
-            createCombinedChart('reservationsChartMonth', Object.keys(monthlyData), Object.values(monthlyData), 'Mois');
+            createCombinedChart('reservationsChartWeek', Object.keys(weeklyData), Object.values(weeklyData),
+                'Semaine');
+            createCombinedChart('reservationsChartMonth', Object.keys(monthlyData), Object.values(monthlyData),
+                'Mois');
 
             function createCombinedChart(canvasId, labels, data, period) {
                 const ctx = document.getElementById(canvasId).getContext('2d');
@@ -299,8 +329,7 @@
                     type: 'bar',
                     data: {
                         labels: labels,
-                        datasets: [
-                            {
+                        datasets: [{
                                 label: `Réservations (barres)`,
                                 data: data,
                                 backgroundColor: 'rgba(54, 162, 235, 0.7)',
@@ -366,84 +395,85 @@
             }
 
             const statusCounts = {
-            pending: 0,
-            confirmed: 0,
-            completed: 0,
-            cancelled: 0,
-            reconducted: 0
-        };
+                pending: 0,
+                confirmed: 0,
+                completed: 0,
+                cancelled: 0,
+                reconducted: 0
+            };
 
-        reservations.forEach(reservation => {
-            switch(reservation.status) {
-                case 'pending':
-                    statusCounts.pending++;
-                    break;
-                case 'confirmed':
-                    statusCounts.confirmed++;
-                    break;
-                case 'completed':
-                    statusCounts.completed++;
-                    break;
-                case 'cancelled':
-                    statusCounts.cancelled++;
-                    break;
-                case 'reconducted':
-                    statusCounts.reconducted++;
-                    break;
-            }
-        });
+            reservations.forEach(reservation => {
+                switch (reservation.status) {
+                    case 'pending':
+                        statusCounts.pending++;
+                        break;
+                    case 'confirmed':
+                        statusCounts.confirmed++;
+                        break;
+                    case 'completed':
+                        statusCounts.completed++;
+                        break;
+                    case 'cancelled':
+                        statusCounts.cancelled++;
+                        break;
+                    case 'reconducted':
+                        statusCounts.reconducted++;
+                        break;
+                }
+            });
 
-        // Graphique de répartition par statut
-        const statusCtx = document.getElementById('statusReservationsChart').getContext('2d');
-        new Chart(statusCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['En attente', 'Confirmée','Terminee', 'Annulée', 'Reconduite'],
-                datasets: [{
-                    data: [
-                        statusCounts.pending, 
-                        statusCounts.confirmed,
-                        statusCounts.completed,
-                        statusCounts.cancelled,
-                        statusCounts.reconducted
-                    ],
-                    backgroundColor: [
-                        '#ffc107', // Jaune pour en attente
-                        '#28a745', // Vert pour confirmée
-                        '#6c757d', // gris pour terminee
-                        '#dc3545', // Rouge pour annulée
-                        '#17a2b8'  // Bleu turquoise pour reconduite
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%', // Pour un effet "anneau" plus prononcé
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 12,
-                            padding: 20,
-                            usePointStyle: true
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                                return `${label}: ${value} (${percentage}%)`;
+            // Graphique de répartition par statut
+            const statusCtx = document.getElementById('statusReservationsChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['En attente', 'Confirmée', 'Terminee', 'Annulée', 'Reconduite'],
+                    datasets: [{
+                        data: [
+                            statusCounts.pending,
+                            statusCounts.confirmed,
+                            statusCounts.completed,
+                            statusCounts.cancelled,
+                            statusCounts.reconducted
+                        ],
+                        backgroundColor: [
+                            '#ffc107', // Jaune pour en attente
+                            '#28a745', // Vert pour confirmée
+                            '#6c757d', // gris pour terminee
+                            '#dc3545', // Rouge pour annulée
+                            '#17a2b8' // Bleu turquoise pour reconduite
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%', // Pour un effet "anneau" plus prononcé
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? Math.round((value / total) * 100) :
+                                    0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
         });
     </script>
 @endsection
