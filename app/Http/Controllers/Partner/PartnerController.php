@@ -30,7 +30,6 @@ class PartnerController extends Controller
 
         // Récupération des propriétés actives du partenaire
         $partnerProperties = Property::where('partner_uuid', $partner->uuid)
-            ->where('etat', 'actif')
             ->get();
 
         // Récupération des UUID des propriétés
@@ -38,7 +37,6 @@ class PartnerController extends Controller
 
         // Récupération des appartements actifs associés à ces propriétés
         $partnerPropertyApartments = Appartement::whereIn('property_uuid', $propertyUuids)
-            ->where('etat', 'actif')
             ->get();
 
         // Récupération des reservations actives associées aux appartements
