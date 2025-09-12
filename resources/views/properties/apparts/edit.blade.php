@@ -391,7 +391,7 @@
                                     @endif
                                 </div>
 
-                                <input type="hidden" id="hiddenCommoditiesInput" name="commodities"
+                                <input type="text" id="hiddenCommoditiesInput" name="commodities"
                                     value="{{ $appart->commodities ?? '' }}">
                             </fieldset>
                         </div>

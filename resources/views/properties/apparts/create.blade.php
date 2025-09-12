@@ -601,16 +601,29 @@
 
     </div>
 
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             const addTarifBtn = document.getElementById('addTarifBtn');
-
             const tarifsContainer = document.getElementById('tarifs-container');
             const tarifBlock = document.querySelector('.tarif-block');
 
-            // Fonction pour gérer le comportement de sélection
+            function isJourAlreadySelected() {
+                return Array.from(document.querySelectorAll('.sejour-en')).some(select => select.value === 'Jour');
+            }
+
+            function updateJourOptionsAvailability() {
+                const jourExists = isJourAlreadySelected();
+                document.querySelectorAll('.sejour-en').forEach(select => {
+                    const jourOption = select.querySelector('option[value="Jour"]');
+                    if (jourOption) {
+                        jourOption.disabled = jourExists && select.value !== 'Jour';
+                    }
+                });
+            }
+
             function handleSelectChange(select, tempsInput, tempsLabelSpan) {
-                select.addEventListener('change', function() {
+                select.addEventListener('change', function () {
+                    tempsLabelSpan.textContent = select.value;
                     if (select.value === 'Jour') {
                         tempsInput.value = 1;
                         tempsInput.readOnly = true;
@@ -618,18 +631,21 @@
                         tempsInput.value = '';
                         tempsInput.readOnly = false;
                     }
-                    tempsLabelSpan.textContent = select.value;
+
+                    // Mettre à jour tous les selects après changement
+                    updateJourOptionsAvailability();
                 });
             }
 
-            // Appliquer la logique au bloc initial
+            // Initialisation du bloc existant
             const initialSelect = tarifBlock.querySelector('.sejour-en');
             const initialTempsInput = tarifBlock.querySelector('.temps-input');
-            const tempsLabelSpan = document.querySelector('.temps-label');
+            const tempsLabelSpan = tarifBlock.querySelector('.temps-label');
             handleSelectChange(initialSelect, initialTempsInput, tempsLabelSpan);
+            updateJourOptionsAvailability();
 
-            // Ajouter un nouveau bloc de tarif
-            addTarifBtn.addEventListener('click', function() {
+            // Ajouter un nouveau bloc tarif
+            addTarifBtn.addEventListener('click', function () {
                 const newTarifBlock = tarifBlock.cloneNode(true);
 
                 // Réinitialiser les champs
@@ -644,181 +660,31 @@
                 prixInput.value = '';
                 tempsLabel.textContent = '';
 
-                // Appliquer le comportement dynamique au nouveau bloc
-                handleSelectChange(select, tempsInput, tempsLabel);
+                // Supprimer le bouton existant (au cas où)
+                const removeContainer = newTarifBlock.querySelector('.remove-container');
+                removeContainer.innerHTML = '';
 
                 // Ajouter bouton de suppression
                 const removeBtn = document.createElement('button');
                 removeBtn.textContent = 'Supprimer';
+                removeBtn.type = 'button';
                 removeBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4');
-                removeBtn.addEventListener('click', function() {
+                removeBtn.addEventListener('click', function () {
                     newTarifBlock.remove();
+                    updateJourOptionsAvailability(); // Réactiver "Jour" si besoin
                 });
-
-                const removeContainer = newTarifBlock.querySelector('.remove-container');
-                removeContainer.innerHTML = '';
                 removeContainer.appendChild(removeBtn);
 
-                // Ajouter le nouveau bloc au container
+                // Appliquer le comportement
+                handleSelectChange(select, tempsInput, tempsLabel);
+
+                // Ajouter bloc
                 tarifsContainer.appendChild(newTarifBlock);
-            });
 
-            //     // Sélection des éléments
-            // const commoditiesContainer = document.querySelector('.commodities-container');
-            // const addCommoditiesBtn = document.getElementById('addCommoditiesBtn');
-            // const originalCommodityBlock = document.querySelector('.commodity-block');
-
-            // // Compteur pour créer des IDs uniques si nécessaire
-            // let commodityCounter = 1;
-
-            // // Fonction pour ajouter un nouveau bloc de commodité
-            // function addCommodityBlock() {
-            //     // Cloner le bloc original
-            //     const newBlock = originalCommodityBlock.cloneNode(true);
-
-            //     // Réinitialiser la valeur du champ
-            //     const inputField = newBlock.querySelector('input[name="commodities[]"]');
-            //     inputField.value = '';
-
-            //     // Ajouter un bouton de suppression si ce n'est pas le premier bloc
-            //     if (commodityCounter > 0) {
-            //         const removeContainer = newBlock.querySelector('.remove-commodity-container');
-            //         removeContainer.innerHTML = `
-        //             <button type="button" class="btn btn-danger remove-commodity-btn">
-        //                 <i class="fas fa-times"></i>
-        //             </button>
-        //         `;
-
-            //         // Ajouter l'événement de suppression
-            //         const removeBtn = newBlock.querySelector('.remove-commodity-btn');
-            //         removeBtn.addEventListener('click', function() {
-            //             newBlock.remove();
-            //         });
-            //     }
-
-            //     // Ajouter le nouveau bloc au container
-            //     commoditiesContainer.appendChild(newBlock);
-            //     commodityCounter++;
-            // }
-
-            // // Événement pour le bouton d'ajout
-            // addCommoditiesBtn.addEventListener('click', addCommodityBlock);
-
-            // // Gestion de la suppression pour le premier bloc (si déjà présent)
-            // const firstRemoveContainer = originalCommodityBlock.querySelector('.remove-commodity-container');
-            // if (firstRemoveContainer) {
-            //     firstRemoveContainer.innerHTML = `
-        //         <button type="button" class="btn btn-danger remove-commodity-btn">
-        //             <i class="fas fa-times"></i>
-        //         </button>
-        //     `;
-
-            //     const firstRemoveBtn = originalCommodityBlock.querySelector('.remove-commodity-btn');
-            //     firstRemoveBtn.addEventListener('click', function() {
-            //         // Ne pas supprimer s'il s'agit du seul bloc
-            //         const allBlocks = document.querySelectorAll('.commodity-block');
-            //         if (allBlocks.length > 1) {
-            //             originalCommodityBlock.remove();
-            //         } else {
-            //             Swal.fire({
-            //                 icon: 'warning',
-            //                 title: 'Action impossible',
-            //                 text: 'Vous devez avoir au moins une commodité.',
-            //                 timer: 1500,
-            //                 showConfirmButton: false
-            //             });
-            //         }
-            //     });
-            // }
-
-
-        });
-    </script> --}}
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const addTarifBtn = document.getElementById('addTarifBtn');
-        const tarifsContainer = document.getElementById('tarifs-container');
-        const tarifBlock = document.querySelector('.tarif-block');
-
-        function isJourAlreadySelected() {
-            return Array.from(document.querySelectorAll('.sejour-en')).some(select => select.value === 'Jour');
-        }
-
-        function updateJourOptionsAvailability() {
-            const jourExists = isJourAlreadySelected();
-            document.querySelectorAll('.sejour-en').forEach(select => {
-                const jourOption = select.querySelector('option[value="Jour"]');
-                if (jourOption) {
-                    jourOption.disabled = jourExists && select.value !== 'Jour';
-                }
-            });
-        }
-
-        function handleSelectChange(select, tempsInput, tempsLabelSpan) {
-            select.addEventListener('change', function () {
-                tempsLabelSpan.textContent = select.value;
-                if (select.value === 'Jour') {
-                    tempsInput.value = 1;
-                    tempsInput.readOnly = true;
-                } else {
-                    tempsInput.value = '';
-                    tempsInput.readOnly = false;
-                }
-
-                // Mettre à jour tous les selects après changement
                 updateJourOptionsAvailability();
             });
-        }
-
-        // Initialisation du bloc existant
-        const initialSelect = tarifBlock.querySelector('.sejour-en');
-        const initialTempsInput = tarifBlock.querySelector('.temps-input');
-        const tempsLabelSpan = tarifBlock.querySelector('.temps-label');
-        handleSelectChange(initialSelect, initialTempsInput, tempsLabelSpan);
-        updateJourOptionsAvailability();
-
-        // Ajouter un nouveau bloc tarif
-        addTarifBtn.addEventListener('click', function () {
-            const newTarifBlock = tarifBlock.cloneNode(true);
-
-            // Réinitialiser les champs
-            const select = newTarifBlock.querySelector('.sejour-en');
-            const tempsInput = newTarifBlock.querySelector('.temps-input');
-            const prixInput = newTarifBlock.querySelector('[name="prix[]"]');
-            const tempsLabel = newTarifBlock.querySelector('.temps-label');
-
-            select.value = '';
-            tempsInput.value = '';
-            tempsInput.readOnly = false;
-            prixInput.value = '';
-            tempsLabel.textContent = '';
-
-            // Supprimer le bouton existant (au cas où)
-            const removeContainer = newTarifBlock.querySelector('.remove-container');
-            removeContainer.innerHTML = '';
-
-            // Ajouter bouton de suppression
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = 'Supprimer';
-            removeBtn.type = 'button';
-            removeBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4');
-            removeBtn.addEventListener('click', function () {
-                newTarifBlock.remove();
-                updateJourOptionsAvailability(); // Réactiver "Jour" si besoin
-            });
-            removeContainer.appendChild(removeBtn);
-
-            // Appliquer le comportement
-            handleSelectChange(select, tempsInput, tempsLabel);
-
-            // Ajouter bloc
-            tarifsContainer.appendChild(newTarifBlock);
-
-            updateJourOptionsAvailability();
         });
-    });
-</script>
+    </script>
 
 
     <script>
@@ -884,12 +750,18 @@
             }
 
             // Met à jour l'input caché avec les commodities sélectionnées
+            // function updateHiddenInput() {
+            //     const selectedCommodities = Array.from(selectedCommoditiesContainer.children).map(
+            //         child => child.textContent.replace(" x", "").trim()
+            //     );
+            //     hiddenCommoditiesInput.value = selectedCommodities.join(
+            //         ","); // Stocke les commodities sous forme de chaîne
+            // }
             function updateHiddenInput() {
                 const selectedCommodities = Array.from(selectedCommoditiesContainer.children).map(
-                    child => child.textContent.replace(" x", "").trim()
+                    child => child.querySelector("span:first-child").textContent.trim()
                 );
-                hiddenCommoditiesInput.value = selectedCommodities.join(
-                    ","); // Stocke les commodities sous forme de chaîne
+                hiddenCommoditiesInput.value = selectedCommodities.join(",");
             }
         });
     </script>

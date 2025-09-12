@@ -286,7 +286,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                                     <ul class="row">
                                         @foreach ($commodities as $item)
                                             <li class="feature-item col-md-4">
-                                                <i class="bi bi-star"></i> {{ trim($item) }}
+                                                <i class="fa fa-check"></i> {{ trim($item) }}
                                             </li>
                                         @endforeach
                                     </ul>
