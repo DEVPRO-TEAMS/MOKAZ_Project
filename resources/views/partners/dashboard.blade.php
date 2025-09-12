@@ -21,7 +21,8 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">Collaborateurs</div>
-                                    <div class="h5 mb-0 font-weight-bold" id="totalRequests"> {{ count($partnerUsers) }} </div>
+                                    <div class="h5 mb-0 font-weight-bold" id="totalRequests"> {{ count($partnerUsers) }}
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-users fa-2x text-info"></i>
@@ -38,16 +39,14 @@
                     <div class="card-body">
                         <a href="{{ route('partner.properties.index') }}">
                             <div class="row no-gutters align-items-center">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-uppercase mb-1">Total Propriétés</div>
-                                        <div class="h5 mb-0 font-weight-bold" id="pendingRequests">
-                                            {{ count($partnerProperties) }}
-                                        </div>
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-uppercase mb-1">Total Propriétés</div>
+                                    <div class="h5 mb-0 font-weight-bold" id="pendingRequests">
+                                        {{ count($partnerProperties) }}
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-home fa-2x text-primary"></i>
-                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-home fa-2x text-primary"></i>
                                 </div>
                             </div>
                         </a>
@@ -59,7 +58,6 @@
                 <div class="dashboard-card stat-card actif">
                     <div class="card-body">
                         <a href="{{ route('partner.properties.index') }}">
-
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">Total hébergements</div>
@@ -466,7 +464,7 @@
                                     const value = context.raw || 0;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                     const percentage = total > 0 ? Math.round((value / total) * 100) :
-                                    0;
+                                        0;
                                     return `${label}: ${value} (${percentage}%)`;
                                 }
                             }
