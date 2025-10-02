@@ -66,73 +66,85 @@ class PagesController extends Controller
     // }
 
     public function index(Request $request)
-{
-    $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
-    $perPage = $request->get('perPage', 6);
-    $latitudeUser = $request->get('lat');
-    $longitudeUser = $request->get('lng');
+    {
+        $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+        $perPage = $request->get('perPage', 6);
+        $latitudeUser = $request->get('lat');
+        $longitudeUser = $request->get('lng');
+        $search = $request->input('search');
+        $location = $request->input('location');
 
-    $query = Appartement::with('property');
+        $query = Appartement::with('property')
+            ->where('etat', 'actif')
+            ->where('nbr_available', '>', 0);;
 
-    // Recherche par mot-clé
-    if ($request->filled('search') || $request->filled('location')) {
-        $query->where(function ($q) use ($request) {
-            $q->where('title', 'like', '%' . $request->search . '%')
-              ->orWhere('title', 'like', '%' . $request->location . '%')
-              ->orWhere('description', 'like', '%' . $request->search . '%')
-              ->orWhere('description', 'like', '%' . $request->location . '%')
-              ->orWhere('commodities', 'like', '%' . $request->search . '%');
-        });
-    }
+        // Recherche combinée sur Appartement et Property
+        if ($search || $location) {
+            $query->where(function ($q) use ($search, $location) {
 
-    // Recherche par localisation (dans Property)
-    if ($request->filled('location') || $request->filled('search')) {
-        $query->whereHas('property', function ($q) use ($request) {
-            $q->where('title', 'like', '%' . $request->location . '%')
-              ->orWhere('title', 'like', '%' . $request->search . '%')
-              ->orWhere('description', 'like', '%' . $request->location . '%')
-              ->orWhere('country', 'like', '%' . $request->location . '%')
-              ->orWhere('country', 'like', '%' . $request->search . '%')
-              ->orWhere('city', 'like', '%' . $request->location . '%')
-              ->orWhere('city', 'like', '%' . $request->search . '%')
-              ->orWhere('description', 'like', '%' . $request->search . '%')
-              ->orWhere('address', 'like', '%' . $request->search . '%')
-              ->orWhere('address', 'like', '%' . $request->location . '%');
-        });
-    }
+                // 🔹 Recherche dans Appartement
+                if ($search) {
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%")
+                        ->orWhere('commodities', 'like', "%$search%");
+                }
 
-    // Filtre par type
-    if ($request->filled('type')) {
-        $query->where('type_uuid', $request->type);
-    }
+                if ($location) {
+                    $q->orWhere('title', 'like', "%$location%")
+                        ->orWhere('description', 'like', "%$location%");
+                }
 
-    // Filtre par distance si lat/lng fournis
-    if ($latitudeUser && $longitudeUser) {
-        $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+                // 🔹 Recherche dans Property liée
+                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                    if ($search) {
+                        $q2->where('title', 'like', "%$search%")
+                            ->orWhere('description', 'like', "%$search%")
+                            ->orWhere('address', 'like', "%$search%")
+                            ->orWhere('city', 'like', "%$search%")
+                            ->orWhere('country', 'like', "%$search%");
+                    }
+
+                    if ($location) {
+                        $q2->orWhere('title', 'like', "%$location%")
+                            ->orWhere('description', 'like', "%$location%")
+                            ->orWhere('address', 'like', "%$location%")
+                            ->orWhere('city', 'like', "%$location%")
+                            ->orWhere('country', 'like', "%$location%");
+                    }
+                });
+            });
+        }
+
+        // Filtre par type
+        if ($request->filled('type')) {
+            $query->where('type_uuid', $request->type);
+        }
+
+        // Filtre par distance si lat/lng fournis
+        if ($latitudeUser && $longitudeUser) {
+            $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
                         * cos(radians(properties.latitude)) 
                         * cos(radians(properties.longitude) - radians($longitudeUser)) 
                         + sin(radians($latitudeUser)) 
                         * sin(radians(properties.latitude))))";
 
-        $query->whereHas('property', function($q) use ($haversine) {
-            $q->whereRaw("$haversine <= 2.5"); // distance <= 1.5 km
-        });
+            $query->whereHas('property', function ($q) use ($haversine) {
+                $q->whereRaw("$haversine <= 2.5"); // distance <= 1.5 km
+            });
+        }
+
+        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+        $bestApparts = Appartement::withCount('reservations')
+            ->where('etat', 'actif')
+            ->where('nbr_available', '>', 0)
+            ->orderByDesc('reservations_count')
+            ->take(3)
+            ->with('tarifications')
+            ->get();
+
+        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
     }
-
-    $apparts = $query->where('etat', 'actif')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate($perPage);
-
-    $bestApparts = Appartement::withCount('reservations')
-                        ->where('etat', 'actif')
-                        ->where('nbr_available', '>', 0)
-                        ->orderByDesc('reservations_count')
-                        ->take(3)
-                        ->with('tarifications')
-                        ->get();
-
-    return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
-}
 
     // public function index(Request $request)
     // {
@@ -246,18 +258,149 @@ class PagesController extends Controller
     {
         return view('pages.reservation');
     }
-    public function appartByProperty(Request $request ,$uuid)
+    public function appartByProperty(Request $request, $uuid)
     {
+        $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
-        $apparts = Appartement::where('property_uuid', $uuid)->where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
-        return view('pages.apparts', compact('apparts'));
+        $query = Appartement::with('property')
+            ->where('property_uuid', $uuid)
+            ->where('etat', 'actif')
+            ->where('nbr_available', '>', 0);
+
+        $search = $request->input('search');
+        $location = $request->input('location');
+
+        if ($search || $location) {
+            $query->where(function ($q) use ($search, $location) {
+
+                // 🔹 Recherche dans le modèle Appartement
+                if ($search) {
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%")
+                        ->orWhere('commodities', 'like', "%$search%");
+                }
+
+                // 🔹 Recherche dans le modèle Property lié
+                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                    if ($search) {
+                        $q2->where('title', 'like', "%$search%")
+                            ->orWhere('description', 'like', "%$search%")
+                            ->orWhere('address', 'like', "%$search%")
+                            ->orWhere('city', 'like', "%$search%")
+                            ->orWhere('country', 'like', "%$search%");
+                    }
+
+                    if ($location) {
+                        $q2->where('title', 'like', "%$location%")
+                            ->orWhere('address', 'like', "%$location%")
+                            ->orWhere('city', 'like', "%$location%")
+                            ->orWhere('country', 'like', "%$location%");
+                    }
+                });
+            });
+        }
+
+        // Filtre par type d'appartement
+        if ($request->filled('type')) {
+            $query->where('type_uuid', $request->type);
+        }
+        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        return view('pages.apparts', compact('apparts', 'typeAppart', 'uuid'));
     }
+    // public function allApparts(Request $request)
+    // {
+    //     $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+    //     $perPage = $request->get('perPage', 6);
+
+    //     $query = Appartement::with('property');
+
+    //     // Recherche par mot-clé ou localisation
+    //     if ($request->filled('search') || $request->filled('location')) {
+    //         $query->where(function ($q) use ($request) {
+    //             $q->where('title', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('title', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('description', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('description', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('commodities', 'like', '%' . $request->search . '%');
+    //         });
+
+    //         $query->whereHas('property', function ($q) use ($request) {
+    //             $q->where('title', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('title', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('description', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('country', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('country', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('city', 'like', '%' . $request->location . '%')
+    //                 ->orWhere('city', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('address', 'like', '%' . $request->location . '%');
+    //         });
+    //     }
+
+    //     // Filtre par type
+    //     if ($request->filled('type')) {
+    //         $query->where('type_uuid', $request->type);
+    //     }
+
+    //     $apparts = $query->where('etat', 'actif')
+    //         ->where('nbr_available', '>', 0)
+    //         ->orderBy('created_at', 'desc')
+    //         ->paginate($perPage);
+    //     // $apparts = Appartement::where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
+    //     return view('pages.showAllApparts', compact('apparts', 'typeAppart'));
+    // }
+
     public function allApparts(Request $request)
     {
+        $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
-        $apparts = Appartement::where('etat', '=', 'actif', 'and', 'nbr_available', '>', 0)->orderBy('created_at', 'desc')->paginate($perPage);
-        return view('pages.showAllApparts', compact('apparts'));
+
+        $query = Appartement::with('property')
+            ->where('etat', 'actif')
+            ->where('nbr_available', '>', 0);
+
+        $search = $request->input('search');
+        $location = $request->input('location');
+
+        if ($search || $location) {
+            $query->where(function ($q) use ($search, $location) {
+
+                // 🔹 Recherche dans le modèle Appartement
+                if ($search) {
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%")
+                        ->orWhere('commodities', 'like', "%$search%");
+                }
+
+                // 🔹 Recherche dans le modèle Property lié
+                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                    if ($search) {
+                        $q2->where('title', 'like', "%$search%")
+                            ->orWhere('description', 'like', "%$search%")
+                            ->orWhere('address', 'like', "%$search%")
+                            ->orWhere('city', 'like', "%$search%")
+                            ->orWhere('country', 'like', "%$search%");
+                    }
+
+                    if ($location) {
+                        $q2->where('title', 'like', "%$location%")
+                            ->orWhere('address', 'like', "%$location%")
+                            ->orWhere('city', 'like', "%$location%")
+                            ->orWhere('country', 'like', "%$location%");
+                    }
+                });
+            });
+        }
+
+        // Filtre par type d'appartement
+        if ($request->filled('type')) {
+            $query->where('type_uuid', $request->type);
+        }
+
+        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+        return view('pages.showAllApparts', compact('apparts', 'typeAppart'));
     }
+
     public function indexApropos()
     {
         return view('pages.apropos');
@@ -351,8 +494,5 @@ class PagesController extends Controller
             'message' => $message,
             'api_response' => $response
         ]);
-
-
-        
     }
 }

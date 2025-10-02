@@ -36,14 +36,50 @@
 
 
     <section class="pt-5">
-        <div class="row" id="liste-appartements">
-            {{-- @dd($apparts) --}}
-            @foreach ($apparts->where('nbr_available', '>', 0) as $item)
-                @php
-                    // Récupérer la tarification à l'heure la moins chère
-                    $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-                    // Récupérer la tarification à la journée la moins chère
+        {{-- 🔎 Formulaire de recherche --}}
+        <form action="{{ route('appart.by.property', $uuid) }}" method="get">
+            <div class="wd-find-select shadow-st mb-4 border">
+                <div class="inner-group">
+                    <div class="form-group-1 search-form form-style">
+                        <label>Mot-clé</label>
+                        <input type="text" class="form-control" placeholder="Rechercher par Mot-clé." name="search"
+                            value="{{ request('search') }}">
+                    </div>
+
+                    <div class="form-group-2 form-style">
+                        <label>Localisation</label>
+                        <div class="group-ip">
+                            <input type="text" class="form-control" placeholder="Rechercher par Localisation"
+                                name="location" value="{{ request('location') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group-3 form-style">
+                        <label>Type</label>
+                        <div class="group-select">
+                            <select name="type" id="type" class="nice-select form-select">
+                                <option value="">Tous</option>
+                                @foreach ($typeAppart as $type)
+                                    <option value="{{ $type->uuid }}"
+                                        {{ request('type') == $type->uuid ? 'selected' : '' }}>
+                                        {{ $type->libelle }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="tf-btn primary">Rechercher</button>
+            </div>
+        </form>
+
+        {{-- 📦 Liste des appartements --}}
+        <div class="row" id="liste-appartements">
+            @forelse($apparts->where('nbr_available', '>', 0) as $item)
+                @php
+                    $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
                     $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                 @endphp
                 <div class="col-sm-12 col-xl-4 col-lg-4 col-md-6 mb-4">
@@ -57,19 +93,11 @@
                                 </div>
                                 <div class="top">
                                     <ul class="d-flex gap-8">
-                                        <li class="flag-tag success">en vedette</li>
-                                        {{-- <li class="flag-tag style-1">à vendre</li> --}}
+                                        {{-- <li class="flag-tag success">en vedette</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
-                                        {{-- <li class="box-icon w-32">
-                                            <span class="icon icon-arrLeftRight"></span>
-                                        </li> --}}
-                                        <li class="box-icon w-32">
-                                            <span class="icon icon-heart"></span>
-                                        </li>
-                                        <li class="box-icon w-32">
-                                            <span class="icon icon-eye"></span>
-                                        </li>
+                                        <li class="box-icon w-32"><span class="icon icon-heart"></span></li>
+                                        <li class="box-icon w-32"><span class="icon icon-eye"></span></li>
                                     </ul>
                                 </div>
                                 <div class="bottom">
@@ -77,48 +105,26 @@
                                 </div>
                             </a>
                             <div class="content">
-                                <div class="h7 text-capitalize fw-7"><a
-                                        href="{{ route('appart.detail.show', $item->uuid) }}" class="link">
-                                        {{ $item->title ?? '' }}</a></div>
+                                <div class="h7 text-capitalize fw-7">
+                                    <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                        class="link">{{ $item->title ?? '' }}</a>
+                                </div>
                                 <div class="desc">
-                                    {{-- <i class="fs-16 icon icon-mapPin"></i> --}}
                                     <p>{!! Str::words($item->description ?? '', 8, '...') !!}</p>
                                 </div>
                                 <ul class="meta-list d-flex align-items-center justify-content-between">
-                                    <li class="item">
-                                        <i class="icon icon-bed"></i>
-                                        <span> {{ $item->nbr_room ?? 0 }} Chambre </span>
-                                    </li>
-                                    <li class="item">
-                                        <i class="icon icon-bathtub"></i>
-                                        <span> {{ $item->nbr_bathroom ?? 0 }} Salle de bain </span>
-                                    </li>
-                                    <li class="item">
-                                        {{-- <i class="icon icon-money"></i>
-                                        <span>
-                                            @if ($tarifHeure)
-                                                À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
-                                                FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
-                                            @elseif ($tarifJour)
-                                                À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
-                                                FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
-                                            @else
-                                                Prix non disponible
-                                            @endif
-                                        </span> --}}
-                                    </li>
+                                    <li class="item"><i class="icon icon-bed"></i> <span> {{ $item->nbr_room ?? 0 }}
+                                            Chambre </span></li>
+                                    <li class="item"><i class="icon icon-bathtub"></i> <span>
+                                            {{ $item->nbr_bathroom ?? 0 }} Salle de bain </span></li>
+                                    <li class="item"></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="archive-bottom d-flex justify-content-between align-items-center">
                             <div class="d-flex gap-8 align-items-center">
-                                {{-- <div class="avatar avt-40 round">
-                                    <img src="{{ asset('assets/images/avatar/user-profile.webp') }}" alt="avt">
-                                </div> --}}
-                                 <span class="body-1 text-variant-1">À partir de :</span>
-                                {{-- <span>{{ $item->property->partner->raison_social ?? 'Anonyme' }}</span> --}}
+                                <span class="body-1 text-variant-1">À partir de :</span>
                             </div>
-                           
                             <div class="box-price d-flex align-items-center flex-column">
                                 <div style="display: flex; align-items: center; width: 100%;">
                                     <h6>
@@ -145,26 +151,35 @@
                                     </span>
                                 </div>
                             </div>
-                            {{-- <div class="d-flex align-items-center">
-                                <span class="text-variant-1">À partir de </span>
-                                    @if ($tarifHeure)
-                                    @endif
-                                    @if ($tarifJour)
-                                    <h6>{{ number_format($tarifHeure->price, 0, ',', ' ') }} FCFA</h6>
-                                    <span class="text-variant-1">/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}</span>
-                                    <h6>{{ number_format($tarifJour->price, 0, ',', ' ') }} FCFA</h6>
-                                    <span class="text-variant-1">/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}</span>
-                                    @endif
-                                
-                            </div> --}}
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+
+                {{-- verifier si il y a une recherche effectuée --}}
+                @if (request()->has('search') || request()->has('type') || request()->has('location'))
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                        <h5 class="fw-semibold">Aucun hébergement trouvée</h5>
+                        <p class="text-muted">Aucun hébergement ne correspond à vos critères
+                            de recherche</p>
+                        <a href="{{ route('appart.by.property', $uuid) }}" class="btn btn-sm btn-outline-danger mt-2">
+                            <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                        </a>
+                    </div>
+                @else
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                        <h5 class="fw-semibold text-center">Aucun hébergement pour le moment</h5>
+                    </div>
+                @endif
+            @endforelse
         </div>
+
         <div class="nav-pagination pt-4">
             {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
         </div>
+
         <div class="row pt-5" style="height: 560px">
             <div id="map" style="height: 100%" class="top-map col-12" data-map-zoom="16" data-map-scroll="true"></div>
         </div>
