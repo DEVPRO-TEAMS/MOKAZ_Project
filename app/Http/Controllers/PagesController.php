@@ -129,7 +129,7 @@ class PagesController extends Controller
                         * sin(radians(properties.latitude))))";
 
             $query->whereHas('property', function ($q) use ($haversine) {
-                $q->whereRaw("$haversine <= 2.5"); // distance <= 1.5 km
+                $q->whereRaw("$haversine <= 3.5"); // distance <= 1.5 km
             });
         }
 
