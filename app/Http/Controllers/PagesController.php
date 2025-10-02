@@ -75,18 +75,28 @@ class PagesController extends Controller
     $query = Appartement::with('property');
 
     // Recherche par mot-clé
-    if ($request->filled('search')) {
+    if ($request->filled('search') || $request->filled('location')) {
         $query->where(function ($q) use ($request) {
             $q->where('title', 'like', '%' . $request->search . '%')
+              ->orWhere('title', 'like', '%' . $request->location . '%')
               ->orWhere('description', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->location . '%')
               ->orWhere('commodities', 'like', '%' . $request->search . '%');
         });
     }
 
     // Recherche par localisation (dans Property)
-    if ($request->filled('location')) {
+    if ($request->filled('location') || $request->filled('search')) {
         $query->whereHas('property', function ($q) use ($request) {
             $q->where('title', 'like', '%' . $request->location . '%')
+              ->orWhere('title', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->location . '%')
+              ->orWhere('country', 'like', '%' . $request->location . '%')
+              ->orWhere('country', 'like', '%' . $request->search . '%')
+              ->orWhere('city', 'like', '%' . $request->location . '%')
+              ->orWhere('city', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->search . '%')
+              ->orWhere('address', 'like', '%' . $request->search . '%')
               ->orWhere('address', 'like', '%' . $request->location . '%');
         });
     }
@@ -105,7 +115,7 @@ class PagesController extends Controller
                         * sin(radians(properties.latitude))))";
 
         $query->whereHas('property', function($q) use ($haversine) {
-            $q->whereRaw("$haversine <= 1.5"); // distance <= 1.5 km
+            $q->whereRaw("$haversine <= 2.5"); // distance <= 1.5 km
         });
     }
 

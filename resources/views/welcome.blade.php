@@ -61,49 +61,6 @@
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
                                 </form> --}}
-                                {{-- <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
-                                    <div class="wd-find-select shadow-st">
-                                        <div class="inner-group">
-                                            <div class="form-group-1 search-form form-style">
-                                                <label>Mot-clé</label>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Rechercher par Mot-clé." name="search"
-                                                    value="{{ request('search') }}">
-                                            </div>
-
-                                            <div class="form-group-2 form-style">
-                                                <label>Localisation</label>
-                                                <div class="group-ip">
-                                                    <input type="text" class="form-control"
-                                                        placeholder="rechercher par Localisation" name="location"
-                                                        value="{{ request('location') }}">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group-3 form-style">
-                                                <label>Type</label>
-                                                <div class="group-select">
-                                                    <select name="type" id="type" class="nice-select form-select">
-                                                        <option value="">Tous</option>
-                                                        @foreach ($typeAppart as $type)
-                                                            <option value="{{ $type->uuid }}"
-                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
-                                                                {{ $type->libelle }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <input type="hidden" name="lat" id="user_lat" value="{{ request('lat') }}">
-                                        <input type="hidden" name="lng" id="user_lng" value="{{ request('lng') }}">
-
-                                        <button type="submit" class="tf-btn primary">Rechercher</button>
-                                        <button type="button" id="detectLocationBtn"
-                                            class="tf-btn btn-outline-primary">Localiser moi</button>
-                                    </div>
-                                </form> --}}
 
                                 <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
                                     <div class="wd-find-select shadow-st">
@@ -289,7 +246,7 @@
     <section class="flat-section-v5 bg-surface flat-recommended flat-recommended-v2">
         <div class="container">
             <div class="box-title style-2 text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                <div class="text-subtitle text-primary">Propriétés en vedette</div>
+                {{-- <div class="text-subtitle text-primary">Propriétés en vedette</div> --}}
                 <h5 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h5>
             </div>
             <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
@@ -309,7 +266,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                 </div>
                                 <div class="top">
                                     <ul class="d-flex gap-8">
-                                        <li class="flag-tag success">En vedette</li>
+                                        {{-- <li class="flag-tag     success">En vedette</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
                                         {{-- <li class="box-icon w-32">
@@ -480,7 +437,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
-                                            <li class="flag-tag success style-3">En vedette</li>
+                                            {{-- <li class="flag-tag success style-3">En vedette</li> --}}
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             {{-- <li class="box-icon w-40"><span class="icon icon-arrLeftRight"></span></li> --}}
@@ -549,7 +506,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-4 flex-wrap flex-column">
-                                            <li class="flag-tag success">En vedette</li>
+                                            {{-- <li class="flag-tag success">En vedette</li> --}}
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             {{-- <li class="box-icon w-28"><span class="icon icon-arrLeftRight"></span></li> --}}
@@ -749,27 +706,6 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
 
 
     <script>
-        // document.getElementById('detectLocationBtn').addEventListener('click', function() {
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.getCurrentPosition(function(position) {
-        //             document.getElementById('user_lat').value = position.coords.latitude;
-        //             document.getElementById('user_lng').value = position.coords.longitude;
-        //             document.getElementById('searchAppartsForm').submit();
-        //         }, function(error) {
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Erreur',
-        //                 text: 'Impossible de récupérer votre position.'
-        //             });
-        //         });
-        //     } else {
-        //         Swal.fire({
-        //             icon: 'warning',
-        //             title: 'Attention',
-        //             text: 'Votre navigateur ne supporte pas la géolocalisation.'
-        //         });
-        //     }
-        // });
         document.addEventListener('DOMContentLoaded', function() {
             // Vérifier si les coordonnées sont déjà présentes
             const latInput = document.getElementById('user_lat');
