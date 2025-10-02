@@ -34,12 +34,12 @@
     </section>
 
     <script type="text/javascript">
-            const reservationData = @json($reservation) || null;
-            let urlWaiting = "{{ route('reservation.paiement.waiting', ['reservation_uuid' => ':reservation_uuid']) }}";
-            let urlFailed = "{{ route('reservation.paiement.failed', ['reservation_uuid' => ':reservation_uuid']) }}";
-            const reservationUuid = reservationData.uuid;
+        const reservationData = @json($reservation) || null;
+        let urlWaiting = "{{ route('reservation.paiement.waiting', ['reservation_uuid' => ':reservation_uuid']) }}";
+        let urlFailed = "{{ route('reservation.paiement.failed', ['reservation_uuid' => ':reservation_uuid']) }}";
+        const reservationUuid = reservationData.uuid;
         document.addEventListener('DOMContentLoaded', function() {
-            
+
 
             function generateReceipt() {
                 if (!reservationData) return;
@@ -62,17 +62,17 @@
                         <p class="mb-1">${r.phone}</p>
                         <p class="mb-0 mt-2">
                             ${r.sejour === 'Heure' ? `
-                                        Type: Réservation horaire<br>
-                                        Date: ${start.toLocaleDateString('fr-FR')}<br>
-                                        Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                        Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
-                                        Durée: ${r.nbr_of_sejour} heure(s)
-                                    ` : `
-                                        Type: Réservation journalière<br>
-                                        Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                        Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
-                                        Nuits: ${r.nbr_of_sejour}
-                                    `}
+                                            Type: Réservation horaire<br>
+                                            Date: ${start.toLocaleDateString('fr-FR')}<br>
+                                            Heure de début: ${start.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                            Heure de fin: ${end.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}<br>
+                                            Durée: ${r.nbr_of_sejour} heure(s)
+                                        ` : `
+                                            Type: Réservation journalière<br>
+                                            Arrivée: ${start.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                            Départ: ${end.toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit'})}<br>
+                                            Nuits: ${r.nbr_of_sejour}
+                                        `}
                         </p>
                     </div>
                 `;
@@ -81,47 +81,160 @@
             // Exécuter à l'ouverture
             generateReceipt();
         });
+        // // Fonction TouchPay
+        //     function calltouchpay() {
+        //         const order_number = reservationData.code;
+        //         const agency_code = "JSBEY11380";
+        //         const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
+        //         const domain_name = 'jsbeyci.com';
+        //         const url_redirection_success = urlWaiting.replace(':reservation_uuid', reservationUuid);
+        //         const url_redirection_failed = urlFailed.replace(':reservation_uuid', reservationUuid);
+        //         const amount = reservationData.payment_amount;
+        //         const city = "";
+        //         const email = reservationData.email || "";
+        //         const clientFirstname = reservationData.prenoms || "";
+        //         const clientLastname = reservationData.nom || "";
+        //         const clientPhone = reservationData.phone || "";
+
+        //         sendPaymentInfos(
+        //             order_number,
+        //             agency_code,
+        //             secure_code,
+        //             domain_name,
+        //             url_redirection_success,
+        //             url_redirection_failed,
+        //             amount,
+        //             city,
+        //             email,
+        //             clientFirstname,
+        //             clientLastname,
+        //             clientPhone
+        //         );
+        //     }
+
+        //     async function processPayment() {
+        //         Swal.fire({
+        //             title: 'Traitement du paiement...',
+        //             text: 'Veuillez patienter',
+        //             allowOutsideClick: false,
+        //             didOpen: () => Swal.showLoading()
+        //         });
+
+        //     payload = {
+        //         prenoms: reservationData.prenoms,
+        //         nom: reservationData.nom,
+        //         email: reservationData.email,
+        //         phone: reservationData.phone,
+        //         notes: reservationData.notes,
+        //         status: 'En attente de paiement'
+        //     }
+        //     const res = await fetch('/api/reservation/update-by-paiement' + '/' + reservationUuid, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Accept': 'application/json',
+        //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        //         },
+        //         body: JSON.stringify(payload)
+        //     });
+
+        //     const data = await res.json();
+        //     if (!data.success){
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'Oops...',
+        //             text: data.message,
+        //         });
+        //         return;
+        //     };
+        //     // Appel vers TouchPay
+        //     calltouchpay();
+        //     }
+
         // Fonction TouchPay
-            function calltouchpay() {
-                const order_number = reservationData.code;
-                const agency_code = "JSBEY11380";
-                const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
-                const domain_name = 'jsbeyci.com';
-                const url_redirection_success = urlWaiting.replace(':reservation_uuid', reservationUuid);
-                const url_redirection_failed = urlFailed.replace(':reservation_uuid', reservationUuid);
-                const amount = reservationData.payment_amount;
-                const city = "";
-                const email = reservationData.email || "";
-                const clientFirstname = reservationData.prenoms || "";
-                const clientLastname = reservationData.nom || "";
-                const clientPhone = reservationData.phone || "";
+        reservationDataUpdated = {};
+        
+        console.log(reservationDataUpdated);
 
-                sendPaymentInfos(
-                    order_number,
-                    agency_code,
-                    secure_code,
-                    domain_name,
-                    url_redirection_success,
-                    url_redirection_failed,
-                    amount,
-                    city,
-                    email,
-                    clientFirstname,
-                    clientLastname,
-                    clientPhone
-                );
-            }
+        function calltouchpay() {
+            const order_number = reservationDataUpdated.reservation.code;
+            const agency_code = "JSBEY11380";
+            const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
+            const domain_name = 'jsbeyci.com';
+            const url_redirection_success = urlWaiting.replace(':reservation_uuid', reservationUuid);
+            const url_redirection_failed = urlFailed.replace(':reservation_uuid', reservationUuid);
+            const amount = reservationDataUpdated.reservation.payment_amount;
+            const city = "";
+            const email = reservationDataUpdated.reservation.email || "";
+            const clientFirstname = reservationDataUpdated.reservation.prenoms || "";
+            const clientLastname = reservationDataUpdated.reservation.nom || "";
+            const clientPhone = reservationDataUpdated.reservation.phone || "";
 
-            async function processPayment() {
-                Swal.fire({
-                    title: 'Traitement du paiement...',
-                    text: 'Veuillez patienter',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading()
+            sendPaymentInfos(
+                order_number,
+                agency_code,
+                secure_code,
+                domain_name,
+                url_redirection_success,
+                url_redirection_failed,
+                amount,
+                city,
+                email,
+                clientFirstname,
+                clientLastname,
+                clientPhone
+            );
+        }
+
+        async function processPayment() {
+            Swal.fire({
+                title: 'Traitement du paiement...',
+                text: 'Veuillez patienter',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            const payload = {
+                ...reservationData
+            };
+
+            try {
+                const res = await fetch('/api/reservation/update-by-paiement/' + reservationUuid, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(payload)
                 });
-                // Appel vers TouchPay
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message,
+                    });
+                    return;
+                }
+
+                // Mise à jour de reservationData avec la réponse du backend
+                // reservationData = data.data;
+                reservationDataUpdated.reservation = data.reservation;
+
+                // Appel TouchPay avec les infos mises à jour
                 calltouchpay();
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur réseau',
+                    text: 'Impossible de traiter le paiement. Veuillez réessayer.'
+                });
             }
+        }
     </script>
 
 

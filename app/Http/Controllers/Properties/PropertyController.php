@@ -19,6 +19,7 @@ class PropertyController extends Controller
      */
     public function index(Request $request)
     {
+        $perPage = $request->get('perPage', 8);
         $query = Property::query();
 
         if($request->filled('search')) {
@@ -45,8 +46,9 @@ class PropertyController extends Controller
         }
 
         $properties = $query->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
+        $propertiesForSmallDevice = $query->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->paginate($perPage);
         // $properties = Property::where('partner_code', Auth::user()->email)->get();
-        return view('properties.index', compact('properties'));
+        return view('properties.index', compact('properties', 'propertiesForSmallDevice'));
     }
 
     /**
@@ -88,9 +90,22 @@ class PropertyController extends Controller
                 $fileDirectory = 'properties_'.$code.'/';
 
                 $file->move($externalUploadDir.$fileDirectory, $imageName);
-                // $file->move(public_path('media/properties_'.$code), $imageName);
             }
             $fileUrl = "storage/files/" . $fileDirectory. $imageName;
+            if($request->city == 'autre'){
+                $cityLabel = $request->cityAutre;
+                $cityCode = Str::slug($cityLabel) . '-' . Str::random(3) . '-' . $request->country;
+                $cityModel = city::firstOrCreate([
+                    'label' => $cityLabel,
+                    'country_code' => $request->country
+                ],
+                [
+                    'code' => $cityCode
+                ]);
+                $city = $cityModel->code;
+            }else{
+                $city = $request->city;
+            }
             $property = Property::create(
                 [ 
                     'uuid' => $uuid,
@@ -101,7 +116,7 @@ class PropertyController extends Controller
                     'type_uuid' => $request->type_uuid,
                     'address' => $request->address,
                     'country' => $request->country,
-                    'city' => $request->city,
+                    'city' => $city,
                     'longitude' => $request->longitude,
                     'latitude' => $request->latitude,
                     'description' => $request->description,
@@ -174,12 +189,26 @@ class PropertyController extends Controller
                 // $file->move(public_path('media/properties_' . $property_code . '/apparts_' . $code), $imageName);
                 $mainFileUrl = "storage/files/" . $mainFileDirectory. $imageName;
             }
+            if($request->city == 'autre'){
+                $cityLabel = $request->cityAutre;
+                $cityCode = Str::slug($cityLabel) . '-' . Str::random(3) . '-' . $request->country;
+                $cityModel = city::firstOrCreate([
+                    'label' => $cityLabel,
+                    'country_code' => $request->country
+                ],
+                [
+                    'code' => $cityCode
+                ]);
+                $city = $cityModel->code;
+            }else{
+                $city = $request->city;
+            }
             $isUpdated = $property->update([
                 'title' => $request->title,
                 'type_uuid' => $request->type_uuid,
                 'address' => $request->address,
                 'country' => $request->country,
-                'city' => $request->city,
+                'city' => $city,
                 'longitude' => $request->longitude,
                 'latitude' => $request->latitude,
                 'description' => $request->description,

@@ -197,7 +197,7 @@
                         </fieldset> --}}
 
                     </div>
-                    <div class="box grid-2 gap-30">
+                    <div class="box grid-3 gap-30">
                         <fieldset class="box-fieldset">
                             <label for="country">
                                 Pays:<span>*</span>
@@ -216,6 +216,14 @@
                             <select name="city" class="form-select nice-select list style-1" id="city" required>
                                 <option selected value="{{ $property->city ?? '' }}">{{ $property->city ?? '' }}"></option>
                             </select>
+                        </fieldset>
+                        <fieldset class="box-fieldset">
+                            <label for="cityAutre">
+                                Precisez la ville:<span>*</span>
+                            </label>
+
+                            <input name="cityAutre" class="form-control style-1" id="cityAutre"
+                                placeholder="Entrer la ville" value="" disabled>
                         </fieldset>
                     </div>
                     <div class="box box-fieldset">
@@ -248,46 +256,113 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const countrySelect = document.getElementById('country');
+        //     const citySelect = document.getElementById('city');
+
+        //     countrySelect.addEventListener('change', function () {
+        //         const selectedCountry = this.value;
+
+        //         // Vider les anciennes options
+        //         citySelect.innerHTML = '<option value="">Chargement...</option>';
+
+        //         fetch(`/api/get-cities-by-country?country=${selectedCountry}`, {
+        //             headers: {
+        //                 'Accept': 'application/json'
+        //             }
+        //         })
+        //         .then(response => {
+        //             if (!response.ok) {
+        //                 throw new Error('Erreur lors de la récupération des villes');
+        //             }
+        //             return response.json();
+        //         })
+        //         .then(data => {
+        //             citySelect.innerHTML = ''; // Vider le select
+
+        //             if (data.length === 0) {
+        //                 citySelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
+        //                 return;
+        //             }
+
+        //             data.forEach(city => {
+        //                 const option = document.createElement('option');
+        //                 option.value = city.code;
+        //                 option.textContent = city.label; // Assurez-vous que votre modèle `city` a un champ `name`
+        //                 citySelect.appendChild(option);
+        //             });
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //             citySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
+        //         });
+        //     });
+
+        //     // Déclencher le chargement des villes au chargement initial si un pays est déjà sélectionné
+        //     if (countrySelect.value) {
+        //         countrySelect.dispatchEvent(new Event('change'));
+        //     }
+        // });
+        document.addEventListener('DOMContentLoaded', function() {
             const countrySelect = document.getElementById('country');
             const citySelect = document.getElementById('city');
+            const cityAutreInput = document.getElementById('cityAutre');
 
-            countrySelect.addEventListener('change', function () {
+            countrySelect.addEventListener('change', function() {
                 const selectedCountry = this.value;
 
                 // Vider les anciennes options
                 citySelect.innerHTML = '<option value="">Chargement...</option>';
 
                 fetch(`/api/get-cities-by-country?country=${selectedCountry}`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération des villes');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    citySelect.innerHTML = ''; // Vider le select
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la récupération des villes');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        citySelect.innerHTML = ''; // Vider le select
 
-                    if (data.length === 0) {
-                        citySelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
-                        return;
-                    }
+                        if (data.length === 0) {
+                            citySelect.innerHTML = '<option value="">Aucune ville trouvée</option>';
+                            return;
+                        }
 
-                    data.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city.code;
-                        option.textContent = city.label; // Assurez-vous que votre modèle `city` a un champ `name`
-                        citySelect.appendChild(option);
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.code;
+                            option.textContent = city.label;
+                            citySelect.appendChild(option);
+                        });
+
+                        // 👉 Ajouter l’option "Autre"
+                        const optionAutre = document.createElement('option');
+                        optionAutre.value = 'autre';
+                        optionAutre.textContent = 'Autre';
+                        citySelect.appendChild(optionAutre);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        citySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
                     });
-                })
-                .catch(error => {
-                    console.error(error);
-                    citySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
-                });
+            });
+
+            // Gestion du choix de la ville
+            citySelect.addEventListener('change', function() {
+                if (this.value === 'autre') {
+                    cityAutreInput.disabled = false;
+                    cityAutreInput.required = true;
+                    cityAutreInput.focus();
+                } else {
+                    cityAutreInput.disabled = true;
+                    cityAutreInput.required = false;
+                    cityAutreInput.value = '';
+                }
             });
 
             // Déclencher le chargement des villes au chargement initial si un pays est déjà sélectionné

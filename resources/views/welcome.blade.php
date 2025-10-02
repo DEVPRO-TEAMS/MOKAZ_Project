@@ -25,7 +25,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" role="tabpanel">
                             <div class="form-sl pt-5">
-                                <form action="{{ route('welcome') }}" method="get">
+                                {{-- <form  id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
                                             <div class="form-group-1 search-form form-style">
@@ -40,7 +40,6 @@
                                                     <input type="text" class="form-control"
                                                         placeholder="rechercher par Localisation"
                                                         value="{{ request('location') }}" name="location">
-                                                    {{-- <a href="#" class="icon icon-location"></a> --}}
                                                 </div>
                                             </div>
                                             <div class="form-group-3 form-style">
@@ -57,16 +56,61 @@
 
                                                 </div>
                                             </div>
-                                            {{-- <div class="form-group-4 box-filter">
+
+                                        </div>
+                                        <button type="submit" class="tf-btn primary">Rechercher</button>
+                                    </div>
+                                </form> --}}
+                                <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
+                                    <div class="wd-find-select shadow-st">
+                                        <div class="inner-group">
+                                            <div class="form-group-1 search-form form-style">
+                                                <label>Mot-clé</label>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Rechercher par Mot-clé." name="search"
+                                                    value="{{ request('search') }}">
+                                            </div>
+
+                                            <div class="form-group-2 form-style">
+                                                <label>Localisation</label>
+                                                <div class="group-ip">
+                                                    <input type="text" class="form-control"
+                                                        placeholder="rechercher par Localisation" name="location"
+                                                        value="{{ request('location') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group-3 form-style">
+                                                <label>Type</label>
+                                                <div class="group-select">
+                                                    <select name="type" id="type" class="nice-select form-select">
+                                                        <option value="">Tous</option>
+                                                        @foreach ($typeAppart as $type)
+                                                            <option value="{{ $type->uuid }}"
+                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
+                                                                {{ $type->libelle }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="lat" id="user_lat" value="{{ request('lat') }}">
+                                        <input type="hidden" name="lng" id="user_lng" value="{{ request('lng') }}">
+
+                                        <button type="submit" class="tf-btn primary">Rechercher</button>
+                                        <button type="button" id="detectLocationBtn"
+                                            class="tf-btn btn-outline-primary">Localiser moi</button>
+                                    </div>
+                                </form>
+                                {{-- <div class="form-group-4 box-filter">
                                                 <a class="filter-advanced pull-right">
                                                     <span class="icon icon-faders"></span>
                                                     <span class="text-1">Avancé</span>
                                                 </a>
                                             </div> --}}
-                                        </div>
-                                        <button type="submit" class="tf-btn primary">Rechercher</button>
-                                    </div>
-                                    {{-- <div class="wd-search-form">
+                                {{-- <div class="wd-search-form">
                                         <div class="grid-2 group-box group-price">
                                             <div class="widget-price">
                                                 <div class="box-title-price">
@@ -188,7 +232,7 @@
 
                                         
                                     </div> --}}
-                                </form>
+
                             </div>
                         </div>
 
@@ -210,10 +254,10 @@
                 @forelse ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
-                        $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-                        // Récupérer la tarification à la journée la moins chère
-                        $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                     @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
@@ -286,36 +330,18 @@
                     @else
                         <div class="d-flex flex-column align-items-center">
                             <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
-                            <h5 class="fw-semibold">Aucun hébergement pour le moment</h5>                            
+                            <h5 class="fw-semibold">Aucun hébergement pour le moment</h5>
                         </div>
                     @endif
                 @endforelse
-                
+
             </div>
 
-            {{-- <div class="nav-pagination">
-                <nav class="pt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Précédent</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Suivant</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div> --}}
             <div class="nav-pagination pt-4">
                 {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
             </div>
-        
-            @if($apparts->count() > 0)
+
+            @if ($apparts->count() > 0)
                 <div class="text-center pt-4">
                     <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
                 </div>
@@ -678,5 +704,30 @@
             </div>
         </div>
     </section>
+
+
+    <script>
+        document.getElementById('detectLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('user_lat').value = position.coords.latitude;
+                    document.getElementById('user_lng').value = position.coords.longitude;
+                    document.getElementById('searchAppartsForm').submit();
+                }, function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Impossible de récupérer votre position.'
+                    });
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Attention',
+                    text: 'Votre navigateur ne supporte pas la géolocalisation.'
+                });
+            }
+        });
+    </script>
     <!-- end banner -->
 @endsection

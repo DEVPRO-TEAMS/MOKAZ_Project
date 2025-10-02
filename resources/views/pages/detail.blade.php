@@ -72,9 +72,9 @@ $tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->f
                         <div class="label text-uppercase">caractéristiques:</div>
                         <ul class="meta">
                             <li class="meta-item"><span class="icon icon-bed"></span> {{ $appart->nbr_room ?? '0' }}
-                                Chambres à couché</li>
+                                Chambres à coucher</li>
                             <li class="meta-item"><span class="icon icon-bathtub"></span>
-                                {{ $appart->nbr_bathroom ?? '0' }} Salle de bain</li>
+                                {{ $appart->nbr_bathroom ?? '0' }} Salle de bains</li>
                         </ul>
                     </div>
                     <div class="info-box">
@@ -180,15 +180,15 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                             <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bed"></i></a>
                                 <div class="content">
-                                    <span class="label">Chambre à couché:</span>
-                                    <span>{{ $appart->nbr_room ?? '0' }} Chambres</span>
+                                    <span class="label">Chambre à coucher:</span>
+                                    <span>{{ $appart->nbr_room ?? '0' }} Chambre{{ $appart->nbr_room > 1 ? 's' : '' }} </span>
                                 </div>
                             </li>
                             <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bathtub"></i></a>
                                 <div class="content">
-                                    <span class="label">Salle de bain:</span>
-                                    <span>{{ $appart->nbr_bathroom ?? '0' }} salles</span>
+                                    <span class="label">Salle de bains:</span>
+                                    <span>{{ $appart->nbr_bathroom ?? '0' }} salle{{ $appart->nbr_bathroom > 1 ? 's' : '' }}</span>
                                 </div>
                             </li>
                         </ul>

@@ -47,6 +47,27 @@
             cursor: no-drop;
             /* cursor: wait; */
         }
+
+        .pagination .page-item .page-link {
+            color: #dc3545;
+            /* Rouge Bootstrap */
+            border-radius: 8px;
+            margin: 0 4px;
+            border: 1px solid #dc3545;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
     </head>
 

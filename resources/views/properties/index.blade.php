@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .desktop-version {
+            display: none;
+        }
+
+        /* Afficher la version desktop à partir de 576px (sm et +) */
+        @media (min-width: 576px) {
+            .desktop-version {
+                display: block;
+            }
+
+            .mobile-version {
+                display: none;
+                /* cacher la version mobile dès sm */
+            }
+        }
+    </style>
     <div class="main-content-inne pt-5 mt-5 wrap-dashboard-content">
         <div class="row mb-4">
             <div class="col-12">
@@ -9,7 +26,7 @@
                         <i class="fas fa-home me-2 text-danger"></i> Gestion des Propriétés
                     </h3>
                 </div>
-                
+
             </div>
         </div>
         <div class="row mb-4">
@@ -164,7 +181,106 @@
                 </div>
             </div>
 
-            <div class="wrapper-content row">
+            <div class="mobile-version">
+                <div class="row g-3 py-4">
+                    @forelse ($propertiesForSmallDevice as $property)
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="card" style="width: 100%;">
+                                @if ($property->image)
+                                    <img src="{{ asset($property->image) }}" alt="{{ $property->title }}"
+                                        class="card-img-top">
+                                @else
+                                    <div class="avatar-initials bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-2"
+                                        style="width: 150px; height: 150px;">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                @endif
+                                <div class="card-body">
+                                    <h5 class="card-title">{!! Str::words($property->title ?? '', 3, '...') ?? '' !!}</h5>
+                                    <p class="card-text">{!! Str::words($property->description ?? '', 4, '...') !!}</p>
+
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-semibold">{{ $property->ville->label ?? '' }},
+                                            {{ $property->pays->label ?? '' }}</span>
+                                        <small class="text-muted">{{ $property->address ?? '' }}</small>
+
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row mb-4">
+                                        <input type="hidden" name="property_uuid" value="{{ $property->uuid ?? '' }}">
+                                        <div class="d-flex gap-2 col-8">
+                                            <a title="Voir détails"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
+                                                href="{{ route('partner.properties.show', $property->uuid) }}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            <a title="Modifier"
+                                                href="{{ route('partner.properties.edit', $property->uuid) }}"
+                                                class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                                title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button
+                                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteProperty"
+                                                title="Supprimer">
+                                                <i class="icon icon-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="col-4">
+                                            @if ($property->etat == 'actif')
+                                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                    <i class="fas fa-check-circle me-1"></i> Active
+                                                </span>
+                                            @elseif ($property->etat == 'inactif')
+                                                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
+                                                    <i class="fas fa-times-circle me-1"></i> Inactive
+                                                </span>
+                                            @else
+                                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                    <i class="fas fa-clock me-1"></i> En attente
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="{{ route('partner.apartments.create', $property->uuid) }}"
+                                                class="btn btn-sm tf-btn primary w-100">
+                                                <i class="icon icon-plus"></i> Ajouter un hébergement
+                                            </a>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div colspan="7" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-home fa-3x text-muted mb-3 opacity-50"></i>
+                                <h5 class="fw-semibold">Aucune propriété trouvée</h5>
+                                <p class="text-muted">Aucune propriété ne correspond à vos critères
+                                    de recherche</p>
+                                <a href="{{ route('partner.properties.index') }}"
+                                    class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                                </a>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+                <div class="nav-pagination pt-4">
+                    {{ $propertiesForSmallDevice->withQueryString()->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
+
+            <div class="wrapper-content row desktop-version">
                 <div class="col-xl-12">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
                         <div class="card-body p-0">
@@ -212,7 +328,7 @@
                                                         <span class="fw-semibold">{{ $property->ville->label ?? '' }},
                                                             {{ $property->pays->label ?? '' }}</span>
                                                         <small class="text-muted">{{ $property->address ?? '' }}</small>
-                                                        
+
                                                     </div>
                                                 </td>
                                                 <td>
@@ -244,7 +360,8 @@
                                                     @endif
                                                 </td>
                                                 <td class="">
-                                                    <input type="hidden" name="property_uuid" value="{{ $property->uuid ?? '' }}">
+                                                    <input type="hidden" name="property_uuid"
+                                                        value="{{ $property->uuid ?? '' }}">
                                                     <div class="d-flex gap-2">
                                                         <a title="Voir détails"
                                                             class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
@@ -252,12 +369,15 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
 
-                                                        <a title="Modifier" href="{{ route('partner.properties.edit', $property->uuid) }}"
+                                                        <a title="Modifier"
+                                                            href="{{ route('partner.properties.edit', $property->uuid) }}"
                                                             class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
                                                             title="Modifier">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <button class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteProperty" title="Supprimer">
+                                                        <button
+                                                            class="btn btn-sm btn-icon btn-outline-danger rounded-circle deleteProperty"
+                                                            title="Supprimer">
                                                             <i class="icon icon-trash"></i>
                                                         </button>
 
@@ -292,12 +412,13 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // supprimer un appartement
-            document.querySelectorAll('.deleteProperty').forEach(function (button) {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.deleteProperty').forEach(function(button) {
+                button.addEventListener('click', function() {
                     const propertyRow = this.closest('.property-row'); // corrige ici le sélecteur
-                    const propertyUuid = propertyRow.querySelector('input[name="property_uuid"]').value;
+                    const propertyUuid = propertyRow.querySelector('input[name="property_uuid"]')
+                        .value;
 
                     Swal.fire({
                         title: 'Êtes-vous sûr ?',
@@ -323,50 +444,51 @@
                             });
 
                             fetch(`/api/property/destroy/${propertyUuid}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
-                                    'Accept': 'application/json',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Succès',
-                                        text: data.message,
-                                        timer: 1500,
-                                        showConfirmButton: false,
-                                        toast: true,
-                                        position: 'top-end',
-                                        timerProgressBar: true,
-                                    });
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]')?.content,
+                                        'Accept': 'application/json',
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Succès',
+                                            text: data.message,
+                                            timer: 1500,
+                                            showConfirmButton: false,
+                                            toast: true,
+                                            position: 'top-end',
+                                            timerProgressBar: true,
+                                        });
 
-                                    // setTimeout(() => {
-                                    //     location.reload();
-                                    // }, 1000);
+                                        // setTimeout(() => {
+                                        //     location.reload();
+                                        // }, 1000);
 
-                                    propertyRow.remove();
-                                    // defaultItem.classList.add();
-                                } else {
+                                        propertyRow.remove();
+                                        // defaultItem.classList.add();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Erreur',
+                                            text: data.message,
+                                            showConfirmButton: true,
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Erreur',
-                                        text: data.message,
+                                        text: 'Une erreur s’est produite lors de la suppression de la propriété.',
                                         showConfirmButton: true,
                                     });
-                                }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erreur',
-                                    text: 'Une erreur s’est produite lors de la suppression de la propriété.',
-                                    showConfirmButton: true,
                                 });
-                            });
                         }
                     });
                 });

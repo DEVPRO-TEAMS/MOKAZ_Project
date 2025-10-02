@@ -195,7 +195,7 @@
                         aria-expanded="false" 
                         aria-controls="dashboardSubmenu">
                             <i class="bi bi-grid-3x3-gap me-3 fs-5"></i>
-                            <span>Paramettres</span>
+                            <span>Parametres</span>
                             <i class="bi bi-chevron-down ms-auto transition-all"></i>
                         </a>
                         <div class="collapse" id="dashboardSubmenu">

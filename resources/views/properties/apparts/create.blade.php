@@ -368,7 +368,10 @@
                 </fieldset>
             </div>
             <div class="d-flex justify-content-end">
-                <button type="submit" class="tf-btn primary"> Ajouter</button>
+                {{-- <button type="submit" class="tf-btn primary"> Ajouter</button> --}}
+                <button type="submit" name="action" value="continue" class="tf-btn btn-outline-primary me-4"> Ajouter
+                    et continuer</button>
+                <button type="submit" name="action" value="add" class="tf-btn primary"> Ajouter</button>
             </div>
 
         </form>
@@ -376,12 +379,105 @@
     </div>
 
     <script>
+        // document.getElementById('addAppartForm').addEventListener('submit', async function(e) {
+        //     e.preventDefault();
+        //     const property_uuid = document.getElementById('property_uuid').value;
+        //     const textareaId = 'desc';
+
+        //     // 🔄 Synchroniser le contenu TinyMCE avec le textarea
+        //     tinymce.triggerSave();
+
+        //     const content = document.getElementById(textareaId).value.trim();
+
+        //     if (!content) {
+        //         Swal.fire({
+        //             icon: 'warning',
+        //             title: 'Champ requis',
+        //             text: 'Le champ de description est obligatoire.',
+        //             showConfirmButton: false,
+        //             timer: 1500,
+        //             progressBar: true
+
+        //         });
+        //         return;
+        //     }
+
+        //     const submitBtn = this.querySelector('button[type="submit"]');
+        //     const originalText = submitBtn.innerHTML;
+
+        //     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
+        //     submitBtn.disabled = true;
+
+        //     try {
+
+        //         const formData = new FormData(this);
+        //         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        //         if (csrfToken) {
+        //             formData.append('_token', csrfToken);
+        //         }
+
+        //         console.log('Form data:', Object.fromEntries(formData));
+
+
+        //         const response = await fetch('/api/appart/add', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Accept': 'application/json',
+        //                 'X-CSRF-TOKEN': csrfToken
+        //             },
+        //             body: formData
+        //         });
+
+        //         const data = await response.json();
+
+        //         console.log('Response:', data);
+
+        //         if (!response.ok) {
+        //             if (data.errors) {
+        //                 const errorMessages = Object.values(data.errors).flat().join('\n');
+        //                 throw new Error(errorMessages);
+        //             }
+        //             throw new Error(data.message || 'Erreur lors de l\'envoi');
+        //         }
+
+        //         // ✅ Message de succès
+        //         Swal.fire({
+        //             icon: 'success',
+        //             title: 'Succès',
+        //             text: 'Hébergement ajoutée avec succès',
+        //             timer: 5000,
+        //             showConfirmButton: false,
+        //             position: 'top-end',
+        //             progressBar: true,
+        //             toast: true
+        //         });
+
+        //         // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
+        //         // modal.hide();
+        //         this.reset();
+        //         setTimeout(() => {
+        //             window.location.href = '/partner/property/show/' + property_uuid;
+        //         }, 3000);
+
+        //     } catch (error) {
+        //         console.error('Erreur:', error);
+        //         Swal.fire({
+        //             icon: "error",
+        //             title: "Erreur",
+        //             text: error.message,
+        //         });
+        //     } finally {
+        //         submitBtn.innerHTML = originalText;
+        //         submitBtn.disabled = false;
+        //     }
+        // });
+
         document.getElementById('addAppartForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const property_uuid = document.getElementById('property_uuid').value;
             const textareaId = 'desc';
 
-            // 🔄 Synchroniser le contenu TinyMCE avec le textarea
+            // 🔄 Synchroniser TinyMCE
             tinymce.triggerSave();
 
             const content = document.getElementById(textareaId).value.trim();
@@ -394,27 +490,27 @@
                     showConfirmButton: false,
                     timer: 1500,
                     progressBar: true
-
                 });
                 return;
             }
 
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+            // ✅ Identifier quel bouton a été cliqué
+            const submitter = e.submitter; // bouton cliqué
+            const action = submitter ? submitter.value : "add"; // par défaut "add"
 
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
-            submitBtn.disabled = true;
+            const originalText = submitter.innerHTML;
+            submitter.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...';
+            submitter.disabled = true;
 
             try {
-
                 const formData = new FormData(this);
+                formData.append("action", action); // on ajoute l’action
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 if (csrfToken) {
                     formData.append('_token', csrfToken);
                 }
 
                 console.log('Form data:', Object.fromEntries(formData));
-
 
                 const response = await fetch('/api/appart/add', {
                     method: 'POST',
@@ -426,7 +522,6 @@
                 });
 
                 const data = await response.json();
-
                 console.log('Response:', data);
 
                 if (!response.ok) {
@@ -437,24 +532,28 @@
                     throw new Error(data.message || 'Erreur lors de l\'envoi');
                 }
 
-                // ✅ Message de succès
+                // ✅ Message succès
                 Swal.fire({
                     icon: 'success',
                     title: 'Succès',
-                    text: 'Hébergement ajoutée avec succès',
-                    timer: 5000,
+                    text: 'Hébergement ajouté avec succès',
+                    timer: 3000,
                     showConfirmButton: false,
                     position: 'top-end',
-                    progressBar: true,
                     toast: true
                 });
 
-                // const modal = bootstrap.Modal.getInstance(document.getElementById('demandPartnariaModal'));
-                // modal.hide();
-                this.reset();
-                setTimeout(() => {
-                    window.location.href = '/partner/property/show/' + property_uuid;
-                }, 3000);
+                if (action === "add") {
+                    // 👉 Processus normal : redirection après enregistrement
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.href = '/partner/property/show/' + property_uuid;
+                    }, 2000);
+                } else if (action === "continue") {
+                    // 👉 Ajouter et continuer : pas de reset, pas de reload
+                    // tu peux ajouter une logique ici (par ex. vider uniquement certains champs si besoin)
+                    console.log("Ajout effectué, on reste sur place (mode continuer).");
+                }
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -464,8 +563,8 @@
                     text: error.message,
                 });
             } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                submitter.innerHTML = originalText;
+                submitter.disabled = false;
             }
         });
     </script>
@@ -602,7 +701,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const addTarifBtn = document.getElementById('addTarifBtn');
             const tarifsContainer = document.getElementById('tarifs-container');
             const tarifBlock = document.querySelector('.tarif-block');
@@ -622,7 +721,7 @@
             }
 
             function handleSelectChange(select, tempsInput, tempsLabelSpan) {
-                select.addEventListener('change', function () {
+                select.addEventListener('change', function() {
                     tempsLabelSpan.textContent = select.value;
                     if (select.value === 'Jour') {
                         tempsInput.value = 1;
@@ -645,7 +744,7 @@
             updateJourOptionsAvailability();
 
             // Ajouter un nouveau bloc tarif
-            addTarifBtn.addEventListener('click', function () {
+            addTarifBtn.addEventListener('click', function() {
                 const newTarifBlock = tarifBlock.cloneNode(true);
 
                 // Réinitialiser les champs
@@ -669,7 +768,7 @@
                 removeBtn.textContent = 'Supprimer';
                 removeBtn.type = 'button';
                 removeBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4');
-                removeBtn.addEventListener('click', function () {
+                removeBtn.addEventListener('click', function() {
                     newTarifBlock.remove();
                     updateJourOptionsAvailability(); // Réactiver "Jour" si besoin
                 });
@@ -704,11 +803,11 @@
                     addCommodities(commoditiesValue);
                     updateHiddenInput(); // Met à jour l'input caché
                     commoditiesInput.value = ""; // Réinitialise le champ
-                }else {
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Existe déja',
-                        text: "La commodité " + commoditiesValue +  " a déja été ajoutée!",
+                        text: "La commodité " + commoditiesValue + " a déja été ajoutée!",
                         showConfirmButton: true,
                         showConfirmText: 'OK',
                     });

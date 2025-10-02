@@ -562,6 +562,18 @@ class ReservationController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Réservation mise à jour', 'data' => $reservation]);
     }
+    public function updateByPaiement(Request $request, $uuid)
+    {
+        $reservation = Reservation::where('uuid', $uuid)->first();
+        if (!$reservation) {
+            return response()->json(['success' => false, 'message' => 'Réservation non trouvée'], 404);
+        }
+        $code = 'RES-' . strtoupper(Str::random(6));
+        $reservation->code = $code;
+        $reservation->save();
+
+        return response()->json(['success' => true, 'message' => 'Réservation mise à jour', 'reservation' => $reservation]);
+    }
 
     // Supprimer une réservation
     public function destroy($id)
