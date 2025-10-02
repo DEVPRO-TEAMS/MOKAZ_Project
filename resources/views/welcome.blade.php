@@ -61,7 +61,7 @@
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
                                 </form> --}}
-                                <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
+                                {{-- <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
                                             <div class="form-group-1 search-form form-style">
@@ -102,6 +102,48 @@
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
                                         <button type="button" id="detectLocationBtn"
                                             class="tf-btn btn-outline-primary">Localiser moi</button>
+                                    </div>
+                                </form> --}}
+
+                                <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
+                                    <div class="wd-find-select shadow-st">
+                                        <div class="inner-group">
+                                            <div class="form-group-1 search-form form-style">
+                                                <label>Mot-clé</label>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Rechercher par Mot-clé." name="search"
+                                                    value="{{ request('search') }}">
+                                            </div>
+
+                                            <div class="form-group-2 form-style">
+                                                <label>Localisation</label>
+                                                <div class="group-ip">
+                                                    <input type="text" class="form-control"
+                                                        placeholder="rechercher par Localisation" name="location"
+                                                        value="{{ request('location') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group-3 form-style">
+                                                <label>Type</label>
+                                                <div class="group-select">
+                                                    <select name="type" id="type" class="nice-select form-select">
+                                                        <option value="">Tous</option>
+                                                        @foreach ($typeAppart as $type)
+                                                            <option value="{{ $type->uuid }}"
+                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
+                                                                {{ $type->libelle }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="lat" id="user_lat" value="{{ request('lat') }}">
+                                        <input type="hidden" name="lng" id="user_lng" value="{{ request('lng') }}">
+
+                                        <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
                                 </form>
                                 {{-- <div class="form-group-4 box-filter">
@@ -707,25 +749,48 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
 
 
     <script>
-        document.getElementById('detectLocationBtn').addEventListener('click', function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById('user_lat').value = position.coords.latitude;
-                    document.getElementById('user_lng').value = position.coords.longitude;
-                    document.getElementById('searchAppartsForm').submit();
-                }, function(error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Impossible de récupérer votre position.'
+        // document.getElementById('detectLocationBtn').addEventListener('click', function() {
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.getCurrentPosition(function(position) {
+        //             document.getElementById('user_lat').value = position.coords.latitude;
+        //             document.getElementById('user_lng').value = position.coords.longitude;
+        //             document.getElementById('searchAppartsForm').submit();
+        //         }, function(error) {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Erreur',
+        //                 text: 'Impossible de récupérer votre position.'
+        //             });
+        //         });
+        //     } else {
+        //         Swal.fire({
+        //             icon: 'warning',
+        //             title: 'Attention',
+        //             text: 'Votre navigateur ne supporte pas la géolocalisation.'
+        //         });
+        //     }
+        // });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si les coordonnées sont déjà présentes
+            const latInput = document.getElementById('user_lat');
+            const lngInput = document.getElementById('user_lng');
+
+            if (!latInput.value || !lngInput.value) {
+                // Récupérer automatiquement la position
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        latInput.value = position.coords.latitude;
+                        lngInput.value = position.coords.longitude;
+
+                        // Soumettre automatiquement le formulaire
+                        document.getElementById('searchAppartsForm').submit();
+                    }, function(error) {
+                        console.warn("Impossible de récupérer la position :", error.message);
+                        // On peut charger les appartements sans géolocalisation si refusé
                     });
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Attention',
-                    text: 'Votre navigateur ne supporte pas la géolocalisation.'
-                });
+                } else {
+                    console.warn("Géolocalisation non supportée par le navigateur.");
+                }
             }
         });
     </script>
