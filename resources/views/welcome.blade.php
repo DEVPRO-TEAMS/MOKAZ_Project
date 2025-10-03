@@ -428,20 +428,21 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                 $count = $properties->count();
                                 $image =
                                     $firstProperty->ville?->locationImage?->image ??
-                                    'assets/images/location/default.jpg';
+                                    'assets/images/location/abidjan.jpg';
                             @endphp
-
-                            <div class="swiper-slide">
-                                <a href="javascript:void(0)" class="box-location">
-                                    <div class="image">
-                                        <img src="{{ asset($image) }}" alt="image-location">
-                                    </div>
-                                    <div class="content">
-                                        <span class="sub-title">{{ $count }} Propriété(s)</span>
-                                        <h6 class="title">{{ $country }}, {{ $city }}</h6>
-                                    </div>
-                                </a>
-                            </div>
+                            @if ($firstProperty->ville?->locationImage)
+                                <div class="swiper-slide">
+                                    <a href="javascript:void(0)" class="box-location">
+                                        <div class="image">
+                                            <img src="{{ asset($image) }}" alt="image-location">
+                                        </div>
+                                        <div class="content">
+                                            <span class="sub-title">{{ $count }} Propriété(s)</span>
+                                            <h6 class="title">{{ $country }}, {{ $city }}</h6>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
 
