@@ -143,7 +143,14 @@ class PagesController extends Controller
             ->with('tarifications')
             ->get();
 
-        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
+        $locations = Property::with(['ville', 'pays'])
+        ->where('etat', 'actif')
+        ->get()
+        ->groupBy(function ($property) {
+            return $property->pays?->label . ' - ' . $property->ville?->label;
+        });
+        // dd($locations);
+        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
     }
 
     // public function index(Request $request)

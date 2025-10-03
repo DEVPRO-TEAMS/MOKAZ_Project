@@ -349,7 +349,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
     </section>
     <!-- End Recommended -->
     <!-- Location -->
-    <section class="flat-section-v3 flat-location bg-surface">
+    {{-- <section class="flat-section-v3 flat-location bg-surface">
         <div class="container-full">
             <div class="box-title text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
                 <div class="text-subtitle text-primary">Explorer les villes</div>
@@ -370,28 +370,6 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                 </div>
                             </a>
                         </div>
-                        <div class="swiper-slide">
-                            <a href="#" class="box-location">
-                                <div class="image">
-                                    <img src="{{ asset('assets/images/location/yakro.jpg') }}" alt="image-location">
-                                </div>
-                                <div class="content">
-                                    <span class="sub-title">221 Propriété</span>
-                                    <h6 class="title">Cote d'Ivoire , Yamoussokro</h6>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="#" class="box-location">
-                                <div class="image">
-                                    <img src="{{ asset('assets/images/location/bouake.jpg') }}" alt="image-location">
-                                </div>
-                                <div class="content">
-                                    <span class="sub-title">128 Propriété</span>
-                                    <h6 class="title">cote d'ivoire , Bouake</h6>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                     <div class="box-navigation">
                         <div class="navigation swiper-nav-next nav-next-location"><span class="icon icon-arr-l"></span>
@@ -402,6 +380,53 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                 </div>
             </div>
 
+        </div>
+    </section> --}}
+
+    <section class="flat-section-v3 flat-location bg-surface">
+        <div class="container-full">
+            <div class="box-title text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+                <div class="text-subtitle text-primary">Explorer les villes</div>
+                <h4 class="mt-4">Notre emplacement pour vous</h4>
+            </div>
+
+            <div class="wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
+                <div class="swiper tf-sw-location overlay" data-preview-lg="4.1" data-preview-md="3" data-preview-sm="2"
+                    data-space="30" data-centered="true" data-loop="true">
+
+                    <div class="swiper-wrapper">
+                        @foreach ($locations as $location => $properties)
+                            @php
+                                $firstProperty = $properties->first();
+                                $city = $firstProperty->ville?->label ?? 'Ville inconnue';
+                                $country = $firstProperty->pays?->label ?? 'Pays inconnu';
+                                $count = $properties->count();
+                            @endphp
+
+                            <div class="swiper-slide">
+                                <a href="javascript:void(0)"
+                                    class="box-location">
+                                    <div class="image">
+                                        <img src="{{ asset('assets/images/location/' . strtolower($city) . '.jpg') }}"
+                                            alt="image-location">
+                                    </div>
+                                    <div class="content">
+                                        <span class="sub-title">{{ $count }} Propriété(s)</span>
+                                        <h6 class="title">{{ $country }}, {{ $city }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="box-navigation">
+                        <div class="navigation swiper-nav-next nav-next-location"><span class="icon icon-arr-l"></span>
+                        </div>
+                        <div class="navigation swiper-nav-prev nav-prev-location"><span class="icon icon-arr-r"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     <!-- End Location -->
