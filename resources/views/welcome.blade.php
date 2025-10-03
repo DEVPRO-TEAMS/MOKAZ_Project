@@ -394,7 +394,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                 <div class="swiper tf-sw-location overlay" data-preview-lg="4.1" data-preview-md="3" data-preview-sm="2"
                     data-space="30" data-centered="true" data-loop="true">
 
-                    <div class="swiper-wrapper">
+                    {{-- <div class="swiper-wrapper">
                         @foreach ($locations as $location => $properties)
                             @php
                                 $firstProperty = $properties->first();
@@ -409,6 +409,32 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                     <div class="image">
                                         <img src="{{ asset('assets/images/location/abidjan.jpg') }}"
                                             alt="image-location">
+                                    </div>
+                                    <div class="content">
+                                        <span class="sub-title">{{ $count }} Propriété(s)</span>
+                                        <h6 class="title">{{ $country }}, {{ $city }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div> --}}
+
+                    <div class="swiper-wrapper">
+                        @foreach ($locations as $location => $properties)
+                            @php
+                                $firstProperty = $properties->first();
+                                $city = $firstProperty->ville?->label ?? 'Ville inconnue';
+                                $country = $firstProperty->pays?->label ?? 'Pays inconnu';
+                                $count = $properties->count();
+                                $image =
+                                    $firstProperty->ville?->locationImage?->image ??
+                                    'assets/images/location/default.jpg';
+                            @endphp
+
+                            <div class="swiper-slide">
+                                <a href="javascript:void(0)" class="box-location">
+                                    <div class="image">
+                                        <img src="{{ asset($image) }}" alt="image-location">
                                     </div>
                                     <div class="content">
                                         <span class="sub-title">{{ $count }} Propriété(s)</span>

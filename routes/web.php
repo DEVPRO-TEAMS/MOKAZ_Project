@@ -83,9 +83,12 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
-
+        
         // validation de demande de partenariat 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
+        
+        Route::get('/indexLocation', [AdminController::class, 'indexLocation'])->name('indexLocation');
+        Route::post('/storeLocationImage', [AdminController::class, 'storeLocationImage'])->name('storeLocationImage');
 
         Route::get('/allProprety/list', [AdminController::class, 'allProprety'])->name('proprety.view');
         Route::get('/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');

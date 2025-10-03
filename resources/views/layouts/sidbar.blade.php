@@ -212,6 +212,14 @@
                                         <span>Type d'hébergement</span>
                                     </a>
                                 </li>
+                                @if (Auth::user()->user_type == 'admin')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.indexLocation') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                            <i class="bi bi-map me-2"></i>
+                                            <span>Emplacements</span>
+                                        </a>
+                                    </li>
+                                @endif
                                 
                             </ul>
                         </div>

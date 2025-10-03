@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\city;
 use App\Models\User;
 use App\Models\Partner;
 use App\Models\Property;
+use App\Models\Appartement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\LocationImage;
 use App\Imports\CityCountryImport;
 use App\Models\PartnershipRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationPartenaire;
-use App\Models\Appartement;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -27,25 +29,25 @@ class AdminController extends Controller
     {
         // Récupérer toutes les demandes
         $partnerships = PartnershipRequest::all();
-        
+
         // Statistiques principales
         $totalRequests = $partnerships->count();
         $pendingRequests = $partnerships->where('etat', 'pending')->count();
         $activeRequests = $partnerships->where('etat', 'actif')->count();
         $inactiveRequests = $partnerships->where('etat', 'inactif')->count();
-        
+
         // Préparer les données pour le graphique d'évolution annuelle
         $currentYear = date('Y');
         $monthlyData = [];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $monthStart = $currentYear . '-' . str_pad($i, 2, '0', STR_PAD_LEFT) . '-01';
             $monthEnd = date('Y-m-t', strtotime($monthStart));
-            
+
             $count = PartnershipRequest::whereBetween('created_at', [$monthStart, $monthEnd])->count();
             $monthlyData[] = $count;
         }
-        
+
         // Répartition par type de propriété
         $propertyTypes = [
             'residential' => 'Résidentiel',
@@ -54,12 +56,12 @@ class AdminController extends Controller
             'land' => 'Terrains',
             'mixed' => 'Mixte'
         ];
-        
+
         $propertyTypeData = [];
         foreach ($propertyTypes as $key => $label) {
             $propertyTypeData[$label] = $partnerships->where('property_type', $key)->count();
         }
-        
+
         // Répartition par niveau d'expérience
         $experienceLevels = [
             '0-2' => '0-2 ans',
@@ -67,12 +69,12 @@ class AdminController extends Controller
             '6-10' => '6-10 ans',
             '10+' => 'Plus de 10 ans'
         ];
-        
+
         $experienceData = [];
         foreach ($experienceLevels as $key => $label) {
             $experienceData[$label] = $partnerships->where('experience', $key)->count();
         }
-        
+
         return view('admins.pages.index', compact(
             'partnerships',
             'totalRequests',
@@ -85,20 +87,78 @@ class AdminController extends Controller
         ));
     }
 
+    public function indexLocation()
+    {
+        // $locations = city::with('country')->get();
+        $locations = City::with('country')
+            ->join('properties', 'properties.city', '=', 'cities.code')
+            ->select('cities.*')
+            ->distinct()
+            ->get();
+        $images = LocationImage::all()->keyBy('city_code');
+
+        return view('admins.pages.locations.index', compact('locations', 'images'));
+    }
+
+    public function storeLocationImage(Request $request)
+    {
+
+        $externalUploadDir = base_path(env('STORAGE_FILES'));
+
+        if (!is_dir($externalUploadDir)) {
+            mkdir($externalUploadDir, 0777, true);
+        }
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = $request->city_code . now()->format('YmdHis') . '.' . $file->extension();
+
+            $fileDirectory = "locations/$request->city_code/";
+
+            $file->move($externalUploadDir . $fileDirectory, $imageName);
+        }
+        $fileUrl = "storage/files/" . $fileDirectory . $imageName;
+
+        $ville = city::where('code', $request->city_code)->first();
+
+        $saving = LocationImage::updateOrCreate(
+            ['city_code' => $request->city_code],
+            [
+                'country_code' => $ville->country_code,
+                'image' => $fileUrl
+            ]
+        );
+
+        if (!$saving) {
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => 'Une erreur s\'est produite lors de l\'ajout de l\'image',
+                'code' => 500
+            ]);
+        }
+
+        return response()->json([
+            'type' => 'success',
+            'urlback' => 'back',
+            'message' => 'Image ajoutée avec successe',
+            'code' => 200
+        ]);
+    }
+
     public function allProprety(Request $request)
     {
         $query = Property::query();
 
-        if($request->filled('search')) {
+        if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%')
                 // ->orWhere('partner_code', 'like', '%' . $request->search . '%')
                 ->orWhere('address', 'like', '%' . $request->search . '%');
         }
 
         // Filtre par date
-        if($request->filled('date_debut') && $request->filled('date_fin')) {
+        if ($request->filled('date_debut') && $request->filled('date_fin')) {
             $query->whereBetween('created_at', [
-                $request->date_debut . ' 00:00:00', 
+                $request->date_debut . ' 00:00:00',
                 $request->date_fin . ' 23:59:59'
             ]);
         } elseif ($request->filled('date_debut')) {
@@ -108,7 +168,7 @@ class AdminController extends Controller
         }
 
         // Filtre par état
-        if($request->filled('etat')) {
+        if ($request->filled('etat')) {
             $query->where('etat', $request->etat);
         }
 
@@ -122,7 +182,7 @@ class AdminController extends Controller
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
-        
+
 
         Excel::import(new CityCountryImport, $request->file('file'));
 
@@ -134,16 +194,16 @@ class AdminController extends Controller
         $query = PartnershipRequest::query();
 
         // Filtre par recherche textuelle
-        if($request->filled('search')) {
+        if ($request->filled('search')) {
             $query->where('company', 'like', '%' . $request->search . '%')
                 ->orWhere('email', 'like', '%' . $request->search . '%')
                 ->orWhere('phone', 'like', '%' . $request->search . '%');
         }
 
         // Filtre par date
-        if($request->filled('date_debut') && $request->filled('date_fin')) {
+        if ($request->filled('date_debut') && $request->filled('date_fin')) {
             $query->whereBetween('created_at', [
-                $request->date_debut . ' 00:00:00', 
+                $request->date_debut . ' 00:00:00',
                 $request->date_fin . ' 23:59:59'
             ]);
         } elseif ($request->filled('date_debut')) {
@@ -153,7 +213,7 @@ class AdminController extends Controller
         }
 
         // Filtre par état
-        if($request->filled('etat')) {
+        if ($request->filled('etat')) {
             $query->where('etat', $request->etat);
         }
 
@@ -177,7 +237,7 @@ class AdminController extends Controller
 
             $demande = PartnershipRequest::find($id);
             Log::info('Demande trouve', ['demande' => $demande]);
-            
+
             // Vérification si la demande existe
             if (!$demande) {
                 Log::info('Demande non trouvee donca 404 error');
@@ -228,7 +288,7 @@ class AdminController extends Controller
                 'etat' => 'actif',
             ]);
 
-            if($partner){
+            if ($partner) {
                 $nom = $demande->first_name . ' ' . $demande->last_name;
 
                 $emailSubject = "Bienvenue ";
@@ -248,7 +308,7 @@ class AdminController extends Controller
 
 
             DB::commit();
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Demande acceptée avec succès',
@@ -256,7 +316,6 @@ class AdminController extends Controller
                 'partner' => $partner,
                 'partner_user' => $partner_user
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -273,7 +332,7 @@ class AdminController extends Controller
         try {
 
             $demande = PartnershipRequest::findOrFail($id);
-                
+
             if ($demande->etat === 'inactif') {
                 return response()->json([
                     'status' => false,
@@ -286,13 +345,12 @@ class AdminController extends Controller
             $demande->save();
 
             DB::commit();
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Demande rejetée avec succès',
                 'data' => $demande
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -308,9 +366,9 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $property = Property::where('uuid', $uuid)->first();
-            
+
             // Vérification si la demande existe
             if (!$property) {
                 Log::info('Propriete non trouvee donca 404 error');
@@ -342,14 +400,13 @@ class AdminController extends Controller
             $property->save();
 
             DB::commit();
-            
+
             return response()->json([
                 'type' => 'success',
                 'status' => true,
                 'urlback' => 'back',
                 'message' => 'Propriété approuvée avec succès',
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -366,9 +423,9 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $property = Property::where('uuid', $uuid)->first();
-            
+
             // Vérification si la demande existe
             if (!$property) {
                 Log::info('Propriete non trouvee donca 404 error');
@@ -392,7 +449,7 @@ class AdminController extends Controller
             }
 
             // Mise à jour de l'état
-            foreach($property->apartements->where('etat', '==', 'actif') as $appart){
+            foreach ($property->apartements->where('etat', '==', 'actif') as $appart) {
                 $appart->etat = 'inactif';
                 $appart->save();
             }
@@ -400,14 +457,13 @@ class AdminController extends Controller
             $property->save();
 
             DB::commit();
-            
+
             return response()->json([
                 'type' => 'success',
                 'status' => true,
                 'urlback' => 'back',
                 'message' => 'Propriété rejetée avec succès',
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -424,9 +480,9 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $appart = Appartement::where('uuid', $uuid)->first();
-            
+
             // Vérification si la demande existe
             if (!$appart) {
                 Log::info('hébergement non trouvee donca 404 error');
@@ -454,14 +510,13 @@ class AdminController extends Controller
             $appart->save();
 
             DB::commit();
-            
+
             return response()->json([
                 'type' => 'success',
                 'status' => true,
                 'urlback' => 'back',
                 'message' => 'Hébergement accepté avec succès',
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -478,9 +533,9 @@ class AdminController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $appart = Appartement::where('uuid', $uuid)->first();
-            
+
             // Vérification si la demande existe
             if (!$appart) {
                 Log::info('Hébergement non trouvee donca 404 error');
@@ -508,14 +563,13 @@ class AdminController extends Controller
             $appart->save();
 
             DB::commit();
-            
+
             return response()->json([
                 'type' => 'success',
                 'status' => true,
                 'urlback' => 'back',
                 'message' => 'Hébergement rejeté avec succès',
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -528,7 +582,7 @@ class AdminController extends Controller
         }
     }
 
-    
+
 
 
     /**
