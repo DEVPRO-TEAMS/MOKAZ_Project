@@ -407,7 +407,7 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                                 <a href="javascript:void(0)"
                                     class="box-location">
                                     <div class="image">
-                                        <img src="{{ asset('assets/images/location/' . strtolower($city) . '.jpg') }}"
+                                        <img src="{{ asset('assets/images/location/abidjan.jpg') }}"
                                             alt="image-location">
                                     </div>
                                     <div class="content">
