@@ -47,8 +47,7 @@
 
             <!-- Footer -->
             <div class="modal-footer btn-container">
-                {{-- <input type="hidden" name="appart_uuid" id="appart_uuid" value="{{ $apartement->uuid }}"> --}}
-                @if (Auth::user()->user_type == 'partner')
+                {{-- @if (Auth::user()->user_type == 'partner') --}}
                     @if ($item->etat == 'pending')
                         <button class="btn btn-success me-2">
                             <a class="deleteConfirmation text-white" data-uuid="{{ $item->uuid }}"
@@ -72,7 +71,7 @@
                         </button>
                     @endif
                 
-                @endif
+                {{-- @endif --}}
             </div>
 
         </div>
