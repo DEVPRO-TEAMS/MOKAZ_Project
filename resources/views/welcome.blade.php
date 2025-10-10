@@ -522,6 +522,7 @@
             // Vérifier si les coordonnées sont déjà présentes
             const latInput = document.getElementById('user_lat');
             const lngInput = document.getElementById('user_lng');
+            // const lngInput = document.getElementById('search');
 
             if (!latInput.value || !lngInput.value) {
                 // Récupérer automatiquement la position

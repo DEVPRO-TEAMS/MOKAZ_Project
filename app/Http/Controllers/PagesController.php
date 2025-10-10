@@ -74,14 +74,17 @@ class PagesController extends Controller
         $search = $request->input('search');
         $location = $request->input('location');
 
+        if ($search != null || $location != null || $location != '' || $search != '' || $request->type != ' ' || $request->type != null) {
+            $latitudeUser = '';
+            $longitudeUser = '';
+        }
+
         $query = Appartement::with('property')
             ->where('etat', 'actif')
             ->where('nbr_available', '>', 0);;
 
         // Recherche combinée sur Appartement et Property
         if ($search || $location) {
-            $latitudeUser = '';
-            $longitudeUser = '';
             $query->where(function ($q) use ($search, $location) {
 
                 // 🔹 Recherche dans Appartement
@@ -119,8 +122,6 @@ class PagesController extends Controller
 
         // Filtre par type
         if ($request->filled('type')) {
-            $latitudeUser = '';
-            $longitudeUser = '';
             $query->where('type_uuid', $request->type);
         }
 
