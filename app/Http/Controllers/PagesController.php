@@ -65,29 +65,121 @@ class PagesController extends Controller
     //     return view('welcome', compact('apparts', 'bestApparts', 'typeAppart'));
     // }
 
+    // public function index(Request $request)
+    // {
+    //     $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+    //     $perPage = $request->get('perPage', 6);
+    //     $latitudeUser = $request->get('lat');
+    //     $longitudeUser = $request->get('lng');
+    //     $search = $request->input('search');
+    //     $location = $request->input('location');
+
+    //     if ($search != null || $location != null || $location != '' || $search != '' || $request->type != ' ' || $request->type != null) {
+    //         $latitudeUser = '';
+    //         $longitudeUser = '';
+    //     }
+
+    //     $query = Appartement::with('property')
+    //         ->where('etat', 'actif')
+    //         ->where('nbr_available', '>', 0);;
+
+    //     // Recherche combinée sur Appartement et Property
+    //     if ($search || $location) {
+    //         $query->where(function ($q) use ($search, $location) {
+
+    //             // 🔹 Recherche dans Appartement
+    //             if ($search) {
+    //                 $q->where('title', 'like', "%$search%")
+    //                     ->orWhere('description', 'like', "%$search%")
+    //                     ->orWhere('commodities', 'like', "%$search%");
+    //             }
+
+    //             if ($location) {
+    //                 $q->orWhere('title', 'like', "%$location%")
+    //                     ->orWhere('description', 'like', "%$location%");
+    //             }
+
+    //             // 🔹 Recherche dans Property liée
+    //             $q->orWhereHas('property', function ($q2) use ($search, $location) {
+    //                 if ($search) {
+    //                     $q2->where('title', 'like', "%$search%")
+    //                         ->orWhere('description', 'like', "%$search%")
+    //                         ->orWhere('address', 'like', "%$search%")
+    //                         ->orWhere('city', 'like', "%$search%")
+    //                         ->orWhere('country', 'like', "%$search%");
+    //                 }
+
+    //                 if ($location) {
+    //                     $q2->orWhere('title', 'like', "%$location%")
+    //                         ->orWhere('description', 'like', "%$location%")
+    //                         ->orWhere('address', 'like', "%$location%")
+    //                         ->orWhere('city', 'like', "%$location%")
+    //                         ->orWhere('country', 'like', "%$location%");
+    //                 }
+    //             });
+    //         });
+    //     }
+
+    //     // Filtre par type
+    //     if ($request->filled('type')) {
+    //         $query->where('type_uuid', $request->type);
+    //     }
+
+    //     // Filtre par distance si lat/lng fournis
+    //     if ($latitudeUser && $longitudeUser) {
+    //         $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+    //                     * cos(radians(properties.latitude)) 
+    //                     * cos(radians(properties.longitude) - radians($longitudeUser)) 
+    //                     + sin(radians($latitudeUser)) 
+    //                     * sin(radians(properties.latitude))))";
+
+    //         $query->whereHas('property', function ($q) use ($haversine) {
+    //             $q->whereRaw("$haversine <= 10"); // distance <= 10 km
+    //         });
+    //     }
+
+    //     $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+    //     $bestApparts = Appartement::withCount('reservations')
+    //         ->where('etat', 'actif')
+    //         ->where('nbr_available', '>', 0)
+    //         ->orderByDesc('reservations_count')
+    //         ->take(3)
+    //         ->with('tarifications')
+    //         ->get();
+
+    //     $locations = Property::with(['ville.locationImage', 'pays'])
+    //         ->where('etat', 'actif')
+    //         ->get()
+    //         ->groupBy(function ($property) {
+    //             return $property->pays?->label . ' - ' . $property->ville?->label;
+    //         });
+    //     return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
+    // }
+
     public function index(Request $request)
     {
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
         $latitudeUser = $request->get('lat');
         $longitudeUser = $request->get('lng');
-        $search = $request->input('search');
-        $location = $request->input('location');
+        $search = trim($request->input('search'));
+        $location = trim($request->input('location'));
+        $type = $request->input('type');
 
-        if ($search != null || $location != null || $location != '' || $search != '' || $request->type != ' ' || $request->type != null) {
-            $latitudeUser = '';
-            $longitudeUser = '';
+        // ✅ Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
+        $useGeolocation = true;
+        if ($search || $location || $type) {
+            $useGeolocation = false;
         }
 
         $query = Appartement::with('property')
             ->where('etat', 'actif')
-            ->where('nbr_available', '>', 0);;
+            ->where('nbr_available', '>', 0);
 
-        // Recherche combinée sur Appartement et Property
+        // 🔎 Recherche par mot-clé / localisation
         if ($search || $location) {
             $query->where(function ($q) use ($search, $location) {
-
-                // 🔹 Recherche dans Appartement
                 if ($search) {
                     $q->where('title', 'like', "%$search%")
                         ->orWhere('description', 'like', "%$search%")
@@ -99,7 +191,6 @@ class PagesController extends Controller
                         ->orWhere('description', 'like', "%$location%");
                 }
 
-                // 🔹 Recherche dans Property liée
                 $q->orWhereHas('property', function ($q2) use ($search, $location) {
                     if ($search) {
                         $q2->where('title', 'like', "%$search%")
@@ -120,21 +211,21 @@ class PagesController extends Controller
             });
         }
 
-        // Filtre par type
-        if ($request->filled('type')) {
-            $query->where('type_uuid', $request->type);
+        // 🏡 Filtre par type
+        if ($type) {
+            $query->where('type_uuid', $type);
         }
 
-        // Filtre par distance si lat/lng fournis
-        if ($latitudeUser && $longitudeUser) {
+        // 📍 Filtre par distance UNIQUEMENT s’il n’y a pas de recherche manuelle
+        if ($useGeolocation && $latitudeUser && $longitudeUser) {
             $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
-                        * cos(radians(properties.latitude)) 
-                        * cos(radians(properties.longitude) - radians($longitudeUser)) 
-                        + sin(radians($latitudeUser)) 
-                        * sin(radians(properties.latitude))))";
+                    * cos(radians(properties.latitude)) 
+                    * cos(radians(properties.longitude) - radians($longitudeUser)) 
+                    + sin(radians($latitudeUser)) 
+                    * sin(radians(properties.latitude))))";
 
             $query->whereHas('property', function ($q) use ($haversine) {
-                $q->whereRaw("$haversine <= 10"); // distance <= 10 km
+                $q->whereRaw("$haversine <= 10");
             });
         }
 
@@ -147,15 +238,17 @@ class PagesController extends Controller
             ->take(3)
             ->with('tarifications')
             ->get();
-            
+
         $locations = Property::with(['ville.locationImage', 'pays'])
             ->where('etat', 'actif')
             ->get()
             ->groupBy(function ($property) {
                 return $property->pays?->label . ' - ' . $property->ville?->label;
             });
+
         return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
     }
+
 
     // public function index(Request $request)
     // {
