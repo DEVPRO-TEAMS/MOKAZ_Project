@@ -103,136 +103,7 @@
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
                                 </form>
-                                {{-- <div class="form-group-4 box-filter">
-                                                <a class="filter-advanced pull-right">
-                                                    <span class="icon icon-faders"></span>
-                                                    <span class="text-1">Avancé</span>
-                                                </a>
-                                            </div> --}}
-                                {{-- <div class="wd-search-form">
-                                        <div class="grid-2 group-box group-price">
-                                            <div class="widget-price">
-                                                <div class="box-title-price">
-                                                    <span class="title-price">Fourchette de prix</span>
-                                                    <div class="caption-price">
-                                                        <span>De</span>
-                                                        <span id="slider-range-value1" class="fw-7"></span>
-                                                        <span>à</span>
-                                                        <span id="slider-range-value2" class="fw-7"></span>
-                                                    </div>
-                                                </div>
-                                                <div id="slider-range"></div>
-                                                <div class="slider-labels">
-                                                    <div>
-                                                        <input type="hidden" name="min-value" value="">
-                                                        <input type="hidden" name="max-value" value="">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="widget-price">
-                                                <div class="box-title-price">
-                                                    <span class="title-price">Gamme de tailles</span>
-                                                    <div class="caption-price">
-                                                        <span>De</span>
-                                                        <span id="slider-range-value01" class="fw-7"></span>
-                                                        <span>à</span>
-                                                        <span id="slider-range-value02" class="fw-7"></span>
-                                                    </div>
-                                                </div>
-                                                <div id="slider-range2"></div>
-                                                <div class="slider-labels">
-                                                    <div>
-                                                        <input type="hidden" name="min-value2" value="">
-                                                        <input type="hidden" name="max-value2" value="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="grid-2 group-box">
-                                            <div class="group-select grid-2">
-                                                <div class="box-select">
-                                                    <label class="title-select text-variant-1">Chambres</label>
-                                                    <div class="nice-select" tabindex="0"><span
-                                                            class="current">2</span>
-                                                        <ul class="list">
-                                                            <li data-value="1" class="option">1</li>
-                                                            <li data-value="2" class="option selected">2</li>
-                                                            <li data-value="3" class="option">3</li>
-                                                            <li data-value="4" class="option">4</li>
-                                                            <li data-value="5" class="option">5</li>
-                                                            <li data-value="6" class="option">6</li>
-                                                            <li data-value="7" class="option">7</li>
-                                                            <li data-value="8" class="option">8</li>
-                                                            <li data-value="9" class="option">9</li>
-                                                            <li data-value="10" class="option">10</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="box-select">
-                                                    <label class="title-select text-variant-1">Salles de bains</label>
-                                                    <div class="nice-select" tabindex="0"><span
-                                                            class="current">2</span>
-                                                        <ul class="list">
-                                                            <li data-value="1" class="option">1</li>
-                                                            <li data-value="2" class="option selected">2</li>
-                                                            <li data-value="3" class="option">3</li>
-                                                            <li data-value="4" class="option">4</li>
-                                                            <li data-value="5" class="option">5</li>
-                                                            <li data-value="6" class="option">6</li>
-                                                            <li data-value="7" class="option">7</li>
-                                                            <li data-value="8" class="option">8</li>
-                                                            <li data-value="9" class="option">9</li>
-                                                            <li data-value="10" class="option">10</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="group-select grid-2">
-                                                <div class="box-select">
-                                                    <label class="title-select text-variant-1">Chambres à coucher</label>
-                                                    <div class="nice-select" tabindex="0"><span
-                                                            class="current">2</span>
-                                                        <ul class="list">
-                                                            <li data-value="1" class="option">1</li>
-                                                            <li data-value="2" class="option selected">2</li>
-                                                            <li data-value="3" class="option">3</li>
-                                                            <li data-value="4" class="option">4</li>
-                                                            <li data-value="5" class="option">5</li>
-                                                            <li data-value="6" class="option">6</li>
-                                                            <li data-value="7" class="option">7</li>
-                                                            <li data-value="8" class="option">8</li>
-                                                            <li data-value="9" class="option">9</li>
-                                                            <li data-value="10" class="option">10</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="box-select">
-                                                    <label class="title-select fw-5">Type</label>
-                                                    <div class="nice-select" tabindex="0"><span
-                                                            class="current">2</span>
-                                                        <ul class="list">
-                                                            <li data-value="1" class="option">1</li>
-                                                            <li data-value="2" class="option selected">2</li>
-                                                            <li data-value="3" class="option">3</li>
-                                                            <li data-value="4" class="option">4</li>
-                                                            <li data-value="5" class="option">5</li>
-                                                            <li data-value="6" class="option">6</li>
-                                                            <li data-value="7" class="option">7</li>
-                                                            <li data-value="8" class="option">8</li>
-                                                            <li data-value="9" class="option">9</li>
-                                                            <li data-value="10" class="option">10</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        
-                                    </div> --}}
-
-                            </div>
+                                </div>
                         </div>
 
                     </div>
@@ -253,10 +124,10 @@
                 @forelse ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
-$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                        $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-// Récupérer la tarification à la journée la moins chère
-$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+                        // Récupérer la tarification à la journée la moins chère
+                        $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                     @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
@@ -348,40 +219,6 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
         </div>
     </section>
     <!-- End Recommended -->
-    <!-- Location -->
-    {{-- <section class="flat-section-v3 flat-location bg-surface">
-        <div class="container-full">
-            <div class="box-title text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                <div class="text-subtitle text-primary">Explorer les villes</div>
-                <h4 class="mt-4">Notre emplacement pour vous</h4>
-            </div>
-            <div class="wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
-                <div class="swiper tf-sw-location overlay" data-preview-lg="4.1" data-preview-md="3" data-preview-sm="2"
-                    data-space="30" data-centered="true" data-loop="true">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <a href="#" class="box-location">
-                                <div class="image">
-                                    <img src="{{ asset('assets/images/location/abidjan.jpg') }}" alt="image-location">
-                                </div>
-                                <div class="content">
-                                    <span class="sub-title">321 Propriété</span>
-                                    <h6 class="title">Cote d'Ivoire , Abidjan</h6>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="box-navigation">
-                        <div class="navigation swiper-nav-next nav-next-location"><span class="icon icon-arr-l"></span>
-                        </div>
-                        <div class="navigation swiper-nav-prev nav-prev-location"><span class="icon icon-arr-r"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section> --}}
 
     <section class="flat-section-v3 flat-location bg-surface">
         <div class="container-full">
@@ -393,31 +230,6 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
             <div class="wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
                 <div class="swiper tf-sw-location overlay" data-preview-lg="4.1" data-preview-md="3" data-preview-sm="2"
                     data-space="30" data-centered="true" data-loop="true">
-
-                    {{-- <div class="swiper-wrapper">
-                        @foreach ($locations as $location => $properties)
-                            @php
-                                $firstProperty = $properties->first();
-                                $city = $firstProperty->ville?->label ?? 'Ville inconnue';
-                                $country = $firstProperty->pays?->label ?? 'Pays inconnu';
-                                $count = $properties->count();
-                            @endphp
-
-                            <div class="swiper-slide">
-                                <a href="javascript:void(0)"
-                                    class="box-location">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/images/location/abidjan.jpg') }}"
-                                            alt="image-location">
-                                    </div>
-                                    <div class="content">
-                                        <span class="sub-title">{{ $count }} Propriété(s)</span>
-                                        <h6 class="title">{{ $country }}, {{ $city }}</h6>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div> --}}
 
                     <div class="swiper-wrapper">
                         @foreach ($locations as $location => $properties)
@@ -677,58 +489,6 @@ $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->fir
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="swiper-slide">
-                        <div class="box-tes-item style-2">
-                            <ul class="list-star">
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                            </ul>
-                            <p class="note body-1">
-                                "Mon expérience avec les services de gestion immobilière a dépassé mes attentes. Ils gèrent
-                                efficacement
-                                les propriétés avec une approche professionnelle et attentive dans chaque situation. Je me
-                                sens
-                                rassuré sur le fait que tout problème sera résolu rapidement et efficacement."
-                            </p>
-                            <div class="box-avt d-flex align-items-center gap-12">
-                                <div class="avatar avt-60 round">
-                                    <img src="{{ asset('assets/images/avatar/avt-5.jpg') }}" alt="avatar">
-                                </div>
-                                <div class="info">
-                                    <div class="h7 fw-7">Lorem, ipsum.</div>
-                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="box-tes-item style-2">
-                            <ul class="list-star">
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                            </ul>
-                            <p class="note body-1">
-                                "I truly appreciate the professionalism and in-depth knowledge of the brokerage team. They
-                                not only helped me find the perfect home but also assisted with legal and financial aspects,
-                                making me feel confident and secure in my decision."
-                            </p>
-                            <div class="box-avt d-flex align-items-center gap-12">
-                                <div class="avatar avt-60 round">
-                                    <img src="{{ asset('assets/images/avatar/avt-7.jpg') }}" alt="avatar">
-                                </div>
-                                <div class="info">
-                                    <div class="h7 fw-7">Liam Anderson</div>
-                                    <p class="text-variant-1 mt-4">CEO Digital</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
 
                 </div>
                 <div class="sw-pagination sw-pagination-testimonial"></div>

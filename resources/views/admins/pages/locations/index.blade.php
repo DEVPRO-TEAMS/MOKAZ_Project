@@ -16,7 +16,7 @@
             <div class="col-xl-12">
                 <div class="card border-1 shadow-sm rounded-3 overflow-hidden">
                     <div class="card-body p-4">
-                        <form action="{{ route('admin.storeLocationImage') }}" method="POST" class="submitForm"
+                        <form action="{{ route('admin.storeLocationImage') }}" accept="image/*" method="POST" class="submitForm"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">

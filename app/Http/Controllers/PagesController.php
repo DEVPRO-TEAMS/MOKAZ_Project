@@ -80,6 +80,8 @@ class PagesController extends Controller
 
         // Recherche combinée sur Appartement et Property
         if ($search || $location) {
+            $latitudeUser = '';
+            $longitudeUser = '';
             $query->where(function ($q) use ($search, $location) {
 
                 // 🔹 Recherche dans Appartement
@@ -117,6 +119,8 @@ class PagesController extends Controller
 
         // Filtre par type
         if ($request->filled('type')) {
+            $latitudeUser = '';
+            $longitudeUser = '';
             $query->where('type_uuid', $request->type);
         }
 
@@ -129,7 +133,7 @@ class PagesController extends Controller
                         * sin(radians(properties.latitude))))";
 
             $query->whereHas('property', function ($q) use ($haversine) {
-                $q->whereRaw("$haversine <= 3.5"); // distance <= 1.5 km
+                $q->whereRaw("$haversine <= 10"); // distance <= 10 km
             });
         }
 

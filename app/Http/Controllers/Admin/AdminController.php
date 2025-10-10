@@ -361,7 +361,6 @@ class AdminController extends Controller
         }
     }
 
-
     public function approveProperty($uuid)
     {
         DB::beginTransaction();
