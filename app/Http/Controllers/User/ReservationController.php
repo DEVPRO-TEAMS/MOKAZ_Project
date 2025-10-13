@@ -200,7 +200,13 @@ class ReservationController extends Controller
 
                 Log::info('Paiement trouvée: ' . json_encode($paiement));
                 $partner = Partner::where('uuid', $reservation->partner_uuid)->first();
-                $phone = $partner->phone;
+                // Récupérer les 10 derniers chiffres du numéro
+                $last10 = substr(preg_replace('/\D/', '', $partner->phone), -10);
+
+                // Ajouter l'indicatif "225"
+                $phone = "225" . $last10;
+
+                // $phone = "225" .;
                 $message = "Bonjour {$partner->raison_social}, vous avez une nouvelle réservation {$reservation_code}. — MOKAZ ";
 
                 $this->sendSms($phone, $message);
@@ -352,8 +358,12 @@ class ReservationController extends Controller
 
 
             // envoie de sms 
+            // Récupérer les 10 derniers chiffres du numéro
+            $last10 = substr(preg_replace('/\D/', '', $reservation->phone), -10);
 
-            $phone = $reservation->phone;
+            // Ajouter l'indicatif "225"
+            $phone = "225" . $last10;
+            // $phone = $reservation->phone;
             $message = "Bonjour, votre réservation {$reservation->code} est confirmée. Merci pour votre confiance. — MOKAZ";
 
             $this->sendSms($phone, $message);
@@ -450,7 +460,12 @@ class ReservationController extends Controller
                     // $message = "Bonjour, votre réservation N° RES-4MDLGQ a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
                     $message = "Bonjour, votre réservation {$reservation->code} a été annulée. Merci de votre compréhension. — MOKAZ";
 
-                    $this->sendSms($reservation->phone, $message);
+                    // Récupérer les 10 derniers chiffres du numéro
+                    $last10 = substr(preg_replace('/\D/', '', $reservation->phone), -10);
+
+                    // Ajouter l'indicatif "225"
+                    $phone = "225" . $last10;
+                    $this->sendSms($phone, $message);
 
 
                     $emailSubject = "❌ Réservation annulée";
