@@ -108,25 +108,21 @@ class ReservationController extends Controller
                 'payment_method' => $request->payment_method,
                 'payment_amount' => $request->paymentAmount
             ]);
+            // if ($reservation) {
+            //     // faire une decrementation du stock de l'appartement
+            //     $appartement = Appartement::where('uuid', $request->appart_uuid)->first();
+            //     $appartement->nbr_available = (int) $appartement->nbr_available - 1;
+            //     $appartement->save();
+            // }
 
-            if ($reservation) {
-                // faire une decrementation du stock de l'appartement
-                $appartement = Appartement::where('uuid', $request->appart_uuid)->first();
-                $appartement->nbr_available = (int) $appartement->nbr_available - 1;
-                $appartement->save();
-            }
+            // $partner = Partner::where('uuid', $request->partner_uuid)->first();
+            // $phone = $partner->phone;
+            // $message = "Bonjour {$partner->raison_social}, vous avez une nouvelle réservation {$reservation->code}. — MOKAZ ";
 
-            $partner = Partner::where('uuid', $request->partner_uuid)->first();
-            $phone = $partner->phone;
-            $message = "Bonjour {$partner->raison_social}, vous avez une nouvelle réservation. - " . env('APP_NAME');
-
-            $this->sendSms($phone, $message);
+            // $this->sendSms($phone, $message);
 
             // Génération du PDF après enregistrement
             $pdfUrl = $this->generateReceiptPDF($reservation);
-
-
-
             DB::commit();
 
             return response()->json([
@@ -193,8 +189,21 @@ class ReservationController extends Controller
             if ($paiement) {
                 $payment_status = $paiement->payment_status;
 
-                Log::info('Paiement trouvée: ' . json_encode($paiement));
+                $reservation = Reservation::where('code', $reservation_code)->first();
+                $reservation->statut_paiement = 'paid';
+                $reservation->save();
 
+                // faire une decrementation du stock de l'appartement
+                $appartement = Appartement::where('uuid', $reservation->appart_uuid)->first();
+                $appartement->nbr_available = (int) $appartement->nbr_available - 1;
+                $appartement->save();
+
+                Log::info('Paiement trouvée: ' . json_encode($paiement));
+                $partner = Partner::where('uuid', $reservation->partner_uuid)->first();
+                $phone = $partner->phone;
+                $message = "Bonjour {$partner->raison_social}, vous avez une nouvelle réservation {$reservation_code}. — MOKAZ ";
+
+                $this->sendSms($phone, $message);
                 return response()->json([
                     'success' => true,
                     'payment_status' => $payment_status,
@@ -345,7 +354,7 @@ class ReservationController extends Controller
             // envoie de sms 
 
             $phone = $reservation->phone;
-            $message = "Bonjour, votre réservation est confirmée. Merci pour votre confiance. - " . env('APP_NAME');
+            $message = "Bonjour, votre réservation {$reservation->code} est confirmée. Merci pour votre confiance. — MOKAZ";
 
             $this->sendSms($phone, $message);
 
@@ -438,7 +447,8 @@ class ReservationController extends Controller
                 if ($now->greaterThan($threshold) && $reservation->is_present == false) {
                     $this->releaseAppartement($reservation, "no_show");
 
-                    $message = "Bonjour, votre réservation a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
+                    // $message = "Bonjour, votre réservation N° RES-4MDLGQ a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
+                    $message = "Bonjour, votre réservation {$reservation->code} a été annulée. Merci de votre compréhension. — MOKAZ";
 
                     $this->sendSms($reservation->phone, $message);
 
