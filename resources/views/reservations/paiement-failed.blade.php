@@ -163,7 +163,7 @@
             const domain_name = 'jsbeyci.com';
             const url_redirection_success = urlWaiting.replace(':reservation_uuid', reservationUuid);
             const url_redirection_failed = urlFailed.replace(':reservation_uuid', reservationUuid);
-            const amount = reservationDataUpdated.reservation.payment_amount;
+            const amount = parseFloat(reservationDataUpdated.reservation.payment_amount);
             const city = "";
             const email = reservationDataUpdated.reservation.email || "";
             const clientFirstname = reservationDataUpdated.reservation.prenoms || "";

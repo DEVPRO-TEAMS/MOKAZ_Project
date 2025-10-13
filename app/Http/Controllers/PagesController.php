@@ -588,7 +588,7 @@ class PagesController extends Controller
     public function demoSms(Request $request)
     {
 
-        $to = '2250789078557';
+        $to = '2250758817235';
         $message = 'test sms';
         $response = sendSms($to, $message);
 
