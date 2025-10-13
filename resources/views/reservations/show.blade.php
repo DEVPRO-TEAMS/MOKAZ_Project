@@ -302,22 +302,22 @@
                                             
                                             <p class="mb-2">
                                                 @switch($reservation->paiement->payment_mode)
-                                                @case('PAIEMENTMARCHANDOMPAYCIDIRECT')
-                                                    <span class="badge bg-success" style="background-color: #FFA500 !important">Orange Money</span>
-                                                @break
+                                                    @case('PAIEMENTMARCHANDOMPAYCIDIRECT')
+                                                        <span class="badge bg-success" style="background-color: #FFA500 !important">Orange Money</span>
+                                                    @break
 
-                                                @case('PAIEMENTMARCHAND_MTN_CI')
-                                                    <span class="badge bg-danger" style="background-color: #ffee00 !important">MTN Money</span>
-                                                @break
-                                                @case('PAIEMENTMARCHAND_MOOV_CI')
-                                                    <span class="badge bg-danger" style="background-color: #0080ff !important">Moov Money</span>
-                                                @break
-                                                @case('CI_PAIEMENTWAVE_TP')
-                                                    <span class="badge bg-info" style="background-color: #00b3ff !important">Wave</span>
-                                                @break
-                                                @default
-                                                    <span class="badge bg-secondary">{{ $reservation->paiement->payment_mode }}</span>
-                                            @endswitch
+                                                    @case('PAIEMENTMARCHAND_MTN_CI')
+                                                        <span class="badge bg-danger" style="background-color: #ffee00 !important">MTN Money</span>
+                                                    @break
+                                                    @case('PAIEMENTMARCHAND_MOOV_CI')
+                                                        <span class="badge bg-danger" style="background-color: #0080ff !important">Moov Money</span>
+                                                    @break
+                                                    @case('CI_PAIEMENTWAVE_TP')
+                                                        <span class="badge bg-info" style="background-color: #00b3ff !important">Wave</span>
+                                                    @break
+                                                    @default
+                                                        <span class="badge bg-secondary">{{ $reservation->paiement->payment_mode }}</span>
+                                                @endswitch
                                                 {{-- {{ ucfirst($reservation->paiement->payment_mode) }}</p> --}}
                                         </div>
                                     </div>
@@ -394,7 +394,25 @@
                                         <h6 class="timeline-title">Paiement effectué</h6>
                                         <p class="timeline-text">
                                             {{ number_format($reservation->payment_amount, 0, ',', ' ') }} FCFA via
-                                            {{ ucfirst($reservation->paiement->payment_mode) }}</p>
+                                            
+                                            @switch($reservation->paiement->payment_mode)
+                                                @case('PAIEMENTMARCHANDOMPAYCIDIRECT')
+                                                    Orange Money
+                                                @break
+
+                                                @case('PAIEMENTMARCHAND_MTN_CI')
+                                                    MTN Money
+                                                @break
+                                                @case('PAIEMENTMARCHAND_MOOV_CI')
+                                                    Moov Money
+                                                @break
+                                                @case('CI_PAIEMENTWAVE_TP')
+                                                    Wave
+                                                @break
+                                                @default
+                                                    {{ ucfirst($reservation->paiement->payment_mode) }}
+                                            @endswitch
+                                        </p>
                                     </div>
                                 </div>
                             @endif
