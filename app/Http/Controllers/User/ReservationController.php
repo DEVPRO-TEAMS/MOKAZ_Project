@@ -310,8 +310,8 @@ class ReservationController extends Controller
 
     public function myReservation(Request $request)
     {
-        $reservation = Reservation::where('code', $request->code)->first();
-        if (!$reservation) {
+        $paiement = Paiement::where('reservation_code', $request->code)->first();
+        if (!$paiement) {
             return response()->json([
                 'type' => 'error',
                 'code' => 404,
@@ -319,6 +319,7 @@ class ReservationController extends Controller
                 'urlback' => '',
             ]);
         }
+        $reservation = Reservation::where('code', $request->code)->first();
         return response()->json([
             'type' => 'success',
             'message' => 'Réservation trouvée. Redirection en cours...',
@@ -364,7 +365,7 @@ class ReservationController extends Controller
             // Ajouter l'indicatif "225"
             $phone = "225" . $last10;
             // $phone = $reservation->phone;
-            $message = "Bonjour, votre réservation {$reservation->code} est confirmée. Merci pour votre confiance. — MOKAZ";
+            $message = "Bonjour, votre réservation {$reservation->code} a été confirmée. Merci pour votre confiance. — MOKAZ";
 
             $this->sendSms($phone, $message);
 
