@@ -183,6 +183,7 @@
     
 
                 var table = $('#example2').DataTable({
+                    order: [[0, 'desc']],
                     lengthChange: true,
                     searching: false,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
