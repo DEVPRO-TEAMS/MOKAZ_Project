@@ -91,7 +91,7 @@
 
         <!-- Cards Counters -->
         <div class="row mb-4">
-            <div class="col-md-3">
+            <div class="col-md-4 mb-3">
                 <div class="card card-counter bg-white rounded-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4 mb-3">
                 <div class="card card-counter bg-white rounded-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4 mb-3">
                 <div class="card card-counter bg-white rounded-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -138,8 +138,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row mb-4">
 
-            <div class="col-md-3">
+            <div class="col-md-4 mb-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Séjour terminé</h6>
+                                <h3 class="mb-0">{{ count($reservations->where('status', 'completed')) }}</h3>
+                            </div>
+                            <div class="counter-icon text-secondary">
+                                 <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card card-counter bg-white rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Réconduit</h6>
+                                <h3 class="mb-0">{{ count($reservations->where('status', 'reconducted')) }}</h3>
+                            </div>
+                            <div class="counter-icon text-info">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
                 <div class="card card-counter bg-white rounded-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
