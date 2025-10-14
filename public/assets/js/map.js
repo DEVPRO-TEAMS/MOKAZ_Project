@@ -180,6 +180,10 @@
     // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     //     attribution: '&copy; OpenStreetMap contributors'
     // }).addTo(map);
+    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
+        attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
+        maxZoom: 19
+    }).addTo(map);
 
     // Géocodeur
     L.Control.geocoder().addTo(map);
