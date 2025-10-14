@@ -177,9 +177,9 @@
     const map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
 
     // Fond de carte
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     attribution: '&copy; OpenStreetMap contributors'
+    // }).addTo(map);
 
     // Géocodeur
     L.Control.geocoder().addTo(map);

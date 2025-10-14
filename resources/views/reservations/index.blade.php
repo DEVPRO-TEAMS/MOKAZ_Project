@@ -149,7 +149,7 @@
                                 <h6 class="text-muted mb-2">Séjour terminé</h6>
                                 <h3 class="mb-0">{{ count($reservations->where('status', 'completed')) }}</h3>
                             </div>
-                            <div class="counter-icon text-secondary">
+                            <div class="counter-icon text-secondary"> 
                                  <i class="fas fa-check-circle"></i>
                             </div>
                         </div>
