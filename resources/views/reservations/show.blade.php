@@ -142,7 +142,7 @@
                                                 <span class="badge bg-danger">Annulé</span>
                                             @break
                                             @case('completed')
-                                                <span class="badge bg-success">Séjour Terminé</span>
+                                                <span class="badge bg-secondary">Séjour Terminé</span>
                                             @break
 
                                             @case('reconducted')
@@ -444,10 +444,12 @@
                         </a>
                     </div>
                     <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
-                            data-bs-target="#receiptModal{{ $reservation->uuid }}">
-                            <i class="fas fa-receipt"></i> Voir le reçu
-                        </button>
+                        @if($reservation->paiement && $reservation->paiement->payment_status == 'paid')
+                            <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal"
+                                data-bs-target="#receiptModal{{ $reservation->uuid }}">
+                                <i class="fas fa-receipt"></i> Voir le reçu
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>

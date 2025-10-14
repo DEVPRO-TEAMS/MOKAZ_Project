@@ -26,11 +26,6 @@ class ReservationController extends Controller
     // Liste des réservations
     public function index(Request $request)
     {
-    //     $reservations = Reservation::where('etat', 'actif')
-    // ->where('partner_uuid', Auth::user()->partner_uuid)
-    // ->whereHas('paiement')
-    // ->with('paiement') // charge la relation
-    // ->get();
 
         $query = Reservation::query();
 
