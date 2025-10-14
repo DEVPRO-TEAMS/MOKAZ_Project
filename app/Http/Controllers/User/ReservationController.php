@@ -26,9 +26,13 @@ class ReservationController extends Controller
     // Liste des réservations
     public function index(Request $request)
     {
+    //     $reservations = Reservation::where('etat', 'actif')
+    // ->where('partner_uuid', Auth::user()->partner_uuid)
+    // ->whereHas('paiement')
+    // ->with('paiement') // charge la relation
+    // ->get();
 
-        $query = Reservation::whereHas('paiement')
-        ->with('paiement');
+        $query = Reservation::query();
 
         if ($request->filled('search')) {
             $query->where('code', 'like', '%' . $request->search . '%')
@@ -61,10 +65,10 @@ class ReservationController extends Controller
         }
 
         if (Auth::user()->user_type == 'admin') {
-            $reservations = $query->where('etat', 'actif')->orderBy('created_at', 'desc')->get();
+            $reservations = $query->where('etat', 'actif')->whereHas('paiement')->orderBy('created_at', 'desc')->get();
         } else {
 
-            $reservations = $query->where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->orderBy('created_at', 'desc')->get();
+            $reservations = $query->where('etat', 'actif')->where('partner_uuid', Auth::user()->partner_uuid)->whereHas('paiement')->orderBy('created_at', 'desc')->get();
         }
 
         return view('reservations.index', compact('reservations'));
