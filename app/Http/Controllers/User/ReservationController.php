@@ -584,7 +584,7 @@ class ReservationController extends Controller
                 });
 
             // Récupérer les réservations sans paiement
-            $reservationsDoesntHavePaiement = Reservation::whereIn('status', ['pending', 'confirmed'])
+            $reservationsDoesntHavePaiement = Reservation::whereIn('status', ['pending', 'confirmed', 'cancelled'])
                 ->whereDoesntHave('paiement')
                 ->with('appartement')
                 ->get()
@@ -593,9 +593,9 @@ class ReservationController extends Controller
                     return $r;
                 });
 
-            Log::info("Réservation avec paiement: " . json_encode($reservationsHavingPaiement));
+            // Log::info("Réservation avec paiement: " . json_encode($reservationsHavingPaiement));
             Log::info("Nombre de réservation avec paiement: " . $reservationsHavingPaiement->count());
-            Log::info("Réservation sans paiement: " . json_encode($reservationsDoesntHavePaiement));
+            // Log::info("Réservation sans paiement: " . json_encode($reservationsDoesntHavePaiement));
             Log::info("Nombre de réservation sans paiement: " . $reservationsDoesntHavePaiement->count());
             // Fusion des deux collections
             $reservations = $reservationsHavingPaiement->merge($reservationsDoesntHavePaiement);
