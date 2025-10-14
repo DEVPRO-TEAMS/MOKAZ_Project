@@ -181,14 +181,16 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bed"></i></a>
                                 <div class="content">
                                     <span class="label">Chambre à coucher:</span>
-                                    <span>{{ $appart->nbr_room ?? '0' }} Chambre{{ $appart->nbr_room > 1 ? 's' : '' }} </span>
+                                    <span>{{ $appart->nbr_room ?? '0' }} Chambre{{ $appart->nbr_room > 1 ? 's' : '' }}
+                                    </span>
                                 </div>
                             </li>
                             <li class="item col-lg-4 col-md-6">
                                 <a href="#" class="box-icon w-52"><i class="icon icon-bathtub"></i></a>
                                 <div class="content">
                                     <span class="label">Salle de bains:</span>
-                                    <span>{{ $appart->nbr_bathroom ?? '0' }} salle{{ $appart->nbr_bathroom > 1 ? 's' : '' }}</span>
+                                    <span>{{ $appart->nbr_bathroom ?? '0' }}
+                                        salle{{ $appart->nbr_bathroom > 1 ? 's' : '' }}</span>
                                 </div>
                             </li>
                         </ul>
@@ -214,12 +216,16 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                         $videoUrl = generateEmbedUrl($appart->video_url);
                         $commodities = explode(',', $appart->commodities);
                     @endphp
-                    @if(!empty($videoUrl) && !is_null($videoUrl) && $videoUrl != '' || $appart->video_url != null || $appart->video_url != '')
+                    @if (
+                        (!empty($videoUrl) && !is_null($videoUrl) && $videoUrl != '') ||
+                            $appart->video_url != null ||
+                            $appart->video_url != '')
                         <div class="single-property-element single-property-video">
                             <div class="h7 title fw-7">Video</div>
                             <div class="img-video">
                                 <img src="{{ asset($appart->image) }}" alt="img-video">
-                                <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2" class="btn-video">
+                                <a href="{{ $videoUrl }}" target="_blank" data-fancybox="gallery2"
+                                    class="btn-video">
                                     <span class="icon icon-play"></span></a>
                             </div>
                         </div>
@@ -380,7 +386,8 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
 
                             <div class="card-footer">
                                 <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal"
-                                    data-bs-target="#reservationModal" title="Les reservations ne sont pas disponible pour l'instant ...">
+                                    data-bs-target="#reservationModal"
+                                    title="Les reservations ne sont pas disponible pour l'instant ...">
                                     <i class="fas fa-calendar-plus"></i> Reserver maintenant
                                 </button>
                             </div>
@@ -440,8 +447,12 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
             const map = L.map('map-location-property').setView([latitude, longitude], 16);
 
             // Chargement des tuiles OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            // }).addTo(map);
+            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
+                attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
+                maxZoom: 19
             }).addTo(map);
 
             // Ajout d’un marqueur à l’emplacement
@@ -542,7 +553,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                                 stars +=
                                     `<li class="icon-star ${i < rating ? 'text-warning' : ''}"></li>`;
                             }
-                            
+
                             commentsList.innerHTML += `
                             <li class="list-review-item">
                                 <div class="avatar avt-60 round">
@@ -564,6 +575,7 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                     })
                     .catch(err => console.error(err));
             }
+
             function renderPagination(meta) {
                 const totalPages = meta.last_page;
                 const currentPage = meta.current_page;
@@ -574,36 +586,36 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
                     <nav class="pt-4">
                         <ul class="pagination justify-content-center">`;
 
-                                // Bouton "Précédent"
-                                paginationHTML += `
+                    // Bouton "Précédent"
+                    paginationHTML += `
                         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
                             <a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a>
                         </li>`;
 
-                                // Pages
-                                for (let i = 1; i <= totalPages; i++) {
-                                    // Afficher toujours la première et dernière page
-                                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                                        paginationHTML += `
+                    // Pages
+                    for (let i = 1; i <= totalPages; i++) {
+                        // Afficher toujours la première et dernière page
+                        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                            paginationHTML += `
                             <li class="page-item ${i === currentPage ? 'active' : ''}">
                                 <a class="page-link" href="#" data-page="${i}">${i}</a>
                             </li>`;
-                                    } else if (i === 2 && currentPage > 3) {
-                                        paginationHTML +=
-                                            `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                                    } else if (i === totalPages - 1 && currentPage < totalPages - 2) {
-                                        paginationHTML +=
-                                            `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                                    }
-                                }
+                        } else if (i === 2 && currentPage > 3) {
+                            paginationHTML +=
+                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                        } else if (i === totalPages - 1 && currentPage < totalPages - 2) {
+                            paginationHTML +=
+                                `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                        }
+                    }
 
-                                // Bouton "Suivant"
-                                paginationHTML += `
+                    // Bouton "Suivant"
+                    paginationHTML += `
                         <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
                             <a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a>
                         </li>`;
 
-                                paginationHTML += `
+                    paginationHTML += `
                         </ul>
                     </nav>`;
                 }

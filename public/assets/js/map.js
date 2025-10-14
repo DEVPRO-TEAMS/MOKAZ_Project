@@ -182,7 +182,7 @@
     // }).addTo(map);
     L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
         attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
-        maxZoom: 19
+        maxZoom: 25
     }).addTo(map);
 
     // Géocodeur
