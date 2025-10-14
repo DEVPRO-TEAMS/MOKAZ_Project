@@ -282,7 +282,7 @@
                                                 <span class="badge bg-danger">Annulé</span>
                                                 @break
                                             @case('completed')
-                                                <span class="badge bg-success">Terminé</span>
+                                                <span class="badge bg-success">Séjour terminé</span>
                                                 @break
                                             @default
                                                 <span class="badge bg-secondary">{{ $reservation->status }}</span>
@@ -297,7 +297,7 @@
                                                     <small class="badge bg-warning">Partiel</small>
                                                     @break
                                                 @case('pending' || 'unpaid')
-                                                    <small class="badge bg-danger">Non payé</small>
+                                                    <small class="badge bg-danger">En attente de paiement</small>
                                                     @break
                                                 @default
                                                     <small class="badge bg-secondary">{{ $reservation->paiement->payment_status }}</small>

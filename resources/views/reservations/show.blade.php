@@ -335,7 +335,7 @@
                                                 @break
 
                                                 @case('pending' || 'unpaid')
-                                                    <span class="badge bg-danger">Non payé</span>
+                                                    <span class="badge bg-danger">En attente de paiement</span>
                                                 @break
                                                 @default
                                                     <span class="badge bg-secondary">{{ $reservation->paiement->payment_status }}</span>

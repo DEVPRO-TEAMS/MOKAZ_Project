@@ -430,93 +430,232 @@ class ReservationController extends Controller
         return view('reservations.show', compact('reservation'));
     }
 
+    // public function autoRemiseReservation()
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $now = Carbon::now();
+    //         $results = []; // ✅ Initialisation ici
+
+    //         // On récupère toutes les réservations encore "pending" ou "confirmed"
+    //         $reservationsHavingPaiement = Reservation::whereIn('status', ['pending', 'confirmed'])
+    //             ->whereHas('paiement')
+    //             ->with('appartement')
+    //             ->get();
+
+    //         $reservationsDoesntHavePaiement = Reservation::whereIn('status', ['pending', 'confirmed'])
+    //             ->whereDoesntHave('paiement')
+    //             ->with('appartement')
+    //             ->get();
+
+    //         foreach ($reservationsDoesntHavePaiement as $reservation) {
+    //             $start = Carbon::parse($reservation->start_time);
+    //             $end = Carbon::parse($reservation->end_time);
+
+    //             // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
+    //             $totalDurationMinutes = $start->diffInMinutes($end);
+    //             $threshold = $start->copy()->addMinutes($totalDurationMinutes * 0.1);
+
+    //             if ($now->greaterThan($threshold) && $reservation->is_present == false) {
+    //                 // Supprimer la reservation
+    //                 $reservation->delete();
+
+    //                 Log::info('Reservation supprimée: ' . $reservation->code . ' aucun paiement et No show ');
+    //                 continue;
+    //             }
+
+    //             // 2️ Vérifier si le séjour est terminé
+    //             if ($now->greaterThanOrEqualTo($end) && $reservation->is_present == true) {
+    //                 // Supprimer la reservation
+    //                 $reservation->delete();
+
+    //                 Log::info('Reservation supprimée: ' . $reservation->code . ' aucun paiement et finished ');
+    //                 continue;
+    //             }
+    //         }
+    //         foreach ($reservationsHavingPaiement as $reservation) {
+    //             $start = Carbon::parse($reservation->start_time);
+    //             $end = Carbon::parse($reservation->end_time);
+
+    //             // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
+    //             $totalDurationMinutes = $start->diffInMinutes($end);
+    //             $threshold = $start->copy()->addMinutes($totalDurationMinutes * 0.1);
+
+    //             if ($now->greaterThan($threshold) && $reservation->is_present == false) {
+    //                 $this->releaseAppartement($reservation, "no_show");
+
+    //                 // $message = "Bonjour, votre réservation N° RES-4MDLGQ a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
+    //                 $message = "Bonjour, votre réservation {$reservation->code} a été annulée. Merci de votre compréhension. — MOKAZ";
+
+    //                 // Récupérer les 10 derniers chiffres du numéro
+    //                 $last10 = substr(preg_replace('/\D/', '', $reservation->phone), -10);
+
+    //                 // Ajouter l'indicatif "225"
+    //                 $phone = "225" . $last10;
+    //                 $this->sendSms($phone, $message);
+
+
+    //                 $emailSubject = "❌ Réservation annulée";
+    //                 $emailContent = view('mail.cancel_reservation', [
+    //                     'reservation' => $reservation
+    //                 ])->render();
+
+    //                 $emailData = [
+    //                     'title' => 'Annulation de votre réservation - MOKAZ',
+    //                     'message' => $emailContent,
+    //                     'status' => $reservation->status,
+    //                     'code' => $reservation->code,
+    //                     'url' => url($reservation->receipt->filepath ?? '#'),
+    //                     'buttonText' => 'Télécharger le reçu',
+    //                 ];
+
+    //                 Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+    //                 Log::info('Reservation auto remise: No show ');
+    //                 $results[] = [
+    //                     'reservation' => $reservation->code,
+    //                     'status' => 'cancelled',
+    //                     'message' => 'Réservation annulée (no-show)'
+    //                 ];
+    //                 continue;
+    //             }
+
+    //             // 2️ Vérifier si le séjour est terminé
+    //             if ($now->greaterThanOrEqualTo($end) && $reservation->is_present == true) {
+    //                 $this->releaseAppartement($reservation, "finished");
+    //                 $emailSubject = "✅ Séjour terminé";
+    //                 $emailContent = view('mail.finishe_reservation', [
+    //                     'reservation' => $reservation
+    //                 ])->render();
+
+    //                 $emailData = [
+    //                     'title' => 'Merci pour votre séjour - MOKAZ',
+    //                     'message' => $emailContent,
+    //                     'status' => $reservation->status,
+    //                     'code' => $reservation->code,
+    //                     'url' => url('/detail/appartement/' . $reservation->appartement->uuid),
+    //                     'buttonText' => "Noter l'hébergement",
+    //                 ];
+
+    //                 Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+    //                 Log::info('Reservation auto remise: Séjour terminé ');
+    //                 $results[] = [
+    //                     'reservation' => $reservation->code,
+    //                     'status' => 'completed',
+    //                     'message' => 'Séjour terminé'
+    //                 ];
+    //                 continue;
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => count($results) > 0
+    //                 ? "Certaines réservations ont été mises à jour"
+    //                 : "Aucune réservation à libérer",
+    //             'details' => $results
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         Log::error('Reservation auto remise failed: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => "Erreur lors de la remise automatique",
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
     public function autoRemiseReservation()
     {
         DB::beginTransaction();
         try {
             $now = Carbon::now();
-            $results = []; // ✅ Initialisation ici
+            $results = [];
 
-            // On récupère toutes les réservations encore "pending" ou "confirmed"
-            $reservations = Reservation::whereIn('status', ['pending', 'confirmed'])
+            // Récupérer les réservations avec paiement
+            $reservationsHavingPaiement = Reservation::whereIn('status', ['pending', 'confirmed'])
+                ->whereHas('paiement')
                 ->with('appartement')
-                ->get();
+                ->get()
+                ->map(function ($r) {
+                    $r->has_payment = true;
+                    return $r;
+                });
 
-            // Log::info('Reservation auto remise: ' . json_encode($reservations));
+            // Récupérer les réservations sans paiement
+            $reservationsDoesntHavePaiement = Reservation::whereIn('status', ['pending', 'confirmed'])
+                ->whereDoesntHave('paiement')
+                ->with('appartement')
+                ->get()
+                ->map(function ($r) {
+                    $r->has_payment = false;
+                    return $r;
+                });
+
+            // Fusion des deux collections
+            $reservations = $reservationsHavingPaiement->merge($reservationsDoesntHavePaiement);
 
             foreach ($reservations as $reservation) {
-                $start = Carbon::parse($reservation->start_time);
-                $end = Carbon::parse($reservation->end_time);
+                $times = $this->getReservationThreshold($reservation);
 
-                // Log::info('Heure de debut: ' . $start . ' | Heure de fin: ' . $end . ' | Reservation: ' . json_encode($reservation));
+                // 1. Cas No Show (10% du temps écoulé sans arrivée)
+                if ($now->greaterThan($times['threshold']) && !$reservation->is_present) {
 
-                // 1️ Vérifier le "no show" (10% du séjour écoulé sans l'arrivée du client)
-                $totalDurationMinutes = $start->diffInMinutes($end);
-                $threshold = $start->copy()->addMinutes($totalDurationMinutes * 0.1);
+                    if ($reservation->has_payment) {
+                        // Annulation avec libération d'appartement
+                        $this->releaseAppartement($reservation, "no_show");
 
-                if ($now->greaterThan($threshold) && $reservation->is_present == false) {
-                    $this->releaseAppartement($reservation, "no_show");
+                        // Envoi SMS + email
+                        $this->notifyCancellation($reservation);
 
-                    // $message = "Bonjour, votre réservation N° RES-4MDLGQ a été annulée. Merci de votre compréhension. - " . env('APP_NAME');
-                    $message = "Bonjour, votre réservation {$reservation->code} a été annulée. Merci de votre compréhension. — MOKAZ";
+                        Log::info("Réservation {$reservation->code} annulée automatiquement (no-show avec paiement)");
 
-                    // Récupérer les 10 derniers chiffres du numéro
-                    $last10 = substr(preg_replace('/\D/', '', $reservation->phone), -10);
+                        $results[] = [
+                            'reservation' => $reservation->code,
+                            'status' => 'cancelled',
+                            'message' => 'Annulée (no-show avec paiement)'
+                        ];
+                    } else {
+                        // Suppression directe si aucun paiement
+                        $reservation->delete();
+                        Log::info("Réservation {$reservation->code} supprimée automatiquement (no-show sans paiement)");
 
-                    // Ajouter l'indicatif "225"
-                    $phone = "225" . $last10;
-                    $this->sendSms($phone, $message);
-
-
-                    $emailSubject = "❌ Réservation annulée";
-                    $emailContent = view('mail.cancel_reservation', [
-                        'reservation' => $reservation
-                    ])->render();
-
-                    $emailData = [
-                        'title' => 'Annulation de votre réservation - MOKAZ',
-                        'message' => $emailContent,
-                        'status' => $reservation->status,
-                        'code' => $reservation->code,
-                        'url' => url($reservation->receipt->filepath ?? '#'),
-                        'buttonText' => 'Télécharger le reçu',
-                    ];
-
-                    Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
-                    Log::info('Reservation auto remise: No show ');
-                    $results[] = [
-                        'reservation' => $reservation->code,
-                        'status' => 'cancelled',
-                        'message' => 'Réservation annulée (no-show)'
-                    ];
+                        $results[] = [
+                            'reservation' => $reservation->code,
+                            'status' => 'deleted',
+                            'message' => 'Supprimée (no-show sans paiement)'
+                        ];
+                    }
                     continue;
                 }
 
-                // 2️ Vérifier si le séjour est terminé
-                if ($now->greaterThanOrEqualTo($end) && $reservation->is_present == true) {
-                    $this->releaseAppartement($reservation, "finished");
-                    $emailSubject = "✅ Séjour terminé";
-                    $emailContent = view('mail.finishe_reservation', [
-                        'reservation' => $reservation
-                    ])->render();
+                // 2. Cas séjour terminé
+                if ($now->greaterThanOrEqualTo($times['end']) && $reservation->is_present) {
 
-                    $emailData = [
-                        'title' => 'Merci pour votre séjour - MOKAZ',
-                        'message' => $emailContent,
-                        'status' => $reservation->status,
-                        'code' => $reservation->code,
-                        'url' => url('/detail/appartement/' . $reservation->appartement->uuid),
-                        'buttonText' => "Noter l'hébergement",
-                    ];
+                    if ($reservation->has_payment) {
+                        $this->releaseAppartement($reservation, "finished");
 
-                    Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
-                    Log::info('Reservation auto remise: Séjour terminé ');
-                    $results[] = [
-                        'reservation' => $reservation->code,
-                        'status' => 'completed',
-                        'message' => 'Séjour terminé'
-                    ];
-                    continue;
+                        $this->notifyFinished($reservation);
+
+                        Log::info("Réservation {$reservation->code} libérée automatiquement (séjour terminé)");
+
+                        $results[] = [
+                            'reservation' => $reservation->code,
+                            'status' => 'completed',
+                            'message' => 'Séjour terminé'
+                        ];
+                    } else {
+                        // Suppression directe si aucun paiement
+                        $reservation->delete();
+                        Log::info("Réservation {$reservation->code} supprimée automatiquement (séjour terminé sans paiement)");
+
+                        $results[] = [
+                            'reservation' => $reservation->code,
+                            'status' => 'deleted',
+                            'message' => 'Supprimée (séjour terminé sans paiement)'
+                        ];
+                    }
                 }
             }
 
@@ -537,6 +676,78 @@ class ReservationController extends Controller
                 'message' => "Erreur lors de la remise automatique",
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Calculer les seuils temporels de la réservation
+     */
+    private function getReservationThreshold($reservation)
+    {
+        $start = Carbon::parse($reservation->start_time);
+        $end = Carbon::parse($reservation->end_time);
+        $totalMinutes = $start->diffInMinutes($end);
+        $threshold = $start->copy()->addMinutes($totalMinutes * 0.1);
+
+        return compact('start', 'end', 'threshold');
+    }
+
+    /**
+     * Notification annulation (SMS + Email)
+     */
+    private function notifyCancellation($reservation)
+    {
+        // SMS
+        $cleanPhone = preg_replace('/\D/', '', $reservation->phone);
+        $last10 = strlen($cleanPhone) >= 10 ? substr($cleanPhone, -10) : $cleanPhone;
+        $phone = "225" . $last10;
+
+        $message = "Bonjour, votre réservation {$reservation->code} a été annulée. Merci de votre compréhension. — " . env('APP_NAME');
+        $this->sendSms($phone, $message);
+
+        // Email
+        if (!empty($reservation->email)) {
+            $emailSubject = "❌ Réservation annulée";
+            $emailContent = view('mail.cancel_reservation', [
+                'reservation' => $reservation
+            ])->render();
+
+            $emailData = [
+                'title' => 'Annulation de votre réservation - ' . env('APP_NAME'),
+                'message' => $emailContent,
+                'status' => $reservation->status,
+                'code' => $reservation->code,
+                'url' => url($reservation->receipt->filepath ?? '#'),
+                'buttonText' => 'Télécharger le reçu',
+            ];
+
+            Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
+        }
+    }
+
+    /**
+     * Notification séjour terminé
+     */
+    private function notifyFinished($reservation)
+    {
+        if (!empty($reservation->email)) {
+            $emailSubject = "✅ Séjour terminé";
+            $emailContent = view('mail.finishe_reservation', [
+                'reservation' => $reservation
+            ])->render();
+
+            $emailData = [
+                'title' => 'Merci pour votre séjour - ' . env('APP_NAME'),
+                'message' => $emailContent,
+                'status' => $reservation->status,
+                'code' => $reservation->code,
+                'url' => $reservation->appartement
+                    ? url('/detail/appartement/' . $reservation->appartement->uuid)
+                    : url('/'),
+                'buttonText' => "Noter l'hébergement",
+            ];
+
+            Mail::to($reservation->email)->send(new reservatierNotifier($emailData, $emailSubject));
         }
     }
     /**
