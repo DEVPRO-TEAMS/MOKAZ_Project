@@ -593,6 +593,9 @@ class ReservationController extends Controller
                     return $r;
                 });
 
+            Log::info("Réservation avec paiement: " . json_encode($reservationsHavingPaiement));
+            Log::info("Réservation sans paiement: " . json_encode($reservationsDoesntHavePaiement));
+
             // Fusion des deux collections
             $reservations = $reservationsHavingPaiement->merge($reservationsDoesntHavePaiement);
 
