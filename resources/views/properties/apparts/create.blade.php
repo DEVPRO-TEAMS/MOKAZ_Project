@@ -643,12 +643,8 @@
             const map = L.map(mapElement).setView([initialLat, initialLng], 16);
 
             // Ajouter le fond de carte
-            // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //     attribution: '© OpenStreetMap',
-            // }).addTo(map);
-            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
-                attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
-                maxZoom: 19
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
             }).addTo(map);
 
             // Ajout du marqueur

@@ -444,16 +444,16 @@ $hasMoreContent = trim(strip_tags($remainingHtml)) !== '';
 
 
             // Initialisation de la carte
-            const map = L.map('map-location-property').setView([latitude, longitude], 20);
+            const map = L.map('map-location-property').setView([latitude, longitude], 16);
 
             // Chargement des tuiles OpenStreetMap
-            // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            // }).addTo(map);
-            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
-                attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
-                maxZoom: 40
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             }).addTo(map);
+            // L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
+            //     attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
+            //     maxZoom: 19
+            // }).addTo(map);
 
             // Ajout d’un marqueur à l’emplacement
             L.marker([latitude, longitude]).addTo(map)

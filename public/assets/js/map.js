@@ -177,13 +177,13 @@
     const map = L.map('map').setView([5.3489, -4.0030], 12).setMaxBounds(coteDIvoireBounds);
 
     // Fond de carte
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //     attribution: '&copy; OpenStreetMap contributors'
-    // }).addTo(map);
-    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
-        attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
-        maxZoom: 25
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+    // L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=hgHWK7yUfl2sMR3BI4H2', {
+    //     attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
+    //     maxZoom: 19
+    // }).addTo(map);
 
     // Géocodeur
     L.Control.geocoder().addTo(map);
