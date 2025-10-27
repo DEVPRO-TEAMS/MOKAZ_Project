@@ -77,132 +77,126 @@
     </section>
     <!-- Map -->
     <!-- Recommended -->
-    <section class="flat-section-v5 bg-surface flat-recommended flat-recommended-v2">
-        <div class="container">
-            <div class="box-title style-2 text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                {{-- <div class="text-subtitle text-primary">Propriétés en vedette</div> --}}
-                <h5 class="mt-4">Découvrez les meilleures propriétés pour un sejour de rêve</h5>
-            </div>
-            <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
-                @forelse ($apparts->where('nbr_available', '>', 0) as $item)
-                    @php
-                        // Récupérer la tarification à l'heure la moins chère
-$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+<section class="flat-section-v5 bg-surface flat-recommended flat-recommended-v2">
+    <div class="container">
+        <div class="box-title style-2 text-center wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+            <h5 class="mt-4">Découvrez les meilleures propriétés pour un séjour de rêve</h5>
+        </div>
 
-// Récupérer la tarification à la journée la moins chère
-$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
-                    @endphp
-                    <div class="col-xl-4 col-md-6">
-                        <div class="homeya-box style-3">
-                            <div class="images-group">
-                                <div class="images-style">
-                                    <img src="{{ asset($item->image) }}" alt="img">
+        <div class="row wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
+            @forelse ($apparts->where('nbr_available', '>', 0) as $item)
+                @php
+                    // Récupérer les tarifications les moins chères
+                    $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+                    $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+
+                    // Récupérer la distance si disponible
+                    $distanceKm = $item->property->distance_km ?? null;
+                    $tempsPied = $distanceKm ? ($distanceKm * 1000) / 80 : null; // 80 m/min
+                    $tempsVoiture = $distanceKm ? ($distanceKm / 40) * 60 : null; // 40 km/h
+                @endphp
+
+                <div class="col-xl-4 col-md-6">
+                    <div class="homeya-box style-3">
+                        <div class="images-group">
+                            <div class="images-style">
+                                <img src="{{ asset($item->image) }}" alt="img">
+                            </div>
+                            <div class="top">
+                                <ul class="d-flex gap-8"></ul>
+                                <ul class="d-flex gap-4">
+                                    <li class="box-icon w-32">
+                                        <span class="icon icon-heart"></span>
+                                    </li>
+                                    <li class="box-icon w-32">
+                                        <a href="{{ route('appart.detail.show', $item->uuid) }}">
+                                            <span class="icon icon-eye"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="content">
+                                <div class="title text-1 text-capitalize">
+                                    <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                        class="link text-white">{{ $item->title ?? '' }}</a>
                                 </div>
-                                <div class="top">
-                                    <ul class="d-flex gap-8">
-                                        {{-- <li class="flag-tag     success">En vedette</li> --}}
-                                    </ul>
-                                    <ul class="d-flex gap-4">
-                                        {{-- <li class="box-icon w-32">
-                                            <span class="icon icon-arrLeftRight"></span>
-                                        </li> --}}
-                                        <li class="box-icon w-32">
-                                            <span class="icon icon-heart"></span>
-                                        </li>
-                                        <li class="box-icon w-32">
-                                            <a href="{{ route('appart.detail.show', $item->uuid) }}">
-                                                <span class="icon icon-eye"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="content">
-                                    <div class="title text-1 text-capitalize">
-                                        <a href="{{ route('appart.detail.show', $item->uuid) }}"
-                                            class="link text-white">{{ $item->title ?? '' }}</a>
-                                    </div>
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>{{ $item->nbr_room ?? 0 }}</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>{{ $item->nbr_bathroom ?? 0 }}</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-money"></i>
-                                            <span>
-                                                @if ($tarifHeure)
-                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
-                                                    FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
-                                                @elseif ($tarifJour)
-                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
-                                                    FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
-                                                @else
-                                                    Prix non disponible
-                                                @endif
-                                            </span>
-                                        </li>
-                                    </ul>
+
+                                <ul class="meta-list">
+                                    <li class="item">
+                                        <i class="icon icon-bed"></i>
+                                        <span>{{ $item->nbr_room ?? 0 }}</span>
+                                    </li>
+                                    <li class="item">
+                                        <i class="icon icon-bathtub"></i>
+                                        <span>{{ $item->nbr_bathroom ?? 0 }}</span>
+                                    </li>
+                                    <li class="item">
+                                        <i class="icon icon-money"></i>
+                                        <span>
+                                            @if ($tarifHeure)
+                                                À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
+                                                FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                            @elseif ($tarifJour)
+                                                À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
+                                                FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                            @else
+                                                Prix non disponible
+                                            @endif
+                                        </span>
+                                    </li>
+                                </ul>
+
+                                {{-- Distance / Temps de trajet --}}
+                                @if ($distanceKm)
                                     <ul class="meta-list">
                                         <li class="item">
                                             <i class="icon icon-foot"></i>
-                                            <span>
-                                                @if (isset($item->distance_km))
-                                                    {{ number_format(($item->distance_km * 1000) / 80, 0, ',', ' ') }} min à
-                                                    pied
-                                                @endif
-                                            </span>
+                                            <span>{{ number_format($tempsPied, 0, ',', ' ') }} min à pied</span>
                                         </li>
                                         <li class="item">
                                             <i class="icon icon-car"></i>
-                                            <span>
-                                                @if (isset($item->distance_km))
-                                                    {{ number_format(($item->distance_km / 40) * 60, 0, ',', ' ') }} min en
-                                                    voiture
-                                                @endif
-                                            </span>
+                                            <span>{{ number_format($tempsVoiture, 0, ',', ' ') }} min en voiture</span>
                                         </li>
                                     </ul>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
-                @empty
-                    {{-- verifier si il y a une recherche effectuée --}}
-                    @if (request()->has('search') || request()->has('type') || request()->has('location'))
-                        <div class="d-flex flex-column align-items-center">
-                            <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
-                            <h5 class="fw-semibold">Aucun hébergement trouvée</h5>
-                            <p class="text-muted">Aucun hébergement ne correspond à vos critères
-                                de recherche</p>
-                            <a href="{{ route('welcome') }}" class="btn btn-sm btn-outline-danger mt-2">
-                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
-                            </a>
-                        </div>
-                    @else
-                        <div class="d-flex flex-column align-items-center">
-                            <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
-                            <h5 class="fw-semibold">Aucun hébergement pour le moment</h5>
-                        </div>
-                    @endif
-                @endforelse
-
-            </div>
-
-            <div class="nav-pagination pt-4">
-                {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
-            </div>
-
-            @if ($apparts->count() > 0)
-                <div class="text-center pt-4">
-                    <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
                 </div>
-            @endif
+            @empty
+                {{-- Vérifie s’il y a une recherche effectuée --}}
+                @if (request()->has('search') || request()->has('type') || request()->has('location'))
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                        <h5 class="fw-semibold">Aucun hébergement trouvé</h5>
+                        <p class="text-muted">Aucun hébergement ne correspond à vos critères de recherche</p>
+                        <a href="{{ route('welcome') }}" class="btn btn-sm btn-outline-danger mt-2">
+                            <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                        </a>
+                    </div>
+                @else
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
+                        <h5 class="fw-semibold">Aucun hébergement pour le moment</h5>
+                    </div>
+                @endif
+            @endforelse
         </div>
-    </section>
-    <!-- End Recommended -->
+
+        <div class="nav-pagination pt-4">
+            {{ $apparts->withQueryString()->links('pagination::bootstrap-5') }}
+        </div>
+
+        @if ($apparts->count() > 0)
+            <div class="text-center pt-4">
+                <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
+            </div>
+        @endif
+    </div>
+</section>
+<!-- End Recommended -->
+
 
     <section class="flat-section-v3 flat-location bg-surface">
         <div class="container-full">

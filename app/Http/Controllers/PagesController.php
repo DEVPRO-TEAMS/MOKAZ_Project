@@ -10,15 +10,122 @@ use App\Models\Appartement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PagesController extends Controller
 {
 
+    // public function index(Request $request)
+    // {
+    //     $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+    //     $perPage = $request->get('perPage', 6);
+    //     $latitudeUser = $request->get('lat');
+    //     $longitudeUser = $request->get('lng');
+    //     $search = trim($request->input('search'));
+    //     $location = trim($request->input('location'));
+    //     $type = $request->input('type');
+
+    //     // ✅ Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
+    //     $useGeolocation = true;
+    //     if ($search || $location || $type) {
+    //         $useGeolocation = false;
+    //     }
+
+    //     $query = Appartement::with('property')
+    //         ->where('etat', 'actif')
+    //         ->where('nbr_available', '>', 0);
+
+    //     // 🔎 Recherche par mot-clé / localisation
+    //     if ($search || $location) {
+    //         $query->where(function ($q) use ($search, $location) {
+    //             if ($search) {
+    //                 $q->where('title', 'like', "%$search%")
+    //                     ->orWhere('description', 'like', "%$search%")
+    //                     ->orWhere('commodities', 'like', "%$search%");
+    //             }
+
+    //             if ($location) {
+    //                 $q->orWhere('title', 'like', "%$location%")
+    //                     ->orWhere('description', 'like', "%$location%");
+    //             }
+
+    //             $q->orWhereHas('property', function ($q2) use ($search, $location) {
+    //                 if ($search) {
+    //                     $q2->where('title', 'like', "%$search%")
+    //                         ->orWhere('description', 'like', "%$search%")
+    //                         ->orWhere('address', 'like', "%$search%")
+    //                         ->orWhere('city', 'like', "%$search%")
+    //                         ->orWhere('country', 'like', "%$search%");
+    //                 }
+
+    //                 if ($location) {
+    //                     $q2->orWhere('title', 'like', "%$location%")
+    //                         ->orWhere('description', 'like', "%$location%")
+    //                         ->orWhere('address', 'like', "%$location%")
+    //                         ->orWhere('city', 'like', "%$location%")
+    //                         ->orWhere('country', 'like', "%$location%");
+    //                 }
+    //             });
+    //         });
+    //     }
+
+    //     // 🏡 Filtre par type
+    //     if ($type) {
+    //         $query->where('type_uuid', $type);
+    //     }
+
+    //     // // 📍 Filtre par distance UNIQUEMENT s’il n’y a pas de recherche manuelle
+    //     if ($latitudeUser && $longitudeUser) {
+    //         $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+    //             * cos(radians(properties.latitude)) 
+    //             * cos(radians(properties.longitude) - radians($longitudeUser)) 
+    //             + sin(radians($latitudeUser)) 
+    //             * sin(radians(properties.latitude))))";
+
+    //         // Filtrer sur la distance (10 km max) uniquement si géolocalisation active
+    //         if ($useGeolocation) {
+    //             $query->whereHas('property', function ($q) use ($haversine) {
+    //                 $q->whereRaw("$haversine <= 10");
+    //             });
+    //         }
+
+    //         // Ajouter la distance au SELECT sans casser le with()
+    //         $query->with(['property' => function ($q) use ($haversine) {
+    //             $q->select('*')
+    //                 ->selectRaw("$haversine AS distance_km");
+    //         }]);
+
+    //         Log::info($query->toSql());
+    //     }
+
+    //     $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+    //     $bestApparts = Appartement::withCount('reservations')
+    //         ->where('etat', 'actif')
+    //         ->where('nbr_available', '>', 0)
+    //         ->orderByDesc('reservations_count')
+    //         ->take(3)
+    //         ->with('tarifications')
+    //         ->get();
+
+    //     $locations = Property::with(['ville.locationImage', 'pays'])
+    //         ->where('etat', 'actif')
+    //         ->get()
+    //         ->groupBy(function ($property) {
+    //             return $property->pays?->label . ' - ' . $property->ville?->label;
+    //         });
+
+    //     return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
+    // }
+
     public function index(Request $request)
     {
+        // 📋 Récupération des types d'appartements actifs
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
+
+        // ⚙️ Paramètres de pagination et de requête
         $perPage = $request->get('perPage', 6);
         $latitudeUser = $request->get('lat');
         $longitudeUser = $request->get('lng');
@@ -27,16 +134,14 @@ class PagesController extends Controller
         $type = $request->input('type');
 
         // ✅ Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
-        $useGeolocation = true;
-        if ($search || $location || $type) {
-            $useGeolocation = false;
-        }
+        $useGeolocation = !($search || $location || $type);
 
+        // 🏘️ Requête de base : appartements actifs et disponibles
         $query = Appartement::with('property')
-            ->where('etat', 'actif')
-            ->where('nbr_available', '>', 0);
+            ->where('appartements.etat', 'actif')
+            ->where('appartements.nbr_available', '>', 0);
 
-        // 🔎 Recherche par mot-clé / localisation
+        // 🔍 Recherche par mot-clé / localisation
         if ($search || $location) {
             $query->where(function ($q) use ($search, $location) {
                 if ($search) {
@@ -75,40 +180,43 @@ class PagesController extends Controller
             $query->where('type_uuid', $type);
         }
 
-        // // 📍 Filtre par distance UNIQUEMENT s’il n’y a pas de recherche manuelle
+        // 📍 Filtre et calcul de distance (Haversine) uniquement si coordonnées fournies
         if ($latitudeUser && $longitudeUser) {
             $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
-                * cos(radians(properties.latitude)) 
-                * cos(radians(properties.longitude) - radians($longitudeUser)) 
-                + sin(radians($latitudeUser)) 
-                * sin(radians(properties.latitude))))";
+            * cos(radians(properties.latitude)) 
+            * cos(radians(properties.longitude) - radians($longitudeUser)) 
+            + sin(radians($latitudeUser)) 
+            * sin(radians(properties.latitude))))";
 
-            // Filtrer sur la distance (10 km max) uniquement si géolocalisation active
+            // Filtrer sur la distance (≤ 10 km) uniquement si géolocalisation active
             if ($useGeolocation) {
                 $query->whereHas('property', function ($q) use ($haversine) {
                     $q->whereRaw("$haversine <= 10");
                 });
             }
 
-            // Ajouter la distance au SELECT sans casser le with()
+            // Ajouter la distance au SELECT de la relation property
             $query->with(['property' => function ($q) use ($haversine) {
-                $q->select('*')
-                    ->selectRaw("$haversine AS distance_km");
+                $q->addSelect([
+                    'properties.*',
+                    DB::raw("$haversine AS distance_km")
+                ]);
             }]);
-
-            Log::info($query->toSql());
         }
 
+        // 📦 Pagination des appartements
         $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
+        // 🌟 Meilleurs appartements (ceux ayant le plus de réservations)
         $bestApparts = Appartement::withCount('reservations')
-            ->where('etat', 'actif')
-            ->where('nbr_available', '>', 0)
+            ->where('appartements.etat', 'actif')
+            ->where('appartements.nbr_available', '>', 0)
             ->orderByDesc('reservations_count')
             ->take(3)
             ->with('tarifications')
             ->get();
 
+        // 🗺️ Liste des localisations groupées (Pays - Ville)
         $locations = Property::with(['ville.locationImage', 'pays'])
             ->where('etat', 'actif')
             ->get()
@@ -116,8 +224,10 @@ class PagesController extends Controller
                 return $property->pays?->label . ' - ' . $property->ville?->label;
             });
 
+        // 🖼️ Vue principale
         return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
     }
+
 
     // if ($useGeolocation && $latitudeUser && $longitudeUser) {
     //     $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
