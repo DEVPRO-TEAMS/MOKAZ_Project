@@ -288,32 +288,39 @@ class PagesController extends Controller
             $query->where('type_uuid', $type);
         }
 
-        // 📍 Calcul de distance et tri si coordonnées fournies
-    if ($latitudeUser && $longitudeUser) {
-        $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+        // 📍 Calcul de distance Haversine et tri si coordonnées fournies
+        if ($latitudeUser && $longitudeUser) {
+            $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
             * cos(radians(properties.latitude)) 
             * cos(radians(properties.longitude) - radians($longitudeUser)) 
             + sin(radians($latitudeUser)) 
             * sin(radians(properties.latitude))))";
 
-        // Filtrer sur la distance (≤ 10 km) si géolocalisation active
-        if ($useGeolocation) {
-            $query->whereHas('property', function ($q) use ($haversine) {
-                $q->whereRaw("$haversine <= 10");
-            });
+            // Filtrer sur la distance ≤ 10 km si géolocalisation active
+            if ($useGeolocation) {
+                $query->whereHas('property', function ($q) use ($haversine) {
+                    $q->whereRaw("$haversine <= 10");
+                });
+            }
+
+            // Ajouter la distance au SELECT et trier par distance croissante
+            $query->with(['property' => function ($q) use ($haversine) {
+                $q->addSelect([
+                    'properties.*',
+                    DB::raw("$haversine AS distance_km")
+                ]);
+            }])
+                ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
+                ->select('appartements.*', DB::raw("$haversine AS distance_km"))
+                ->orderBy('distance_km', 'asc')
+                ->orderBy('appartements.created_at', 'desc');
+        } else {
+            // Tri par date de création si pas de géolocalisation
+            $query->orderBy('appartements.created_at', 'desc');
         }
 
-        // Ajouter la distance dans le SELECT et trier par distance croissante
-        $query->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
-              ->select('appartements.*', DB::raw("$haversine AS distance_km"))
-              ->orderBy('distance_km', 'asc')
-              ->orderBy('appartements.created_at', 'desc');
-
+        // 📦 Pagination des appartements
         $apparts = $query->paginate($perPage);
-    } else {
-        // Tri par date si pas de géolocalisation
-        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
-    }
 
         // 🌟 Meilleurs appartements (ceux ayant le plus de réservations)
         $bestApparts = Appartement::withCount('reservations')
@@ -332,7 +339,6 @@ class PagesController extends Controller
                 return $property->pays?->label . ' - ' . $property->ville?->label;
             });
 
-        // 🖼️ Vue principale
         return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations'));
     }
 
