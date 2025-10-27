@@ -313,7 +313,17 @@ class PagesController extends Controller
                 ->select('appartements.*', DB::raw("$haversine AS distance_km"))
                 ->orderBy('distance_km', 'asc')
                 ->orderBy('appartements.created_at', 'desc');
+            }else {
+                // Ajouter la distance au SELECT de la relation property
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }]);
             }
+
+            
 
             
         } else {
