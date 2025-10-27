@@ -25,43 +25,6 @@
                     <div class="tab-content">
                         <div class="tab-pane fade active show" role="tabpanel">
                             <div class="form-sl pt-5">
-                                {{-- <form  id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
-                                    <div class="wd-find-select shadow-st">
-                                        <div class="inner-group">
-                                            <div class="form-group-1 search-form form-style">
-                                                <label>Mot-clé</label>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Rechercher par Mot-clé." name="search"
-                                                    value="{{ request('search') }}">
-                                            </div>
-                                            <div class="form-group-2 form-style">
-                                                <label>Localisation</label>
-                                                <div class="group-ip">
-                                                    <input type="text" class="form-control"
-                                                        placeholder="rechercher par Localisation"
-                                                        value="{{ request('location') }}" name="location">
-                                                </div>
-                                            </div>
-                                            <div class="form-group-3 form-style">
-                                                <label id="type">Type</label>
-                                                <div class="group-select">
-                                                    <select name="type" id="type" class="nice-select form-select">
-                                                        <option value="">Tous</option>
-                                                        @foreach ($typeAppart as $type)
-                                                            <option value="{{ $type->uuid }}"
-                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
-                                                                {{ $type->libelle }}</option>
-                                                        @endforeach
-                                                    </select>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <button type="submit" class="tf-btn primary">Rechercher</button>
-                                    </div>
-                                </form> --}}
-
                                 <form id="searchAppartsForm" action="{{ route('welcome') }}" method="get">
                                     <div class="wd-find-select shadow-st">
                                         <div class="inner-group">
@@ -103,7 +66,7 @@
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
                                     </div>
                                 </form>
-                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -124,10 +87,10 @@
                 @forelse ($apparts->where('nbr_available', '>', 0) as $item)
                     @php
                         // Récupérer la tarification à l'heure la moins chère
-                        $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
+$tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
 
-                        // Récupérer la tarification à la journée la moins chère
-                        $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+// Récupérer la tarification à la journée la moins chère
+$tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
                     @endphp
                     <div class="col-xl-4 col-md-6">
                         <div class="homeya-box style-3">
@@ -154,9 +117,10 @@
                                     </ul>
                                 </div>
                                 <div class="content">
-                                    <div class="title text-1 text-capitalize"><a
-                                            href="{{ route('appart.detail.show', $item->uuid) }}"
-                                            class="link text-white">{{ $item->title ?? '' }}</a></div>
+                                    <div class="title text-1 text-capitalize">
+                                        <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                            class="link text-white">{{ $item->title ?? '' }}</a>
+                                    </div>
                                     <ul class="meta-list">
                                         <li class="item">
                                             <i class="icon icon-bed"></i>
@@ -177,6 +141,26 @@
                                                     FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
                                                 @else
                                                     Prix non disponible
+                                                @endif
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <ul class="meta-list">
+                                        <li class="item">
+                                            <i class="icon icon-foot"></i>
+                                            <span>
+                                                @if (isset($item->distance_km))
+                                                    {{ number_format(($item->distance_km * 1000) / 80, 0, ',', ' ') }} min à
+                                                    pied
+                                                @endif
+                                            </span>
+                                        </li>
+                                        <li class="item">
+                                            <i class="icon icon-car"></i>
+                                            <span>
+                                                @if (isset($item->distance_km))
+                                                    {{ number_format(($item->distance_km / 40) * 60, 0, ',', ' ') }} min en
+                                                    voiture
                                                 @endif
                                             </span>
                                         </li>
