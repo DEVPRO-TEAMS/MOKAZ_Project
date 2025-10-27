@@ -766,6 +766,8 @@ class ReservationController extends Controller
             $appartement->save();
         }
 
+        // Supprimer l'attribut temporaire avant la sauvegarde
+        unset($reservation->has_payment);
         // Mettre à jour la réservation
         $reservation->status = ($reason == "finished") ? "completed" : "cancelled";
         // $reservation->etat = "libéré";
