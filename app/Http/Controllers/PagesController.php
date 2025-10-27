@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PagesController extends Controller
 {
@@ -94,6 +95,8 @@ class PagesController extends Controller
                 $q->select('*')
                     ->selectRaw("$haversine AS distance_km");
             }]);
+
+            Log::info($query->toSql());
         }
 
         $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
