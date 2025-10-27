@@ -301,19 +301,21 @@ class PagesController extends Controller
                 $query->whereHas('property', function ($q) use ($haversine) {
                     $q->whereRaw("$haversine <= 10");
                 });
-            }
-
-            // Ajouter la distance au SELECT et trier par distance croissante
-            $query->with(['property' => function ($q) use ($haversine) {
-                $q->addSelect([
-                    'properties.*',
-                    DB::raw("$haversine AS distance_km")
-                ]);
-            }])
+                
+                // Ajouter la distance au SELECT et trier par distance croissante
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }])
                 ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
                 ->select('appartements.*', DB::raw("$haversine AS distance_km"))
                 ->orderBy('distance_km', 'asc')
                 ->orderBy('appartements.created_at', 'desc');
+            }
+
+            
         } else {
             // Tri par date de création si pas de géolocalisation
             $query->orderBy('appartements.created_at', 'desc');
