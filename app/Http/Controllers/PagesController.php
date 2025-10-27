@@ -181,31 +181,7 @@ class PagesController extends Controller
         }
 
         // 📍 Filtre et calcul de distance (Haversine) uniquement si coordonnées fournies
-        // if ($latitudeUser && $longitudeUser) {
-        //     $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
-        //     * cos(radians(properties.latitude)) 
-        //     * cos(radians(properties.longitude) - radians($longitudeUser)) 
-        //     + sin(radians($latitudeUser)) 
-        //     * sin(radians(properties.latitude))))";
-
-        //     // Filtrer sur la distance (≤ 10 km) uniquement si géolocalisation active
-        //     if ($useGeolocation) {
-        //         $query->whereHas('property', function ($q) use ($haversine) {
-        //             $q->whereRaw("$haversine <= 10");
-        //         });
-        //     }
-
-        //     // Ajouter la distance au SELECT de la relation property
-        //     $query->with(['property' => function ($q) use ($haversine) {
-        //         $q->addSelect([
-        //             'properties.*',
-        //             DB::raw("$haversine AS distance_km")
-        //         ]);
-        //     }]);
-        // }
-
-        // // 📦 Pagination des appartements
-        // $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        
 
         if ($latitudeUser && $longitudeUser) {
             $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
@@ -232,7 +208,7 @@ class PagesController extends Controller
 
         // Tri par distance croissante
         $apparts = $query
-            ->orderByRaw('property.distance_km ASC')
+            ->orderByRaw('properties.distance_km ASC')
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
@@ -258,17 +234,31 @@ class PagesController extends Controller
     }
 
 
-    // if ($useGeolocation && $latitudeUser && $longitudeUser) {
-    //     $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
-    //             * cos(radians(properties.latitude)) 
-    //             * cos(radians(properties.longitude) - radians($longitudeUser)) 
-    //             + sin(radians($latitudeUser)) 
-    //             * sin(radians(properties.latitude))))";
+    // if ($latitudeUser && $longitudeUser) {
+        //     $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+        //     * cos(radians(properties.latitude)) 
+        //     * cos(radians(properties.longitude) - radians($longitudeUser)) 
+        //     + sin(radians($latitudeUser)) 
+        //     * sin(radians(properties.latitude))))";
 
-    //     $query->whereHas('property', function ($q) use ($haversine) {
-    //         $q->whereRaw("$haversine <= 10");
-    //     });
-    // }
+        //     // Filtrer sur la distance (≤ 10 km) uniquement si géolocalisation active
+        //     if ($useGeolocation) {
+        //         $query->whereHas('property', function ($q) use ($haversine) {
+        //             $q->whereRaw("$haversine <= 10");
+        //         });
+        //     }
+
+        //     // Ajouter la distance au SELECT de la relation property
+        //     $query->with(['property' => function ($q) use ($haversine) {
+        //         $q->addSelect([
+        //             'properties.*',
+        //             DB::raw("$haversine AS distance_km")
+        //         ]);
+        //     }]);
+        // }
+
+        // // 📦 Pagination des appartements
+        // $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
 
     // public function index(Request $request)
