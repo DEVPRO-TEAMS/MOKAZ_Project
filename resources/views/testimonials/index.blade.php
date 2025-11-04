@@ -12,7 +12,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-handshake me-2 text-danger"></i> Reglages
+                        <i class="bi bi-chat-right me-2 text-danger"></i>Témoignages
                     </h3>
                     
                 </div>
@@ -24,66 +24,43 @@
 
             <!-- Header avec bouton d'ajout -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <small class="mb-0">Gestion des Variables</small>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addVariableModal">
-                    <i class="bi bi-plus-circle me-2"></i>Nouvelle Variable
+                <small class="mb-0">Gestion des témoignages</small>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTestimonialModal">
+                    <i class="bi bi-plus-circle me-2"></i>Nouveau Témoignage
                 </button>
             </div>
 
             <!-- Tableau -->
             <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Liste des variables</h5>
-                    <span id="totalCount" class="badge bg-secondary">{{ $variables->count() }} variables</span>
+                    <h5 class="mb-0">Liste des témoignages</h5>
+                    <span id="totalCount" class="badge bg-secondary">{{ $testimonials->count() }} Témoignage{{ $testimonials->count() > 1 ? 's' : '' }}</span>
                 </div>
                 <div class="table-responsive table-container p-3">
                     <table class="table table-striped align-middle mb-0" id="example2">
                         <thead class="table-light sticky-top">
                             <tr>
                                 <th>Code</th>
-                                <th>Libellé</th>
-                                <th>Description</th>
-                                <th>Type</th>
-                                <th>État</th>
+                                <th>Nom du client</th>
+                                <th>Témoignage</th>
                                 <th width="100">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                           @foreach ($variables as $item)
+                           @foreach ($testimonials as $item)
                                <tr>
                                    <td class="fw-semibold">#{{ $item->code ?? '' }}</td>
-                                   <td>{{ $item->libelle ?? '' }}</td>
-                                   <td>{{ $item->description ?? '' }}</td>
-                                   <td>
-
-                                        @if ($item->type == 'commodity')
-                                            <span class="badge bg-primary text-light">Commodité</span>
-                                        @elseif ($item->type == 'type_of_property')
-                                            <span class="badge bg-warning text-light">Type de bien</span>
-                                        @elseif ($item->type == 'type_of_appart')
-                                            <span class="badge bg-success text-light">Type d'appart</span>
-                                        @elseif ($item->type == 'autre')
-                                            <span>Autre</span>
-                                        @endif
-
-                                   </td>
-                                   <td>
-                                    @if ($item->etat == 'actif')
-                                        <span class="badge bg-success  text-light">
-                                           <i class="fas fa-check me-1"></i>
-                                           Actif
-                                       </span>
-                                    @else
-                                        <span class="badge bg-danger text-light">
-                                           <i class="fas fa-check me-1"></i>
-                                           Inactif
-                                       </span>
-                                    @endif
-                                   </td>
+                                   <td>{{ $item->name ?? '' }}</td>
+                                   <td class="text-wrap">{!! Str::words($item->content ?? '', 20, '...') !!}</td>
                                    <td>
                                        <div class="d-flex justify-content-between align-items-center">
                                            <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
-                                              data-bs-toggle="modal" data-bs-target="#editVariableModal{{ $item->uuid }}"
+                                              data-bs-toggle="modal" data-bs-target="#showTestimonialModal{{ $item->uuid }}"
+                                               title="Modifier">
+                                           <i class="fas fa-eye"></i>
+                                           </button>
+                                           <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" 
+                                              data-bs-toggle="modal" data-bs-target="#editTestimonialModal{{ $item->uuid }}"
                                                title="Modifier">
                                            <i class="fas fa-edit"></i>
                                            </button>
@@ -91,17 +68,18 @@
                                             <a class="deleteConfirmation" data-uuid="{{$item->uuid}}"
                                             data-type="confirmation_redirect" data-placement="top"
                                             data-token="{{ csrf_token() }}"
-                                            data-url="{{route('setting.destroyVariable',$item->uuid)}}"
-                                            data-title="Vous êtes sur le point de supprimer {{$item->libelle}} "
+                                            data-url="{{route('admin.destroy.testimonial',$item->uuid)}}"
+                                            data-title="Vous êtes sur le point de supprimer le témoignage de {{$item->name}} "
                                             data-id="{{$item->uuid}}" data-param="0"
-                                            data-route="{{route('setting.destroyVariable',$item->uuid)}}"><i
+                                            data-route="{{route('admin.destroy.testimonial',$item->uuid)}}"><i
                                                 class='fas fa-trash' style="cursor: pointer"></i></a>
                                            </button>
                                        </div>
                                    </td>
                                </tr>
 
-                               @include('admins.components.editVariableModal')
+                               @include('admins.components.testimonialModal.edit')
+                               @include('admins.components.testimonialModal.show')
                            @endforeach
                         </tbody>
                     </table>
@@ -117,6 +95,6 @@
         </div>
     </div>
 
-    @include('admins.components.addVariableModal')
+    @include('admins.components.testimonialModal.add')
 
 @endsection

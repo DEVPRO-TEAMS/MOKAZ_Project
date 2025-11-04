@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Partner\PartnerController;
 use App\Http\Controllers\User\ReservationController;
+use App\Http\Controllers\Comment\TestimoniController;
 use App\Http\Controllers\Properties\AppartController;
 use App\Http\Controllers\Properties\PropertyController;
 
@@ -120,6 +121,12 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // Route::get('/comment/show/{uuid}', [CommentController::class, 'show'])->name('comment.show');
         Route::post('/approveComment/{uuid}', [CommentController::class, 'approveComment'])->name('approveComment');
         Route::post('/rejectComment/{uuid}', [CommentController::class, 'rejectComment'])->name('rejectComment');
+
+        // Testimonial route 
+        Route::get('/testimonial/index', [TestimoniController::class, 'index'])->name('testimonial.index');
+        Route::post('/testimonial/add', [TestimoniController::class, 'store'])->name('store.testimonial');
+        Route::post('/testimonial/update/{uuid}', [TestimoniController::class, 'update'])->name('update.testimonial');
+        Route::post('/testimonial/destroy/{uuid}', [TestimoniController::class, 'destroy'])->name('destroy.testimonial');
         
     });
 });

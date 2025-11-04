@@ -97,7 +97,7 @@
                     
                     <!-- Tableau de Bord -->
                     <li class="nav-item mb-1">
-                        <a class="nav-link active d-flex align-items-center py-2 px-3 rounded bg-danger bg-opacity-10 text-danger" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.index' || Route::currentRouteName() == 'partner.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded bg-opacity-10 text-dark" 
                         href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('partner.index') }}">
                             <i class="bi bi-house-door me-3 fs-5"></i>
                             <span>Tableau de Bord</span>
@@ -108,7 +108,7 @@
                     @if (Auth::user()->user_type == 'partner')
                     <!-- Réservations -->
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'partner.reservation.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ route('partner.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
@@ -117,7 +117,7 @@
                     </li>
                     @else
                      <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.reservation.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ route('admin.reservation.index') }}">
                             <i class="bi bi-calendar-check me-3 fs-5"></i>
                             <span>Réservations</span>
@@ -133,9 +133,9 @@
                     <!-- Demandes de partenariat (Admin seulement) -->
                     @if (Auth::user()->user_type == 'admin')
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.demande.view' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ route('admin.demande.view') }}">
-                            <i class="bi bi-handshake me-3 fs-5"></i>
+                            <i class="bi bi-envelope-paper me-3 fs-5"></i>
                             <span>Demandes de partenariat</span>
                             <span class="badge bg-warning text-dark ms-auto">
                                 {{ $demandes->where('etat', 'pending')->count() }}
@@ -146,14 +146,14 @@
 
                     <!-- Propriétés -->
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.proprety.view' || Route::currentRouteName() == 'partner.properties.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ Auth::user()->user_type == 'admin' ? route('admin.proprety.view') :  route('partner.properties.index') }}">
                             <i class="bi bi-house-door me-3 fs-5"></i>
                             <span> {{ Auth::user()->user_type == 'admin' ? '' : 'Mes '}}Propriétés</span>
                         </a> 
                     </li>
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.comment.index' || Route::currentRouteName() == 'partner.comment.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ Auth::user()->user_type == 'admin' ? route('admin.comment.index') :  route('partner.comment.index') }}">
                             <i class="bi bi-chat-left me-3 fs-5"></i>
                             <span>Commentaires et avis </span>
@@ -163,22 +163,29 @@
                     <!-- Partenaires (Admin seulement) -->
                     @if (Auth::user()->user_type == 'admin')
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                        <a href="{{ route('admin.testimonial.index') }}" class="nav-link {{ Route::currentRouteName() == 'admin.testimonial.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark">
+                            <i class="bi bi-chat-right me-3 fs-5"></i>
+                            <span>Témoignages</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.partner.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href="{{ route('admin.partner.index') }}">
-                            <i class="bi bi-people me-3 fs-5"></i>
+                            {{-- <i class="bi bi-people me-3 fs-5"></i> --}}
+                            <i class="fas fa-handshake me-3 fs-5"></i>
                             <span>Partenaires</span>
                         </a>
                     </li>
                     <li class="nav-item mb-1">
                         <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
                         href=" https://jsbeyci.com:2096/" target="_blank">
-                            <i class="bi bi-chat-right me-3 fs-5"></i>
+                            <i class="bi bi-chat me-3 fs-5"></i>
                             <span>Messagerie equipe MOKAZ</span>
                         </a>
                     </li>
                     @else
                         <li class="nav-item mb-1">
-                            <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark" 
+                            <a class="nav-link {{ Route::currentRouteName() == 'partner.collaborator.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark" 
                             href="{{ route('partner.collaborator.index') }}">
                                 <i class="bi bi-people me-3 fs-5"></i>
                                 <span>Mes collaborateurs</span>
@@ -188,7 +195,7 @@
 
                     <!-- Menu déroulant Dashboard -->
                     <li class="nav-item mb-1">
-                        <a class="nav-link d-flex align-items-center py-2 px-3 rounded text-dark collapsed" 
+                        <a class="nav-link {{ Route::currentRouteName() == 'setting.indexProperty' || Route::currentRouteName() == 'setting.indexAppart' || Route::currentRouteName() == 'admin.indexLocation' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-dark collapsed" 
                         data-bs-toggle="collapse" 
                         href="#dashboardSubmenu" 
                         role="button" 
@@ -201,20 +208,20 @@
                         <div class="collapse" id="dashboardSubmenu">
                             <ul class="nav nav-pills flex-column ms-3 mt-2">
                                 <li class="nav-item">
-                                    <a href="{{ route('setting.indexProperty') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                    <a href="{{ route('setting.indexProperty') }}" class="nav-link {{ Route::currentRouteName() == 'setting.indexProperty' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Type de proprieté</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('setting.indexAppart') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                    <a href="{{ route('setting.indexAppart') }}" class="nav-link {{ Route::currentRouteName() == 'setting.indexAppart' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
                                         <span>Type d'hébergement</span>
                                     </a>
                                 </li>
                                 @if (Auth::user()->user_type == 'admin')
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.indexLocation') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded text-muted">
+                                        <a href="{{ route('admin.indexLocation') }}" class="nav-link {{ Route::currentRouteName() == 'admin.indexLocation' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-muted">
                                             <i class="bi bi-map me-2"></i>
                                             <span>Emplacements</span>
                                         </a>

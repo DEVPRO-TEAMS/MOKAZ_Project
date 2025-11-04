@@ -16,13 +16,13 @@
             <div class="col-xl-12">
                 <div class="card border-1 shadow-sm rounded-3 overflow-hidden">
                     <div class="card-body p-4">
-                        <form action="{{ route('admin.storeLocationImage') }}" accept="image/*" method="POST" class="submitForm"
+                        <form action="{{ route('admin.storeLocationImage') }}"  method="POST" class="submitForm"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="city_code" class="form-label">Ville</label>
-                                    <select name="city_code" id="city_code" class="form-select">
+                                    <select name="city_code" id="city_code" class="form-select" required>
                                         @foreach ($locations as $city)
                                             <option value="{{ $city->code }}">
                                                 {{ $city->label }} ({{ $city->country?->label }})
@@ -33,7 +33,7 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label for="image" class="form-label">Image</label>
-                                    <input type="file" name="image" class="form-control">
+                                    <input type="file" name="image" class="form-control" accept="image/*" required>
                                 </div>
                             </div>
 

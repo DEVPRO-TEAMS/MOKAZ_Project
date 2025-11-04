@@ -455,76 +455,48 @@
     @endif
     <!-- End Property  -->
     <!-- Testimonial -->
-    <section class="flat-section flat-testimonial-v4 wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
-        <div class="container">
-            <div class="box-titl text-center mb-5">
-                <div class="text-subtitle text-primary">Témoignages</div>
-                <h4 class="mt-4">Ce que disent les gens</h4>
-            </div>
-            <div class="swiper tf-sw-testimonial" data-preview-lg="2" data-preview-md="2" data-preview-sm="2"
-                data-space="30">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="box-tes-item style-2">
-                            <ul class="list-star">
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                            </ul>
-                            <p class="note body-1">
-                                "J'ai vraiment apprécié le professionnalisme et les connaissances approfondies de l'équipe
-                                de courtage. Ils
-                                m'ont non seulement aidé à trouver la maison idéale, mais ils m'ont également assisté pour
-                                les aspects juridiques et financiers,
-                                , ce qui m'a permis de me sentir confiant et sûr de ma décision."
-                            </p>
-                            <div class="box-avt d-flex align-items-center gap-12">
-                                <div class="avatar avt-60 round">
-                                    <img src="{{ asset('assets/images/avatar/avt-7.jpg') }}" alt="avatar">
-                                </div>
-                                <div class="info">
-                                    {{-- <div class="h7 fw-7">Lorem, ipsum.</div>
-                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="box-tes-item style-2">
-                            <ul class="list-star">
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                                <li class="icon icon-star"></li>
-                            </ul>
-                            <p class="note body-1">
-                                "Mon expérience avec les services de gestion immobilière a dépassé mes attentes. Ils gèrent
-                                efficacement
-                                les propriétés avec une approche professionnelle et attentive dans chaque situation. Je me
-                                sens
-                                rassuré sur le fait que tout problème sera résolu rapidement et efficacement."
-                            </p>
-                            <div class="box-avt d-flex align-items-center gap-12">
-                                <div class="avatar avt-60 round">
-                                    <img src="{{ asset('assets/images/avatar/avt-5.jpg') }}" alt="avatar">
-                                </div>
-                                <div class="info">
-                                    {{-- <div class="h7 fw-7">Lorem, ipsum.</div>
-                                    <p class="text-variant-1 mt-4">Lorem, ipsum.</p> --}}
+    @if (count($testimonials) > 0)
+        <section class="flat-section flat-testimonial-v4 wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
+            <div class="container">
+                <div class="box-titl text-center mb-5">
+                    <div class="text-subtitle text-primary">Témoignages</div>
+                    <h4 class="mt-4">Ce que disent les gens</h4>
+                </div>
+                <div class="swiper tf-sw-testimonial" data-preview-lg="2" data-preview-md="2" data-preview-sm="2"
+                    data-space="30">
+                    <div class="swiper-wrapper">
+                        @foreach($testimonials as $item)
+                            <div class="swiper-slide">
+                                <div class="box-tes-item style-2">
+                                    <ul class="list-star">
+                                        <li class="icon icon-star"></li>
+                                        <li class="icon icon-star"></li>
+                                        <li class="icon icon-star"></li>
+                                        <li class="icon icon-star"></li>
+                                        <li class="icon icon-star"></li>
+                                    </ul>
+                                    <p class="note body-1">
+                                        "{!! $item->content !!}"
+                                    </p>
+                                    <div class="box-avt d-flex align-items-center gap-12">
+                                        <div class="avatar avt-60 round">
+                                            <img src="{{ asset('assets/images/avatar/user-profile.webp') }}" alt="avatar">
+                                        </div>
+                                        <div class="info">
+                                            <div class="h7 fw-7">{{ $item->name }}</div>
+                                            <p class="text-variant-1 mt-4">{{ $item->fonction }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
+                    <div class="sw-pagination sw-pagination-testimonial"></div>
 
                 </div>
-                <div class="sw-pagination sw-pagination-testimonial"></div>
-
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     <!-- End Testimonial -->
     <!-- banner -->
     <section class="flat-section pt-0 flat-banner wow fadeInUpSmall" data-wow-delay=".2s" data-wow-duration="2000ms">
