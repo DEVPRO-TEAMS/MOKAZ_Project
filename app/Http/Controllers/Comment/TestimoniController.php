@@ -107,7 +107,7 @@ class TestimoniController extends Controller
             return response()->json([
                 'type' => 'success',
                 'urlback' => "back",
-                'message' => "Le téstimonial a été mise a jour!",
+                'message' => "Le témoignage a été mise a jour!",
                 'code' => 200,
             ]);
         } catch (\Throwable $th) {
