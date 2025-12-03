@@ -58,6 +58,20 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group-3 form-style">
+                                                <label>Categorie</label>
+                                                <div class="group-select">
+                                                    <select name="categorie" id="categorie" class="nice-select form-select">
+                                                        <option value="">Tous</option>
+                                                        @foreach ($categories as $categorie)
+                                                            <option value="{{ $categorie->uuid }}"
+                                                                {{ request('categorie') == $categorie->uuid ? 'selected' : '' }}>
+                                                                {{ $categorie->libelle }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <input type="hidden" name="lat" id="user_lat" value="{{ request('lat') }}">
@@ -217,7 +231,7 @@
                     </div>
                 @empty
                     {{-- Vérifie s’il y a une recherche effectuée --}}
-                    @if (request()->has('search') || request()->has('type') || request()->has('location'))
+                    @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie'))
                         <div class="d-flex flex-column align-items-center">
                             <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
                             <h5 class="fw-semibold">Aucun hébergement trouvé</h5>

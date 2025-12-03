@@ -41,6 +41,36 @@
 
 
 
+@php
+        // ✅ Fonctions utilitaires définies une seule fois
+        if (!function_exists('formatTemps')) {
+            function formatTemps($minutes)
+            {
+                if (!$minutes) {
+                    return null;
+                }
+                if ($minutes >= 60) {
+                    $heures = floor($minutes / 60);
+                    $mins = round($minutes % 60);
+                    return $heures . 'h ' . ($mins > 0 ? $mins . 'min' : '');
+                }
+                return round($minutes) . ' min';
+            }
+        }
+
+        if (!function_exists('formatDistance')) {
+            function formatDistance($km)
+            {
+                if (!$km) {
+                    return null;
+                }
+                $metres = $km * 1000;
+                return $metres >= 1000
+                    ? number_format($km, 1, ',', ' ') . ' km'
+                    : number_format($metres, 0, ',', ' ') . ' m';
+            }
+        }
+    @endphp
     <section class="pt-5">
 
         {{-- 🔎 Formulaire de recherche --}}
@@ -75,6 +105,20 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group-3 form-style">
+                        <label>Categorie</label>
+                        <div class="group-select">
+                            <select name="categorie" id="categorie" class="nice-select form-select">
+                                <option value="">Tous</option>
+                                @foreach ($categories as $categorie)
+                                    <option value="{{ $categorie->uuid }}"
+                                        {{ request('categorie') == $categorie->uuid ? 'selected' : '' }}>
+                                        {{ $categorie->libelle }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="tf-btn primary">Rechercher</button>
@@ -87,6 +131,17 @@
                 @php
                     $tarifHeure = $item->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
                     $tarifJour = $item->tarifications->where('sejour', 'Jour')->sortBy('price')->first();
+
+                    // ✅ Récupérer la distance si disponible
+                    $distanceKm = $item->property->distance_km ?? null;
+
+                    // ✅ Calculs des temps de trajet
+                    $tempsPied = $distanceKm ? ($distanceKm * 1000) / 80 : null; // 80 m/min à pied
+                    $tempsVoiture = $distanceKm ? ($distanceKm / 40) * 60 : null; // 40 km/h en voiture
+
+                    $distanceAffiche = formatDistance($distanceKm);
+                    $tempsPiedAffiche = formatTemps($tempsPied);
+                    $tempsVoitureAffiche = formatTemps($tempsVoiture);
                 @endphp
                 <div class="col-sm-12 col-xl-4 col-lg-4 col-md-6 mb-4">
                     <div class="homeya-box">
@@ -158,12 +213,39 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- 🚗 Distance + Temps de trajet --}}
+                        @if ($distanceKm)
+                            <ul class="meta-list justify-content-between">
+                                {{-- 📏 Distance --}}
+                                <li class="item d-flex align-items-center">
+                                    <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
+                                    <span>{{ $distanceAffiche }}</span>
+                                </li>
+
+                                {{-- 🚶 Temps à pied --}}
+                                @if ($tempsPiedAffiche)
+                                    <li class="item d-flex align-items-center">
+                                        <i class="fa-solid fa-person-walking me-2 text-white"></i>
+                                        <span>{{ $tempsPiedAffiche }}</span>
+                                    </li>
+                                @endif
+
+                                {{-- 🚗 Temps en voiture --}}
+                                @if ($tempsVoitureAffiche)
+                                    <li class="item d-flex align-items-center">
+                                        <i class="fa-solid fa-car-side me-2 text-white"></i>
+                                        <span>{{ $tempsVoitureAffiche }}</span>
+                                    </li>
+                                @endif
+                            </ul>
+                        @endif
                     </div>
                 </div>
             @empty
 
                 {{-- verifier si il y a une recherche effectuée --}}
-                @if (request()->has('search') || request()->has('type') || request()->has('location'))
+                @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie'))
                     <div class="d-flex flex-column align-items-center">
                         <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
                         <h5 class="fw-semibold">Aucun hébergement trouvée</h5>
@@ -187,7 +269,8 @@
         </div>
 
         <div class="row pt-5" style="height: 560px">
-            <div id="map" style="height: 100%" class="top-map col-12" data-map-zoom="16" data-map-scroll="true"></div>
+            <div id="map" style="height: 100%" class="top-map col-12" data-map-zoom="16" data-map-scroll="true">
+            </div>
         </div>
     </section>
 @endsection

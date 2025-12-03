@@ -46,20 +46,24 @@
                                     <option value="Colocation">
                                     <option value="Dortoir">
                                 </datalist>
+                            @elseif ($isCategoryPage)
+                                <input list="categories_bien" name="libelle" class="form-control" required id="add_libelle" placeholder="Sélectionnez ou saisissez le libelle">
+                                <datalist id="categories_bien">
+                                    <option value="Location meublée">
+                                    <option value="Location non meublée">
+                                    <option value="Courte durée">
+                                    <option value="Longue durée">
+                                    <option value="Résidentiel">
+                                    <option value="Commercial">
+                                    <option value="Luxe">
+                                    <option value="Économique">
+                                    <option value="Famille">
+                                    <option value="Vacances">
+                                    <option value="Étudiant">
+                                </datalist>
                             @endif
-                            {{-- <input type="text"  id="add_libelle" name="libelle" required> --}}
                             <div class="invalid-feedback"></div>
                         </div>
-                        {{-- <div class="col-md-12">
-                            <label for="add_type" class="form-label">Type <span class="text-danger">*</span></label>
-                            <select class="form-select nice-select" id="add_type" name="type" required>
-                                <option value="" disabled>Sélectionner un type</option>
-                                <option value="type_of_property" @if ($isPropertyPage) selected @endif>Type de bien</option>
-                                <option value="type_of_appart">Type d'appart</option>
-                                <option value="autre">Autre</option>
-                            </select>
-                            <div class="invalid-feedback"></div>
-                        </div> --}}
 
                         <div class="col-md-12">
                             <label for="add_type" class="form-label">Type <span class="text-danger">*</span></label>
@@ -68,19 +72,24 @@
 
                                 <option value="type_of_property" 
                                     {{ $isPropertyPage ? 'selected' : (old('type') === 'type_of_property' ? 'selected' : '') }} 
-                                    {{ $isAppartPage ? 'disabled' : '' }}>
+                                    {{ $isPropertyPage ? '' : 'disabled' }}>
                                     Type de bien
                                 </option>
 
                                 <option value="type_of_appart"
                                     {{ $isAppartPage ? 'selected' : (old('type') === 'type_of_appart' ? 'selected' : '') }} 
-                                    {{ $isPropertyPage ? 'disabled' : '' }}>
+                                    {{ $isAppartPage? '' : 'disabled' }}>
                                     Type d'appart
+                                </option>
+                                <option value="category_of_property"
+                                    {{ $isCategoryPage ? 'selected' : (old('type') === 'category_of_property' ? 'selected' : '') }} 
+                                    {{ $isCategoryPage ? '' : 'disabled' }}>
+                                    Cotégorie de bien
                                 </option>
 
                                 <option value="autre" 
                                     {{ old('type') === 'autre' ? 'selected' : '' }} 
-                                    {{ ($isAppartPage || $isPropertyPage) ? 'disabled' : '' }}>
+                                    {{ ($isAppartPage || $isPropertyPage || $isCategoryPage) ? 'disabled' : '' }}>
                                     Autre
                                 </option>
                             </select>

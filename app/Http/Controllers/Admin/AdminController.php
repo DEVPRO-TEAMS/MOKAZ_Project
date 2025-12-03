@@ -6,6 +6,7 @@ use App\Models\city;
 use App\Models\User;
 use App\Models\Partner;
 use App\Models\Property;
+use App\Models\Variable;
 use App\Models\Appartement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -174,7 +175,9 @@ class AdminController extends Controller
 
         $properties = $query->orderBy('created_at', 'desc')->get();
 
-        return view('admins.pages.propreties.viewProperty', compact('properties'));
+        $categories = Variable::where(['type'=> 'category_of_property','etat' => 'actif'])->get();
+
+        return view('admins.pages.propreties.viewProperty', compact('properties', 'categories'));
     }
 
     public function importCityCountry(Request $request)
@@ -361,7 +364,7 @@ class AdminController extends Controller
         }
     }
 
-    public function approveProperty($uuid)
+    public function approveProperty(Request $request, $uuid)
     {
         DB::beginTransaction();
         try {
@@ -380,21 +383,22 @@ class AdminController extends Controller
             }
 
             // Vérification si la demande n'est pas déjà approuvée
-            if ($property->etat == 'actif') {
-                Log::info('Propriete deja approuvee donc actif');
-                return response()->json([
-                    'type' => 'error',
-                    'urlback' => '',
-                    'status' => false,
-                    'message' => 'Cette propriété a déjà été approuvée'
-                ], 400);
-            }
+            // if ($property->etat == 'actif') {
+            //     Log::info('Propriete deja approuvee donc actif');
+            //     return response()->json([
+            //         'type' => 'error',
+            //         'urlback' => '',
+            //         'status' => false,
+            //         'message' => 'Cette propriété a déjà été approuvée'
+            //     ], 400);
+            // }
 
             // Mise à jour de l'état
             // foreach($property->apartements->where('etat', '==', 'inactif') as $appart){
             //     $appart->etat = 'actif';
             //     $appart->save();
             // }
+            $property->category_uuid = $request->category_uuid;
             $property->etat = 'actif';
             $property->save();
 
@@ -404,7 +408,8 @@ class AdminController extends Controller
                 'type' => 'success',
                 'status' => true,
                 'urlback' => 'back',
-                'message' => 'Propriété approuvée avec succès',
+                'message' => '',
+                // 'message' => 'Propriété approuvée avec succès',
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -412,7 +417,7 @@ class AdminController extends Controller
                 'type' => 'error',
                 'urlback' => '',
                 'status' => false,
-                'message' => "Une erreur s'est produite lors de l'approbation de la propriété",
+                'message' => "Une erreur s'est produite",
                 'error_details' => env('APP_DEBUG') ? $e->getMessage() : null
             ], 500);
         }

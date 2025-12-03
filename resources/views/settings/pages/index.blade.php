@@ -4,6 +4,7 @@
     @php
         $isAppartPage = request()->is('setting/index/appart');
         $isPropertyPage = request()->is('setting/index/property');
+        $isCategoryPage = request()->is('setting/index/category');
     @endphp
 
     <div class="main-content-inn">
@@ -62,6 +63,8 @@
                                             <span class="badge bg-warning text-light">Type de bien</span>
                                         @elseif ($item->type == 'type_of_appart')
                                             <span class="badge bg-success text-light">Type d'appart</span>
+                                        @elseif ($item->type == 'category_of_property')
+                                            <span class="badge bg-primary text-light">Categorie de bien</span>
                                         @elseif ($item->type == 'autre')
                                             <span>Autre</span>
                                         @endif

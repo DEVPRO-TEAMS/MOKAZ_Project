@@ -30,6 +30,12 @@ class SettingController extends Controller
 
         return view('settings.pages.index', compact('variables'));
     }
+    public function indexCategory(Request $request)
+    {
+        $variables = Variable::where(['type'=> 'category_of_property','etat' => 'actif'])->get();
+
+        return view('settings.pages.index', compact('variables'));
+    }
 
     public function storeVariable(Request $request)
     {

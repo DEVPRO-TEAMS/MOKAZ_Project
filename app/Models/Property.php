@@ -22,6 +22,7 @@ class Property extends Model
         'image',
         'title',
         'type_uuid',
+        'category_uuid',
         'address',
         'country',
         'city',
@@ -52,6 +53,10 @@ class Property extends Model
     public function type()
     {
         return $this->belongsTo(Variable::class, 'type_uuid', 'uuid');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Variable::class, 'category_uuid', 'uuid');
     }
 
     public function partner()

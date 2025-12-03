@@ -151,7 +151,8 @@ class PropertyController extends Controller
         $property = Property::where('uuid', $uuid)
         ->with(['apartements.tarifications']) // eager load
         ->first();
-        return view('properties.show', compact('property'));
+        $categories = Variable::where(['type'=> 'category_of_property','etat' => 'actif'])->get();
+        return view('properties.show', compact('property', 'categories'));
     }
 
     /**

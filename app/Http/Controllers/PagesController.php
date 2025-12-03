@@ -241,16 +241,20 @@ class PagesController extends Controller
         $search = trim($request->input('search'));
         $location = trim($request->input('location'));
         $type = $request->input('type');
+        $categorie = $request->input('categorie');
 
-        // ✅ Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
-        $useGeolocation = !($search || $location || $type);
+        // créer une session pour stocker les latitudeUser et longitudeUser
+        session(['lat' => $latitudeUser, 'lng' => $longitudeUser]);
 
-        // 🏘️ Requête de base : appartements actifs et disponibles
+        //  Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
+        $useGeolocation = !($search || $location || $type || $categorie);
+
+        //  Requête de base : appartements actifs et disponibles
         $query = Appartement::with('property')
             ->where('appartements.etat', 'actif')
             ->where('appartements.nbr_available', '>', 0);
 
-        // 🔍 Recherche par mot-clé / localisation
+        // Recherche par mot-clé / localisation
         if ($search || $location) {
             $query->where(function ($q) use ($search, $location) {
                 if ($search) {
@@ -284,12 +288,17 @@ class PagesController extends Controller
             });
         }
 
-        // 🏡 Filtre par type
+        // Filtre par type
         if ($type) {
             $query->where('type_uuid', $type);
         }
 
-        // 📍 Calcul de distance Haversine et tri si coordonnées fournies
+        // Filtre par categorie
+        if ($categorie) {
+            $query->where('category_uuid', $categorie);
+        }
+
+        // Calcul de distance Haversine et tri si coordonnées fournies
         if ($latitudeUser && $longitudeUser) {
             $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
             * cos(radians(properties.latitude)) 
@@ -302,7 +311,7 @@ class PagesController extends Controller
                 $query->whereHas('property', function ($q) use ($haversine) {
                     $q->whereRaw("$haversine <= 10");
                 });
-                
+
                 // Ajouter la distance au SELECT et trier par distance croissante
                 $query->with(['property' => function ($q) use ($haversine) {
                     $q->addSelect([
@@ -310,11 +319,11 @@ class PagesController extends Controller
                         DB::raw("$haversine AS distance_km")
                     ]);
                 }])
-                ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
-                ->select('appartements.*', DB::raw("$haversine AS distance_km"))
-                ->orderBy('distance_km', 'asc')
-                ->orderBy('appartements.created_at', 'desc');
-            }else {
+                    ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
+                    ->select('appartements.*', DB::raw("$haversine AS distance_km"))
+                    ->orderBy('distance_km', 'asc')
+                    ->orderBy('appartements.created_at', 'desc');
+            } else {
                 // Ajouter la distance au SELECT de la relation property
                 $query->with(['property' => function ($q) use ($haversine) {
                     $q->addSelect([
@@ -323,10 +332,6 @@ class PagesController extends Controller
                     ]);
                 }]);
             }
-
-            
-
-            
         } else {
             // Tri par date de création si pas de géolocalisation
             $query->orderBy('appartements.created_at', 'desc');
@@ -353,7 +358,9 @@ class PagesController extends Controller
             });
         $testimonials = Testimonial::all();
 
-        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations', 'testimonials'));
+        $categories = Variable::where(['type' => 'category_of_property', 'etat' => 'actif'])->get();
+
+        return view('welcome', compact('apparts', 'bestApparts', 'typeAppart', 'locations', 'testimonials', 'categories'));
     }
 
 
@@ -424,6 +431,13 @@ class PagesController extends Controller
     {
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
+        $categorie = $request->input('categorie');
+        // recuperer les coordonnées de l'utilisateur dans la session
+        $latitudeUser = session()->get('lat');
+        $longitudeUser = session()->get('lng');
+
+        $type = $request->input('type');
+
         $query = Appartement::with('property')
             ->where('property_uuid', $uuid)
             ->where('etat', 'actif')
@@ -432,6 +446,10 @@ class PagesController extends Controller
         $search = $request->input('search');
         $location = $request->input('location');
 
+        //  Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
+        $useGeolocation = !($search || $location || $type || $categorie);
+
+        // Recherche par mot-clé / localisation
         if ($search || $location) {
             $query->where(function ($q) use ($search, $location) {
 
@@ -440,6 +458,11 @@ class PagesController extends Controller
                     $q->where('title', 'like', "%$search%")
                         ->orWhere('description', 'like', "%$search%")
                         ->orWhere('commodities', 'like', "%$search%");
+                }
+
+                if ($location) {
+                    $q->orWhere('title', 'like', "%$location%")
+                        ->orWhere('description', 'like', "%$location%");
                 }
 
                 // 🔹 Recherche dans le modèle Property lié
@@ -453,7 +476,8 @@ class PagesController extends Controller
                     }
 
                     if ($location) {
-                        $q2->where('title', 'like', "%$location%")
+                        $q2->orWhere('title', 'like', "%$location%")
+                            ->orWhere('description', 'like', "%$location%")
                             ->orWhere('address', 'like', "%$location%")
                             ->orWhere('city', 'like', "%$location%")
                             ->orWhere('country', 'like', "%$location%");
@@ -466,8 +490,54 @@ class PagesController extends Controller
         if ($request->filled('type')) {
             $query->where('type_uuid', $request->type);
         }
-        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
-        return view('pages.apparts', compact('apparts', 'typeAppart', 'uuid'));
+        if ($categorie) {
+            $query->where('category_uuid', $categorie);
+        }
+
+        // Calcul de distance Haversine et tri si coordonnées fournies
+        if ($latitudeUser && $longitudeUser) {
+            $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+            * cos(radians(properties.latitude)) 
+            * cos(radians(properties.longitude) - radians($longitudeUser)) 
+            + sin(radians($latitudeUser)) 
+            * sin(radians(properties.latitude))))";
+
+            if ($useGeolocation) {
+                // $query->whereHas('property', function ($q) use ($haversine) {
+                //     $q->whereRaw("$haversine <= 10");
+                // });
+
+                // Ajouter la distance au SELECT et trier par distance croissante
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }])
+                    ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
+                    ->select('appartements.*', DB::raw("$haversine AS distance_km"))
+                    ->orderBy('distance_km', 'asc')
+                    ->orderBy('appartements.created_at', 'desc');
+            } else {
+                // Ajouter la distance au SELECT de la relation property
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }]);
+            }
+        } else {
+            // Tri par date de création si pas de géolocalisation
+            $query->orderBy('appartements.created_at', 'desc');
+        }
+
+        // Pagination des appartements
+        $apparts = $query->paginate($perPage);
+
+        // $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        $categories = Variable::where(['type' => 'category_of_property', 'etat' => 'actif'])->get();
+        return view('pages.apparts', compact('apparts', 'typeAppart', 'uuid', 'categories'));
     }
     // public function allApparts(Request $request)
     // {
@@ -516,12 +586,17 @@ class PagesController extends Controller
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
 
-        $query = Appartement::with('property')
-            ->where('etat', 'actif')
-            ->where('nbr_available', '>', 0);
+        $query = Appartement::with('property')->where('etat', 'actif')->where('nbr_available', '>', 0);
 
         $search = $request->input('search');
         $location = $request->input('location');
+        $categorie = $request->input('categorie');
+        $type = $request->input('type');
+        // recuperer les coordonnées de l'utilisateur dans la session
+        $latitudeUser = session()->get('lat');
+        $longitudeUser = session()->get('lng');
+        //  Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
+        $useGeolocation = !($search || $location || $type || $categorie);
 
         if ($search || $location) {
             $query->where(function ($q) use ($search, $location) {
@@ -531,6 +606,11 @@ class PagesController extends Controller
                     $q->where('title', 'like', "%$search%")
                         ->orWhere('description', 'like', "%$search%")
                         ->orWhere('commodities', 'like', "%$search%");
+                }
+
+                if ($location) {
+                    $q->orWhere('title', 'like', "%$location%")
+                        ->orWhere('description', 'like', "%$location%");
                 }
 
                 // 🔹 Recherche dans le modèle Property lié
@@ -544,7 +624,8 @@ class PagesController extends Controller
                     }
 
                     if ($location) {
-                        $q2->where('title', 'like', "%$location%")
+                        $q2->orWhere('title', 'like', "%$location%")
+                            ->orWhere('description', 'like', "%$location%")
                             ->orWhere('address', 'like', "%$location%")
                             ->orWhere('city', 'like', "%$location%")
                             ->orWhere('country', 'like', "%$location%");
@@ -557,10 +638,55 @@ class PagesController extends Controller
         if ($request->filled('type')) {
             $query->where('type_uuid', $request->type);
         }
+        if ($categorie) {
+            $query->where('category_uuid', $categorie);
+        }
 
-        $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        // Calcul de distance Haversine et tri si coordonnées fournies
+        if ($latitudeUser && $longitudeUser) {
+            $haversine = "(6371 * acos(cos(radians($latitudeUser)) 
+            * cos(radians(properties.latitude)) 
+            * cos(radians(properties.longitude) - radians($longitudeUser)) 
+            + sin(radians($latitudeUser)) 
+            * sin(radians(properties.latitude))))";
 
-        return view('pages.showAllApparts', compact('apparts', 'typeAppart'));
+            if ($useGeolocation) {
+                // $query->whereHas('property', function ($q) use ($haversine) {
+                //     $q->whereRaw("$haversine <= 10");
+                // });
+
+                // Ajouter la distance au SELECT et trier par distance croissante
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }])
+                    ->join('properties', 'appartements.property_uuid', '=', 'properties.uuid')
+                    ->select('appartements.*', DB::raw("$haversine AS distance_km"))
+                    ->orderBy('distance_km', 'asc')
+                    ->orderBy('appartements.created_at', 'desc');
+            } else {
+                // Ajouter la distance au SELECT de la relation property
+                $query->with(['property' => function ($q) use ($haversine) {
+                    $q->addSelect([
+                        'properties.*',
+                        DB::raw("$haversine AS distance_km")
+                    ]);
+                }]);
+            }
+        } else {
+            // Tri par date de création si pas de géolocalisation
+            $query->orderBy('appartements.created_at', 'desc');
+        }
+
+        // Pagination des appartements
+        $apparts = $query->paginate($perPage);
+
+        // $apparts = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        $categories = Variable::where(['type' => 'category_of_property', 'etat' => 'actif'])->get();
+
+        return view('pages.showAllApparts', compact('apparts', 'typeAppart', 'categories'));
     }
 
     public function indexApropos()

@@ -192,6 +192,7 @@ Route::prefix('setting')->name('setting.')->group(function(){
         Route::get('/index/commodity', [SettingController::class, 'indexCommodity'])->name('indexCommodity');
         Route::get('/index/appart', [SettingController::class, 'indexAppart'])->name('indexAppart');
         Route::get('/index/property', [SettingController::class, 'indexProperty'])->name('indexProperty');
+        Route::get('/index/category', [SettingController::class, 'indexCategory'])->name('indexCategory');
         Route::post('/variable/store', [SettingController::class, 'storeVariable'])->name('storeVariable');
         Route::post('/variable/update/{uuid}', [SettingController::class, 'updateVariable'])->name('updateVariable');
         Route::post('/variable/destroy/{uuid}', [SettingController::class, 'destroyVariable'])->name('destroyVariable');

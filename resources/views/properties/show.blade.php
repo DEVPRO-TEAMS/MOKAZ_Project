@@ -355,7 +355,10 @@
                     @if (Auth::user()->user_type == 'admin')
                         @if($property->etat == 'pending')
 
-                            <button class="btn btn-success me-2">
+                            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#propertyCategoriziedModal{{ $property->uuid }}">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Accepter
+                            </button>
+                            {{-- <button class="btn btn-success me-2">
                                 <a class="deleteConfirmation text-white" data-uuid="{{$property->uuid}}"
                                 data-type="confirmation_redirect" data-placement="top"
                                 data-token="{{ csrf_token() }}"
@@ -364,7 +367,7 @@
                                 data-id="{{$property->uuid}}" data-param="0"
                                 data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
                                 <i class="fas fa-check" style="cursor: pointer"></i> Accepter</a>
-                            </button>
+                            </button> --}}
                         
                             <button class="btn btn-danger">
                                 <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
@@ -377,6 +380,11 @@
                                 <i class="fas fa-times" style="cursor: pointer"></i> Rejeter</a>
                             </button>
                         @elseif ($property->etat == 'actif')
+                            @if (empty($property->category))
+                                <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#propertyCategoriziedModal{{ $property->uuid }}">
+                                    <i class="fas fa-tags" style="cursor: pointer"></i> Catégoriser la propriété
+                                </button>
+                            @endif
                             <button class="btn btn-danger">
                                 <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
                                 data-type="confirmation_redirect" data-placement="top"
@@ -388,7 +396,7 @@
                                 <i class="fas fa-times" style="cursor: pointer"></i> Désactiver</a>
                             </button>
                         @elseif($property->etat == 'inactif')
-                            <button class="btn btn-success">
+                            {{-- <button class="btn btn-success">
                                 <a class="deleteConfirmation  text-white" data-uuid="{{$property->uuid}}"
                                 data-type="confirmation_redirect" data-placement="top"
                                 data-token="{{ csrf_token() }}"
@@ -397,6 +405,9 @@
                                 data-id="{{$property->uuid}}" data-param="0"
                                 data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
                                 <i class="fas fa-check" style="cursor: pointer"></i> Activer</a>
+                            </button> --}}
+                            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#propertyCategoriziedModal{{ $property->uuid }}">
+                                <i class="fas fa-check" style="cursor: pointer"></i> Activer
                             </button>
                         @endif
                     @else
@@ -405,9 +416,11 @@
                     @endif
                 </div>
             </div>
+            @include('admins.pages.propreties.propretyCategoriziedModal')
+
             <div class="wrap-table p-3">
                 <!-- Informations Personnelles -->
-                <div class="info-section fade-in">
+                <div class="info-section fade-in table-responsive">
                     <h6><i class="fas fa-building text-danger"></i>Informations sur la propriété #{{ $property->code }}</h6>
                     <div class="partner-info-card">
 
@@ -458,6 +471,7 @@
                                             @endif
                                         </p>
                                     </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -471,9 +485,29 @@
                             </div>
 
                         </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-toggle-on me-2"></i>Catégorie :
+                                    </div>
+                                    <div class="info-value" id="show-last-name">
+                                        <p class="mb-0">
+                                            <span class="badge rounded-pill bg-{{!empty($property->category) ? 'success' : 'primary'}} text-light">
+                                                <i class="fas fa-tags me-1"></i>
+                                                {{ $property->category->libelle ?? 'Non categorisé pour le moment' }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-                <div class="info-section fade-in">
+                <div class="info-section fade-in table-responsive">
                     <h6><i class="fas fa-map-marker-alt me-2 text-danger"></i>Localisation</h6>
                     <div class="partner-info-card">
                         <div class="row g-0">

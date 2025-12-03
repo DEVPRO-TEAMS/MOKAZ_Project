@@ -73,7 +73,7 @@
         </div>
     </div> --}}
 
-    <div class="main-content-inner wrap-dashboard-content">
+    <div class="main-content-inne wrap-dashboard-conten">
 
 
         <div class="row mb-4">

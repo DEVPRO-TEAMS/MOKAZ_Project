@@ -146,6 +146,7 @@
                                     <tr>
                                         <th width="80">Code</th>
                                         <th>Propriété</th>
+                                        <th>Catégorie</th>
                                         <th>Localisation</th>
                                         <th>Partenaire</th>
                                         <th width="140">Date</th>
@@ -176,6 +177,12 @@
                                                     <small class="text-muted d-block">{!! Str::limit($property->description ?? '', 50) !!}</small>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary text-light">
+                                                <i class="fas fa-tags me-1"></i>
+                                                {{ $property->category->libelle ?? 'Non categorisé' }}
+                                            </span>
                                         </td>
                                         <td>
                                             <div class="d-flex flex-column">
@@ -212,51 +219,22 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                {{-- <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" 
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#showPropertyModal{{ $property->id }}"
-                                                        title="Voir détails">
-                                                    <i class="fas fa-eye"></i>
-                                                </button> --}}
                                                 <a title="Voir détails"
                                                     class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
                                                     href="{{ route('admin.properties.show', $property->uuid) }}">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                
-                                                {{-- <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                                        onclick="editProperty({{ $property->id }})"
-                                                        title="Modifier">
-                                                    <i class="fas fa-edit"></i>
-                                                </button> --}}
-                                                
-                                                {{-- @if($property->etat == 'pending')
-                                                    <button class="btn btn-sm btn-icon btn-outline-success rounded-circle">
-                                                        <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
-                                                        data-type="confirmation_redirect" data-placement="top"
-                                                        data-token="{{ csrf_token() }}"
-                                                        data-url="{{route('admin.approveProperty',$property->uuid)}}"
-                                                        data-title="Vous êtes sur le point d'approuver la propriété {{$property->code}} "
-                                                        data-id="{{$property->uuid}}" data-param="0"
-                                                        data-route="{{route('admin.approveProperty',$property->uuid)}}" title="Approuver">
-                                                        <i class="fas fa-check" style="cursor: pointer"></i></a>
-                                                    </button>
-                                                    
-                                                    <button class="btn btn-sm btn-icon btn-outline-success rounded-circle">
-                                                        <a class="deleteConfirmation" data-uuid="{{$property->uuid}}"
-                                                        data-type="confirmation_redirect" data-placement="top"
-                                                        data-token="{{ csrf_token() }}"
-                                                        data-url="{{route('admin.rejectProperty',$property->uuid)}}"
-                                                        data-title="Vous êtes sur le point de rejeter la propriété {{$property->code}} "
-                                                        data-id="{{$property->uuid}}" data-param="0"
-                                                        data-route="{{route('admin.rejectProperty',$property->uuid)}}" title="Rejeter">
-                                                        <i class="fas fa-times" style="cursor: pointer"></i></a>
-                                                    </button>
-                                                @endif --}}
+                                                @if (empty($property->category) && ($property->etat == 'actif'))
+                                                    <a title="Catégoriser"
+                                                        class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                                        href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#propertyCategoriziedModal{{ $property->uuid }}">
+                                                        <i class="fas fa-tags"></i>
+                                                    </a>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
-                                    
+                                    @include('admins.pages.propreties.propretyCategoriziedModal')
                                     @include('admins.pages.propreties.showPropretyModal')
                                     @empty
                                     <tr>

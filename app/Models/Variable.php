@@ -16,6 +16,7 @@ class Variable extends Model
         'libelle',
         'description',
         'type',
+        'category_uuid',
         'category',
         'etat',
     ];
