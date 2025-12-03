@@ -207,20 +207,21 @@
                             </div>
                         </div>
                         <div class="archive-top">
+                            
                             <div class="content">
                                 {{-- 🚗 Distance + Temps de trajet --}}
                                 @if ($distanceKm)
                                     <ul class="meta-list d-flex align-items-center justify-content-between">
                                         {{-- 📏 Distance --}}
                                         <li class="item d-flex align-items-center">
-                                            <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
+                                            <i class="bi bi-rulers me-2 text-white"></i>
                                             <span>{{ $distanceAffiche }}</span>
                                         </li>
 
                                         {{-- 🚶 Temps à pied --}}
                                         @if ($tempsPiedAffiche)
                                             <li class="item d-flex align-items-center">
-                                                <i class="fa-solid fa-person-walking me-2 text-white"></i>
+                                                <i class="bi bi-person-walking me-2 text-white"></i>
                                                 <span>{{ $tempsPiedAffiche }}</span>
                                             </li>
                                         @endif
@@ -228,7 +229,7 @@
                                         {{-- 🚗 Temps en voiture --}}
                                         @if ($tempsVoitureAffiche)
                                             <li class="item d-flex align-items-center">
-                                                <i class="fa-solid fa-car-side me-2 text-white"></i>
+                                                <i class="bi bi-car-front me-2 text-white"></i>
                                                 <span>{{ $tempsVoitureAffiche }}</span>
                                             </li>
                                         @endif
