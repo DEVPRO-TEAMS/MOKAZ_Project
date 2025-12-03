@@ -41,7 +41,7 @@
 
 
 
-@php
+    @php
         // ✅ Fonctions utilitaires définies une seule fois
         if (!function_exists('formatTemps')) {
             function formatTemps($minutes)
@@ -214,32 +214,35 @@
                             </div>
                         </div>
 
-                        {{-- 🚗 Distance + Temps de trajet --}}
-                        @if ($distanceKm)
-                            <ul class="meta-list justify-content-between">
-                                {{-- 📏 Distance --}}
-                                <li class="item d-flex align-items-center">
-                                    <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
-                                    <span>{{ $distanceAffiche }}</span>
-                                </li>
+                        <div class="archive-top">
+                            <div class="content">
+                                @if ($distanceKm)
+                                    <ul class="meta-list d-flex align-items-center justify-content-between">
+                                        {{-- 📏 Distance --}}
+                                        <li class="item d-flex align-items-center">
+                                            <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
+                                            <span>{{ $distanceAffiche }}</span>
+                                        </li>
 
-                                {{-- 🚶 Temps à pied --}}
-                                @if ($tempsPiedAffiche)
-                                    <li class="item d-flex align-items-center">
-                                        <i class="fa-solid fa-person-walking me-2 text-white"></i>
-                                        <span>{{ $tempsPiedAffiche }}</span>
-                                    </li>
-                                @endif
+                                        {{-- 🚶 Temps à pied --}}
+                                        @if ($tempsPiedAffiche)
+                                            <li class="item d-flex align-items-center">
+                                                <i class="fa-solid fa-person-walking me-2 text-white"></i>
+                                                <span>{{ $tempsPiedAffiche }}</span>
+                                            </li>
+                                        @endif
 
-                                {{-- 🚗 Temps en voiture --}}
-                                @if ($tempsVoitureAffiche)
-                                    <li class="item d-flex align-items-center">
-                                        <i class="fa-solid fa-car-side me-2 text-white"></i>
-                                        <span>{{ $tempsVoitureAffiche }}</span>
-                                    </li>
+                                        {{-- 🚗 Temps en voiture --}}
+                                        @if ($tempsVoitureAffiche)
+                                            <li class="item d-flex align-items-center">
+                                                <i class="fa-solid fa-car-side me-2 text-white"></i>
+                                                <span>{{ $tempsVoitureAffiche }}</span>
+                                            </li>
+                                        @endif
+                                    </ul>
                                 @endif
-                            </ul>
-                        @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             @empty
