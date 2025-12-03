@@ -207,14 +207,14 @@
                         </a>
                         <div class="collapse" id="dashboardSubmenu">
                             <ul class="nav nav-pills flex-column ms-3 mt-2">
-                                @if (Auth::user()->user_type == 'admin')
+                                {{-- @if (Auth::user()->user_type == 'admin')
                                     <li class="nav-item">
                                         <a href="{{ route('setting.indexCategory') }}" class="nav-link {{ Route::currentRouteName() == 'setting.indexCategory' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-muted">
                                             <i class="bi bi-circle me-2"></i>
                                             <span>Catégorie de proprieté</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
                                 <li class="nav-item">
                                     <a href="{{ route('setting.indexProperty') }}" class="nav-link {{ Route::currentRouteName() == 'setting.indexProperty' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded text-muted">
                                         <i class="bi bi-circle me-2"></i>
