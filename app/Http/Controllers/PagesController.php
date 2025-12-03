@@ -255,8 +255,8 @@ class PagesController extends Controller
             ->where('appartements.nbr_available', '>', 0);
 
         // Recherche par mot-clé / localisation
-        if ($search || $location) {
-            $query->where(function ($q) use ($search, $location) {
+        if ($search || $location || $categorie) {
+            $query->where(function ($q) use ($search, $location, $categorie) {
                 if ($search) {
                     $q->where('title', 'like', "%$search%")
                         ->orWhere('description', 'like', "%$search%")
@@ -268,7 +268,7 @@ class PagesController extends Controller
                         ->orWhere('description', 'like', "%$location%");
                 }
 
-                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                $q->orWhereHas('property', function ($q2) use ($search, $location, $categorie) {
                     if ($search) {
                         $q2->where('title', 'like', "%$search%")
                             ->orWhere('description', 'like', "%$search%")
@@ -284,6 +284,11 @@ class PagesController extends Controller
                             ->orWhere('city', 'like', "%$location%")
                             ->orWhere('country', 'like', "%$location%");
                     }
+
+                    // Filtre par categorie
+                    if ($categorie) {
+                        $q2->where('category_uuid', $categorie);
+                    }
                 });
             });
         }
@@ -291,11 +296,6 @@ class PagesController extends Controller
         // Filtre par type
         if ($type) {
             $query->where('type_uuid', $type);
-        }
-
-        // Filtre par categorie
-        if ($categorie) {
-            $query->where('category_uuid', $categorie);
         }
 
         // Calcul de distance Haversine et tri si coordonnées fournies
@@ -455,8 +455,8 @@ class PagesController extends Controller
         $useGeolocation = !($search || $location || $type || $categorie);
 
         // Recherche par mot-clé / localisation
-        if ($search || $location) {
-            $query->where(function ($q) use ($search, $location) {
+        if ($search || $location || $categorie) {
+            $query->where(function ($q) use ($search, $location, $categorie) {
 
                 // 🔹 Recherche dans le modèle Appartement
                 if ($search) {
@@ -471,7 +471,7 @@ class PagesController extends Controller
                 }
 
                 // 🔹 Recherche dans le modèle Property lié
-                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                $q->orWhereHas('property', function ($q2) use ($search, $location, $categorie) {
                     if ($search) {
                         $q2->where('title', 'like', "%$search%")
                             ->orWhere('description', 'like', "%$search%")
@@ -487,6 +487,10 @@ class PagesController extends Controller
                             ->orWhere('city', 'like', "%$location%")
                             ->orWhere('country', 'like', "%$location%");
                     }
+                    // Filtre par categorie
+                    if ($categorie) {
+                        $q2->where('category_uuid', $categorie);
+                    }
                 });
             });
         }
@@ -494,9 +498,6 @@ class PagesController extends Controller
         // Filtre par type d'appartement
         if ($request->filled('type')) {
             $query->where('type_uuid', $request->type);
-        }
-        if ($categorie) {
-            $query->where('category_uuid', $categorie);
         }
 
         // Calcul de distance Haversine et tri si coordonnées fournies
@@ -606,8 +607,8 @@ class PagesController extends Controller
         //  Si l'utilisateur fait une recherche manuelle, on ignore la géolocalisation
         $useGeolocation = !($search || $location || $type || $categorie);
 
-        if ($search || $location) {
-            $query->where(function ($q) use ($search, $location) {
+        if ($search || $location || $categorie) {
+            $query->where(function ($q) use ($categorie, $search, $location) {
 
                 // 🔹 Recherche dans le modèle Appartement
                 if ($search) {
@@ -622,7 +623,7 @@ class PagesController extends Controller
                 }
 
                 // 🔹 Recherche dans le modèle Property lié
-                $q->orWhereHas('property', function ($q2) use ($search, $location) {
+                $q->orWhereHas('property', function ($q2) use ($search, $location, $categorie) {
                     if ($search) {
                         $q2->where('title', 'like', "%$search%")
                             ->orWhere('description', 'like', "%$search%")
@@ -638,6 +639,11 @@ class PagesController extends Controller
                             ->orWhere('city', 'like', "%$location%")
                             ->orWhere('country', 'like', "%$location%");
                     }
+
+                    // Filtre par categorie
+                    if ($categorie) {
+                        $q2->where('category_uuid', $categorie);
+                    }
                 });
             });
         }
@@ -645,9 +651,6 @@ class PagesController extends Controller
         // Filtre par type d'appartement
         if ($request->filled('type')) {
             $query->where('type_uuid', $request->type);
-        }
-        if ($categorie) {
-            $query->where('category_uuid', $categorie);
         }
 
         // Calcul de distance Haversine et tri si coordonnées fournies
