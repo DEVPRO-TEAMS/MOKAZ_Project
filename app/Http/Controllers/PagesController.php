@@ -438,10 +438,15 @@ class PagesController extends Controller
 
         $type = $request->input('type');
 
+        // $query = Appartement::with('property')
+        //     ->where('property_uuid', $uuid)
+        //     ->where('etat', 'actif')
+        //     ->where('nbr_available', '>', 0);
+
         $query = Appartement::with('property')
-            ->where('property_uuid', $uuid)
-            ->where('etat', 'actif')
-            ->where('nbr_available', '>', 0);
+            ->where('appartements.property_uuid', $uuid)
+            ->where('appartements.etat', 'actif')
+            ->where('appartements.nbr_available', '>', 0);
 
         $search = $request->input('search');
         $location = $request->input('location');
@@ -586,7 +591,10 @@ class PagesController extends Controller
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
         $perPage = $request->get('perPage', 6);
 
-        $query = Appartement::with('property')->where('etat', 'actif')->where('nbr_available', '>', 0);
+        // $query = Appartement::with('property')->where('etat', 'actif')->where('nbr_available', '>', 0);
+        $query = Appartement::with('property')
+            ->where('appartements.etat', 'actif')
+            ->where('appartements.nbr_available', '>', 0);
 
         $search = $request->input('search');
         $location = $request->input('location');
