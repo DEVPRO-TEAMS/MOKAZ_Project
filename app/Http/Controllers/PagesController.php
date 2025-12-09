@@ -10,6 +10,7 @@ use App\Models\Appartement;
 use App\Models\Testimonial;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use function PHPSTORM_META\type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -793,5 +794,13 @@ class PagesController extends Controller
             'message' => $message,
             'api_response' => $response
         ]);
+    }
+
+
+    public function contratPrestataire(Request $request, $uuid)
+    {
+        $pdf = Pdf::loadView('mail.contrat', compact('uuid'));
+        return $pdf->stream('contrat-prestataire.pdf');
+        // return $pdf->download('fiche_prestation.pdf');
     }
 }

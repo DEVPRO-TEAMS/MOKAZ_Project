@@ -257,6 +257,9 @@
                 <div class="text-center pt-4">
                     <a href="{{ route('appart.all') }}" class="tf-btn primary size-1">Voir tous les biens</a>
                 </div>
+                {{-- <div class="text-center pt-4">
+                    <a href="{{ route('contratPrestataire', 'jkfeejk') }}" target="_blank" class="tf-btn primary size-1">Contrat </a>
+                </div> --}}
             @endif
         </div>
     </section>

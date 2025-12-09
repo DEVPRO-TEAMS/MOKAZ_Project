@@ -35,7 +35,7 @@
                             <select name="category_uuid" class="form-select nice-select" id="category_uuid" required>
                                 <option value="">Choisir une categorie de propriété</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->uuid }}">{{ $category->libelle }}</option>
+                                    <option value="{{ $category->uuid }}" {{ $property->category_uuid == $category->uuid ? 'selected' : '' }}>{{ $category->libelle }}</option>
                                 @endforeach
                             </select>
                         </div>

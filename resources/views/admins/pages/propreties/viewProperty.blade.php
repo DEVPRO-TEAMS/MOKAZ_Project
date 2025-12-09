@@ -224,8 +224,9 @@
                                                     href="{{ route('admin.properties.show', $property->uuid) }}">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                @if (empty($property->category) && ($property->etat == 'actif'))
-                                                    <a title="Catégoriser"
+                                                {{-- @if (empty($property->category) && ($property->etat == 'actif')) --}}
+                                                @if ($property->etat == 'actif')
+                                                    <a title=" {{ empty($property->category) ? 'Catégoriser' : 'Modifier la catégorie' }}"
                                                         class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
                                                         href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#propertyCategoriziedModal{{ $property->uuid }}">
                                                         <i class="fas fa-tags"></i>
