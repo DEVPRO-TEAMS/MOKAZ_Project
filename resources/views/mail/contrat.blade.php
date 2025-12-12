@@ -67,11 +67,11 @@
 <body>
 
     <div class="header" style="width: 25%; margin: 0">
-        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/images/logo/logo-main.png'))) }}"
+        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/images/logo/logo-jsbey.png'))) }}"
             style="width: 100%" alt="MOKAZ Logo" class="logo">
     </div>
 
-    <h1><u>Contrat de Partenariat</u></h1>
+    <h1><u>Contrat de Partenariat</u></h1> <br><br>
 
     <p><strong>Entre les soussignés :</strong></p>
 
@@ -81,10 +81,12 @@
 
     <p>Ci-après désignée « société gérante de l'application MOKAZ » d'une part</p><br>
 
-    <p>2) <br> a) Nom de la structure : ___________________________</p>
-    <p>b) Nom du Propriétaire ou gérant : ___________________________</p>
-    <p>c) Téléphone : ___________________________</p>
-    <p>d) Adresse mail : ___________________________</p>
+    <p>2) <br> a) Nom de la structure : <span
+            style="text-transform: uppercase">{{ $partner->raison_social ?? '' }}</span> </p>
+    <p>b) Nom du Propriétaire ou gérant : <span style="text-transform: uppercase">{{ $user->lastname ?? '' }}
+            {{ $user->name ?? '' }}</span> </p>
+    <p>c) Téléphone : <span>{{ $user->phone ?? '' }}</span> </p>
+    <p>d) Adresse mail : <span>{{ $user->email ?? '' }}</span> </p>
 
     <p>Ci-après désignée « Structure d’hébergement » d'autre part,</p>
 
@@ -93,7 +95,8 @@
     <p><strong>Article 1er – Objet du contrat</strong><br><br>
         1) La présente convention a pour objet de définir les conditions dans lesquelles la société JSBEY, société
         gérante de la plateforme MOKAZ, demande à une structure d’hébergement de mettre à la disposition du Client un
-        hébergement situé à (Commune et Localisation)</p><br><br><br><br>
+        hébergement situé à <span style="text-transform: uppercase">{{ $partner->adresse ?? '' }}</span></p>
+    <br><br><br><br><br><br><br><br>
 
     <p><strong>Article 2 – Obligations de la structure d’hébergement</strong><br><br>
         La structure d’hébergement s’engage à observer la confidentialité la plus totale en ce qui concerne le contenu
@@ -158,20 +161,29 @@
         Pour l’exécution des présentes, ainsi que de leurs suites, les Parties font élection de domicile en leurs sièges
         sociaux indiqués en tête des présentes.</p><br>
 
-    <p>Fait à Abidjan, le ___/___/20___ en deux (2) exemplaires originaux</p>
+    <p>Fait à Abidjan, le {{ \Carbon\Carbon::parse($user->created_at)->translatedFormat('l d F Y') }} en deux (2)
+        exemplaires originaux</p>
 
-    <div class="signature">
-        <div>
-            <p style="text-align: left">La structure d’hébergement<br><br><br>Signature</p>
+    <div class="signature" style="height: 60vh;">
+        <div style="height: 45vh; float: left">
+            <p style="text-align: left">La structure d’hébergement</p>
+            <p>
+                
+            </p>
         </div>
-        <div>
-            <p style="text-align: right">La société gérante<br><br><br>Signature</p>
+        <div style="height: 45vh; float: right">
+            <p style="text-align: right">La société gérante</p>
+            <p style="text-align: right">
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('assets/images/logo/sign-jsbey.jpeg'))) }}"
+                    style="width: 70%" alt="MOKAZ signature" class="log">
+            </p>
         </div>
     </div>
     <div style="clear: both"></div>
 
     <div class="footer" style="width: 100%; position: fixed; bottom: 0;">
-        <p style="text-align: center; margin: 0; font-size: 12px; font-weight: normal; font-size: 15px;">JSBEY – Société à responsabilité limitée – RCCM
+        <p style="text-align: center; margin: 0; font-size: 12px; font-weight: normal; font-size: 15px;">JSBEY – Société
+            à responsabilité limitée – RCCM
             CI-ABJ-03-2024-B13-01106<br>
             Cité Alliance Akwaba Anyama – Lot 317 – IM 17 – n°13 – 11 BP 1713 Abidjan 11<br>
             Tél : 0787245197 – 0767964144</p>

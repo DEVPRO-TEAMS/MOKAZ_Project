@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Comment;
+use App\Models\Partner;
+
 use App\Models\Property;
 use App\Models\Variable;
-
 use App\Models\Appartement;
 use App\Models\Testimonial;
 use Illuminate\Support\Str;
@@ -797,9 +799,11 @@ class PagesController extends Controller
     }
 
 
-    public function contratPrestataire(Request $request, $uuid)
+    public function contratPrestataire(Request $request, $email)
     {
-        $pdf = Pdf::loadView('mail.contrat', compact('uuid'));
+        $partner = Partner::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
+        $pdf = Pdf::loadView('mail.contrat', compact('partner', 'user'));
         return $pdf->stream('contrat-prestataire.pdf');
         // return $pdf->download('fiche_prestation.pdf');
     }

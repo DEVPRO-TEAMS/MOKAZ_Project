@@ -69,7 +69,7 @@ Route::get('/reservation/paiement-success/{reservation_uuid}', [ReservationContr
 Route::get('/reservation/paiement-failed/{reservation_uuid}', [ReservationController::class, 'paiementFailed'])->name('reservation.paiement.failed');
 
 
-Route::get('/contrat-prestataire/{uuid}', [PagesController::class, 'contratPrestataire'])->name('contratPrestataire');
+Route::get('/contrat-prestataire/{email}', [PagesController::class, 'contratPrestataire'])->name('contratPrestataire');
 
 
 
