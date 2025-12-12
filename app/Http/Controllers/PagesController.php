@@ -804,7 +804,7 @@ class PagesController extends Controller
         $partner = Partner::where('email', $email)->first();
         $user = User::where('email', $email)->first();
         $pdf = Pdf::loadView('mail.contrat', compact('partner', 'user'));
-        return $pdf->stream('contrat-prestataire.pdf');
-        // return $pdf->download('fiche_prestation.pdf');
+        // return $pdf->stream('contrat-prestataire.pdf');
+        return $pdf->download('fiche_prestation.pdf');
     }
 }
