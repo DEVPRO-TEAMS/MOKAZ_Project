@@ -785,11 +785,19 @@ class ReservationController extends Controller
         $reservation->is_present = $request->is_present;
         $reservation->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Client présent',
-            'data' => $reservation
-        ]);
+        if ($request->is_present == 1) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Client présent',
+                'data' => $reservation
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'message' => 'Client absent',
+                'data' => $reservation
+            ]);
+        }
     }
 
     // Mettre à jour une réservation

@@ -149,6 +149,7 @@
                     @endphp
 
                     <div class="col-xl-4 col-md-6">
+                        
                         <div class="homeya-box style-3">
                             <div class="images-group">
                                 <div class="images-style">
@@ -167,65 +168,70 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div class="top">
+                                    <span class="flag-tag style-2">{{ $item->type->libelle }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
+                                </div>
 
                                 <div class="content">
-                                    <div class="title text-1 text-capitalize">
-                                        <a href="{{ route('appart.detail.show', $item->uuid) }}"
-                                            class="link text-white">{{ $item->title ?? '' }}</a>
-                                    </div>
+                                    <a href="{{ route('appart.detail.show', $item->uuid) }}" class="link">
+                                        <div class="title text-1 text-capitalize">
+                                            <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                                class="link text-white">{{ $item->title ?? '' }}</a>
+                                        </div>
 
-                                    <ul class="meta-list">
-                                        <li class="item">
-                                            <i class="icon icon-bed"></i>
-                                            <span>{{ $item->nbr_room ?? 0 }}</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-bathtub"></i>
-                                            <span>{{ $item->nbr_bathroom ?? 0 }}</span>
-                                        </li>
-                                        <li class="item">
-                                            <i class="icon icon-money"></i>
-                                            <span>
-                                                @if ($tarifHeure)
-                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
-                                                    FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
-                                                @elseif ($tarifJour)
-                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
-                                                    FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
-                                                @else
-                                                    Prix non disponible
-                                                @endif
-                                            </span>
-                                        </li>
-                                    </ul>
-
-                                    {{-- 🚗 Distance + Temps de trajet --}}
-                                    @if ($distanceKm)
-                                        <ul class="meta-list justify-content-between">
-                                            {{-- 📏 Distance --}}
-                                            <li class="item d-flex align-items-center">
-                                                <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
-                                                <span>{{ $distanceAffiche }}</span>
+                                        <ul class="meta-list">
+                                            <li class="item">
+                                                <i class="icon icon-bed"></i>
+                                                <span>{{ $item->nbr_room ?? 0 }}</span>
                                             </li>
-
-                                            {{-- 🚶 Temps à pied --}}
-                                            @if ($tempsPiedAffiche)
-                                                <li class="item d-flex align-items-center">
-                                                    <i class="fa-solid fa-person-walking me-2 text-white"></i>
-                                                    <span>{{ $tempsPiedAffiche }}</span>
-                                                </li>
-                                            @endif
-
-                                            {{-- 🚗 Temps en voiture --}}
-                                            @if ($tempsVoitureAffiche)
-                                                <li class="item d-flex align-items-center">
-                                                    <i class="fa-solid fa-car-side me-2 text-white"></i>
-                                                    <span>{{ $tempsVoitureAffiche }}</span>
-                                                </li>
-                                            @endif
+                                            <li class="item">
+                                                <i class="icon icon-bathtub"></i>
+                                                <span>{{ $item->nbr_bathroom ?? 0 }}</span>
+                                            </li>
+                                            <li class="item">
+                                                <i class="icon icon-money"></i>
+                                                <span>
+                                                    @if ($tarifHeure)
+                                                        À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
+                                                        FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                                    @elseif ($tarifJour)
+                                                        À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
+                                                        FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                                    @else
+                                                        Prix non disponible
+                                                    @endif
+                                                </span>
+                                            </li>
                                         </ul>
-                                    @endif
-                                </div>
+
+                                        {{-- 🚗 Distance + Temps de trajet --}}
+                                        @if ($distanceKm)
+                                            <ul class="meta-list justify-content-between">
+                                                {{-- 📏 Distance --}}
+                                                <li class="item d-flex align-items-center">
+                                                    <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
+                                                    <span>{{ $distanceAffiche }}</span>
+                                                </li>
+
+                                                {{-- 🚶 Temps à pied --}}
+                                                @if ($tempsPiedAffiche)
+                                                    <li class="item d-flex align-items-center">
+                                                        <i class="fa-solid fa-person-walking me-2 text-white"></i>
+                                                        <span>{{ $tempsPiedAffiche }}</span>
+                                                    </li>
+                                                @endif
+
+                                                {{-- 🚗 Temps en voiture --}}
+                                                @if ($tempsVoitureAffiche)
+                                                    <li class="item d-flex align-items-center">
+                                                        <i class="fa-solid fa-car-side me-2 text-white"></i>
+                                                        <span>{{ $tempsVoitureAffiche }}</span>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        @endif
+                                    </a>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -356,7 +362,7 @@
                                         </ul>
                                     </div>
                                     <div class="bottom"><span
-                                            class="flag-tag style-2">{{ $firstAppart->type->libelle }}</span></div>
+                                            class="flag-tag style-2">{{ $firstAppart->type->libelle }} {{ !empty($firstAppart->property->category) ? ' | ' . $firstAppart->property->category->libelle : '' }}</span></div>
                                 </a>
                                 <div class="content">
                                     <h5 class="text-capitalize"><a
@@ -424,7 +430,7 @@
                                             <li class="box-icon w-28"><span class="icon icon-eye"></span></li>
                                         </ul>
                                     </div>
-                                    <div class="bottom"><span class="flag-tag style-2">{{ $item->type->libelle }}</span>
+                                    <div class="bottom"><span class="flag-tag style-2">{{ $item->type->libelle }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
                                     </div>
                                 </a>
                                 <div class="content">

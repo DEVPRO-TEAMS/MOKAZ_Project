@@ -24,6 +24,7 @@
     </section>
 
     <section class="flat-section pt-0 flat-property-detail">
+        
         @php
             // Récupérer la tarification à l'heure la moins chère
 $tarifHeure = $appart->tarifications->where('sejour', 'Heure')->sortBy('price')->first();
@@ -33,6 +34,9 @@ $tarifJour = $appart->tarifications->where('sejour', 'Jour')->sortBy('price')->f
         @endphp
         <div class="container border rounded shadow p-4">
             <div class="header-property-detail">
+                <a href="javascript:history.back()" class="btn btn-outline-dark mb-3">
+                    <i class="fa fa-arrow-left"></i> Retour
+                </a>
                 <div class="content-top d-flex justify-content-between align-items-center">
                     <div class="box-name">
                         {{-- <a href="#" class="flag-tag primary">En </a> --}}

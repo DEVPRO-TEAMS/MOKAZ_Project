@@ -73,6 +73,11 @@
     @endphp
     <section class="pt-5">
 
+        {{-- Bouton retour  --}}
+        <a href="javascript:history.back()" class="btn btn-outline-dark mb-3">
+            <i class="fa fa-arrow-left"></i> Retour
+        </a>
+
         {{-- 🔎 Formulaire de recherche --}}
         <form action="{{ route('appart.all') }}" method="get">
             <div class="wd-find-select shadow-st mb-4 border">
@@ -162,7 +167,7 @@
                                     </ul>
                                 </div>
                                 <div class="bottom">
-                                    <span class="flag-tag style-2">{{ $item->type->libelle ?? '' }}</span>
+                                    <span class="flag-tag style-2">{{ $item->type->libelle ?? '' }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
                                 </div>
                             </a>
                             <div class="content">

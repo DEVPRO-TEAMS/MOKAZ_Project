@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('content')
     <section class="flat-section pt-4 flat-property-detail">
+        <a href="javascript:history.back()" class="btn btn-outline-dark mb-3">
+            <i class="fa fa-arrow-left"></i> Retour
+        </a>
         <div class="container border rounded shadow p-4">
             @php
                 $start = \Carbon\Carbon::parse($reservation->start_time);
