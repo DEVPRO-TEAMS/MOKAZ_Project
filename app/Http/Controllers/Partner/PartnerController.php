@@ -54,9 +54,18 @@ class PartnerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function partners()
+    public function partners(Request $request)
     {
-        $partners = Partner::all();
+        
+        $query = Partner::query();
+
+        if ($request->filled('search')) {
+            $query->where('raison_social', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('adresse', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%');
+        }
+        $partners = $query->get();
         return view('partners.pages.index', compact('partners'));
     }
     public function partnersCollaborator()

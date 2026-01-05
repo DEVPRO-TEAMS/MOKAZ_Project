@@ -169,7 +169,7 @@ $tarifJour = $apartement->tarifications->where('sejour', 'Jour')->sortBy('price'
             <div class="modal-footer btn-container">
                 <input type="hidden" name="appart_uuid" id="appart_uuid" value="{{ $apartement->uuid }}">
                 @if (Auth::user()->user_type == 'admin')
-                    @if ($property->etat == 'actif')
+                    @if ($apartement->property->etat == 'actif')
                         @if ($apartement->etat == 'pending')
                             <button class="btn btn-success me-2">
                                 <a class="deleteConfirmation text-white" data-uuid="{{ $apartement->uuid }}"
