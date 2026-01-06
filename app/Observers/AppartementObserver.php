@@ -11,7 +11,7 @@ class AppartementObserver
 {
     public function saved(Appartement $appartement)
     {
-        $appartement->where('etat','!=', 'inactif')->load([
+        $appartement->load([
             'property.ville',
             'property.pays',
             'property.type',
