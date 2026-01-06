@@ -303,6 +303,10 @@
                                                 <span>{{ $tempsVoitureAffiche }}</span>
                                             </li>
                                         @endif
+                                        <li class="item d-flex align-items-center">
+                                            <i class="fa-solid fa-map-location-dot me-1 text-dark"></i>
+                                            <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
+                                        </li>
                                     </ul>
                                 @endif
                             </div>
