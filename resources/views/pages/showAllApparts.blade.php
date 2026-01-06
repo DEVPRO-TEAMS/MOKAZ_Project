@@ -81,7 +81,7 @@
         {{-- 🔎 Formulaire de recherche --}}
         <form action="{{ route('appart.all') }}" method="get">
             <div class="wd-find-select shadow-st mb-4 border">
-                <div class="inner-group">
+                {{-- <div class="inner-group">
                     <div class="form-group-1 search-form form-style">
                         <label>Mot-clé</label>
                         <input type="text" class="form-control" placeholder="Rechercher par Mot-clé." name="search"
@@ -118,6 +118,64 @@
                                 @foreach ($categories as $categorie)
                                     <option value="{{ $categorie->uuid }}"
                                         {{ request('categorie') == $categorie->uuid ? 'selected' : '' }}>
+                                        {{ $categorie->libelle }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div> --}}
+                <div class="inner-group">
+                    <div class="form-group-1 search-form form-style">
+                        <label>Mot-clé</label>
+                        <input type="text" class="form-control" placeholder="Par Mot-clé." name="search"
+                            value="{{ request('search') }}">
+                    </div>
+
+                    <div class="form-group-2 form-style">
+                        <label for="ville">Ville</label>
+                        <div class="group-ip">
+                            <select name="ville" id="ville" class="nice-select form-select selection">
+                                <option value="" selected>Toutes les villes</option>
+                                @foreach ($cities as $city)
+                                    <option value="{{ $city->code . ' ' . $city->label }}"
+                                        {{ request('ville') == $city->code . ' ' . $city->label ? 'selected' : '' }}>
+                                        {{ $city->label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-2 form-style d-none">
+                        <label for="">Localisation</label>
+                        <div class="group-ip">
+                            <input type="text" class="form-control" placeholder="Par Localisation" name="location"
+                                value="{{ request('location') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group-3 form-style">
+                        <label>Type</label>
+                        <div class="group-select">
+                            <select name="type" id="type" class="nice-select form-select">
+                                <option value="" selected>Tous</option>
+                                @foreach ($typeAppart as $type)
+                                    <option value="{{ $type->libelle }}"
+                                        {{ request('type') == $type->libelle ? 'selected' : '' }}>
+                                        {{ $type->libelle }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-3 form-style">
+                        <label>Categorie</label>
+                        <div class="group-select">
+                            <select name="categorie" id="categorie" class="nice-select form-select">
+                                <option value="">Tous</option>
+                                @foreach ($categories as $categorie)
+                                    <option value="{{ $categorie->libelle }}"
+                                        {{ request('categorie') == $categorie->libelle ? 'selected' : '' }}>
                                         {{ $categorie->libelle }}
                                     </option>
                                 @endforeach
@@ -167,7 +225,8 @@
                                     </ul>
                                 </div>
                                 <div class="bottom">
-                                    <span class="flag-tag style-2">{{ $item->type->libelle ?? '' }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
+                                    <span class="flag-tag style-2">{{ $item->type->libelle ?? '' }}
+                                        {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
                                 </div>
                             </a>
                             <div class="content">

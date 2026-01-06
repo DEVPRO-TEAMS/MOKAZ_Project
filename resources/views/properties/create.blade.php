@@ -91,7 +91,7 @@
                                 Ville:<span>*</span>
                             </label>
 
-                            <select name="city" class="nice-select list style-1" id="city" required>
+                            <select name="city" class="nice-select list style-1 selectio" id="city" required>
                             </select>
                         </fieldset>
                         <fieldset class="box-fieldset">
@@ -167,18 +167,27 @@
                             return;
                         }
 
+                        
+
+                        // 👉 Ajouter l’option "Autre"
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        defaultOption.textContent = '-- Choisir une ville ou commune --';
+                        citySelect.appendChild(defaultOption);
+
+                        const optionAutre = document.createElement('option');
+                        optionAutre.value = 'autre';
+                        optionAutre.textContent = 'Autre ville, précisez !';
+                        citySelect.appendChild(optionAutre);
+
                         data.forEach(city => {
                             const option = document.createElement('option');
                             option.value = city.code;
                             option.textContent = city.label;
                             citySelect.appendChild(option);
                         });
-
-                        // 👉 Ajouter l’option "Autre"
-                        const optionAutre = document.createElement('option');
-                        optionAutre.value = 'autre';
-                        optionAutre.textContent = 'Autre';
-                        citySelect.appendChild(optionAutre);
                     })
                     .catch(error => {
                         console.error(error);

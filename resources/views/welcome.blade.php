@@ -31,15 +31,29 @@
                                             <div class="form-group-1 search-form form-style">
                                                 <label>Mot-clé</label>
                                                 <input type="text" class="form-control"
-                                                    placeholder="Rechercher par Mot-clé." name="search"
+                                                    placeholder="Par Mot-clé." name="search"
                                                     value="{{ request('search') }}">
                                             </div>
 
                                             <div class="form-group-2 form-style">
-                                                <label>Localisation</label>
+                                                <label for="ville">Ville</label>
+                                                <div class="group-ip">
+                                                    <select name="ville" id="ville" class="nice-select form-select selection">
+                                                    <option value="" selected>Toutes les villes</option>
+                                                        @foreach ($cities as $city)
+                                                            <option value="{{ $city->code . ' ' . $city->label }}"
+                                                                {{ request('ville') == $city->code . ' ' . $city->label ? 'selected' : '' }}>
+                                                                {{ $city->label }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group-2 form-style d-none">
+                                                <label for="">Localisation</label>
                                                 <div class="group-ip">
                                                     <input type="text" class="form-control"
-                                                        placeholder="rechercher par Localisation" name="location"
+                                                        placeholder="Par Localisation" name="location"
                                                         value="{{ request('location') }}">
                                                 </div>
                                             </div>
@@ -48,10 +62,10 @@
                                                 <label>Type</label>
                                                 <div class="group-select">
                                                     <select name="type" id="type" class="nice-select form-select">
-                                                        <option value="">Tous</option>
+                                                        <option value="" selected>Tous</option>
                                                         @foreach ($typeAppart as $type)
-                                                            <option value="{{ $type->uuid }}"
-                                                                {{ request('type') == $type->uuid ? 'selected' : '' }}>
+                                                            <option value="{{ $type->libelle }}"
+                                                                {{ request('type') == $type->libelle ? 'selected' : '' }}>
                                                                 {{ $type->libelle }}
                                                             </option>
                                                         @endforeach
@@ -64,8 +78,8 @@
                                                     <select name="categorie" id="categorie" class="nice-select form-select">
                                                         <option value="">Tous</option>
                                                         @foreach ($categories as $categorie)
-                                                            <option value="{{ $categorie->uuid }}"
-                                                                {{ request('categorie') == $categorie->uuid ? 'selected' : '' }}>
+                                                            <option value="{{ $categorie->libelle }}"
+                                                                {{ request('categorie') == $categorie->libelle ? 'selected' : '' }}>
                                                                 {{ $categorie->libelle }}
                                                             </option>
                                                         @endforeach
@@ -206,28 +220,32 @@
 
                                         {{-- 🚗 Distance + Temps de trajet --}}
                                         @if ($distanceKm)
-                                            <ul class="meta-list justify-content-between">
+                                            <ul class="meta-list justify-content-between w-100">
                                                 {{-- 📏 Distance --}}
                                                 <li class="item d-flex align-items-center">
-                                                    <i class="fa-solid fa-ruler-horizontal me-2 text-white"></i>
-                                                    <span>{{ $distanceAffiche }}</span>
+                                                    <i class="fa-solid fa-ruler-horizontal me-1 text-white"></i>
+                                                    <span>{{ $distanceAffiche ?? '' }}</span>
                                                 </li>
 
                                                 {{-- 🚶 Temps à pied --}}
                                                 @if ($tempsPiedAffiche)
                                                     <li class="item d-flex align-items-center">
-                                                        <i class="fa-solid fa-person-walking me-2 text-white"></i>
-                                                        <span>{{ $tempsPiedAffiche }}</span>
+                                                        <i class="fa-solid fa-person-walking me-1 text-white"></i>
+                                                        <span>{{ $tempsPiedAffiche ?? '' }}</span>
                                                     </li>
                                                 @endif
 
                                                 {{-- 🚗 Temps en voiture --}}
                                                 @if ($tempsVoitureAffiche)
                                                     <li class="item d-flex align-items-center">
-                                                        <i class="fa-solid fa-car-side me-2 text-white"></i>
-                                                        <span>{{ $tempsVoitureAffiche }}</span>
+                                                        <i class="fa-solid fa-car-side me-1 text-white"></i>
+                                                        <span>{{ $tempsVoitureAffiche ?? '' }}</span>
                                                     </li>
                                                 @endif
+                                                <li class="item d-flex align-items-center">
+                                                    <i class="fa-solid fa-map-location-dot me-1 text-white"></i>
+                                                    <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
+                                                </li>
                                             </ul>
                                         @endif
                                     </a>

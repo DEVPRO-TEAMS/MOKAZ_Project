@@ -30,9 +30,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
+    
     <style>
         /* Conteneur des champs de saisie pour placer l'icône */
         /* Applique le style aux éléments en lecture seule */
@@ -138,6 +140,19 @@
             color: #fff;
             font-weight: bold;
         }
+        .select2-container--default .select2-selection--single {
+            /* border-radius: 8px; */
+            border: none !important;
+        }
+        /* .select2-container--default .select2-selection--single {
+            height: 38px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px !important;
+        } */
     </style>
 </head>
 
@@ -286,6 +301,8 @@
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('assets/js/map.js') }}"></script>
     <script src="{{ asset('assets/js/map-contact.js') }}"></script>
     <script src="{{ asset('assets/js/marker.js') }}"></script>
@@ -296,6 +313,17 @@
     <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript">
     </script>
     <script src="{{ asset('assets/js/map-single.js') }}"></script>
+
+    
+    <script>
+        $(document).ready(function() {
+            $('.selection').select2({
+                // placeholder: "Choisir",
+                allowClear: true,
+                width: '100%',
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

@@ -26,6 +26,24 @@ function Refgenerate($table,$init,$key)
     return $init.'-' . sprintf('%05d',$string+1);
 }
 
+function cleanHtmlForSearch(?string $html): string
+{
+    if (!$html) {
+        return '';
+    }
+
+    // 1. Décoder les entités HTML (&eacute; → é)
+    $text = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    // 2. Supprimer les balises HTML
+    $text = strip_tags($text);
+
+    // 3. Supprimer les espaces multiples
+    $text = preg_replace('/\s+/', ' ', $text);
+
+    return trim($text);
+}
+
 if (!function_exists('sendSms')) {
     function sendSms($to, $message)
     {
@@ -44,4 +62,6 @@ if (!function_exists('sendSms')) {
         return $response->json();
     }
 }
+
+
 

@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <!-- Favicon and Touch Icons  -->
         <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/logo/favicon.png') }}">
@@ -67,6 +67,16 @@
             border-color: #dc3545;
             color: #fff;
             font-weight: bold;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px !important;
         }
     </style>
     </head>
@@ -175,9 +185,19 @@
         <script src="{{ asset('assets/js/marker.js') }}"></script>
         <script src="{{ asset('assets/js/infobox.min.js') }}"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+        <script>
+            $(document).ready(function() {
+                $('.selection').select2({
+                    placeholder: "Choisir",
+                    allowClear: true,
+                    width: '100%',
+                });
+            });
+        </script>
         <script>
              $(document).ready(function() {
     
