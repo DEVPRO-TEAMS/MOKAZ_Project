@@ -680,7 +680,7 @@ class PagesController extends Controller
         $query = Appartement::with('property')
             ->where('appartements.etat', 'actif')
             ->where('appartements.nbr_available', '>', 0)
-            ->whereIn('uuid', $appartementIds);
+            ->whereIn('appartements.uuid', $appartementIds);
 
         // Calcul de distance Haversine et tri si coordonnées fournies
         if ($latitudeUser && $longitudeUser) {
