@@ -2,7 +2,9 @@
 
 namespace App\Services\Search;
 
+use App\Models\Search;
 use App\Models\Appartement;
+use Illuminate\Support\Str;
 
 class AppartementSearchService
 {
@@ -92,5 +94,30 @@ class AppartementSearchService
             // Tarification
             $tarifs,
         ])->filter()->implode(' ');
+    }
+
+    public function reindexAppartement(Appartement $appartement): void
+    {
+        $appartement->load([
+            'property.ville',
+            'property.pays',
+            'property.type',
+            'property.category',
+            'tarifications',
+            'type'
+        ]);
+
+        $query = $this->buildQuery($appartement);
+
+        Search::updateOrCreate(
+            ['appartement_uuid' => $appartement->uuid],
+            [
+                'uuid' => Str::uuid(),
+                'property_uuid' => $appartement->property_uuid,
+                'property_code' => $appartement->property->code ?? null,
+                'appartement_code' => $appartement->code,
+                'query' => $query,
+            ]
+        );
     }
 }

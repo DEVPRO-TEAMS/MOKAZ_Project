@@ -216,8 +216,8 @@
                                     Séjour en:<span>*</span>
                                 </label>
                                 <select class="form-select list style-1 nice-select sejour-en" name="sejour_en[]" @if ($countTarif == 0) required @endif>
-                                    <option value="" disabled>Sélectionnez...</option>
-                                    <option value="Jour" @if (!empty($tarifJour)) disabled @endif>Jour</option>
+                                    <option value="" disabled selected>Sélectionnez...</option>
+                                    <option value="Jour">Jour</option>
                                     <option value="Heure" @if (!empty($tarifJour)) selected @endif>Heure</option>
                                 </select>
                             </fieldset>
@@ -438,7 +438,7 @@
             <div class="widget-box-2">
                 <h6 class="title">Videos de l'hébergement</h6>
                 <fieldset class="box-fieldset">
-                    <label for="video">URL de la vidéo :</label>
+                    <label for="video">URL de la vidéo (Youtube de preference) :</label>
                     <input type="url" class="form-control style-1" id="video" name="video_url"
                         value="{{ $appart->video_url ?? '' }}" placeholder="Youtube de preference">
                 </fieldset>
@@ -687,15 +687,48 @@
         });
     </script>
 
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
+            let tarifJour = @json($tarifJour) || null;
+            // console.log(tarifJour);
             const addTarifBtn = document.getElementById('addTarifBtn');
 
             const tarifsContainer = document.getElementById('tarifs-container');
             const tarifBlock = document.querySelector('.tarif-block');
+
+            function isJourAlreadySelected() {
+                return Array.from(document.querySelectorAll('.sejour-en')).some(select => select.value === 'Jour');
+            }
+            function haveDefaultTarifJour() {
+                // let defaultTarifJourExists = false;
+                // if (tarifJour != null) {
+                //     defaultTarifJourExists = true;
+                // }
+                // return defaultTarifJourExists;
+                return tarifJour !== null;
+            }
+
+            function updateJourOptionsAvailability() {
+                const jourInForm = isJourAlreadySelected();
+                const defaultTarifJourExists = haveDefaultTarifJour();
+                document.querySelectorAll('.sejour-en').forEach(select => {
+                    const jourOption = select.querySelector('option[value="Jour"]');
+                    // const jourOption = select.querySelector('option[value="Jour"]');
+                    if (!jourOption) return;
+
+                    // autoriser Jour uniquement si :
+                    // - pas déjà sélectionné ailleurs
+                    // - pas existant en base
+                    jourOption.disabled =
+                        (jourInForm && select.value !== 'Jour') || defaultTarifJourExists;
+                    // if (jourOption) {
+                    //     jourOption.disabled = (jourExists && select.value !== 'Jour') || defaultTarifJourExists;
+                    //     // if (defaultTarifJourExists) {
+                    //     //     jourOption.disabled = true;
+                    //     // }
+                    // }
+                });  
+            }
 
             // Fonction pour gérer le comportement de sélection
             function handleSelectChange(select, tempsInput, tempsLabelSpan) {
@@ -708,6 +741,9 @@
                         tempsInput.readOnly = false;
                     }
                     tempsLabelSpan.textContent = select.value;
+
+                    // Mettre à jour tous les selects après changement
+                    updateJourOptionsAvailability();
                 });
             }
 
@@ -716,6 +752,7 @@
             const initialTempsInput = tarifBlock.querySelector('.temps-input');
             const tempsLabelSpan = document.querySelector('.temps-label');
             handleSelectChange(initialSelect, initialTempsInput, tempsLabelSpan);
+            updateJourOptionsAvailability();
 
             // Ajouter un nouveau bloc de tarif
             addTarifBtn.addEventListener('click', function() {
@@ -742,6 +779,7 @@
                 removeBtn.classList.add('tf-btn', 'secondary', 'mt-sm-2', 'mt-lg-4', 'mt-md-4');
                 removeBtn.addEventListener('click', function() {
                     newTarifBlock.remove();
+                    updateJourOptionsAvailability();
                 });
 
                 const removeContainer = newTarifBlock.querySelector('.remove-container');
@@ -750,6 +788,8 @@
 
                 // Ajouter le nouveau bloc au container
                 tarifsContainer.appendChild(newTarifBlock);
+
+                updateJourOptionsAvailability();
             });
 
 
@@ -828,7 +868,6 @@
                 });
             });
 
-
             // supprimer un tarif de l'appartement
             document.querySelectorAll('.removeTarif').forEach(function(button) {
                 button.addEventListener('click', function() {
@@ -859,45 +898,50 @@
                             });
 
                             fetch(`/api/delete-appart-tarif/${tarifUuid}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector(
-                                            'meta[name="csrf-token"]')?.content,
-                                        'Accept': 'application/json',
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.status) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Succès',
-                                            text: data.message,
-                                            timer: 1500,
-                                            showConfirmButton: false,
-                                            toast: true,
-                                            position: 'top-end',
-                                            timerProgressBar: true,
-                                        });
-                                        previewItem.remove();
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Erreur',
-                                            text: data.message,
-                                            showConfirmButton: true,
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error(error);
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]')?.content,
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Succès',
+                                        text: data.message,
+                                        timer: 1500,
+                                        showConfirmButton: false,
+                                        toast: true,
+                                        position: 'top-end',
+                                        timerProgressBar: true,
+                                    });
+                                    previewItem.remove();
+                                    // 🔥 ON DIT AU JS : "le tarif Jour n’existe plus en base"
+                                    tarifJour = null;
+
+                                    // 🔥 RÉACTIVATION IMMÉDIATE DE L’OPTION "Jour"
+                                    updateJourOptionsAvailability();
+                                } else {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Erreur',
-                                        text: 'Une erreur s’est produite lors de la suppression de l’image.',
+                                        text: data.message,
                                         showConfirmButton: true,
                                     });
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erreur',
+                                    text: 'Une erreur s’est produite lors de la suppression de l’image.',
+                                    showConfirmButton: true,
                                 });
+                            });
                         }
                     });
                 });
@@ -905,6 +949,7 @@
 
         });
     </script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
