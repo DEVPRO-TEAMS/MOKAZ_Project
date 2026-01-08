@@ -81,12 +81,15 @@ class ReservationController extends Controller
             $end_time = $request->end_time
                 ? Carbon::parse($request->end_time)->format('Y-m-d H:i:s')
                 : null;
+            
+            $visitUuid = session('visit_uuid');
 
             $still_to_pay = (float) $request->totalPrice - (float) $request->paymentAmount;
             // Création de la réservation
             $reservation = Reservation::create([
                 'uuid' => Str::uuid(),
                 'code' => $code,
+                'visit_uuid' => $visitUuid,
                 'nom' => $request->nom,
                 'prenoms' => $request->prenoms,
                 'email' => $request->email,

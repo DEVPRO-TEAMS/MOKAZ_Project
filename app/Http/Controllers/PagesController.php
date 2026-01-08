@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\city;
 use App\Models\User;
-use App\Models\Search;
 
+use App\Models\Search;
 use App\Models\Comment;
 use App\Models\Partner;
 use App\Models\Property;
@@ -14,6 +15,7 @@ use App\Models\Appartement;
 use App\Models\Testimonial;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\AppartementView;
 use Barryvdh\DomPDF\Facade\Pdf;
 use function PHPSTORM_META\type;
 use Illuminate\Support\Facades\DB;
@@ -749,7 +751,32 @@ class PagesController extends Controller
     public function show(string $uuid)
     {
         $appart = Appartement::where('etat', '=', 'actif')->where('uuid', $uuid)->first();
-        // dd($appart);
+
+        $visitUuid = session('visit_uuid');
+
+        if ($visitUuid) {
+            $todayStart = Carbon::today();
+            $todayEnd   = Carbon::today()->endOfDay();
+
+            $view = AppartementView::where('visit_uuid', $visitUuid)
+            ->where('appartement_uuid', $uuid)
+            ->whereBetween('viewed_at', [$todayStart, $todayEnd])
+            ->first();
+
+            if ($view) {
+                // déjà visité aujourd’hui → update
+                $view->update([
+                    'viewed_at' => now(),
+                ]);
+            } else {
+                // pas encore visité aujourd’hui → create
+                AppartementView::create([
+                    'visit_uuid'       => $visitUuid,
+                    'appartement_uuid' => $uuid,
+                    'viewed_at'        => now(),
+                ]);
+            }
+        }
         return view('pages.detail', compact('appart'));
     }
 

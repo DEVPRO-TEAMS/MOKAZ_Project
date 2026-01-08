@@ -382,6 +382,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
     </script>
 
+    <script>
+        const pageViewId = "{{ session('current_page_view_id') }}";
+        // window.addEventListener('beforeunload', function () {
+        //     navigator.sendBeacon(
+        //         '/track/page-duration',
+        //         new Blob([], { type: 'application/json' })
+        //     );
+        // });
+
+        window.addEventListener('beforeunload', function () {
+            if (!pageViewId) return;
+
+            const data = JSON.stringify({ page_view_id: pageViewId });
+
+            navigator.sendBeacon(
+                '/track/page-duration',
+                new Blob([data], { type: 'application/json' })
+            );
+        });
+
+    </script>
+
 </body>
 
 </html>

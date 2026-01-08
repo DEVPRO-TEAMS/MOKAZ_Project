@@ -17,6 +17,7 @@ class Reservation extends Model
     protected $fillable = [
         'uuid',
         'code',
+        'visit_uuid',
         'nom',
         'prenoms',
         'email',

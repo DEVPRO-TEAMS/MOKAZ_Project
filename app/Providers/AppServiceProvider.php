@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\PageView;
 use App\Models\Property;
 use App\Models\Variable;
 use App\Models\Appartement;
@@ -51,5 +52,6 @@ class AppServiceProvider extends ServiceProvider
         Tarification::observe(TarificationObserver::class);
         Property::observe(PropertyObserver::class);
         Variable::observe(VariableObserver::class);
-    }
+
+}
 }

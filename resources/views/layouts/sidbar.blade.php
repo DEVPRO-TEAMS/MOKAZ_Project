@@ -105,6 +105,16 @@
                         
                     </li>
 
+                    {{-- <li class="nav-item mb-1">
+                        <a class="nav-link {{ Route::currentRouteName() == 'admin.index' || Route::currentRouteName() == 'partner.index' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded bg-opacity-10 text-dark" 
+                        href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : route('partner.index') }}">
+                            <i class="bi bi-graph-up me-3 fs-5"></i>
+                            <span>Statistiques</span>
+                        </a>
+                        
+                    </li> --}}
+
+
                     @if (Auth::user()->user_type == 'partner')
                     <!-- Réservations -->
                     <li class="nav-item mb-1">

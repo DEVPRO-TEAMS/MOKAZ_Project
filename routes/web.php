@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\PageView;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -203,6 +205,27 @@ Route::prefix('setting')->name('setting.')->group(function(){
         
     });
 });
+
+
+Route::post('/track/page-duration', function (Request $request) {
+    $pageViewId = $request->input('page_view_id');
+
+    if (!$pageViewId) {
+        Log::info('page_view_id not provided');
+        return response()->json(['status' => false]);
+    }
+
+    $pageView = \App\Models\PageView::find($pageViewId);
+
+    if ($pageView && is_null($pageView->duration)) {
+        $pageView->duration = now()->diffInSeconds($pageView->created_at);
+        $pageView->save();
+
+        Log::info('Duration saved for PageView ID ' . $pageView->id);
+    }
+
+    return response()->json(['status' => true]);
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/send/email', [MailController::class, 'sendMail'])->name('sendMail');
 
