@@ -16,21 +16,22 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
-
-            $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email'])->nullable();
-            $table->string('referrer')->nullable();
-
-            $table->string('coordornneGPS', 150)->nullable();
-            $table->string('country', 120)->nullable();
-            $table->string('city', 120)->nullable();
-
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('ended_at')->nullable();
-
             $table->timestamps();
+            
+            // $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email'])->nullable();
+            // $table->string('referrer')->nullable();
 
-            $table->index(['source']);
-            $table->index(['started_at']);
+            // $table->string('coordornneGPS', 150)->nullable();
+            // $table->string('country', 120)->nullable();
+            // $table->string('city', 120)->nullable();
+
+            // $table->timestamp('started_at')->nullable();
+            // $table->timestamp('ended_at')->nullable();
+
+            
+
+            // $table->index(['source']);
+            // $table->index(['started_at']);
         });
     }
 

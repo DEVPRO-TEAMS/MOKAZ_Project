@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Visit;
 use App\Models\Appartement;
+use App\Models\PageViewHistorique;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -11,13 +12,17 @@ class PageView extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'uuid',
         'visit_uuid',
         'url',
-        'page_type', // home, search, appartement, login
+        'page_type',
         'appartement_uuid',
-        'duration',
     ];
 
+    public function historiques()
+    {
+        return $this->hasMany(PageViewHistorique::class, 'pageview_uuid', 'uuid');
+    }
     public function visit()
     {
         return $this->belongsTo(Visit::class, 'visit_uuid', 'uuid');

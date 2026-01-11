@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\PageView;
+use Illuminate\Support\Str;
+use App\Models\PageViewHistorique;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TrackPageView
@@ -13,51 +16,117 @@ class TrackPageView
     //     return $next($request);
     // }
 
+    // public function handle($request, Closure $next)
+    // {
+    //     // Ignore si pas de visite
+    //     if (!session()->has('visit_uuid')) {
+    //         return $next($request);
+    //     }
+
+    //     $url = $request->path();
+
+    //     // 🔹 Ignorer les fichiers statiques et la route de tracking
+    //     $ignoredPrefixes = [
+    //         'storage/',
+    //         'track/',
+    //         'assets/',
+    //         'api/',
+    //     ];
+
+    //     foreach ($ignoredPrefixes as $prefix) {
+    //         if (str_starts_with($url, $prefix)) {
+    //             return $next($request); // ne pas tracker
+    //         }
+    //     }
+
+    //     $pageType = $this->resolvePageType($url);
+
+    //     $pageView = PageView::where('visit_uuid', session('visit_uuid'))
+    //         ->where('url', $url)
+    //         ->where('page_type', $pageType)
+    //         ->whereDate('created_at', today())
+    //         ->first();
+
+    //     if (!$pageView) {
+    //         $pageView = PageView::create([
+    //             'uuid'       => (string) Str::uuid(),
+    //             'visit_uuid' => session('visit_uuid'),
+    //             'url'        => $url,
+    //             'page_type'  => $pageType,
+    //         ]);
+    //         Log::info('PageView created for URL ' . $url . ' and PageView ID ' . $pageView->id);
+    //     }
+
+    //     $pageViewHistorique = PageViewHistorique::where('page_view_uuid', $pageView->uuid)
+    //         ->whereNull('ended_at')
+    //         ->whereDate('started_at', today())
+    //         ->first();
+    //     // 2️⃣ Nouvelle entrée historique
+    //     if (!$pageViewHistorique) {
+    //         $historique = PageViewHistorique::create([
+    //             'uuid'   => (string) Str::uuid(),
+    //             'page_view_uuid' => $pageView->uuid,
+    //             'started_at'   => now(),
+    //         ]);
+    //     }
+
+    //     // 🔹 Stocker l'ID immédiatement pour sendBeacon
+    //     session(['current_page_view_historique_uuid' => $pageView->uuid]);
+
+    //     return $next($request);
+    // }
+
     public function handle($request, Closure $next)
     {
-        // Ignore si pas de visite
         if (!session()->has('visit_uuid')) {
             return $next($request);
         }
 
-        $url = $request->path();
+        $url = '/' . ltrim($request->path(), '/');
 
         // 🔹 Ignorer les fichiers statiques et la route de tracking
-        $ignoredPrefixes = [
-            'storage/',
-            'track/',
-            'assets/',
-            'api/',
-        ];
-
-        foreach ($ignoredPrefixes as $prefix) {
-            if (str_starts_with($url, $prefix)) {
-                return $next($request); // ne pas tracker
+        foreach (['storage/', 'track/', 'assets/', 'api/'] as $prefix) {
+            if (str_starts_with($url, '/' . $prefix)) {
+                return $next($request);
             }
         }
 
-        $pageType = $this->resolvePageType($url);
+        $pageType = $this->resolvePageType($request->path());
 
-        $pageView = PageView::where('visit_uuid', session('visit_uuid'))
-            ->where('url', $url)
-            ->where('page_type', $pageType)
-            ->whereDate('created_at', today())
-            ->first();
-
-        if (!$pageView) {
-            $pageView = PageView::create([
+        // 🔹 PageView (statique)
+        $pageView = PageView::firstOrCreate(
+            [
                 'visit_uuid' => session('visit_uuid'),
                 'url'        => $url,
                 'page_type'  => $pageType,
-            ]);
-            Log::info('PageView created for URL ' . $url . ' and PageView ID ' . $pageView->id);
-        }
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+            ]
+        );
 
-        // 🔹 Stocker l'ID immédiatement pour sendBeacon
-        session(['current_page_view_id' => $pageView->id]);
+        // 🔹 Auto-fermeture des historiques inactifs depuis > 30 min
+        PageViewHistorique::where('pageview_uuid', $pageView->uuid)
+            ->whereNull('ended_at')
+            ->where('started_at', '<', now()->subMinutes(30))
+            ->update([
+                'ended_at' => now(),
+                'duration' => DB::raw('TIMESTAMPDIFF(SECOND, started_at, NOW())')
+            ]);
+
+        // 🔹 Toujours créer un nouvel historique
+        $historique = PageViewHistorique::create([
+            'uuid'          => (string) Str::uuid(),
+            'pageview_uuid' => $pageView->uuid,
+            'started_at'    => now(),
+        ]);
+
+        // ✅ Stocker l'UUID de l'historique actif pour sendBeacon
+        session(['current_page_view_historique_uuid' => $historique->uuid]);
 
         return $next($request);
     }
+
 
     private function resolvePageType(string $path): string
     {

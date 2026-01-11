@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('page_views', function (Blueprint $table) {
             $table->id();
+
+            $table->uuid('uuid');
             $table->uuid('visit_uuid');
             $table->string('url')->nullable();
             $table->string('page_type')->nullable(); // home, search, appartement
             $table->uuid('appartement_uuid')->nullable();
-            $table->integer('duration')->nullable()->comment('Temps passé en secondes');; // secondes
+            $table->integer('duration')->nullable()->comment('Temps passé en secondes'); 
 
             $table->timestamps();
 

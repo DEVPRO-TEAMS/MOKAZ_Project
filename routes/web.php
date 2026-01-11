@@ -1,11 +1,15 @@
 <?php
 
+use App\Models\Visit;
 use App\Models\PageView;
 use Illuminate\Http\Request;
+use App\Models\VisitHistorique;
+use App\Models\PageViewHistorique;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\User\UserController;
@@ -84,6 +88,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/import-city-country', [AdminController::class, 'importCityCountry'])->name('import.city.country');
 
         Route::get('/dashboard', [AdminController::class, 'index'])->name('index');
+        Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
@@ -207,25 +212,141 @@ Route::prefix('setting')->name('setting.')->group(function(){
 });
 
 
-Route::post('/track/page-duration', function (Request $request) {
-    $pageViewId = $request->input('page_view_id');
+// Route::post('/track/page-duration', function (Request $request) {
+//     $pageViewId = $request->input('page_view_id');
 
-    if (!$pageViewId) {
-        Log::info('page_view_id not provided');
+//     if (!$pageViewId) {
+//         Log::info('page_view_id not provided');
+//         return response()->json(['status' => false]);
+//     }
+
+//     $pageView = PageView::find($pageViewId);
+
+//     if ($pageView && is_null($pageView->duration)) {
+//         $pageView->duration = now()->diffInSeconds($pageView->created_at);
+//         $pageView->save();
+
+//         Log::info('Duration saved for PageView ID ' . $pageView->id);
+//     }
+
+//     return response()->json(['status' => true]);
+// })->withoutMiddleware([VerifyCsrfToken::class]);
+
+// Route::post('/track/page-duration', function (Request $request) {
+
+//     $historiqueUuid = $request->input('historique_uuid');
+
+//     if (!$historiqueUuid) {
+//         Log::info('historique_id not provided');
+//         return response()->json(['status' => false]);
+//     }
+
+//     $historique = PageViewHistorique::where('uuid', $historiqueUuid)
+//         ->whereNull('ended_at')
+//         ->whereDate('started_at' , today())
+//         ->first();
+
+//     if (!$historique || $historique->ended_at) {
+//         return response()->json(['status' => true]);
+//     }
+
+//     $historique->update([
+//         'ended_at' => now(),
+//         'duration' => now()->diffInSeconds($historique->started_at),
+//     ]);
+
+//     Log::info('Page duration saved for historique ' . $historiqueUuid);
+
+//     return response()->json(['status' => true]);
+
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+Route::post('/track/page-duration', function (Request $request) {
+
+    $uuid = $request->input('historique_uuid');
+
+    if (!$uuid) {
+        Log::warning('historique_uuid manquant : Page historique');
         return response()->json(['status' => false]);
     }
 
-    $pageView = \App\Models\PageView::find($pageViewId);
+    $historique = PageViewHistorique::where('uuid', $uuid)
+        ->whereNull('ended_at')
+        ->first();
 
-    if ($pageView && is_null($pageView->duration)) {
-        $pageView->duration = now()->diffInSeconds($pageView->created_at);
-        $pageView->save();
+    if (!$historique) {
+        Log::info('Historique déjà fermé ou introuvable : Page historique ', ['uuid' => $uuid]);
+        return response()->json(['status' => true]);
+    }
 
-        Log::info('Duration saved for PageView ID ' . $pageView->id);
+    $historique->update([
+        'ended_at' => now(),
+        'duration' => now()->diffInSeconds($historique->started_at),
+    ]);
+
+    Log::info('Durée page enregistrée pour page historique', [
+        'uuid' => $uuid,
+        'duration' => $historique->duration
+    ]);
+
+    return response()->json(['status' => true]);
+
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+// Route::post('/track/visit-end', function (Request $request) {
+
+//     $visitUuid = $request->input('visit_uuid');
+
+//     if (!$visitUuid) {
+//         Log::info('visit_uuid not provided');
+//         return response()->json(['status' => false]);
+//     }
+
+//     $visitHistorique = VisitHistorique::where('visit_uuid', $visitUuid)->first();
+
+//     if (!$visitHistorique) {
+//         Log::info('Visit not found: ' . $visitUuid);
+//         return response()->json(['status' => false]);
+//     }
+
+//     // 🔒 On évite d'écraser si déjà fermé
+//     if (is_null($visitHistorique->ended_at)) {
+//         $visitHistorique->ended_at = now();
+//         $visitHistorique->save();
+
+//         Log::info('Visit ended: ' . $visitUuid);
+//     }
+
+//     return response()->json(['status' => true]);
+
+// })->withoutMiddleware([VerifyCsrfToken::class]);
+
+Route::post('/track/visit-end', function (Request $request) {
+    $uuid = $request->input('visit_historique_uuid');
+
+    if (!$uuid) {
+        Log::warning('visit_historique_uuid manquant');
+        return response()->json(['status' => false]);
+    }
+
+    $historique = VisitHistorique::where('uuid', $uuid)
+        ->whereNull('ended_at')
+        ->first();
+
+    if ($historique) {
+        $historique->update([
+            'ended_at' => now(),
+            'duration' => now()->diffInSeconds($historique->started_at),
+        ]);
+        Log::info('Session fermée avec succès', ['uuid' => $uuid]);
     }
 
     return response()->json(['status' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
 
 Route::get('/send/email', [MailController::class, 'sendMail'])->name('sendMail');
 

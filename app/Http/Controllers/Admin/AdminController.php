@@ -87,6 +87,67 @@ class AdminController extends Controller
             'experienceData'
         ));
     }
+    public function statistics()
+    {
+        // Récupérer toutes les demandes
+        $partnerships = PartnershipRequest::all();
+
+        // Statistiques principales
+        $totalRequests = $partnerships->count();
+        $pendingRequests = $partnerships->where('etat', 'pending')->count();
+        $activeRequests = $partnerships->where('etat', 'actif')->count();
+        $inactiveRequests = $partnerships->where('etat', 'inactif')->count();
+
+        // Préparer les données pour le graphique d'évolution annuelle
+        $currentYear = date('Y');
+        $monthlyData = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthStart = $currentYear . '-' . str_pad($i, 2, '0', STR_PAD_LEFT) . '-01';
+            $monthEnd = date('Y-m-t', strtotime($monthStart));
+
+            $count = PartnershipRequest::whereBetween('created_at', [$monthStart, $monthEnd])->count();
+            $monthlyData[] = $count;
+        }
+
+        // Répartition par type de propriété
+        $propertyTypes = [
+            'residential' => 'Résidentiel',
+            'commercial' => 'Commercial',
+            'industrial' => 'Industriel',
+            'land' => 'Terrains',
+            'mixed' => 'Mixte'
+        ];
+
+        $propertyTypeData = [];
+        foreach ($propertyTypes as $key => $label) {
+            $propertyTypeData[$label] = $partnerships->where('property_type', $key)->count();
+        }
+
+        // Répartition par niveau d'expérience
+        $experienceLevels = [
+            '0-2' => '0-2 ans',
+            '3-5' => '3-5 ans',
+            '6-10' => '6-10 ans',
+            '10+' => 'Plus de 10 ans'
+        ];
+
+        $experienceData = [];
+        foreach ($experienceLevels as $key => $label) {
+            $experienceData[$label] = $partnerships->where('experience', $key)->count();
+        }
+
+        return view('admins.pages.statistics', compact(
+            'partnerships',
+            'totalRequests',
+            'pendingRequests',
+            'activeRequests',
+            'inactiveRequests',
+            'monthlyData',
+            'propertyTypeData',
+            'experienceData'
+        ));
+    }
 
     public function indexLocation()
     {

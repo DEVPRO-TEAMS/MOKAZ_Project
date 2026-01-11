@@ -382,14 +382,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
     </script>
 
-    <script>
+    {{-- <script>
         const pageViewId = "{{ session('current_page_view_id') }}";
-        // window.addEventListener('beforeunload', function () {
-        //     navigator.sendBeacon(
-        //         '/track/page-duration',
-        //         new Blob([], { type: 'application/json' })
-        //     );
-        // });
 
         window.addEventListener('beforeunload', function () {
             if (!pageViewId) return;
@@ -402,6 +396,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             );
         });
 
+    </script> --}}
+
+    <script>
+        const pageViewHistoriqueUuid = "{{ session('current_page_view_historique_uuid') }}";
+
+        window.addEventListener('beforeunload', function () {
+            if (!pageViewHistoriqueUuid) return;
+
+            const data = new Blob(
+                [JSON.stringify({ historique_uuid: pageViewHistoriqueUuid })],
+                { type: 'application/json' }
+            );
+
+            navigator.sendBeacon('/track/page-duration', data);
+        });
+    </script>
+
+    {{-- <script>
+    const visitUuid = "{{ session('visit_uuid') }}";
+
+        window.addEventListener('beforeunload', function () {
+            if (!visitUuid) return;
+
+            navigator.sendBeacon(
+                '/track/visit-end',
+                new Blob(
+                    [JSON.stringify({ visit_uuid: visitUuid })],
+                    { type: 'application/json' }
+                )
+            );
+        });
+    </script> --}}
+    <script>
+        const visitHistoriqueUuid = "{{ session('visit_historique_uuid') }}";
+
+        window.addEventListener('beforeunload', function () {
+            if (!visitHistoriqueUuid) return;
+
+            const data = new Blob(
+                [JSON.stringify({ visit_historique_uuid: visitHistoriqueUuid })],
+                { type: 'application/json' }
+            );
+
+            navigator.sendBeacon('/track/visit-end', data);
+        });
     </script>
 
 </body>
