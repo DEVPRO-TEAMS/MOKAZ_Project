@@ -63,18 +63,35 @@ class VisitTracker
     //     );
     // }
 
+    // private function findOrCreateVisit(Request $request): Visit
+    // {
+    //     return Visit::firstOrCreate(
+    //         [
+    //             'ip_address' => $request->ip(),
+    //             'user_agent' => $request->userAgent(),
+    //             'visit_date' => now()->toDateString(), // 👈 AJOUT
+    //         ],
+    //         [
+    //             'uuid' => Str::uuid(),
+    //             'started_at' => now(),
+    //         ]
+    //     );
+    // }
     private function findOrCreateVisit(Request $request): Visit
     {
+        $start = now()->startOfDay();
+        $end   = now()->endOfDay();
+
         return Visit::where('ip_address', $request->ip())
-        ->where('user_agent', $request->userAgent())
-        ->whereDate('started_at', today()) // 👈 clé ici
-        ->firstOrCreate(
-            [],
-            [
-                'uuid'       => (string) Str::uuid(),
-                'started_at' => now(),
-            ]
-        );
+            ->where('user_agent', $request->userAgent())
+            ->whereBetween('started_at', [$start, $end]) // 🔥 index-friendly
+            ->firstOrCreate(
+                [],
+                [
+                    'uuid'       => (string) Str::uuid(),
+                    'started_at' => now(),
+                ]
+            );
     }
     
     private function manageHistorique(Visit $visit, Request $request): VisitHistorique
