@@ -82,16 +82,21 @@ class VisitTracker
         $start = now()->startOfDay();
         $end   = now()->endOfDay();
 
-        return Visit::where('ip_address', $request->ip())
+        $visit = Visit::where('ip_address', $request->ip())
             ->where('user_agent', $request->userAgent())
-            ->whereBetween('started_at', [$start, $end]) // 🔥 index-friendly
-            ->firstOrCreate(
-                [],
-                [
-                    'uuid'       => (string) Str::uuid(),
-                    'started_at' => now(),
-                ]
-            );
+            ->whereBetween('started_at', [$start, $end])
+            ->first();
+
+        if ($visit) {
+            return $visit;
+        }
+
+        return Visit::create([
+            'uuid'       => (string) Str::uuid(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'started_at' => now(),
+        ]);
     }
     
     private function manageHistorique(Visit $visit, Request $request): VisitHistorique
