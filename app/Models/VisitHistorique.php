@@ -17,6 +17,7 @@ class VisitHistorique extends Model
         'country',
         'city',
         'started_at',
+        'last_activity_at',
         'ended_at',
         'duration',
     ];

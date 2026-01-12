@@ -429,18 +429,81 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
     </script> --}}
     <script>
-        const visitHistoriqueUuid = "{{ session('visit_historique_uuid') }}";
+        // const visitHistoriqueUuid = "{{ session('visit_historique_uuid') }}";
 
-        window.addEventListener('beforeunload', function () {
-            if (!visitHistoriqueUuid) return;
+        // window.addEventListener('beforeunload', function () {
+        //     if (!visitHistoriqueUuid) return;
 
-            const data = new Blob(
-                [JSON.stringify({ visit_historique_uuid: visitHistoriqueUuid })],
-                { type: 'application/json' }
-            );
+        //     navigator.sendBeacon(
+        //         '/track/visit-end',
+        //         new Blob(
+        //             [JSON.stringify({ visit_historique_uuid: visitHistoriqueUuid })],
+        //             { type: 'application/json' }
+        //         )
+        //     );
+        // });
 
-            navigator.sendBeacon('/track/visit-end', data);
-        });
+        class VisitTracker {
+            constructor() {
+                this.visitHistoriqueUuid = window.visitHistoriqueUuid;
+                this.beaconSent = false;
+                this.init();
+            }
+            
+            init() {
+                if (!this.visitHistoriqueUuid) return;
+                
+                // Page Visibility API
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.sendBeacon();
+                    }
+                });
+                
+                // Before unload
+                window.addEventListener('beforeunload', () => {
+                    this.sendBeacon();
+                });
+                
+                // Heartbeat toutes les 5 minutes pour maintenir la session
+                setInterval(() => this.sendHeartbeat(), 5 * 60 * 1000);
+            }
+            
+            sendBeacon() {
+                if (this.beaconSent || !this.visitHistoriqueUuid) return;
+                
+                const data = {
+                    visit_historique_uuid: this.visitHistoriqueUuid,
+                    page: window.location.pathname,
+                    timestamp: Date.now()
+                };
+                
+                const success = navigator.sendBeacon(
+                    '/track/visit-end',
+                    new Blob([JSON.stringify(data)], { type: 'application/json' })
+                );
+                
+                if (success) this.beaconSent = true;
+            }
+            
+            sendHeartbeat() {
+                if (!this.visitHistoriqueUuid) return;
+                
+                fetch('/track/heartbeat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        visit_historique_uuid: this.visitHistoriqueUuid 
+                    }),
+                    keepalive: true
+                }).catch(console.error);
+            }
+        }
+
+        // Initialisation
+        if (window.visitHistoriqueUuid) {
+            window.visitTracker = new VisitTracker();
+        }
     </script>
 
 </body>

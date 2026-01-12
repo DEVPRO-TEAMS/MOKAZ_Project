@@ -212,55 +212,6 @@ Route::prefix('setting')->name('setting.')->group(function(){
 });
 
 
-// Route::post('/track/page-duration', function (Request $request) {
-//     $pageViewId = $request->input('page_view_id');
-
-//     if (!$pageViewId) {
-//         Log::info('page_view_id not provided');
-//         return response()->json(['status' => false]);
-//     }
-
-//     $pageView = PageView::find($pageViewId);
-
-//     if ($pageView && is_null($pageView->duration)) {
-//         $pageView->duration = now()->diffInSeconds($pageView->created_at);
-//         $pageView->save();
-
-//         Log::info('Duration saved for PageView ID ' . $pageView->id);
-//     }
-
-//     return response()->json(['status' => true]);
-// })->withoutMiddleware([VerifyCsrfToken::class]);
-
-// Route::post('/track/page-duration', function (Request $request) {
-
-//     $historiqueUuid = $request->input('historique_uuid');
-
-//     if (!$historiqueUuid) {
-//         Log::info('historique_id not provided');
-//         return response()->json(['status' => false]);
-//     }
-
-//     $historique = PageViewHistorique::where('uuid', $historiqueUuid)
-//         ->whereNull('ended_at')
-//         ->whereDate('started_at' , today())
-//         ->first();
-
-//     if (!$historique || $historique->ended_at) {
-//         return response()->json(['status' => true]);
-//     }
-
-//     $historique->update([
-//         'ended_at' => now(),
-//         'duration' => now()->diffInSeconds($historique->started_at),
-//     ]);
-
-//     Log::info('Page duration saved for historique ' . $historiqueUuid);
-
-//     return response()->json(['status' => true]);
-
-// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
 
 Route::post('/track/page-duration', function (Request $request) {
 
@@ -295,33 +246,29 @@ Route::post('/track/page-duration', function (Request $request) {
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
+
 // Route::post('/track/visit-end', function (Request $request) {
+//     $uuid = $request->input('visit_historique_uuid');
 
-//     $visitUuid = $request->input('visit_uuid');
-
-//     if (!$visitUuid) {
-//         Log::info('visit_uuid not provided');
+//     if (!$uuid) {
+//         Log::warning('visit_historique_uuid manquant');
 //         return response()->json(['status' => false]);
 //     }
 
-//     $visitHistorique = VisitHistorique::where('visit_uuid', $visitUuid)->first();
+//     $historique = VisitHistorique::where('uuid', $uuid)
+//         ->whereNull('ended_at')
+//         ->first();
 
-//     if (!$visitHistorique) {
-//         Log::info('Visit not found: ' . $visitUuid);
-//         return response()->json(['status' => false]);
-//     }
-
-//     // 🔒 On évite d'écraser si déjà fermé
-//     if (is_null($visitHistorique->ended_at)) {
-//         $visitHistorique->ended_at = now();
-//         $visitHistorique->save();
-
-//         Log::info('Visit ended: ' . $visitUuid);
+//     if ($historique) {
+//         $historique->update([
+//             'ended_at' => now(),
+//             'duration' => now()->diffInSeconds($historique->started_at),
+//         ]);
+//         Log::info('Session fermée avec succès', ['uuid' => $uuid]);
 //     }
 
 //     return response()->json(['status' => true]);
-
-// })->withoutMiddleware([VerifyCsrfToken::class]);
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/track/visit-end', function (Request $request) {
     $uuid = $request->input('visit_historique_uuid');
@@ -340,13 +287,28 @@ Route::post('/track/visit-end', function (Request $request) {
             'ended_at' => now(),
             'duration' => now()->diffInSeconds($historique->started_at),
         ]);
-        Log::info('Session fermée avec succès', ['uuid' => $uuid]);
+        Log::info('Session fermée avec succès', ['visit_historique_uuid' => $uuid]);
     }
+
+    // Nettoyer la session côté serveur
+    session()->forget(['visit_uuid', 'visit_historique_uuid', 'last_activity']);
 
     return response()->json(['status' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-
+Route::post('/track/heartbeat', function (Request $request) {
+    $uuid = $request->input('visit_historique_uuid');
+    
+    if (!$uuid) {
+        return response()->json(['status' => false]);
+    }
+    
+    VisitHistorique::where('uuid', $uuid)
+        ->whereNull('ended_at')
+        ->update(['updated_at' => now()]);
+    
+    return response()->json(['status' => true]);
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/send/email', [MailController::class, 'sendMail'])->name('sendMail');
 

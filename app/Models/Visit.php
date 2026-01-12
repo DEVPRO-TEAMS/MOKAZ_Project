@@ -14,14 +14,8 @@ class Visit extends Model
         'uuid',
         'ip_address',
         'user_agent',
+        'started_at',
     ];
-    // 'source',        // direct, seo, social, ads, email
-    // 'referrer',
-    // 'coordornneGPS',
-    // 'country',
-    // 'city',
-    // 'started_at',
-    // 'ended_at',
 
     protected $casts = [
         'started_at' => 'datetime',
@@ -33,17 +27,34 @@ class Visit extends Model
         return $this->hasMany(PageView::class, 'visit_uuid', 'uuid');
     }
 
-    public function getDurationAttribute()
-    {
-        if (!$this->ended_at) {
-            return now()->diffInSeconds($this->started_at);
-        }
+    // public function getDurationAttribute()
+    // {
+    //     if (!$this->ended_at) {
+    //         return now()->diffInSeconds($this->started_at);
+    //     }
 
-        return $this->ended_at->diffInSeconds($this->started_at);
-    }
+    //     return $this->ended_at->diffInSeconds($this->started_at);
+    // }
 
     public function historiques()
     {
         return $this->hasMany(VisitHistorique::class , 'visit_uuid', 'uuid');
+    }
+
+    public function scopeToday($query)
+    {
+        return $query->whereDate('started_at', today());
+    }
+    
+    public function scopeActive($query)
+    {
+        return $query->whereHas('historiques', function ($q) {
+            $q->whereNull('ended_at');
+        });
+    }
+    
+    public function getTotalDurationAttribute()
+    {
+        return $this->historiques->sum('duration');
     }
 }
