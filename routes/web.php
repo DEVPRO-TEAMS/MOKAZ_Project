@@ -296,17 +296,34 @@ Route::post('/track/visit-end', function (Request $request) {
     return response()->json(['status' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+// Route::post('/track/heartbeat', function (Request $request) {
+//     $uuid = $request->input('visit_historique_uuid');
+    
+//     if (!$uuid) {
+//         return response()->json(['status' => false]);
+//     }
+    
+//     VisitHistorique::where('uuid', $uuid)
+//         ->whereNull('ended_at')
+//         ->update(['updated_at' => now()]);
+    
+//     return response()->json(['status' => true]);
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 Route::post('/track/heartbeat', function (Request $request) {
     $uuid = $request->input('visit_historique_uuid');
-    
+
     if (!$uuid) {
         return response()->json(['status' => false]);
     }
-    
+
     VisitHistorique::where('uuid', $uuid)
         ->whereNull('ended_at')
         ->update(['updated_at' => now()]);
-    
+
+    // 🔥 Synchroniser la session serveur
+    session(['last_activity' => now()]);
+
     return response()->json(['status' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 

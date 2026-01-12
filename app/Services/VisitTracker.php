@@ -49,15 +49,29 @@ class VisitTracker
         return true;
     }
     
+    // private function findOrCreateVisit(Request $request): Visit
+    // {
+    //     return Visit::firstOrCreate(
+    //         [
+    //             'ip_address' => $request->ip(),
+    //             'user_agent' => $request->userAgent(),
+    //         ],
+    //         [
+    //             'uuid' => Str::uuid(),
+    //             'started_at' => now(),
+    //         ]
+    //     );
+    // }
+
     private function findOrCreateVisit(Request $request): Visit
     {
-        return Visit::firstOrCreate(
+        return Visit::where('ip_address', $request->ip())
+        ->where('user_agent', $request->userAgent())
+        ->whereDate('started_at', today()) // 👈 clé ici
+        ->firstOrCreate(
+            [],
             [
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ],
-            [
-                'uuid' => Str::uuid(),
+                'uuid'       => (string) Str::uuid(),
                 'started_at' => now(),
             ]
         );
@@ -126,48 +140,87 @@ class VisitTracker
                     'duration' => DB::raw('TIMESTAMPDIFF(SECOND, started_at, NOW())')
                 ]);
         }
-        
+
         session()->forget(['visit_uuid', 'visit_historique_uuid', 'last_activity']);
     }
     
+    // private function detectSource(Request $request): string
+    // {
+    //     // Logique existante améliorée
+    //     if ($request->has('utm_source')) {
+    //         $source = $request->utm_source;
+            
+    //         $socialSources = ['facebook', 'instagram', 'twitter', 'linkedin', 
+    //                          'pinterest', 'tiktok', 'snapchat', 'whatsapp'];
+            
+    //         if (in_array(strtolower($source), $socialSources)) {
+    //             return 'social';
+    //         }
+            
+    //         if (strtolower($source) === 'google') {
+    //             return $request->has('utm_medium') && $request->utm_medium === 'cpc' 
+    //                 ? 'ads' 
+    //                 : 'organic';
+    //         }
+            
+    //         return 'referral';
+    //     }
+        
+    //     $referer = $request->headers->get('referer');
+    //     if ($referer) {
+    //         if (str_contains(strtolower($referer), 'google')) {
+    //             return 'organic';
+    //         }
+            
+    //         $socialDomains = ['facebook.com', 'twitter.com', 'linkedin.com'];
+    //         foreach ($socialDomains as $domain) {
+    //             if (str_contains($referer, $domain)) {
+    //                 return 'social';
+    //             }
+    //         }
+            
+    //         return 'referral';
+    //     }
+        
+    //     return 'direct';
+    // }
+
     private function detectSource(Request $request): string
-    {
-        // Logique existante améliorée
-        if ($request->has('utm_source')) {
-            $source = $request->utm_source;
-            
-            $socialSources = ['facebook', 'instagram', 'twitter', 'linkedin', 
-                             'pinterest', 'tiktok', 'snapchat', 'whatsapp'];
-            
-            if (in_array(strtolower($source), $socialSources)) {
-                return 'social';
-            }
-            
-            if (strtolower($source) === 'google') {
-                return $request->has('utm_medium') && $request->utm_medium === 'cpc' 
-                    ? 'ads' 
-                    : 'organic';
-            }
-            
-            return 'referral';
+{
+    if ($request->has('utm_source')) {
+        $source = strtolower($request->utm_source);
+        $medium = strtolower($request->utm_medium ?? '');
+
+        if (in_array($medium, ['cpc', 'ads', 'paid'])) {
+            return 'ads';
         }
-        
-        $referer = $request->headers->get('referer');
-        if ($referer) {
-            if (str_contains(strtolower($referer), 'google')) {
-                return 'organic';
-            }
-            
-            $socialDomains = ['facebook.com', 'twitter.com', 'linkedin.com'];
-            foreach ($socialDomains as $domain) {
-                if (str_contains($referer, $domain)) {
-                    return 'social';
-                }
-            }
-            
-            return 'referral';
+
+        if (in_array($source, ['facebook', 'instagram', 'twitter', 'linkedin', 'tiktok', 'snapchat', 'whatsapp'])) {
+            return 'social';
         }
-        
-        return 'direct';
+
+        if (in_array($source, ['google', 'bing', 'yahoo'])) {
+            return 'organic';
+        }
+
+        if ($medium === 'email') {
+            return 'email';
+        }
+
+        return 'referral';
     }
+
+    $referer = strtolower($request->headers->get('referer', ''));
+
+    if (str_contains($referer, 'google') || str_contains($referer, 'bing')) {
+        return 'organic';
+    }
+
+    if (preg_match('/facebook|instagram|twitter|linkedin|tiktok/', $referer)) {
+        return 'social';
+    }
+
+    return $referer ? 'referral' : 'direct';
+}
+
 }

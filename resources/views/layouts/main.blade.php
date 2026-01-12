@@ -428,20 +428,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             );
         });
     </script> --}}
+    
     <script>
-        // const visitHistoriqueUuid = "{{ session('visit_historique_uuid') }}";
-
-        // window.addEventListener('beforeunload', function () {
-        //     if (!visitHistoriqueUuid) return;
-
-        //     navigator.sendBeacon(
-        //         '/track/visit-end',
-        //         new Blob(
-        //             [JSON.stringify({ visit_historique_uuid: visitHistoriqueUuid })],
-        //             { type: 'application/json' }
-        //         )
-        //     );
-        // });
 
         class VisitTracker {
             constructor() {
