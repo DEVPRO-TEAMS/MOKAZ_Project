@@ -322,8 +322,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js  type="text/javascript"></script> --}}
 
-    <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript">
-    </script>
+    {{-- <script src=https://touchpay.gutouch.net/touchpayv2/script/touchpaynr/prod_touchpay-0.0.1.js type="text/javascript">
+    </script> --}}
     <script src="{{ asset('assets/js/map-single.js') }}"></script>
 
     
@@ -400,7 +400,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <script>
         const pageViewHistoriqueUuid = "{{ session('current_page_view_historique_uuid') }}";
-
         window.addEventListener('beforeunload', function () {
             if (!pageViewHistoriqueUuid) return;
 
@@ -430,69 +429,142 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </script> --}}
     
     <script>
+        
+        // class VisitTracker {
+        //     constructor() {
+        //         this.visitHistoriqueUuid = window.visitHistoriqueUuid;
+        //         this.beaconSent = false;
+        //         this.init();
+        //     }
+            
+        //     init() {
+        //         if (!this.visitHistoriqueUuid) return;
+                
+        //         // Page Visibility API
+        //         document.addEventListener('visibilitychange', () => {
+        //             if (document.visibilityState === 'hidden') {
+        //                 this.sendBeacon();
+        //             }
+        //         });
+                
+        //         // Before unload
+        //         window.addEventListener('beforeunload', () => {
+        //             this.sendBeacon();
+        //         });
+                
+        //         // Heartbeat toutes les 5 minutes pour maintenir la session
+        //         setInterval(() => this.sendHeartbeat(), 5 * 60 * 1000);
+        //     }
+            
+        //     sendBeacon() {
+        //         console.log('📡 sendBeacon déclenché', this.visitHistoriqueUuid);
+        //         if (this.beaconSent || !this.visitHistoriqueUuid) return;
+                
+        //         const data = {
+        //             visit_historique_uuid: this.visitHistoriqueUuid,
+        //             page: window.location.pathname,
+        //             timestamp: Date.now()
+        //         };
+                
+        //         const success = navigator.sendBeacon(
+        //             '/track/visit-end',
+        //             new Blob([JSON.stringify(data)], { type: 'application/json' })
+        //         );
+                
+        //         if (success) this.beaconSent = true;
+        //     }
+            
+        //     sendHeartbeat() {
+        //         if (!this.visitHistoriqueUuid) return;
+                
+        //         fetch('/track/heartbeat', {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify({ 
+        //                 visit_historique_uuid: this.visitHistoriqueUuid 
+        //             }),
+        //             keepalive: true
+        //         }).catch(console.error);
+        //     }
+        // }
 
-        class VisitTracker {
-            constructor() {
-                this.visitHistoriqueUuid = window.visitHistoriqueUuid;
-                this.beaconSent = false;
-                this.init();
-            }
-            
-            init() {
-                if (!this.visitHistoriqueUuid) return;
-                
-                // Page Visibility API
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') {
-                        this.sendBeacon();
-                    }
-                });
-                
-                // Before unload
-                window.addEventListener('beforeunload', () => {
-                    this.sendBeacon();
-                });
-                
-                // Heartbeat toutes les 5 minutes pour maintenir la session
-                setInterval(() => this.sendHeartbeat(), 5 * 60 * 1000);
-            }
-            
-            sendBeacon() {
-                if (this.beaconSent || !this.visitHistoriqueUuid) return;
-                
-                const data = {
-                    visit_historique_uuid: this.visitHistoriqueUuid,
-                    page: window.location.pathname,
-                    timestamp: Date.now()
-                };
-                
-                const success = navigator.sendBeacon(
-                    '/track/visit-end',
-                    new Blob([JSON.stringify(data)], { type: 'application/json' })
-                );
-                
-                if (success) this.beaconSent = true;
-            }
-            
-            sendHeartbeat() {
-                if (!this.visitHistoriqueUuid) return;
-                
-                fetch('/track/heartbeat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        visit_historique_uuid: this.visitHistoriqueUuid 
-                    }),
-                    keepalive: true
-                }).catch(console.error);
-            }
+        // // Initialisation
+        // if (window.visitHistoriqueUuid) {
+        //     window.visitTracker = new VisitTracker();
+        // }
+    </script>
+    <script>
+    window.visitHistoriqueUuid = @json(session('visit_historique_uuid'));
+    class VisitTracker {
+        constructor() {
+            this.visitHistoriqueUuid = window.visitHistoriqueUuid;
+            this.beaconSent = false;
+
+            if (!this.visitHistoriqueUuid) return;
+
+            this.init();
         }
 
-        // Initialisation
+        init() {
+            const close = () => this.sendBeacon();
+
+            // Quand l’onglet est caché (changement d’onglet, app background)
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden') {
+                    close();
+                }
+            });
+
+            // Plus fiable que beforeunload (mobile / Safari / iOS)
+            window.addEventListener('pagehide', close);
+
+            // Heartbeat toutes les 5 minutes
+            this.heartbeatInterval = setInterval(() => {
+                this.sendHeartbeat();
+            }, 5 * 60 * 1000);
+        }
+
+        sendBeacon() {
+            if (this.beaconSent || !this.visitHistoriqueUuid) return;
+
+            console.log('📡 sendBeacon déclenché', this.visitHistoriqueUuid);
+
+            const data = {
+                visit_historique_uuid: this.visitHistoriqueUuid,
+                // page: window.location.pathname,
+                // timestamp: Date.now()
+            };
+
+            navigator.sendBeacon(
+                '/track/visit-end',
+                new Blob([JSON.stringify(data)], { type: 'application/json' })
+            );
+
+            this.beaconSent = true;
+            clearInterval(this.heartbeatInterval);
+        }
+
+        sendHeartbeat() {
+            if (!this.visitHistoriqueUuid) return;
+
+            fetch('/track/heartbeat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    visit_historique_uuid: this.visitHistoriqueUuid
+                }),
+                keepalive: true
+            }).catch(() => {});
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
         if (window.visitHistoriqueUuid) {
             window.visitTracker = new VisitTracker();
         }
-    </script>
+    });
+</script>
+
 
 </body>
 

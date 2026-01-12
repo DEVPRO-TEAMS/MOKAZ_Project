@@ -289,7 +289,7 @@ class TrackVisit
         // Exclure certaines routes
         $excluded = [
             'horizon*', 'nova*', 'telescope*',
-            'assets/*', 'storage/*', 'api/*', 'track/', 'sanctum/*',
+            'assets/*', 'storage/*', 'api/*', 'track/*', 'sanctum/*',
         ];
         
         foreach ($excluded as $pattern) {

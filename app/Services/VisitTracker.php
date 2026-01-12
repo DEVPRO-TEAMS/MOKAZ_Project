@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VisitHistorique;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class VisitTracker
 {
@@ -33,6 +34,7 @@ class VisitTracker
     private function hasActiveSession(Request $request): bool
     {
         if (!session()->has(['visit_uuid', 'visit_historique_uuid', 'last_activity'])) {
+            Log::info('Aucune session en cours');
             return false;
         }
         
@@ -49,34 +51,6 @@ class VisitTracker
         return true;
     }
     
-    // private function findOrCreateVisit(Request $request): Visit
-    // {
-    //     return Visit::firstOrCreate(
-    //         [
-    //             'ip_address' => $request->ip(),
-    //             'user_agent' => $request->userAgent(),
-    //         ],
-    //         [
-    //             'uuid' => Str::uuid(),
-    //             'started_at' => now(),
-    //         ]
-    //     );
-    // }
-
-    // private function findOrCreateVisit(Request $request): Visit
-    // {
-    //     return Visit::firstOrCreate(
-    //         [
-    //             'ip_address' => $request->ip(),
-    //             'user_agent' => $request->userAgent(),
-    //             'visit_date' => now()->toDateString(), // 👈 AJOUT
-    //         ],
-    //         [
-    //             'uuid' => Str::uuid(),
-    //             'started_at' => now(),
-    //         ]
-    //     );
-    // }
     private function findOrCreateVisit(Request $request): Visit
     {
         $start = now()->startOfDay();
@@ -88,9 +62,11 @@ class VisitTracker
             ->first();
 
         if ($visit) {
+            Log::info('Visite existante trouvée', ['visit_uuid' => $visit->uuid]);
             return $visit;
         }
 
+        Log::info('Nouvelle visite crée', ['ip_address' => $request->ip(), 'user_agent' => $request->userAgent()]);
         return Visit::create([
             'uuid'       => (string) Str::uuid(),
             'ip_address' => $request->ip(),
