@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\VisitHistorique;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Stevebauman\Location\Facades\Location;
 
 class VisitTracker
 {
@@ -102,6 +103,14 @@ class VisitTracker
     
     private function createNewHistorique(Visit $visit, Request $request): VisitHistorique
     {
+        // 2️⃣ GÉOLOCALISATION
+        $country = $city = $latitude = $longitude = null;
+        if ($position = Location::get($request->ip())) {
+            $country   = $position->countryName ?? null;
+            $city      = $position->cityName ?? null;
+            $latitude  = $position->latitude ?? null;
+            $longitude = $position->longitude ?? null;
+        }
         // Fermer l'ancienne session si elle existe
         VisitHistorique::where('visit_uuid', $visit->uuid)
             ->whereNull('ended_at')
@@ -115,6 +124,9 @@ class VisitTracker
             'visit_uuid' => $visit->uuid,
             'source' => $this->detectSource($request),
             'referrer' => $request->headers->get('referer'),
+            'coordornneGPS' => $latitude && $longitude ? "$latitude,$longitude" : null,
+            'country'       => $country,
+            'city'          => $city,
             'started_at' => now(),
         ]);
     }
