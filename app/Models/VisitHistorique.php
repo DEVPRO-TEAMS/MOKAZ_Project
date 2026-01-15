@@ -13,7 +13,7 @@ class VisitHistorique extends Model
         'visit_uuid',
         'source',        // direct, seo, social, ads, email
         'referrer',
-        'coordornneGPS',
+        'coordornneGPS', // latitude, longitude
         'country',
         'city',
         'started_at',
