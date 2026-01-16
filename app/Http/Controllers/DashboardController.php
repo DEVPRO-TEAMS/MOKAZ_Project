@@ -600,11 +600,11 @@ class DashboardController extends Controller
         $currentSessions = VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
             ->validSessions()
             ->count();
-            
+
         $previousSessions = VisitHistorique::whereBetween('started_at', [$previousStart, $previousEnd])
             ->validSessions()
             ->count();
-            
+
         $sessionsTrend = $this->calculateTrend($currentSessions, $previousSessions);
 
         // 3. Durée Moyenne Session - CORRIGÉ (avec limite)
@@ -634,8 +634,8 @@ class DashboardController extends Controller
             ->validSessions()
             ->count();
 
-        $bounceRate = $totalSessionsForBounce > 0 
-            ? ($bounceSessions / $totalSessionsForBounce) * 100 
+        $bounceRate = $totalSessionsForBounce > 0
+            ? ($bounceSessions / $totalSessionsForBounce) * 100
             : 0;
 
         // Calcul période précédente
@@ -651,8 +651,8 @@ class DashboardController extends Controller
             ->validSessions()
             ->count();
 
-        $previousBounceRate = $previousTotalSessionsForBounce > 0 
-            ? ($previousBounceSessions / $previousTotalSessionsForBounce) * 100 
+        $previousBounceRate = $previousTotalSessionsForBounce > 0
+            ? ($previousBounceSessions / $previousTotalSessionsForBounce) * 100
             : 0;
 
         $bounceRateTrend = $this->calculateTrend($bounceRate, $previousBounceRate, true);
@@ -679,8 +679,8 @@ class DashboardController extends Controller
             ->count();
 
         $newVisitorsTrend = $this->calculateTrend($newVisitors, $previousNewVisitors);
-        $newVisitorsPercentage = $currentUniqueVisitors > 0 
-            ? ($newVisitors / $currentUniqueVisitors) * 100 
+        $newVisitorsPercentage = $currentUniqueVisitors > 0
+            ? ($newVisitors / $currentUniqueVisitors) * 100
             : 0;
 
         // 6. Visiteurs Récurrents - CORRIGÉ (ne peut pas être négatif)
@@ -688,8 +688,8 @@ class DashboardController extends Controller
         $previousReturningVisitors = max(0, $previousUniqueVisitors - $previousNewVisitors);
 
         $returningVisitorsTrend = $this->calculateTrend($returningVisitors, $previousReturningVisitors);
-        $returningVisitorsPercentage = $currentUniqueVisitors > 0 
-            ? ($returningVisitors / $currentUniqueVisitors) * 100 
+        $returningVisitorsPercentage = $currentUniqueVisitors > 0
+            ? ($returningVisitors / $currentUniqueVisitors) * 100
             : 0;
 
         // Validation des données
@@ -767,14 +767,14 @@ class DashboardController extends Controller
         if ($previous == 0) {
             return $current > 0 ? 100.0 : 0.0;
         }
-        
+
         $trend = (($current - $previous) / $previous) * 100;
-        
+
         // Pour le taux de rebond, une baisse est positive
         if ($inverse) {
             $trend = -$trend;
         }
-        
+
         return round($trend, 1);
     }
 
@@ -801,29 +801,29 @@ class DashboardController extends Controller
         } elseif ($minutes > 0) {
             return sprintf('%dm %02ds', $minutes, $seconds);
         }
-        
+
         return sprintf('%ds', $seconds);
     }
 
     private function validateDataQuality($data): array
     {
         $issues = [];
-        
+
         // Vérification nouveaux visiteurs > visiteurs uniques
         if ($data['new_visitors'] > $data['unique_visitors']) {
             $issues[] = 'Nouveaux visiteurs > Visiteurs uniques';
         }
-        
+
         // Vérification visiteurs récurrents négatifs
         if ($data['returning_visitors'] < 0) {
             $issues[] = 'Visiteurs récurrents négatifs';
         }
-        
+
         // Vérification durée anormale
         if ($data['avg_duration'] > 7200) { // > 2 heures
             $issues[] = 'Durée moyenne anormalement longue';
         }
-        
+
         return [
             'has_issues' => !empty($issues),
             'issues' => $issues,
@@ -993,7 +993,7 @@ class DashboardController extends Controller
                 $weekNumber = $pointDate->weekOfYear;
                 $year = $pointDate->year;
                 $label = "S{$weekNumber}";
-                
+
                 // Si c'est une nouvelle année, ajouter l'année
                 if ($i === $dataPoints - 1 || $pointDate->year !== $pointDate->copy()->addWeek()->year) {
                     $label .= " '" . substr($year, 2);
@@ -1003,7 +1003,7 @@ class DashboardController extends Controller
                 $startDate = $pointDate->copy()->startOfMonth();
                 $endDate = $pointDate->copy()->endOfMonth();
                 $label = $pointDate->format('M');
-                
+
                 // Ajouter l'année pour le premier mois et si changement d'année
                 if ($i === $dataPoints - 1 || $pointDate->year !== $pointDate->copy()->addMonth()->year) {
                     $label .= " '" . substr($pointDate->year, 2);
@@ -1173,10 +1173,10 @@ class DashboardController extends Controller
 
         $formattedData = $sources->map(function ($item) use ($totalSessions) {
             $percentage = $totalSessions > 0 ? round(($item->sessions / $totalSessions) * 100, 1) : 0;
-            
+
             // Calcul du taux de rebond pour cette source
             $bounceRate = $item->sessions > 0 ? round(($item->bounce_sessions / $item->sessions) * 100, 1) : 0;
-            
+
             // Formatage de la durée moyenne
             $avgDuration = $this->formatDuration($item->avg_duration ?? 0);
 
@@ -1199,7 +1199,7 @@ class DashboardController extends Controller
             'total_unique_visits' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
                 ->distinct('visit_uuid')
                 ->count(),
-            'avg_bounce_rate' => $totalSessions > 0 ? 
+            'avg_bounce_rate' => $totalSessions > 0 ?
                 round(($sources->sum('bounce_sessions') / $totalSessions) * 100, 1) : 0,
             'top_source' => $sources->first() ? $this->formatSourceName($sources->first()->source) : 'Aucune',
             'sources_count' => $sources->count()
@@ -1315,11 +1315,11 @@ class DashboardController extends Controller
 
         // Calculer le total pour les pourcentages
         $totalSessions = VisitHistorique::whereBetween('started_at', [$startDate, $endDate])->count();
-        
+
         $formattedCities = $cities->map(function ($city) use ($totalSessions) {
             $percentage = $totalSessions > 0 ? round(($city->sessions / $totalSessions) * 100, 1) : 0;
             $avgDuration = $this->formatDuration($city->avg_duration ?? 0);
-            
+
             return [
                 'city' => $city->city,
                 'country' => $city->country,
@@ -1344,7 +1344,7 @@ class DashboardController extends Controller
                 ->distinct('country')
                 ->count(),
             'unknown_locations' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
-                ->where(function($query) {
+                ->where(function ($query) {
                     $query->whereNull('city')
                         ->orWhere('city', '=', '')
                         ->orWhere('city', 'like', '%unknown%');
@@ -1358,15 +1358,26 @@ class DashboardController extends Controller
                 ->first()
         ];
 
-        return response()->json([
-            'cities' => $formattedCities,
-            'geo_stats' => $geoStats,
-            'period' => $period,
-            'period_dates' => [
-                'start' => $startDate->format('Y-m-d'),
-                'end' => $endDate->format('Y-m-d')
-            ]
-        ]);
+        // return response()->json([
+        //     'cities' => $formattedCities,
+        //     'geo_stats' => $geoStats,
+        //     'period' => $period,
+        //     'period_dates' => [
+        //         'start' => $startDate->format('Y-m-d'),
+        //         'end' => $endDate->format('Y-m-d')
+        //     ]
+        // ]);
+        return response()->json(
+            $this->utf8ize([
+                'cities' => $formattedCities,
+                'geo_stats' => $geoStats,
+                'period' => $period,
+                'period_dates' => [
+                    'start' => $startDate->format('Y-m-d'),
+                    'end' => $endDate->format('Y-m-d')
+                ]
+            ])
+        );
     }
 
     // private function formatDuration($seconds)
@@ -1405,9 +1416,11 @@ class DashboardController extends Controller
             return null;
         }
 
-        $peakIndex = array_search(max(array_column($data, 'unique_visitors')), 
-                                array_column($data, 'unique_visitors'));
-        
+        $peakIndex = array_search(
+            max(array_column($data, 'unique_visitors')),
+            array_column($data, 'unique_visitors')
+        );
+
         return [
             'label' => $data[$peakIndex]['label'],
             'unique_visitors' => $data[$peakIndex]['unique_visitors'],
@@ -1427,7 +1440,7 @@ class DashboardController extends Controller
             'referral' => 'fas fa-link',
             'seo' => 'fas fa-chart-line'
         ];
-        
+
         return $icons[$source] ?? 'fas fa-question-circle';
     }
 
@@ -1442,7 +1455,7 @@ class DashboardController extends Controller
             'referral' => '#1abc9c',
             'seo' => '#34495e'
         ];
-        
+
         return $colors[$source] ?? '#95a5a6';
     }
 
@@ -1539,66 +1552,128 @@ class DashboardController extends Controller
         // Calculer la somme des pourcentages des 10 premiers pays
         $topCountriesPercentage = $countries->sum('percentage');
 
-        return response()->json([
-            'countries' => $countries,
-            'cities' => $citiesWithCoords,
-            'continents' => $continentsData,
-            'statistics' => [
-                'total_visits' => $totalVisits,
-                'global_distribution' => [
-                    'top_country' => $topCountry ? [
-                        'name' => $topCountry['country'],
-                        'visits' => $topCountry['count'],
-                        'percentage' => $topCountry['percentage'],
-                        'flag' => $topCountry['flag']
-                    ] : null,
-                    'top_city' => $topCity ? [
-                        'name' => $topCity['city'],
-                        'country' => $topCity['country'],
-                        'visits' => $topCity['count'],
-                        'percentage' => $topCity['percentage']
-                    ] : null,
-                    'top_10_countries_percentage' => $topCountriesPercentage,
-                    'countries_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
-                        ->whereNotNull('country')
-                        ->distinct('country')
-                        ->count('country'),
-                    'cities_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
-                        ->whereNotNull('city')
-                        ->distinct('city')
-                        ->count('city'),
-                    'remaining_countries_percentage' => max(0, 100 - $topCountriesPercentage)
-                ],
-                'africa_distribution' => [
-                    'total_percentage' => $continentsData['africa']['percentage'] ?? 0,
-                    'west_africa' => [
-                        'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'west'),
-                        'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'west', 3)
+        // return response()->json([
+        //     'countries' => $countries,
+        //     'cities' => $citiesWithCoords,
+        //     'continents' => $continentsData,
+        //     'statistics' => [
+        //         'total_visits' => $totalVisits,
+        //         'global_distribution' => [
+        //             'top_country' => $topCountry ? [
+        //                 'name' => $topCountry['country'],
+        //                 'visits' => $topCountry['count'],
+        //                 'percentage' => $topCountry['percentage'],
+        //                 'flag' => $topCountry['flag']
+        //             ] : null,
+        //             'top_city' => $topCity ? [
+        //                 'name' => $topCity['city'],
+        //                 'country' => $topCity['country'],
+        //                 'visits' => $topCity['count'],
+        //                 'percentage' => $topCity['percentage']
+        //             ] : null,
+        //             'top_10_countries_percentage' => $topCountriesPercentage,
+        //             'countries_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
+        //                 ->whereNotNull('country')
+        //                 ->distinct('country')
+        //                 ->count('country'),
+        //             'cities_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
+        //                 ->whereNotNull('city')
+        //                 ->distinct('city')
+        //                 ->count('city'),
+        //             'remaining_countries_percentage' => max(0, 100 - $topCountriesPercentage)
+        //         ],
+        //         'africa_distribution' => [
+        //             'total_percentage' => $continentsData['africa']['percentage'] ?? 0,
+        //             'west_africa' => [
+        //                 'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'west'),
+        //                 'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'west', 3)
+        //             ],
+        //             'north_africa' => [
+        //                 'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'north'),
+        //                 'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'north', 3)
+        //             ],
+        //             'central_africa' => [
+        //                 'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'central'),
+        //                 'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'central', 3)
+        //             ],
+        //             'east_africa' => [
+        //                 'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'east'),
+        //                 'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'east', 3)
+        //             ],
+        //             'south_africa' => [
+        //                 'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'south'),
+        //                 'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'south', 3)
+        //             ]
+        //         ]
+        //     ],
+        //     'period' => $period,
+        //     'period_dates' => [
+        //         'start' => $startDate->format('Y-m-d'),
+        //         'end' => $endDate->format('Y-m-d')
+        //     ]
+        // ]);
+        return response()->json(
+            $this->utf8ize([
+                'countries' => $countries,
+                'cities' => $citiesWithCoords,
+                'continents' => $continentsData,
+                'statistics' => [
+                    'total_visits' => $totalVisits,
+                    'global_distribution' => [
+                        'top_country' => $topCountry ? [
+                            'name' => $topCountry['country'],
+                            'visits' => $topCountry['count'],
+                            'percentage' => $topCountry['percentage'],
+                            'flag' => $topCountry['flag']
+                        ] : null,
+                        'top_city' => $topCity ? [
+                            'name' => $topCity['city'],
+                            'country' => $topCity['country'],
+                            'visits' => $topCity['count'],
+                            'percentage' => $topCity['percentage']
+                        ] : null,
+                        'top_10_countries_percentage' => $topCountriesPercentage,
+                        'countries_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
+                            ->whereNotNull('country')
+                            ->distinct('country')
+                            ->count('country'),
+                        'cities_count' => VisitHistorique::whereBetween('started_at', [$startDate, $endDate])
+                            ->whereNotNull('city')
+                            ->distinct('city')
+                            ->count('city'),
+                        'remaining_countries_percentage' => max(0, 100 - $topCountriesPercentage)
                     ],
-                    'north_africa' => [
-                        'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'north'),
-                        'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'north', 3)
-                    ],
-                    'central_africa' => [
-                        'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'central'),
-                        'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'central', 3)
-                    ],
-                    'east_africa' => [
-                        'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'east'),
-                        'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'east', 3)
-                    ],
-                    'south_africa' => [
-                        'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'south'),
-                        'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'south', 3)
+                    'africa_distribution' => [
+                        'total_percentage' => $continentsData['africa']['percentage'] ?? 0,
+                        'west_africa' => [
+                            'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'west'),
+                            'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'west', 3)
+                        ],
+                        'north_africa' => [
+                            'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'north'),
+                            'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'north', 3)
+                        ],
+                        'central_africa' => [
+                            'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'central'),
+                            'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'central', 3)
+                        ],
+                        'east_africa' => [
+                            'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'east'),
+                            'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'east', 3)
+                        ],
+                        'south_africa' => [
+                            'percentage' => $this->calculateRegionPercentage($startDate, $endDate, $totalVisits, 'south'),
+                            'countries' => $this->getTopCountriesByRegion($startDate, $endDate, 'south', 3)
+                        ]
                     ]
+                ],
+                'period' => $period,
+                'period_dates' => [
+                    'start' => $startDate->format('Y-m-d'),
+                    'end' => $endDate->format('Y-m-d')
                 ]
-            ],
-            'period' => $period,
-            'period_dates' => [
-                'start' => $startDate->format('Y-m-d'),
-                'end' => $endDate->format('Y-m-d')
-            ]
-        ]);
+            ])
+        );
     }
 
     private function calculateContinentsPercentages($startDate, $endDate, $totalVisits)
@@ -1684,7 +1759,7 @@ class DashboardController extends Controller
     {
         return [
             // Afrique de l'Ouest
-            'Côte d\'Ivoire',
+            'Côte d’Ivoire',
             'Sénégal',
             'Mali',
             'Burkina Faso',
@@ -1810,6 +1885,23 @@ class DashboardController extends Controller
             'Mexique',
             'Mexico'
         ];
+    }
+
+    private function utf8ize($data)
+    {
+        if (is_array($data)) {
+            return array_map([$this, 'utf8ize'], $data);
+        }
+
+        if ($data instanceof \Illuminate\Support\Collection) {
+            return $data->map(fn($item) => $this->utf8ize($item))->all();
+        }
+
+        if (is_string($data)) {
+            return mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+        }
+
+        return $data;
     }
 
     private function getSouthAmericanCountries()
@@ -2169,7 +2261,7 @@ class DashboardController extends Controller
             }
             return $flag;
         }
-        
+
         return '🏳️';
     }
 }
