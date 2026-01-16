@@ -21,6 +21,7 @@ use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Partner\PartnerController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\Comment\TestimoniController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Properties\AppartController;
 use App\Http\Controllers\Properties\PropertyController;
 
@@ -85,7 +86,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/import-city-country', [AdminController::class, 'importCityCountry'])->name('import.city.country');
 
         Route::get('/dashboard', [AdminController::class, 'index'])->name('index');
-        Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
+        Route::get('/statistics', [DashboardController::class, 'index'])->name('statistics');
 
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
@@ -133,13 +134,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/testimonial/add', [TestimoniController::class, 'store'])->name('store.testimonial');
         Route::post('/testimonial/update/{uuid}', [TestimoniController::class, 'update'])->name('update.testimonial');
         Route::post('/testimonial/destroy/{uuid}', [TestimoniController::class, 'destroy'])->name('destroy.testimonial');
-    });
-});
-
-Route::prefix('com-manager')->name('comManager.')->group(function () {
-    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
-    Route::middleware(['auth', 'comManager'])->group(function () {
-        Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
     });
 });
 
@@ -192,6 +186,14 @@ Route::prefix('partner')->name('partner.')->group(function () {
     });
 
     // addCollaborator
+});
+
+
+Route::prefix('com-manager')->name('comManager.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
+    Route::middleware(['auth', 'comManager'])->group(function () {
+        Route::get('/statistics', [DashboardController::class, 'index'])->name('statistics');
+    });
 });
 
 

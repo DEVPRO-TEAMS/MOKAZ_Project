@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'uuid' => Str::uuid(),
             'name' => 'Community Manager',
             'lastname' => 'BOOMCOM',
-            'user_type' => 'comManeger',
+            'user_type' => 'comManager',
             'phone' => '0700000000',
             'email' => 'communitymanager@jsbeyci.com',
             'password' => Hash::make('password123'),

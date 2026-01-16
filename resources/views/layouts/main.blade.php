@@ -174,6 +174,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         $reservations = App\Models\Reservation::all();
     @endphp
 
+    {{-- @dd(Auth::user()->user_type) --}}
+
     <div class="preload preload-container">
         <div class="boxes ">
             <div class="box">

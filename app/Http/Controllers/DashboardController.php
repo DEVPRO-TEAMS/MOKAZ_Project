@@ -540,6 +540,12 @@ class DashboardController extends Controller
     //     ]);
     // }
 
+    public function index()
+    {
+
+        return view('admins.pages.statistics');
+    }
+
     public function getKPIData(Request $request)
     {
         $period = $request->get('period', 'month');

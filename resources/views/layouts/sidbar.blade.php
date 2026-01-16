@@ -89,6 +89,7 @@
     </header>
     <!-- end header -->
     
+    
 
     <div class="sidebar-menu-dashboard bg-white border-end">
         <div class="d-flex flex-column" style="height: 90vh">
@@ -97,7 +98,7 @@
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item mb-1">
                                 <a class="nav-link {{ Route::currentRouteName() == 'comManager.statistics' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded bg-opacity-10 text-dark" 
-                                href="{{ route('admin.statistics') }}">
+                                href="{{ route('comManager.statistics') }}">
                                     <i class="bi bi-graph-up me-3 fs-5"></i>
                                     <span>Tableau de Bord</span>
                                 </a>
@@ -114,16 +115,16 @@
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0 text-truncate">{{ Auth::user()->name ?? 'Utilisateur' }}</h6>
                                         <small class="text-muted">
-                                            {{ Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'comManager'  ? 'Administrateur' : 'Partenaire' }}
+                                            Administrateur
                                         </small>
                                     </div>
                                 </div>
     
-                                <a class="btn btn-outline-info w-100 d-flex align-items-center mb-3 justify-content-center" 
+                                {{-- <a class="btn btn-outline-info w-100 d-flex align-items-center mb-3 justify-content-center" 
                                 href="#profile">
                                     <i class="bi bi-person-circle me-3 fs-5"></i>
                                     <span>Mon Profil</span>
-                                </a>
+                                </a> --}}
                 
                                 <!-- Bouton de déconnexion -->
                                 <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center" 
@@ -154,10 +155,10 @@
                         </li>
     
                         <!-- Statistiques -->
-                        @if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'comManager')
+                        @if (Auth::user()->user_type == 'admin')
                             <li class="nav-item mb-1">
                                 <a class="nav-link {{ Route::currentRouteName() == 'admin.statistics' || Route::currentRouteName() == 'comManager.statistics' ? 'active' : ''}} d-flex align-items-center py-2 px-3 rounded bg-opacity-10 text-dark" 
-                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.statistics') : route('admin.statistics') }}">
+                                href="{{ route('admin.statistics') }}">
                                     <i class="bi bi-graph-up me-3 fs-5"></i>
                                     <span>Statistiques</span>
                                 </a>
@@ -320,11 +321,11 @@
                                     </div>
                                 </div>
     
-                                <a class="btn btn-outline-info w-100 d-flex align-items-center mb-3 justify-content-center" 
+                                {{-- <a class="btn btn-outline-info w-100 d-flex align-items-center mb-3 justify-content-center" 
                                 href="#profile">
                                     <i class="bi bi-person-circle me-3 fs-5"></i>
                                     <span>Mon Profil</span>
-                                </a>
+                                </a> --}}
                 
                                 <!-- Bouton de déconnexion -->
                                 <a class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center" 
