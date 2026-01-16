@@ -2129,7 +2129,7 @@ class DashboardController extends Controller
     private function getCountryCode($countryName)
     {
         $countryCodes = [
-            'Côte d\'Ivoire' => 'CI',
+            'Côte d’Ivoire' => 'CI',
             'France' => 'FR',
             'Sénégal' => 'SN',
             'Mali' => 'ML',
@@ -2252,16 +2252,26 @@ class DashboardController extends Controller
 
     private function getCountryFlag($countryName)
     {
-        $code = $this->getCountryCode($countryName);
+        $code = $this->getCountryCode(strtoupper($countryName));
         if ($code) {
             // Convertir en emoji de drapeau
             $flag = '';
             foreach (str_split($code) as $char) {
-                $flag .= mb_chr(ord($char) + 127397);
+                $flag .= mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES');
             }
             return $flag;
         }
 
         return '🏳️';
     }
+
+    // private function getFlagEmoji($countryCode)
+    // {
+    //     $code = strtoupper($countryCode);
+    //     $emoji = '';
+    //     foreach (str_split($code) as $char) {
+    //         $emoji .= mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES');
+    //     }
+    //     return $emoji;
+    // }
 }
