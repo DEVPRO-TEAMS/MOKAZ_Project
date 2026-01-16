@@ -21,39 +21,19 @@ class Visit extends Model
         'started_at' => 'datetime',
     ];
 
+    public function historiques()
+    {
+        return $this->hasMany(VisitHistorique::class, 'visit_uuid', 'uuid');
+    }
+
     public function pageViews()
     {
         return $this->hasMany(PageView::class, 'visit_uuid', 'uuid');
     }
 
-    // public function getDurationAttribute()
-    // {
-    //     if (!$this->ended_at) {
-    //         return now()->diffInSeconds($this->started_at);
-    //     }
-
-    //     return $this->ended_at->diffInSeconds($this->started_at);
-    // }
-
-    public function historiques()
+    // Nouvelle méthode pour identifier un visiteur unique
+    public function getVisitorKeyAttribute(): string
     {
-        return $this->hasMany(VisitHistorique::class , 'visit_uuid', 'uuid');
-    }
-
-    public function scopeToday($query)
-    {
-        return $query->whereDate('started_at', today());
-    }
-    
-    public function scopeActive($query)
-    {
-        return $query->whereHas('historiques', function ($q) {
-            $q->whereNull('ended_at');
-        });
-    }
-    
-    public function getTotalDurationAttribute()
-    {
-        return $this->historiques->sum('duration');
+        return md5($this->ip_address . '-' . $this->user_agent);
     }
 }

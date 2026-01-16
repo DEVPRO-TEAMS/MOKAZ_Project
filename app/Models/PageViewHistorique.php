@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageViewHistorique extends Model
 {
@@ -19,10 +20,10 @@ class PageViewHistorique extends Model
 
     protected $casts = [
         'started_at' => 'datetime',
-        'ended_at'   => 'datetime',
+        'ended_at' => 'datetime',
     ];
 
-    public function pageView()
+    public function pageView(): BelongsTo
     {
         return $this->belongsTo(PageView::class, 'pageview_uuid', 'uuid');
     }

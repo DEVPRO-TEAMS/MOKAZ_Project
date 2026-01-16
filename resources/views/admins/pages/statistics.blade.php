@@ -1924,7 +1924,8 @@
             }
         }
 
-        <style>.map-container {
+        /* Map */
+            .map-container {
             position: relative;
             margin-top: 1rem;
         }

@@ -52,7 +52,6 @@ Route::get('storage/files/{file}', function ($file) {
     $mimeType = mime_content_type($path);
 
     return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
-    
 })->where('file', '.*');
 
 Route::get('/', [PagesController::class, 'index'])->name('welcome');
@@ -80,10 +79,8 @@ Route::get('/contrat-prestataire/{email}', [PagesController::class, 'contratPres
 
 
 
-Route::prefix('admin')->name('admin.')->group(function(){
-    Route::middleware('guest', 'PreventBackHistory')->group(function(){
-
-    });
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('/import-city-country', [AdminController::class, 'importCityCountry'])->name('import.city.country');
 
@@ -93,10 +90,10 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/store', [UserController::class, 'store'])->name('store');
         Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('destroy');
-        
+
         // validation de demande de partenariat 
         Route::get('/demande/list', [AdminController::class, 'viewDemande'])->name('demande.view');
-        
+
         Route::get('/indexLocation', [AdminController::class, 'indexLocation'])->name('indexLocation');
         Route::post('/storeLocationImage', [AdminController::class, 'storeLocationImage'])->name('storeLocationImage');
 
@@ -115,7 +112,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/partner/update/{uuid}', [PartnerController::class, 'updatePartner'])->name('updatePartner');
         Route::post('/partner/destroy/{uuid}', [PartnerController::class, 'destroyPartner'])->name('destroyPartner');
         Route::get('/partner/show/{uuid}', [PartnerController::class, 'showPartner'])->name('showPartner');
-        
+
         Route::get('/partner/property/show/{uuid}', [PropertyController::class, 'show'])->name('properties.show');
         // user 
         Route::post('/update/user/{uuid}', [UserController::class, 'update'])->name('user.update');
@@ -136,14 +133,18 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/testimonial/add', [TestimoniController::class, 'store'])->name('store.testimonial');
         Route::post('/testimonial/update/{uuid}', [TestimoniController::class, 'update'])->name('update.testimonial');
         Route::post('/testimonial/destroy/{uuid}', [TestimoniController::class, 'destroy'])->name('destroy.testimonial');
-        
     });
 });
 
-Route::prefix('user')->name('user.')->group(function(){
-    Route::middleware('guest', 'PreventBackHistory')->group(function(){
-
+Route::prefix('com-manager')->name('comManager.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
+    Route::middleware(['auth', 'comManager'])->group(function () {
+        Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
     });
+});
+
+Route::prefix('user')->name('user.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
     Route::middleware(['auth', 'user'])->group(function () {
         Route::get('/dashboard', [UserController::class, 'index'])->name('index');
         Route::post('/update/user/{uuid}', [UserController::class, 'updateUser'])->name('updateUser');
@@ -151,8 +152,8 @@ Route::prefix('user')->name('user.')->group(function(){
     });
 });
 
-Route::prefix('partner')->name('partner.')->group(function(){
-    Route::middleware('guest', 'PreventBackHistory')->group(function(){
+Route::prefix('partner')->name('partner.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {
         Route::post('demande/store', [PartnerController::class, 'store']);
     });
     Route::middleware(['auth', 'partner'])->group(function () {
@@ -194,9 +195,8 @@ Route::prefix('partner')->name('partner.')->group(function(){
 });
 
 
-Route::prefix('setting')->name('setting.')->group(function(){
-    Route::middleware('guest', 'PreventBackHistory')->group(function(){
-    });
+Route::prefix('setting')->name('setting.')->group(function () {
+    Route::middleware('guest', 'PreventBackHistory')->group(function () {});
     Route::middleware(['auth'])->group(function () {
         Route::get('/index/commodity', [SettingController::class, 'indexCommodity'])->name('indexCommodity');
         Route::get('/index/appart', [SettingController::class, 'indexAppart'])->name('indexAppart');
@@ -207,43 +207,43 @@ Route::prefix('setting')->name('setting.')->group(function(){
         Route::post('/variable/destroy/{uuid}', [SettingController::class, 'destroyVariable'])->name('destroyVariable');
 
         // type de variable
-        
+
     });
 });
 
 
 
-Route::post('/track/page-duration', function (Request $request) {
+// Route::post('/track/page-duration', function (Request $request) {
 
-    $uuid = $request->input('historique_uuid');
+//     $uuid = $request->input('historique_uuid');
 
-    if (!$uuid) {
-        Log::warning('historique_uuid manquant : Page historique');
-        return response()->json(['status' => false]);
-    }
+//     if (!$uuid) {
+//         Log::warning('historique_uuid manquant : Page historique');
+//         return response()->json(['status' => false]);
+//     }
 
-    $historique = PageViewHistorique::where('uuid', $uuid)
-        ->whereNull('ended_at')
-        ->first();
+//     $historique = PageViewHistorique::where('uuid', $uuid)
+//         ->whereNull('ended_at')
+//         ->first();
 
-    if (!$historique) {
-        Log::info('Historique déjà fermé ou introuvable : Page historique ', ['uuid' => $uuid]);
-        return response()->json(['status' => true]);
-    }
+//     if (!$historique) {
+//         Log::info('Historique déjà fermé ou introuvable : Page historique ', ['uuid' => $uuid]);
+//         return response()->json(['status' => true]);
+//     }
 
-    $historique->update([
-        'ended_at' => now(),
-        'duration' => now()->diffInSeconds($historique->started_at),
-    ]);
+//     $historique->update([
+//         'ended_at' => now(),
+//         'duration' => now()->diffInSeconds($historique->started_at),
+//     ]);
 
-    Log::info('Durée page enregistrée pour page historique', [
-        'uuid' => $uuid,
-        'duration' => $historique->duration
-    ]);
+//     Log::info('Durée page enregistrée pour page historique', [
+//         'uuid' => $uuid,
+//         'duration' => $historique->duration
+//     ]);
 
-    return response()->json(['status' => true]);
+//     return response()->json(['status' => true]);
 
-})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 
@@ -264,18 +264,43 @@ Route::post('/track/page-duration', function (Request $request) {
 //             'ended_at' => now(),
 //             'duration' => now()->diffInSeconds($historique->started_at),
 //         ]);
-//         Log::info('Session fermée avec succès', ['uuid' => $uuid]);
+//         Log::info('Session fermée avec succès', ['visit_historique_uuid' => $uuid]);
 //     }
+
+//     // Nettoyer la session côté serveur
+//     session()->forget(['visit_uuid', 'visit_historique_uuid', 'last_activity']);
 
 //     return response()->json(['status' => true]);
 // })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+
+// Route::post('/track/heartbeat', function (Request $request) {
+//     $uuid = $request->input('visit_historique_uuid');
+
+//     if (!$uuid) {
+//         return response()->json(['status' => false]);
+//     }
+
+//     VisitHistorique::where('uuid', $uuid)
+//         ->whereNull('ended_at')
+//         ->update(['updated_at' => now()]);
+
+//     // 🔥 Synchroniser la session serveur
+//     session(['last_activity' => now()]);
+
+//     return response()->json(['status' => true]);
+// })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+// Tracking routes
 Route::post('/track/visit-end', function (Request $request) {
     $uuid = $request->input('visit_historique_uuid');
 
     if (!$uuid) {
-        Log::warning('visit_historique_uuid manquant');
-        return response()->json(['status' => false]);
+        return response()->json([
+            'status' => false,
+            'error' => 'uuid_missing'
+        ]);
     }
 
     $historique = VisitHistorique::where('uuid', $uuid)
@@ -283,19 +308,31 @@ Route::post('/track/visit-end', function (Request $request) {
         ->first();
 
     if ($historique) {
+        $duration = now()->diffInSeconds($historique->started_at);
+        // Limiter à 2 heures max
+        $duration = min($duration, 7200);
+
         $historique->update([
             'ended_at' => now(),
-            'duration' => now()->diffInSeconds($historique->started_at),
+            'duration' => $duration,
         ]);
-        Log::info('Session fermée avec succès', ['visit_historique_uuid' => $uuid]);
+
+        Log::debug('Session fermée via beacon', [
+            'uuid' => $uuid,
+            'duration' => $duration
+        ]);
     }
 
-    // Nettoyer la session côté serveur
-    session()->forget(['visit_uuid', 'visit_historique_uuid', 'last_activity']);
+    // Nettoyer la session
+    session()->forget([
+        'visit_uuid',
+        'visit_historique_uuid',
+        'last_activity',
+        'session_started_at'
+    ]);
 
     return response()->json(['status' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
 
 Route::post('/track/heartbeat', function (Request $request) {
     $uuid = $request->input('visit_historique_uuid');
@@ -306,12 +343,42 @@ Route::post('/track/heartbeat', function (Request $request) {
 
     VisitHistorique::where('uuid', $uuid)
         ->whereNull('ended_at')
-        ->update(['updated_at' => now()]);
+        ->update([
+            'last_activity_at' => now(),
+            'updated_at' => now()
+        ]);
 
-    // 🔥 Synchroniser la session serveur
+    // Synchroniser la session serveur
     session(['last_activity' => now()]);
 
     return response()->json(['status' => true]);
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/track/page-duration', function (Request $request) {
+    $uuid = $request->input('historique_uuid');
+
+    if (!$uuid) {
+        return response()->json(['status' => false, 'error' => 'uuid_missing']);
+    }
+
+    $historique = PageViewHistorique::where('uuid', $uuid)
+        ->whereNull('ended_at')
+        ->first();
+
+    if (!$historique) {
+        return response()->json(['status' => true, 'message' => 'already_closed']);
+    }
+
+    $duration = now()->diffInSeconds($historique->started_at);
+    // Limiter à 30 minutes max par page
+    $duration = min($duration, 1800);
+
+    $historique->update([
+        'ended_at' => now(),
+        'duration' => $duration,
+    ]);
+
+    return response()->json(['status' => true, 'duration' => $duration]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/send/email', [MailController::class, 'sendMail'])->name('sendMail');
@@ -355,18 +422,18 @@ Route::get('api/country', function () {
 //                 'code' => $city['code'],
 //                 'ville' => $city['name'],
 //                 'pays' => $city['country']['nameFr'],
-                
+
 //             ];
 //             $meta = $dataResponse['meta'];
 
 //             $allCities[] = $Cities;
 //         }
 //         $allCities['meta'] = $meta;
-        
+
 //         // 
-        
+
 //     do {
-        
+
 
 //         if (!isset($dataResponse['cities']) || !is_array($dataResponse['cities'])) {
 //             break;
@@ -433,7 +500,7 @@ Route::get('api/cities', function () {
     //     ->values();
 
     // return response()->json($filteredCities);
-    
+
 });
     // return response()->json($dataResponse);
     // return response()->json($data);

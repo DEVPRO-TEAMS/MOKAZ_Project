@@ -7,13 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class VisitHistorique extends Model
 {
-    use HasFactory;
+    // use HasFactory;
+    // protected $fillable = [
+    //     'uuid',
+    //     'visit_uuid',
+    //     'source',        // direct, seo, social, ads, email
+    //     'referrer',
+    //     'coordornneGPS', // latitude, longitude
+    //     'country',
+    //     'city',
+    //     'started_at',
+    //     'last_activity_at',
+    //     'ended_at',
+    //     'duration',
+    // ];
+
+    // protected $casts = [
+    //     'started_at' => 'datetime',
+    //     'ended_at' => 'datetime',
+    // ];
     protected $fillable = [
         'uuid',
         'visit_uuid',
-        'source',        // direct, seo, social, ads, email
+        'source',
         'referrer',
-        'coordornneGPS', // latitude, longitude
+        'coordinates',
         'country',
         'city',
         'started_at',
@@ -24,6 +42,25 @@ class VisitHistorique extends Model
 
     protected $casts = [
         'started_at' => 'datetime',
+        'last_activity_at' => 'datetime',
         'ended_at' => 'datetime',
     ];
+
+    public function visit()
+    {
+        return $this->belongsTo(Visit::class, 'visit_uuid', 'uuid');
+    }
+
+    // Scope pour filtrer les sessions valides
+    public function scopeValidSessions($query)
+    {
+        return $query->whereNotNull('ended_at')
+                     ->where('duration', '<=', 7200); // Max 2 heures
+    }
+
+    // Scope pour les sessions en cours
+    public function scopeActive($query)
+    {
+        return $query->whereNull('ended_at');
+    }
 }

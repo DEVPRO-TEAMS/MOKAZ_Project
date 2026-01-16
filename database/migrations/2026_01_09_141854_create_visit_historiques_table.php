@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email', 'referral', 'organic'])->nullable();
             $table->string('referrer')->nullable();
 
-            $table->string('coordornneGPS')->nullable();
+            $table->string('coordinates')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
 
