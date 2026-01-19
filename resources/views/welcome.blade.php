@@ -249,13 +249,13 @@
                     <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="homeya-box">
                             <div class="archive-top">
-                                <a href="property-details-v1.html" class="images-group">
+                                <a href="{{ route('appart.detail.show', $item->uuid) }}" class="images-group">
                                     <div class="images-style">
                                         <img src="{{ asset($item->image) }}" alt="{{ $item->title }}">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-8">
-                                            <li class="flag-tag style-1">{{ !empty ($item->property->category) ? $item->property->category->libelle : '' }}</li>
+                                            <li class="flag-tag success">{{ !empty ($item->property->category) ? $item->property->category->libelle : '' }}</li>
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             <li class="box-icon w-32">
@@ -273,7 +273,7 @@
                                             class="link">{{ $item->title ?? '' }}</a>
                                     </div>
                                     
-                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i><p>{{ $item->address ?? '' }}</p> </div>
+                                    {{-- <div class="desc"><i class="fs-16 icon icon-mapPin"></i><p>{{ $item->address ?? '' }}</p> </div> --}}
                                      <ul class="meta-list">
                                         <li class="item">
                                             <i class="icon icon-bed"></i>
@@ -303,7 +303,7 @@
                             {{-- 🚗 Distance + Temps de trajet --}}
                             @if ($distanceKm)
                                 <div class="archive-bottom d-flex flex-column justify-content-between align-items-center">
-                                    <ul class="meta-list p-3 d-flex justify-content-between w-100">
+                                    <ul class="meta-list p-3 border border-1 border-bottom d-flex justify-content-between w-100">
                                         {{-- 📏 Distance --}}
                                         <li class="item d-flex align-items-center">
                                             <i class="fa-solid fa-ruler-horizontal me-1 text-dark"></i>
@@ -326,11 +326,11 @@
                                             </li>
                                         @endif
                                     </ul>
-                                    <hr>
-                                    <p class="item d-flex align-items-center">
+                                    {{-- <hr> --}}
+                                    <h6 class="item d-flex align-items-center">
                                         <i class="fa-solid fa-map-location-dot me-1 text-dark"></i>
                                         <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
-                                    </p>
+                                    </h6>
                                 </div>
                             @endif
                             {{-- <div class="archive-bottom d-flex justify-content-between align-items-center">
