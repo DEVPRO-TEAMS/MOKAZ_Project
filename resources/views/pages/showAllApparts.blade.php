@@ -182,9 +182,93 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group-4 box-filter">
+                        <a class="filter-advanced pull-right">
+                                <span class="icon icon-faders"></span> 
+                                <span class="text-1">Avancé</span>                                                                      
+                        </a>
+                    </div>
                 </div>
 
                 <button type="submit" class="tf-btn primary">Rechercher</button>
+            </div>
+            <div class="wd-search-form">
+                <div class="grid-1 group-box group-price">
+                    <div class="widget-price">
+                        <div class="box-title-price">
+                            <span class="title-price">Prix</span>
+                            <div class="caption-price">
+                                <span>entre</span>
+                                <span id="slider-range-value1" class="fw-7"></span>
+                                <span>et</span>
+                                <span id="slider-range-value2" class="fw-7"></span>
+                            </div>
+                        </div>
+
+                        <div id="slider-range"
+                            data-min="{{ $minPrice }}"
+                            data-max="{{ $maxPrice }}">
+                        </div>
+
+                        <div class="slider-labels">
+                            <input type="hidden"
+                                name="min_price"
+                                id="min_price"
+                                value="{{ request('min_price', $minPrice) }}">
+
+                            <input type="hidden"
+                                name="max_price"
+                                id="max_price"
+                                value="{{ request('max_price', $maxPrice) }}">
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="grid-1 group-box">
+                    <div class="group-select grid-3">
+                        <div class="box-select">
+                            <label class="title-select text-variant-1">Nombre de chambres</label>
+                            <input type="number" class="form-control" placeholder="Chambres" name="rooms" value="{{ request('rooms') }}">
+                        </div>
+                        <div class="box-select">
+                            <label class="title-select text-variant-1">Nombre de salle de bains</label>
+                            <input type="number" class="form-control" placeholder="Salle de bains" name="bathrooms" value="{{ request('bathrooms') }}">
+                        </div>
+                        <div class="box-select">
+                            <label class="title-select text-variant-1">Type de séjour</label>
+                            <select name="sejour" id="sejour" class="nice-select form-select">
+                                <option value="">Tous</option>
+                                <option value="Heure">séjour en heures</option>
+                                <option value="Jour">séjour en jours</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                @if(count($commodities))
+                    <div class="group-checkbox">
+                        <div class="text-1">Commodités :</div>
+
+                        <div class="group-amenities mt-8 grid-6">
+                            @foreach($commodities as $index => $commodity)
+                                <div class="box-amenities">
+                                    <fieldset class="amenities-item">
+                                        <input
+                                            type="checkbox"
+                                            name="commodities[]"
+                                            class="tf-checkbox style-1"
+                                            id="cb{{ $index }}"
+                                            value="{{ $commodity }}"
+                                            {{ in_array($commodity, request('commodities', [])) ? 'checked' : '' }}
+                                        >
+                                        <label for="cb{{ $index }}" class="text-cb-amenities">
+                                            {{ ucfirst($commodity) }}
+                                        </label>
+                                    </fieldset>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </form>
 
@@ -220,7 +304,7 @@
                                         {{-- <li class="flag-tag success">en vedette</li> --}}
                                     </ul>
                                     <ul class="d-flex gap-4">
-                                        <li class="box-icon w-32"><span class="icon icon-heart"></span></li>
+                                        <li class="box-icon w-32 d-none"><span class="icon icon-heart "></span></li>
                                         <li class="box-icon w-32"><span class="icon icon-eye"></span></li>
                                     </ul>
                                 </div>
@@ -316,7 +400,7 @@
             @empty
 
                 {{-- verifier si il y a une recherche effectuée --}}
-                @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie'))
+                @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie') || request()->has('rooms') || request()->has('bathrooms') || request()->has('sejour') || request()->has('commodities') || request()->has('min_price') || request()->has('max_price'))
                     <div class="d-flex flex-column align-items-center">
                         <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
                         <h5 class="fw-semibold">Aucun hébergement trouvée</h5>

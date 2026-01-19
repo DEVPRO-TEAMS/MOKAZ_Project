@@ -1,34 +1,109 @@
 // Requires jQuery
 
 // Initialize slider:
+// $(document).ready(function () {
+//   $(".noUi-handle").on("click", function () {
+//     $(this).width(50);
+//   });
+//   var rangeSlider = document.getElementById("slider-range");
+//   var moneyFormat = wNumb({
+//     decimals: 0,
+//     thousand: ",",
+//     prefix: "$",
+//   });
+//   noUiSlider.create(rangeSlider, {
+//     start: [100, 650000],
+//     step: 1,
+//     range: {
+//       min: [100],
+//       max: [650000],
+//     },
+//     format: moneyFormat,
+//     connect: true,
+//   });
+//   // Set visual min and max values and also update value hidden form inputs
+//   rangeSlider.noUiSlider.on("update", function (values, handle) {
+//     document.getElementById("slider-range-value1").innerHTML = values[0];
+//     document.getElementById("slider-range-value2").innerHTML = values[1];
+//     document.getElementsByName("min-value").value = moneyFormat.from(values[0]);
+//     document.getElementsByName("max-value").value = moneyFormat.from(values[1]);
+//   });
+// });
+
+// $(document).ready(function () {
+
+//     var rangeSlider = document.getElementById("slider-range");
+
+//     if (!rangeSlider) return;
+
+//     var minPrice = parseInt(rangeSlider.dataset.min);
+//     var maxPrice = parseInt(rangeSlider.dataset.max);
+
+//     var moneyFormat = wNumb({
+//         decimals: 0,
+//         thousand: " ",
+//         suffix: " FCFA"
+//     });
+
+//     noUiSlider.create(rangeSlider, {
+//         start: [minPrice, maxPrice],
+//         step: 500,
+//         connect: true,
+//         range: {
+//             min: minPrice,
+//             max: maxPrice
+//         },
+//         format: moneyFormat
+//     });
+
+//     rangeSlider.noUiSlider.on("update", function (values) {
+
+//         $("#slider-range-value1").text(values[0]);
+//         $("#slider-range-value2").text(values[1]);
+
+//         $("#min_price").val(moneyFormat.from(values[0]));
+//         $("#max_price").val(moneyFormat.from(values[1]));
+//     });
+// });
+
 $(document).ready(function () {
-  $(".noUi-handle").on("click", function () {
-    $(this).width(50);
-  });
-  var rangeSlider = document.getElementById("slider-range");
-  var moneyFormat = wNumb({
-    decimals: 0,
-    thousand: ",",
-    prefix: "$",
-  });
-  noUiSlider.create(rangeSlider, {
-    start: [100, 650000],
-    step: 1,
-    range: {
-      min: [100],
-      max: [650000],
-    },
-    format: moneyFormat,
-    connect: true,
-  });
-  // Set visual min and max values and also update value hidden form inputs
-  rangeSlider.noUiSlider.on("update", function (values, handle) {
-    document.getElementById("slider-range-value1").innerHTML = values[0];
-    document.getElementById("slider-range-value2").innerHTML = values[1];
-    document.getElementsByName("min-value").value = moneyFormat.from(values[0]);
-    document.getElementsByName("max-value").value = moneyFormat.from(values[1]);
-  });
+
+    var rangeSlider = document.getElementById("slider-range");
+    if (!rangeSlider) return;
+
+    var minPrice = parseInt(rangeSlider.dataset.min);
+    var maxPrice = parseInt(rangeSlider.dataset.max);
+
+    var moneyFormat = wNumb({
+        decimals: 0,
+        thousand: " ",
+        suffix: " FCFA"
+    });
+
+    noUiSlider.create(rangeSlider, {
+        start: [
+            parseInt($("#min_price").val()) || minPrice,
+            parseInt($("#max_price").val()) || maxPrice
+        ],
+        step: 500,
+        connect: true,
+        range: {
+            min: minPrice,
+            max: maxPrice
+        },
+        format: moneyFormat
+    });
+
+    rangeSlider.noUiSlider.on("update", function (values) {
+
+        $("#slider-range-value1").text(values[0]);
+        $("#slider-range-value2").text(values[1]);
+
+        $("#min_price").val(moneyFormat.from(values[0]));
+        $("#max_price").val(moneyFormat.from(values[1]));
+    });
 });
+
 
 $(document).ready(function () {
   $(".noUi-handle2").on("click", function () {

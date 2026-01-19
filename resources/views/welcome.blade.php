@@ -86,12 +86,96 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group-4 box-filter">
+                                                <a class="filter-advanced pull-right">
+                                                        <span class="icon icon-faders"></span> 
+                                                        <span class="text-1">Avancé</span>                                                                      
+                                                </a>
+                                            </div>
                                         </div>
 
                                         <input type="hidden" name="lat" id="user_lat" value="{{ request('lat') }}">
                                         <input type="hidden" name="lng" id="user_lng" value="{{ request('lng') }}">
 
                                         <button type="submit" class="tf-btn primary">Rechercher</button>
+                                    </div>
+                                    <div class="wd-search-form">
+                                        <div class="grid-1 group-box group-price">
+                                            <div class="widget-price">
+                                                <div class="box-title-price">
+                                                    <span class="title-price">Prix</span>
+                                                    <div class="caption-price">
+                                                        <span>entre</span>
+                                                        <span id="slider-range-value1" class="fw-7"></span>
+                                                        <span>et</span>
+                                                        <span id="slider-range-value2" class="fw-7"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div id="slider-range"
+                                                    data-min="{{ $minPrice }}"
+                                                    data-max="{{ $maxPrice }}">
+                                                </div>
+
+                                                <div class="slider-labels">
+                                                    <input type="hidden"
+                                                        name="min_price"
+                                                        id="min_price"
+                                                        value="{{ request('min_price', $minPrice) }}">
+
+                                                    <input type="hidden"
+                                                        name="max_price"
+                                                        id="max_price"
+                                                        value="{{ request('max_price', $maxPrice) }}">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="grid-1 group-box">
+                                            <div class="group-select grid-3">
+                                                <div class="box-select">
+                                                    <label class="title-select text-variant-1">Nombre de chambres</label>
+                                                    <input type="number" class="form-control" placeholder="Chambres" name="rooms" value="{{ request('rooms') }}">
+                                                </div>
+                                                <div class="box-select">
+                                                    <label class="title-select text-variant-1">Nombre de salle de bains</label>
+                                                    <input type="number" class="form-control" placeholder="Salle de bains" name="bathrooms" value="{{ request('bathrooms') }}">
+                                                </div>
+                                                <div class="box-select">
+                                                    <label class="title-select text-variant-1">Type de séjour</label>
+                                                    <select name="sejour" id="sejour" class="nice-select form-select">
+                                                        <option value="">Tous</option>
+                                                        <option value="Heure">séjour en heures</option>
+                                                        <option value="Jour">séjour en jours</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if(count($commodities))
+                                            <div class="group-checkbox">
+                                                <div class="text-1">Commodités :</div>
+
+                                                <div class="group-amenities mt-8 grid-6">
+                                                    @foreach($commodities as $index => $commodity)
+                                                        <div class="box-amenities">
+                                                            <fieldset class="amenities-item">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name="commodities[]"
+                                                                    class="tf-checkbox style-1"
+                                                                    id="cb{{ $index }}"
+                                                                    value="{{ $commodity }}"
+                                                                    {{ in_array($commodity, request('commodities', [])) ? 'checked' : '' }}
+                                                                >
+                                                                <label for="cb{{ $index }}" class="text-cb-amenities">
+                                                                    {{ ucfirst($commodity) }}
+                                                                </label>
+                                                            </fieldset>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </form>
                             </div>
@@ -162,100 +246,199 @@
                         $tempsVoitureAffiche = formatTemps($tempsVoiture);
                     @endphp
 
-                    <div class="col-xl-4 col-md-6">
-                        
-                        <div class="homeya-box style-3">
-                            <div class="images-group">
-                                <div class="images-style">
-                                    <img src="{{ asset($item->image) }}" alt="img">
-                                </div>
-                                <div class="top">
-                                    <ul class="d-flex gap-8"></ul>
-                                    <ul class="d-flex gap-4">
-                                        <li class="box-icon w-32">
-                                            <span class="icon icon-heart"></span>
-                                        </li>
-                                        <li class="box-icon w-32">
-                                            <a href="{{ route('appart.detail.show', $item->uuid) }}">
+                    <div class="col-xl-4 col-lg-6 col-md-6">
+                        <div class="homeya-box">
+                            <div class="archive-top">
+                                <a href="property-details-v1.html" class="images-group">
+                                    <div class="images-style">
+                                        <img src="{{ asset($item->image) }}" alt="{{ $item->title }}">
+                                    </div>
+                                    <div class="top">
+                                        <ul class="d-flex gap-8">
+                                            <li class="flag-tag style-1">{{ !empty ($item->property->category) ? $item->property->category->libelle : '' }}</li>
+                                        </ul>
+                                        <ul class="d-flex gap-4">
+                                            <li class="box-icon w-32">
                                                 <span class="icon icon-eye"></span>
-                                            </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="bottom">
+                                        <span class="flag-tag style-2">{{ $item->type->libelle ?? '' }}</span>
+                                    </div>
+                                </a>
+                                <div class="content">
+                                    <div class="h7 text-capitalize fw-7">
+                                        <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                            class="link">{{ $item->title ?? '' }}</a>
+                                    </div>
+                                    
+                                    <div class="desc"><i class="fs-16 icon icon-mapPin"></i><p>{{ $item->address ?? '' }}</p> </div>
+                                     <ul class="meta-list">
+                                        <li class="item">
+                                            <i class="icon icon-bed"></i>
+                                            <span>{{ $item->nbr_room ?? 0 }}</span>
+                                        </li>
+                                        <li class="item">
+                                            <i class="icon icon-bathtub"></i>
+                                            <span>{{ $item->nbr_bathroom ?? 0 }}</span>
+                                        </li>
+                                        <li class="item">
+                                            <i class="icon icon-money"></i>
+                                            <span>
+                                                @if ($tarifHeure)
+                                                    À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
+                                                    FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                                @elseif ($tarifJour)
+                                                    À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
+                                                    FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                                @else
+                                                    Prix non disponible
+                                                @endif
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="top">
-                                    <span class="flag-tag style-2">{{ $item->type->libelle }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
-                                </div>
-
-                                <div class="content">
-                                    <a href="{{ route('appart.detail.show', $item->uuid) }}" class="link">
-                                        <div class="title text-1 text-capitalize">
-                                            <a href="{{ route('appart.detail.show', $item->uuid) }}"
-                                                class="link text-white">{{ $item->title ?? '' }}</a>
-                                        </div>
-
-                                        <ul class="meta-list">
-                                            <li class="item">
-                                                <i class="icon icon-bed"></i>
-                                                <span>{{ $item->nbr_room ?? 0 }}</span>
-                                            </li>
-                                            <li class="item">
-                                                <i class="icon icon-bathtub"></i>
-                                                <span>{{ $item->nbr_bathroom ?? 0 }}</span>
-                                            </li>
-                                            <li class="item">
-                                                <i class="icon icon-money"></i>
-                                                <span>
-                                                    @if ($tarifHeure)
-                                                        À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
-                                                        FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
-                                                    @elseif ($tarifJour)
-                                                        À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
-                                                        FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
-                                                    @else
-                                                        Prix non disponible
-                                                    @endif
-                                                </span>
-                                            </li>
-                                        </ul>
-
-                                        {{-- 🚗 Distance + Temps de trajet --}}
-                                        @if ($distanceKm)
-                                            <ul class="meta-list justify-content-between w-100">
-                                                {{-- 📏 Distance --}}
-                                                <li class="item d-flex align-items-center">
-                                                    <i class="fa-solid fa-ruler-horizontal me-1 text-white"></i>
-                                                    <span>{{ $distanceAffiche ?? '' }}</span>
-                                                </li>
-
-                                                {{-- 🚶 Temps à pied --}}
-                                                @if ($tempsPiedAffiche)
-                                                    <li class="item d-flex align-items-center">
-                                                        <i class="fa-solid fa-person-walking me-1 text-white"></i>
-                                                        <span>{{ $tempsPiedAffiche ?? '' }}</span>
-                                                    </li>
-                                                @endif
-
-                                                {{-- 🚗 Temps en voiture --}}
-                                                @if ($tempsVoitureAffiche)
-                                                    <li class="item d-flex align-items-center">
-                                                        <i class="fa-solid fa-car-side me-1 text-white"></i>
-                                                        <span>{{ $tempsVoitureAffiche ?? '' }}</span>
-                                                    </li>
-                                                @endif
-                                                <li class="item d-flex align-items-center">
-                                                    <i class="fa-solid fa-map-location-dot me-1 text-white"></i>
-                                                    <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
-                                                </li>
-                                            </ul>
-                                        @endif
-                                    </a>
-                                    </div>
                             </div>
+                            {{-- 🚗 Distance + Temps de trajet --}}
+                            @if ($distanceKm)
+                                <div class="archive-bottom d-flex justify-content-between align-items-center">
+                                    <ul class="meta-list justify-content-between w-100">
+                                        {{-- 📏 Distance --}}
+                                        <li class="item d-flex align-items-center">
+                                            <i class="fa-solid fa-ruler-horizontal me-1 text-dark"></i>
+                                            <span>{{ $distanceAffiche ?? '' }}</span>
+                                        </li>
+
+                                        {{-- 🚶 Temps à pied --}}
+                                        @if ($tempsPiedAffiche)
+                                            <li class="item d-flex align-items-center">
+                                                <i class="fa-solid fa-person-walking me-1 text-dark"></i>
+                                                <span>{{ $tempsPiedAffiche ?? '' }}</span>
+                                            </li>
+                                        @endif
+
+                                        {{-- 🚗 Temps en voiture --}}
+                                        @if ($tempsVoitureAffiche)
+                                            <li class="item d-flex align-items-center">
+                                                <i class="fa-solid fa-car-side me-1 text-dark"></i>
+                                                <span>{{ $tempsVoitureAffiche ?? '' }}</span>
+                                            </li>
+                                        @endif
+                                        <li class="item d-flex align-items-center">
+                                            <i class="fa-solid fa-map-location-dot me-1 text-dark"></i>
+                                            <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endif
+                            {{-- <div class="archive-bottom d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-8 align-items-center">
+                                    <div class="avatar avt-40 round">
+                                        <img src="images/avatar/avt-6.jpg" alt="avt">
+                                    </div>
+                                    <span>Arlene McCoy</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <h6>$7250,00</h6>
+                                    <span class="text-variant-1">/SqFT</span>
+                                </div>
+                            </div> --}}
                         </div>
                     </div>
+
+                    {{-- <div class="col-xl-4 col-md-6">
+                        
+                        <div class="homeya-box style-3">
+                                <div class="images-group">
+                                    <div class="images-style">
+                                        <img src="{{ asset($item->image) }}" alt="{{ $item->title }}">
+                                    </div>
+                               
+                                    <div class="top">
+                                        <ul class="d-flex gap-8"></ul>
+                                        <ul class="d-flex gap-4">
+                                            <li class="box-icon w-32 d-none">
+                                                <span class="icon icon-heart"></span>
+                                            </li>
+                                            <li class="box-icon w-32">
+                                                <a href="{{ route('appart.detail.show', $item->uuid) }}">
+                                                    <span class="icon icon-eye"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="top">
+                                        <span class="flag-tag style-2">{{ $item->type->libelle }} {{ !empty($item->property->category) ? ' | ' . $item->property->category->libelle : '' }}</span>
+                                    </div>
+
+                                    <div class="content">
+                                        <a href="{{ route('appart.detail.show', $item->uuid) }}" class="link">
+                                            <div class="title text-1 text-capitalize">
+                                                <a href="{{ route('appart.detail.show', $item->uuid) }}"
+                                                    class="link text-white">{{ $item->title ?? '' }}</a>
+                                            </div>
+
+                                            <ul class="meta-list">
+                                                <li class="item">
+                                                    <i class="icon icon-bed"></i>
+                                                    <span>{{ $item->nbr_room ?? 0 }}</span>
+                                                </li>
+                                                <li class="item">
+                                                    <i class="icon icon-bathtub"></i>
+                                                    <span>{{ $item->nbr_bathroom ?? 0 }}</span>
+                                                </li>
+                                                <li class="item">
+                                                    <i class="icon icon-money"></i>
+                                                    <span>
+                                                        @if ($tarifHeure)
+                                                            À partir de {{ number_format($tarifHeure->price, 0, ',', ' ') }}
+                                                            FCFA/{{ $tarifHeure->nbr_of_sejour ?? '' }}{{ $tarifHeure->nbr_of_sejour <= 1 ? 'hre' : 'hres' }}
+                                                        @elseif ($tarifJour)
+                                                            À partir de {{ number_format($tarifJour->price, 0, ',', ' ') }}
+                                                            FCFA/{{ $tarifJour->nbr_of_sejour ?? '' }}{{ $tarifJour->nbr_of_sejour <= 1 ? 'jr' : 'jrs' }}
+                                                        @else
+                                                            Prix non disponible
+                                                        @endif
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                            
+                                            @if ($distanceKm)
+                                                <ul class="meta-list justify-content-between w-100">
+                                                    <li class="item d-flex align-items-center">
+                                                        <i class="fa-solid fa-ruler-horizontal me-1 text-white"></i>
+                                                        <span>{{ $distanceAffiche ?? '' }}</span>
+                                                    </li>
+
+                                                    @if ($tempsPiedAffiche)
+                                                        <li class="item d-flex align-items-center">
+                                                            <i class="fa-solid fa-person-walking me-1 text-white"></i>
+                                                            <span>{{ $tempsPiedAffiche ?? '' }}</span>
+                                                        </li>
+                                                    @endif
+
+                                                    @if ($tempsVoitureAffiche)
+                                                        <li class="item d-flex align-items-center">
+                                                            <i class="fa-solid fa-car-side me-1 text-white"></i>
+                                                            <span>{{ $tempsVoitureAffiche ?? '' }}</span>
+                                                        </li>
+                                                    @endif
+                                                    <li class="item d-flex align-items-center">
+                                                        <i class="fa-solid fa-map-location-dot me-1 text-white"></i>
+                                                        <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
+                                                    </li>
+                                                </ul>
+                                            @endif
+                                        </a>
+                                    </div>
+                                </div>
+                        </div>
+                    </div> --}}
                 @empty
                     {{-- Vérifie s’il y a une recherche effectuée --}}
-                    @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie'))
+                    @if (request()->has('search') || request()->has('type') || request()->has('location') || request()->has('categorie') || request()->has('rooms') || request()->has('bathrooms') || request()->has('sejour') || request()->has('commodities') || request()->has('min_price') || request()->has('max_price'))
                         <div class="d-flex flex-column align-items-center">
                             <i class="fas fa-home fa-3x text-muted pb-3 opacity-50"></i>
                             <h5 class="fw-semibold">Aucun hébergement trouvé</h5>
@@ -375,7 +558,7 @@
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             {{-- <li class="box-icon w-40"><span class="icon icon-arrLeftRight"></span></li> --}}
-                                            <li class="box-icon w-40"><span class="icon icon-heart"></span></li>
+                                            <li class="box-icon w-40 d-none"><span class="icon icon-heart"></span></li>
                                             <li class="box-icon w-40"><span class="icon icon-eye"></span></li>
                                         </ul>
                                     </div>
@@ -444,7 +627,7 @@
                                         </ul>
                                         <ul class="d-flex gap-4">
                                             {{-- <li class="box-icon w-28"><span class="icon icon-arrLeftRight"></span></li> --}}
-                                            <li class="box-icon w-28"><span class="icon icon-heart"></span></li>
+                                            <li class="box-icon w-28 d-none"><span class="icon icon-heart"></span></li>
                                             <li class="box-icon w-28"><span class="icon icon-eye"></span></li>
                                         </ul>
                                     </div>

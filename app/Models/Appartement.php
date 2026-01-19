@@ -23,7 +23,7 @@ class Appartement extends Model
         'title',
         'description',
         'type_uuid',
-        'commodities',
+        'commodities', // enregistre comme suite pour chaque Appartement : climatiseur,Ventilateur,...
         'nbr_room',
         'nbr_bathroom',
         'nbr_available',
