@@ -355,6 +355,12 @@ $(document).ready(function () {
       return cssPrefix + className;
     };
   }
+  function addCssSurfix(cssSurfix) {
+    return function (className) {
+      return className + cssSurfix;
+    };
+  }
+
   var // Determine the events to bind. IE11 implements pointerEvents without
     // a prefix, which breaks compatibility with the IE10 implementation.
     /** @const */
