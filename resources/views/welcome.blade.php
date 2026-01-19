@@ -106,9 +106,9 @@
                                                     <span class="title-price">Prix</span>
                                                     <div class="caption-price">
                                                         <span>entre</span>
-                                                        <span id="slider-range-value1" class="fw-7"></span> FCFA
+                                                        <span id="slider-range-value1" class="fw-7"></span>
                                                         <span>et</span>
-                                                        <span id="slider-range-value2" class="fw-7"></span> FCFA
+                                                        <span id="slider-range-value2" class="fw-7"></span>
                                                     </div>
                                                 </div>
 

@@ -44,8 +44,15 @@ class PagesController extends Controller
         $bathrooms = $request->input('bathrooms');
         $sejour = $request->input('sejour');
         $commodities = $request->input('commodities');
-        $min_price = $request->input('min_price');
-        $max_price = $request->input('max_price');
+        $min_price = "";
+        $max_price = "";
+
+        $isSearch = ($search || $location || $type || $categorie || $ville || $rooms || $bathrooms || $sejour || $commodities);
+
+        if ($isSearch) {
+            $min_price = $request->input('min_price');
+            $max_price = $request->input('max_price');
+        }
 
 
         // créer une session pour stocker les latitudeUser et longitudeUser
@@ -169,7 +176,14 @@ class PagesController extends Controller
 
         $appartements = Appartement::where('etat', 'actif')
             ->where('nbr_available', '>', 0)->get();
+        // $priceRange = Tarification::where('etat', 'actif')
+        //     ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+        //     ->first();
         $priceRange = Tarification::where('etat', 'actif')
+            ->whereHas('appartement', function ($q) {
+                $q->where('etat', 'actif')
+                ->where('nbr_available', '>', 0);
+            })
             ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
             ->first();
         // dd($priceRange);
@@ -553,9 +567,17 @@ class PagesController extends Controller
             ->where('appartements.property_uuid', $uuid)
             ->where('nbr_available', '>', 0)->get();
 
+        // $priceRange = Tarification::where('etat', 'actif')
+        //     ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+        //     ->first();
         $priceRange = Tarification::where('etat', 'actif')
-            ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
-            ->first();
+        ->whereHas('appartement', function ($q) use ($uuid) {
+            $q->where('etat', 'actif')
+            ->where('nbr_available', '>', 0)
+            ->where('property_uuid', $uuid);
+        })
+        ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+        ->first();
         // dd($priceRange);
         $minPrice = $priceRange->min_price; // prix minimum
         $maxPrice  = $priceRange->max_price; // prix maximum
@@ -759,7 +781,14 @@ class PagesController extends Controller
         $appartements = Appartement::where('etat', 'actif')
             ->where('nbr_available', '>', 0)->get();
 
+        // $priceRange = Tarification::where('etat', 'actif')
+        //     ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+        //     ->first();
         $priceRange = Tarification::where('etat', 'actif')
+            ->whereHas('appartement', function ($q) {
+                $q->where('etat', 'actif')
+                ->where('nbr_available', '>', 0);
+            })
             ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
             ->first();
         // dd($priceRange);

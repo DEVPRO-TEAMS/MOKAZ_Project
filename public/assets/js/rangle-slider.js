@@ -96,8 +96,8 @@ $(document).ready(function () {
 
     rangeSlider.noUiSlider.on("update", function (values) {
 
-        $("#slider-range-value1").text(values[0]);
-        $("#slider-range-value2").text(values[1]);
+        $("#slider-range-value1").text(values[0] + " FCFA");
+        $("#slider-range-value2").text(values[1] + " FCFA");
 
         $("#min_price").val(moneyFormat.from(values[0]));
         $("#max_price").val(moneyFormat.from(values[1]));
