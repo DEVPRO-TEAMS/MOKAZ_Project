@@ -302,8 +302,8 @@
                             </div>
                             {{-- 🚗 Distance + Temps de trajet --}}
                             @if ($distanceKm)
-                                <div class="archive-bottom d-flex justify-content-between align-items-center">
-                                    <ul class="meta-list justify-content-between w-100">
+                                {{-- <div class="archive-bottom d-flex justify-content-between align-items-center"> --}}
+                                    <ul class="meta-list p-5 justify-content-between w-100">
                                         {{-- 📏 Distance --}}
                                         <li class="item d-flex align-items-center">
                                             <i class="fa-solid fa-ruler-horizontal me-1 text-dark"></i>
@@ -330,7 +330,7 @@
                                             <span>{{ $item->property->ville->label ?? '' }} - {{ $item->property->pays->label ?? '' }}</span>
                                         </li>
                                     </ul>
-                                </div>
+                                {{-- </div> --}}
                             @endif
                             {{-- <div class="archive-bottom d-flex justify-content-between align-items-center">
                                 <div class="d-flex gap-8 align-items-center">
