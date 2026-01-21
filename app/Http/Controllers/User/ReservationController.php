@@ -336,6 +336,11 @@ class ReservationController extends Controller
         $reservation = Reservation::where('uuid', $reservation_uuid)->first();
         return view('reservations.detail', compact('reservation'));
     }
+    public function reconduiReservation($reservation_uuid)
+    {
+        $reservation = Reservation::where('uuid', $reservation_uuid)->first();
+        return view('reservations.reconduction.index', compact('reservation'));
+    }
 
     public function confirmReservation($uuid)
     {

@@ -79,7 +79,6 @@ Route::post('/comment/destroy/{uuid}', [CommentController::class, 'destroy']);
 Route::post('/send-sms-helper', [PagesController::class, 'demoSms']);
 
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

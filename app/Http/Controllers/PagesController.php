@@ -30,6 +30,8 @@ class PagesController extends Controller
         // 📋 Récupération des types d'appartements actifs
         $typeAppart = Variable::where(['type' => 'type_of_appart', 'etat' => 'actif'])->get();
 
+        // dd($typeAppart);
+
         // ⚙️ Paramètres de pagination et de requête
         $perPage = $request->get('perPage', 6);
         $latitudeUser = $request->get('lat');
@@ -840,9 +842,13 @@ class PagesController extends Controller
     public function demoSms(Request $request)
     {
 
-        $to = '2250758817235';
+        Log::info("envoie sms");
+
+        $to = '2250789078557';
         $message = 'test sms';
         $response = sendSms($to, $message);
+
+        Log::info("envoie sms 2");
 
         return response()->json([
             'status' => 'success',
