@@ -250,7 +250,7 @@
                         <div class="homeya-box">
                             <div class="archive-top">
                                 <a href="{{ route('appart.detail.show', $item->uuid) }}" class="images-group">
-                                    <div class="images-style">
+                                    <div class="images-style" style="min-height: 250px;max-height: 250px">
                                         <img src="{{ asset($item->image) }}" alt="{{ $item->title }}">
                                     </div>
                                     <div class="top">
