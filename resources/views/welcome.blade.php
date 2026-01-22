@@ -620,7 +620,7 @@
                             <div class="homeya-box list-style-1">
                                 <a href="{{ route('appart.detail.show', $item->uuid) }}" class="images-group">
                                     <div class="images-style">
-                                        <img src="{{ $item->image ?? '' }}" alt="img" style="min-height: 260px;max-height: 260px; min-width: 100%; max-width: 100%">
+                                        <img src="{{ $item->image ?? '' }}" alt="img" style="min-height: 270px;max-height: 270px;">
                                     </div>
                                     <div class="top">
                                         <ul class="d-flex gap-4 flex-wrap flex-column">
