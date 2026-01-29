@@ -125,10 +125,10 @@
     <br><br><br><br><br><br><br><br>
 
     <p><strong>Article 2 – Obligations de la structure d'hébergement</strong><br><br>
-    La structure d'hébergement s'engage à observer la confidentialité la plus totale en ce qui concerne le contenu de la mission et toutes les informations ainsi que tous les documents que la société gérante de l'application et le Client lui auront communiqués dans le cadre légal fixé par « la loi n°2013-450 du 19 Juin 2013 relative à la protection des données à caractère personnel. »<br><br>
-    La structure d'hébergement s'engage à tout mettre en œuvre pour réaliser correctement l'objet du contrat.<br><br>
-    La structure d'hébergement à l'obligation de préserver l'image et les coordonnées du client.<br><br>
-    La structure d'hébergement s'engage à gérer les entrées et les sorties des clients.<br><br>
+    La structure d'hébergement s'engage à observer la confidentialité la plus totale en ce qui concerne le contenu de la mission et toutes les informations ainsi que tous les documents que la société gérante de l'application et le Client lui auront communiqués dans le cadre légal fixé par « la loi n°2013-450 du 19 Juin 2013 relative à la protection des données à caractère personnel. »<br>
+    La structure d'hébergement s'engage à tout mettre en œuvre pour réaliser correctement l'objet du contrat.<br>
+    La structure d'hébergement à l'obligation de préserver l'image et les coordonnées du client.<br>
+    La structure d'hébergement s'engage à gérer les entrées et les sorties des clients.<br>
     La structure d'hébergement constate l'état des lieux avec le client.</p><br>
 
     <p><strong>Article 3 – Obligations de la société gérante de l'application MOKAZ</strong><br><br>
