@@ -12,24 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reconducted_reservations', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->uuid('original_reservation_uuid');
+            $table->uuid('uuid')->index();
+            $table->string('code')->nullable();
+            $table->string('original_reservation_uuid')->nullable();
+            $table->string('old_appart_uuid')->nullable();
+            $table->decimal('old_total_price', 10, 2)->nullable();
+            $table->decimal('already_paid', 10, 2)->nullable();
+
             $table->uuid('new_reservation_uuid')->nullable();
-            $table->uuid('old_appart_uuid');
-            $table->uuid('new_appart_uuid');
-            $table->decimal('old_total_price', 10, 2);
-            $table->decimal('new_total_price', 10, 2);
-            $table->decimal('already_paid', 10, 2);
-            $table->decimal('remaining_to_pay', 10, 2);
-            $table->decimal('amount_to_pay_now', 10, 2);
-            $table->string('status')->default('pending'); // pending, completed, cancelled
+            $table->uuid('new_appart_uuid')->nullable();
+            $table->decimal('new_total_price', 10, 2)->nullable();
+            $table->decimal('remaining_to_pay', 10, 2)->nullable();
+            $table->decimal('amount_to_pay_now', 10, 2)->nullable();
             $table->text('notes')->nullable();
+            $table->string('etat')->nullable()->default('actif');
             $table->timestamps();
-            
-            $table->foreign('original_reservation_uuid')->references('uuid')->on('reservations');
-            $table->foreign('new_reservation_uuid')->references('uuid')->on('reservations');
-            $table->foreign('old_appart_uuid')->references('uuid')->on('appartements');
-            $table->foreign('new_appart_uuid')->references('uuid')->on('appartements');
         });
     }
 

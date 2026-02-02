@@ -66,6 +66,8 @@ class Reservation extends Model
         return $this->belongsTo(Partner::class, 'partner_uuid', 'uuid');
     }
 
+    
+
     protected $casts = [
     'start_time' => 'datetime',
     'end_time' => 'datetime',

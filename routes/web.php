@@ -16,6 +16,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\LinkController;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\ReconductionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Partner\PartnerController;
@@ -70,7 +71,7 @@ Route::get('/detail/appartement/{uuid}', [PagesController::class, 'show'])->name
 
 Route::get('/reservation/paiement-waiting/{reservation_uuid}', [ReservationController::class, 'paiementWaiting'])->name('reservation.paiement.waiting');
 Route::get('/reservation/detail/{reservation_uuid}', [ReservationController::class, 'reservationDetail'])->name('reservation.detail');
-Route::get('/reservation/recondui/{reservation_uuid}', [ReservationController::class, 'reconduiReservation'])->name('reservation.recondui');
+
 
 Route::get('/reservation/paiement-success/{reservation_uuid}', [ReservationController::class, 'paiementSuccess'])->name('reservation.paiement.success');
 Route::get('/reservation/paiement-failed/{reservation_uuid}', [ReservationController::class, 'paiementFailed'])->name('reservation.paiement.failed');
@@ -211,6 +212,12 @@ Route::prefix('setting')->name('setting.')->group(function(){
         
     });
 });
+
+// Reconduction
+Route::prefix('reconduction')->group(function () {
+    Route::get('/reservation/{reservation_uuid}', [ReconductionController::class, 'reconduiReservation'])->name('reservation.reconduction');
+});
+    Route::get('/reconduction/show/{uuid}/{reservation_uuid}', [ReconductionController::class, 'show'])->name('reconduction.show');
 
 
 // Route::post('/track/page-duration', function (Request $request) {

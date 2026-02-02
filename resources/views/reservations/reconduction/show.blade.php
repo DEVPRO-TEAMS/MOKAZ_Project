@@ -390,7 +390,7 @@
 
                             <div class="card-footer">
                                 <button class="btn btn-outline-danger btn-lg w-100" data-bs-toggle="modal"
-                                    data-bs-target="#reservationModal"
+                                    data-bs-target="#reservationReconductionModal"
                                     title="Les reservations ne sont pas disponible pour l'instant ...">
                                     <i class="fas fa-calendar-plus"></i> Reserver maintenant
                                 </button>
@@ -425,7 +425,7 @@
 
     </section>
 
-    @include('reservations.reservationModal')
+    @include('reservations.reconduction.reserRecondModal')
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -645,5 +645,12 @@
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const reservationOld = @json($reservationOld);
+        // console.log(reservationOld.id);
+       
+    })
 
+</script>
 @endsection

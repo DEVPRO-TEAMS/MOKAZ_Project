@@ -13,17 +13,19 @@ class ReconductedReservation extends Model
 
     protected $fillable = [
         'uuid',
+        'code',
         'original_reservation_uuid',
-        'new_reservation_uuid',
         'old_appart_uuid',
-        'new_appart_uuid',
         'old_total_price',
-        'new_total_price',
         'already_paid',
+        'new_reservation_uuid',
+        'new_appart_uuid',
+        'new_total_price',
         'remaining_to_pay',
         'amount_to_pay_now',
         'status',
         'notes',
+        'etat',
     ];
 
     protected $casts = [

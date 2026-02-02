@@ -187,7 +187,7 @@
                             <a href="{{ route('contact') }}" class="btn-action btn-support mt-2">
                                 <i class="fas fa-headset me-2"></i>Contacter le support
                             </a>
-                            <a href="{{ route('reservation.recondui', $reservation->uuid) }}" class="btn-action btn-support mt-2">
+                            <a href="{{ route('reservation.reconduction', $reservation->uuid) }}" class="btn-action btn-support mt-2">
                                 <i class="fas fa-redo me-1"></i>Reconduire la reservation
                             </a>
                         </div>
