@@ -66,11 +66,6 @@ class PagesController extends Controller
         // Requête de base : on récupère les appartements actifs via la table Search
         $searchQuery = Search::query();
 
-<<<<<<< HEAD
-
-=======
-        // 1️⃣ Recherche mot-clé
->>>>>>> 1c56a4eada21d5cf657ddc60e2c56162cd367379
         if ($search) {
             // $searchQuery->where('query', 'like', "%$search%");
             $fulltextConditions = array_filter([$search]);

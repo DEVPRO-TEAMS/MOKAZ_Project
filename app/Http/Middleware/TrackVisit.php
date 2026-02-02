@@ -65,21 +65,6 @@ class TrackVisit
         return $next($request);
     }
 
-<<<<<<< HEAD
-    // 5️⃣ Créer une nouvelle session si aucune session ouverte
-    if (!$visitHistorique) {
-        $visitHistorique = VisitHistorique::create([
-            'uuid'          => (string) Str::uuid(),
-            'visit_uuid'    => $visit->uuid,
-            'source'        => $this->detectSource($request),
-            'referrer'      => $request->headers->get('referer'),
-            // 'coordornneGPS' => $latitude && $longitude ? "$latitude,$longitude" : null,
-            'coordinates' => $latitude && $longitude ? "$latitude,$longitude" : null,
-            'country'       => $country,
-            'city'          => $city,
-            'started_at'    => now(),
-        ]);
-=======
     private function shouldTrack(Request $request): bool
     {
         // Routes à exclure
@@ -109,7 +94,6 @@ class TrackVisit
         }
         
         return true;
->>>>>>> 1c56a4eada21d5cf657ddc60e2c56162cd367379
     }
 }
 
