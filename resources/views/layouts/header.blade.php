@@ -45,9 +45,17 @@
                                 <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span
                                         class="icon icon-arr-down"></span></p>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item"
+                                    @if (Auth::user()->user_type == 'admin')
+                                        <a class="dropdown-item" href="{{ route('admin.index') }}">Tableau de bord</a>
+                                    @elseif (Auth::user()->user_type == 'partner')
+                                        <a class="dropdown-item" href="{{ route('partner.index') }}">Tableau de bord</a>
+                                    @elseif (Auth::user()->user_type == 'comManager')
+                                        <a class="dropdown-item" href="{{ route('comManager.statistics') }}">Tableau de bord</a>
+                                    @endif
+                                    
+                                    {{-- <a class="dropdown-item"
                                         href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index')) }}">Tableau
-                                        de bord</a>
+                                        de bord</a> --}}
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                         document.getElementById('logout-form').submit();">Se
@@ -103,9 +111,16 @@
                         <p class="name">{{ Auth::user()->name }} {{ Auth::user()->lastname }} <span
                                 class="icon icon-arr-down"></span></p>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item"
-                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('user.index')) }}">Tableau
-                                de bord</a>
+                            @if (Auth::user()->user_type == 'admin')
+                                <a class="dropdown-item" href="{{ route('admin.index') }}">Tableau de bord</a>
+                            @elseif (Auth::user()->user_type == 'partner')
+                                <a class="dropdown-item" href="{{ route('partner.index') }}">Tableau de bord</a>
+                            @elseif (Auth::user()->user_type == 'comManager')
+                                <a class="dropdown-item" href="{{ route('comManager.statistics') }}">Tableau de bord</a>
+                            @endif
+                            {{-- <a class="dropdown-item"
+                                href="{{ Auth::user()->user_type == 'admin' ? route('admin.index') : (Auth::user()->user_type == 'partner' ? route('partner.index') : route('comManager.statistics')) }}">Tableau
+                                de bord</a> --}}
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">Se

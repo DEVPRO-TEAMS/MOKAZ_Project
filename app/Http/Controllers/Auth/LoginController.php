@@ -56,12 +56,14 @@ class LoginController extends Controller
             $user = auth()->user();
 
             User::where('uuid', $user->uuid)->update(['last_login' => Carbon::now()->format('Y-m-d H:i:s')]);
-
+            // dd($user);
             if ($user->user_type == 'admin') {
 
                 return redirect()->route('admin.index');
             }elseif ($user->user_type == 'partner') {
                 return redirect()->route('partner.index');
+            }elseif ($user->user_type == 'comManager') {
+                return redirect()->route('comManager.statistics');
             }elseif ($user->user_type == 'user') {
                 
                 return redirect()->route('user.index');

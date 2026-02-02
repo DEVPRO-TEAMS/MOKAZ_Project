@@ -95,6 +95,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
         {{-- @dd($partner); --}}
+        {{-- @dd(Auth::user()->user_type) --}}
         {{-- @dd(Auth::user()->partner_uuid); --}}
         <div class="preload preload-container">
             <div class="boxes ">
@@ -193,6 +194,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFC3m2n0jBRFTMvUNZc0-6Y0Rzlcadzcw"></script>
         <script src="{{ asset('assets/js/map-single.js')}}"></script>
         <script src="{{ asset('assets/js/map.js') }}"></script>
+        <script src="{{ asset('assets/js/dashboard.js') }}"></script>
         <script src="{{ asset('assets/js/map-contact.js') }}"></script>
         <script src="{{ asset('assets/js/marker.js') }}"></script>
         <script src="{{ asset('assets/js/infobox.min.js') }}"></script>

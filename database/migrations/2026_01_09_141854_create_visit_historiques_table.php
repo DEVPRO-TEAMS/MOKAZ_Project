@@ -16,14 +16,15 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('visit_uuid')->nullable();
 
-            $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email'])->nullable();
+            $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email', 'referral', 'organic'])->nullable();
             $table->string('referrer')->nullable();
 
-            $table->string('coordornneGPS')->nullable();
+            $table->string('coordinates')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
 
             $table->timestamp('started_at')->nullable();
+            $table->timestamp('last_activity_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->integer('duration')->nullable(); // en secondes
 

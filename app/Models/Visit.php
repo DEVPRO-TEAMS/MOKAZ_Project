@@ -14,36 +14,26 @@ class Visit extends Model
         'uuid',
         'ip_address',
         'user_agent',
+        'started_at',
     ];
-    // 'source',        // direct, seo, social, ads, email
-    // 'referrer',
-    // 'coordornneGPS',
-    // 'country',
-    // 'city',
-    // 'started_at',
-    // 'ended_at',
 
     protected $casts = [
         'started_at' => 'datetime',
-        'ended_at' => 'datetime',
     ];
+
+    public function historiques()
+    {
+        return $this->hasMany(VisitHistorique::class, 'visit_uuid', 'uuid');
+    }
 
     public function pageViews()
     {
         return $this->hasMany(PageView::class, 'visit_uuid', 'uuid');
     }
 
-    public function getDurationAttribute()
+    // Nouvelle méthode pour identifier un visiteur unique
+    public function getVisitorKeyAttribute(): string
     {
-        if (!$this->ended_at) {
-            return now()->diffInSeconds($this->started_at);
-        }
-
-        return $this->ended_at->diffInSeconds($this->started_at);
-    }
-
-    public function historiques()
-    {
-        return $this->hasMany(VisitHistorique::class , 'visit_uuid', 'uuid');
+        return md5($this->ip_address . '-' . $this->user_agent);
     }
 }

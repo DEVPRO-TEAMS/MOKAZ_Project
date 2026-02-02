@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
+            $table->timestamp('started_at')->nullable();
             $table->timestamps();
             
             // $table->enum('source', ['direct', 'seo', 'social', 'ads', 'email'])->nullable();

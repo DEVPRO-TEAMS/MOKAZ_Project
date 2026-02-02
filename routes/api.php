@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ReconductionController;
@@ -82,6 +83,16 @@ Route::get('/get-comments', [PagesController::class, 'getComments']);
 Route::post('/comment/destroy/{uuid}', [CommentController::class, 'destroy']);
 
 Route::post('/send-sms-helper', [PagesController::class, 'demoSms']);
+
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/kpis', [DashboardController::class, 'getKPIData']);
+    Route::get('/traffic-chart', [DashboardController::class, 'getTrafficChartData']);
+    Route::get('/sources', [DashboardController::class, 'getSourcesData']);
+    Route::get('/top-cities', [DashboardController::class, 'getTopCities']);
+    Route::get('/geographic', [DashboardController::class, 'getGeographicData']);
+});
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

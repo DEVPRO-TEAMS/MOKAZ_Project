@@ -17,11 +17,11 @@ class UserSeeder extends Seeder
     {
         User::create([
             'uuid' => Str::uuid(),
-            'name' => 'Partner',
-            'lastname' => 'Main',
-            'user_type' => 'partner',
+            'name' => 'Community Manager',
+            'lastname' => 'BOOMCOM',
+            'user_type' => 'comManager',
             'phone' => '0700000000',
-            'email' => 'partner@main.com',
+            'email' => 'communitymanager@jsbeyci.com',
             'password' => Hash::make('password123'),
             'last_login' => now(),
             'is_logged_in' => false,
