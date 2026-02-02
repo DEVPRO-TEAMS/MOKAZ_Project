@@ -743,7 +743,7 @@
     </section>
 
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Vérifier si les coordonnées sont déjà présentes
             const latInput = document.getElementById('user_lat');
@@ -765,6 +765,54 @@
                     });
                 } else {
                     console.warn("Géolocalisation non supportée par le navigateur.");
+                }
+            }
+        });
+    </script> --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const latInput = document.getElementById('user_lat');
+            const lngInput = document.getElementById('user_lng');
+            const form = document.getElementById('searchAppartsForm');
+
+            // On ne lance la détection que si les champs sont vides
+            if (!latInput.value || !lngInput.value) {
+                if (navigator.geolocation) {
+                    
+                    const options = {
+                        enableHighAccuracy: true,
+                        timeout: 5000, // On attend max 5 secondes
+                        maximumAge: 0
+                    };
+
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            latInput.value = position.coords.latitude;
+                            lngInput.value = position.coords.longitude;
+                            // Soumission uniquement si on a récupéré les données
+                            form.submit();
+                        }, 
+                        function(error) {
+                            // Gestion explicite des erreurs pour le débug
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    console.warn("L'utilisateur a refusé la demande de géolocalisation.");
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    console.warn("L'information de localisation est indisponible.");
+                                    break;
+                                case error.TIMEOUT:
+                                    console.warn("La demande de localisation a expiré.");
+                                    break;
+                                case error.UNKNOWN_ERROR:
+                                    console.warn("Une erreur inconnue est survenue.");
+                                    break;
+                            }
+                        }, 
+                        options
+                    );
+                } else {
+                    console.warn("Géolocalisation non supportée par ce navigateur.");
                 }
             }
         });
